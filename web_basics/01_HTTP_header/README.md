@@ -2,6 +2,17 @@
 
 ## 課題1 主要なHTTPヘッダの役割を理解する
 
+| ヘッダ名         | ヘッダ種類 | 送信元        |
+| :--------------- | :--------- | :------------ |
+| Host             | Request    | Client        |
+| Content-Type     | Entity     | Client&Server |
+| User-Agent       | Request    | Client        |
+| Accept           | Request    | Client        |
+| Referer          | Request    | Client        |
+| Accept-Encopding | Request    | Client        |
+| Authentication   | Request    | Client        |
+| Location         | Response   | Server        |
+
 ### Host
 
 Hostヘッダは、リクエストメッセージを制御するための、リクエストヘッダの1つである。
@@ -12,8 +23,9 @@ Hostヘッダの特徴は以下になる。
 - クライアントがサーバにリクエストを送信する際に、サーバのドメイン名（FQDN）とポート番号を設定する。
 - 1つのサーバで複数のWebサイトを運用している場合、Hostヘッダに設定されているドメイン名をもとに、仮想ホストにリクエストを振り分ける。
 
-- 参考資料集
-  - [MDN Web Docs HTTP](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Host)
+参考資料集
+
+- [MDN Web Docs HTTP](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Host)
 
 ### Content-Type
 
@@ -27,8 +39,9 @@ Content-Typeヘッダの特徴は以下になる。
   - charset
   - boundary
 
-- 参考資料集
-  - [MDN Web Docs Host](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Type)
+参考資料集
+
+- [MDN Web Docs Host](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Type)
 
 ### User-Agent
 
@@ -41,8 +54,9 @@ User-Agentヘッダの特徴は以下になる。
 - この情報をもとに、ユーザの環境に合わせてWebサイトのコンテンツを最適化できる
 - ただし簡単に改変可能なので、過信に注意
 
-- 参考資料集
-  - [MDN Web Docs User-Agent](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/User-Agent)
+参考資料集
+
+- [MDN Web Docs User-Agent](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/User-Agent)
 
 ### Accept
 
@@ -55,8 +69,9 @@ Acceptヘッダの特徴は以下になる。
 - 品質係数qvalueを、ファイルの種別ごとに設定して優先度を決定する
   - `image/png,image/jpeg;q=0.7,image/gif;q=0.5`
 
-- 参考資料集
-  - [MDN Web Docs Accept](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Accept)
+参考資料集
+
+- [MDN Web Docs Accept](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Accept)
 
 #### コンテンツネゴシエーション
 
@@ -72,8 +87,9 @@ Refererヘッダの特徴は以下になる。
 - サーバはクライアントがどのページからアクセスしたのかわかる
 - これを使ってデータ解析して、プロモーションなどを決定することができる
 
-- 参考資料集
-  - [MDN Web Docs Referer](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Referer)
+参考資料集
+  
+- [MDN Web Docs Referer](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Referer)
 
 ### Accept-Encoding
 
@@ -87,8 +103,9 @@ Accept-Encodingヘッダの特徴は以下になる。
   - サーバが過負荷状態であり、圧縮アルゴリズムを実行する際のオーバヘッドを処理できない場合
   - Microsoftは、計算リソースが80％以上残っている場合は、圧縮しないことをおすすめしている
 
-- 参考資料集
-  - [MDN Web Docs Accept-Encoding](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Accept-Encoding)
+参考資料集
+
+- [MDN Web Docs Accept-Encoding](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Accept-Encoding)
 
 ### Authorization
 
@@ -99,8 +116,9 @@ Authorizationヘッダの特徴は以下になる。
 - ユーザをサーバで認証するための資格情報を含むこともある
 - サーバが「401 Unauthorized」を返し、WWW-Authenticateヘッダを返した後の、リクエストに付与する
 
-- 参考資料集
-  - [MDN Web Docs Authorization](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Authorization)
+参考資料集
+
+- [MDN Web Docs Authorization](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Authorization)
 
 
 ### Location
@@ -113,8 +131,9 @@ Locationヘッダの特徴は以下になる。
 - ステータスコードが「3XX」や「201」の場合にのみ意味を持つ
 - ほとんどのWebブラウザは、自動的にLocationヘッダのURLにアクセスする
 
-- 参考資料集
-  - [MDN Web Docs Location](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Location)
+参考資料集
+
+- [MDN Web Docs Location](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Location)
 
 ### Refererの追加質問
 
@@ -124,8 +143,7 @@ Locationヘッダの特徴は以下になる。
 
 ## 課題2 HTTPヘッダに関するクイズを作成する
 
-> 例
-> 「User-agentを使って、ユーザがモバイル端末を使用していることを判定しようとした場合、どのような誤検知や問題が想定されるでしょうか？」
+> 例：「User-agentを使って、ユーザがモバイル端末を使用していることを判定しようとした場合、どのような誤検知や問題が想定されるでしょうか？」
 
 ### #1 Quiz
 
