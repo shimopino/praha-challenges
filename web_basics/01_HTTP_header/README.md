@@ -161,34 +161,26 @@ HTTPリクエストの`Referer`ヘッダに設定する情報は、サーバ側�
 - 送信しない
 - 送信する
   - オリジンのみ（`https://example.com/`）
-  - オリジン、パス、クエリ文字列を含む（`https://example.com/page.html?param1=example`）
+  - 完全情報（オリジン、パス、クエリ文字列を含む）（`https://example.com/page.html?param1=example`）
 
 実際の`Referrer-Policy`ヘッダに設定できる値は以下になる。
 
-- `no-referrer`
-  - `Referer`ヘッダには値を設定しない
+| Referrer-Policy                   | 同一オリジン | 異なるオリジン | HTTPS → HTTP | HTTP → HTTPS | 
+| --------------------------------- | ------------ | -------------- | ------------- | ------------- | 
+| `no-referrer`                     | ×            | ×              | ×             | ×             | 
+| `no-referrer-when-downgrade`      | 完全         | 完全           | ×             | 完全          | 
+| `origin`                          | オリジンのみ | オリジンのみ   | オリジンのみ  | オリジンのみ  | 
+| `origin-when-cross-origin`        | 完全         | オリジンのみ   | オリジンのみ  | オリジンのみ  | 
+| `same-origin`                     | 完全         | ×              | ×             | ×             | 
+| `strict-origin`                   | オリジンのみ | オリジンのみ   | ×             | オリジンのみ  | 
+| `strict-origin-when-cross-origin` | 完全         | オリジンのみ   | ×             | オリジンのみ  | 
+| `unsafe-url`                      | 完全         | 完全           | 完全          | 完全          | 
+
+そのほかの特徴は以下になる。
+
 - `no-referrer-when-downgrade`
   - `Referrer-Policy`ヘッダが設定されていない場合のデフォルトの挙動
-  - HTTPのプロトコルのセキュリティがダウングレードする場合には、URLを設定しない（HTTP → HTTPS）
   - 最近は`strict-origin-when-cross-origin`をデフォルトにする動きあり
-- `origin`
-  - 直前のサイトURLのオリジンのみを送信する
-  - 遷移元が`https://example.com/page.html`の場合には、`https://example.com/`を送信する
-- `origin-when-cross-origin`
-  - 同一オリジン間の移動時には、パスを含めたURLを送信する
-  - 異なるオリジン間では、オリジンのみを送信する（`origin`と同じ）
-- `same-origin`
-  - 同一オリジン間の移動時でには、完全なURLを送信する
-  - 異なるオリジン間の移動時には、URLを送信しない
-- `strict-origin`
-  - 基本は`origin`と同じ
-  - ただしHTTP → HTTPSの場合に、URLを送信しない
-- `strict-origin-when-cross-origin`
-  - HTTPS → HTTPSの場合にのみ、URLを送信する
-  - 同一オリジン間移動時には、URLを送信する
-  - 異なるオリジン間の移動時には、オリジンのみを送信する
-- `unsafe-url`
-  - URLを送信する
 
 HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能である。
 
@@ -208,6 +200,7 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 - [Referer header: privacy and security concerns](https://developer.mozilla.org/en-US/docs/Web/Security/Referer_header:_privacy_and_security_concerns)
 - [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
 - [W3C Referrer-Policy](https://triple-underscore.github.io/webappsec-referrer-policy-ja.html)
+- [Markdown表テーブル作成ツール | NotePM](https://notepm.jp/markdown-table-tool)
 
 ---
 
@@ -224,5 +217,13 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 > 例：「User-agentを使って、ユーザがモバイル端末を使用していることを判定しようとした場合、どのような誤検知や問題が想定されるでしょうか？」
 
 ### #1 Quiz
+
+阿部寛のHP（[here](http://abehiroshi.la.coocan.jp/)）にアクセスしてみる。2回目にサイトを訪問すると、レスポンスのステータスコードは「304 Not Modified」となっている。この挙動と関連するヘッダは何でしょうか。
+
+### #2 Quiz
+
+
+
+### #3 Quiz
 
 
