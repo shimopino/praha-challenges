@@ -13,6 +13,8 @@
 | Authentication   | Request    | Client        |
 | Location         | Response   | Server        |
 
+---
+
 ### Host
 
 Hostヘッダは、リクエストメッセージを制御するための、リクエストヘッダの1つである。
@@ -23,9 +25,11 @@ Hostヘッダの特徴は以下になる。
 - クライアントがサーバにリクエストを送信する際に、サーバのドメイン名（FQDN）とポート番号を設定する。
 - 1つのサーバで複数のWebサイトを運用している場合、Hostヘッダに設定されているドメイン名をもとに、仮想ホストにリクエストを振り分ける。
 
-参考資料集
+参考資料
 
 - [MDN Web Docs HTTP](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Host)
+
+---
 
 ### Content-Type
 
@@ -39,9 +43,11 @@ Content-Typeヘッダの特徴は以下になる。
   - charset
   - boundary
 
-参考資料集
+参考資料
 
 - [MDN Web Docs Host](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Type)
+
+---
 
 ### User-Agent
 
@@ -54,9 +60,11 @@ User-Agentヘッダの特徴は以下になる。
 - この情報をもとに、ユーザの環境に合わせてWebサイトのコンテンツを最適化できる
 - ただし簡単に改変可能なので、過信に注意
 
-参考資料集
+参考資料
 
 - [MDN Web Docs User-Agent](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/User-Agent)
+
+---
 
 ### Accept
 
@@ -69,13 +77,11 @@ Acceptヘッダの特徴は以下になる。
 - 品質係数qvalueを、ファイルの種別ごとに設定して優先度を決定する
   - `image/png,image/jpeg;q=0.7,image/gif;q=0.5`
 
-参考資料集
+参考資料
 
 - [MDN Web Docs Accept](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Accept)
 
-#### コンテンツネゴシエーション
-
-https://developer.mozilla.org/ja/docs/Web/HTTP/Content_negotiation
+---
 
 ### Referer
 
@@ -87,9 +93,11 @@ Refererヘッダの特徴は以下になる。
 - サーバはクライアントがどのページからアクセスしたのかわかる
 - これを使ってデータ解析して、プロモーションなどを決定することができる
 
-参考資料集
+参考資料
   
 - [MDN Web Docs Referer](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Referer)
+
+---
 
 ### Accept-Encoding
 
@@ -103,9 +111,11 @@ Accept-Encodingヘッダの特徴は以下になる。
   - サーバが過負荷状態であり、圧縮アルゴリズムを実行する際のオーバヘッドを処理できない場合
   - Microsoftは、計算リソースが80％以上残っている場合は、圧縮しないことをおすすめしている
 
-参考資料集
+参考資料
 
 - [MDN Web Docs Accept-Encoding](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Accept-Encoding)
+
+---
 
 ### Authorization
 
@@ -116,10 +126,11 @@ Authorizationヘッダの特徴は以下になる。
 - ユーザをサーバで認証するための資格情報を含むこともある
 - サーバが「401 Unauthorized」を返し、WWW-Authenticateヘッダを返した後の、リクエストに付与する
 
-参考資料集
+参考資料
 
 - [MDN Web Docs Authorization](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Authorization)
 
+---
 
 ### Location
 
@@ -131,15 +142,82 @@ Locationヘッダの特徴は以下になる。
 - ステータスコードが「3XX」や「201」の場合にのみ意味を持つ
 - ほとんどのWebブラウザは、自動的にLocationヘッダのURLにアクセスする
 
-参考資料集
+参考資料
 
 - [MDN Web Docs Location](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Location)
 
+---
+
 ### Refererの追加質問
 
-- aタグにtarget="_blank"を設定したところ、先輩エンジニアから「ちゃんとrel=noreferrerを設定した？」と聞かれました。なぜそのような設定が必要なのでしょうか？
-- rel=noreferrerを設定しなかった場合に起きうる問題を調べて、説明して下さい
-- 先輩エンジニアに「同じオリジンの時はrefererの情報を全部送って、別オリジンの時は、オリジン情報だけをrefererとして送信するように、HTTPリクエストにヘッダを追加しておいてもらえる？」と頼まれました。HTTPリクエストのヘッダーには、どんな値を追加する必要があるでしょうか？
+> aタグに`target="=blank"`を設定しており、`rel=noreferrer`を設定していなかった場合、どのような問題が発生するでしょうか
+
+> 同じオリジンの時はrefererの情報を全部送って、別オリジンの時は、オリジン情報だけをrefererとして送信するために、HTTPリクエストのヘッダーにはどのような値を追加すればいいでしょうか
+
+HTTPリクエストの`Referer`ヘッダに設定する情報は、サーバ側のレスポンスヘッダである`Referrer-Policy`ヘッダで制御することができる。
+
+なお、Referrerに設定する値には以下のパターンが存在している。
+
+- 送信しない
+- 送信する
+  - オリジンのみ（`https://example.com/`）
+  - オリジン、パス、クエリ文字列を含む（`https://example.com/page.html?param1=example`）
+
+実際の`Referrer-Policy`ヘッダに設定できる値は以下になる。
+
+- `no-referrer`
+  - `Referer`ヘッダには値を設定しない
+- `no-referrer-when-downgrade`
+  - `Referrer-Policy`ヘッダが設定されていない場合のデフォルトの挙動
+  - HTTPのプロトコルのセキュリティがダウングレードする場合には、URLを設定しない（HTTP → HTTPS）
+  - 最近は`strict-origin-when-cross-origin`をデフォルトにする動きあり
+- `origin`
+  - 直前のサイトURLのオリジンのみを送信する
+  - 遷移元が`https://example.com/page.html`の場合には、`https://example.com/`を送信する
+- `origin-when-cross-origin`
+  - 同一オリジン間の移動時には、パスを含めたURLを送信する
+  - 異なるオリジン間では、オリジンのみを送信する（`origin`と同じ）
+- `same-origin`
+  - 同一オリジン間の移動時でには、完全なURLを送信する
+  - 異なるオリジン間の移動時には、URLを送信しない
+- `strict-origin`
+  - 基本は`origin`と同じ
+  - ただしHTTP → HTTPSの場合に、URLを送信しない
+- `strict-origin-when-cross-origin`
+  - HTTPS → HTTPSの場合にのみ、URLを送信する
+  - 同一オリジン間移動時には、URLを送信する
+  - 異なるオリジン間の移動時には、オリジンのみを送信する
+- `unsafe-url`
+  - URLを送信する
+
+HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能である。
+
+```html
+<!-- 文書全体に適用 -->
+<meta name="referrer" content="origin">
+
+<!-- aタグ、areaタグ、imgタグ、iframeタグ、scriptタグ、linkタグ -->
+<a href="http://example.com" referrerpolicy="origin">
+
+<!-- aタグ、areaタグ、linkタグ -->
+<a href="http://example.com" rel="noreferrer">
+```
+
+参考資料
+
+- [Referer header: privacy and security concerns](https://developer.mozilla.org/en-US/docs/Web/Security/Referer_header:_privacy_and_security_concerns)
+- [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
+- [W3C Referrer-Policy](https://triple-underscore.github.io/webappsec-referrer-policy-ja.html)
+
+---
+
+### コンテンツネゴシエーション
+
+サーバはHTML5やCSS、画像などの様々なファイルをリソースとして有している。クライアントが、URLを指定してこうしたリソースを取得しようとした場合、サーバ側は指定されたリソースのうち、クライアントに適したリソースを選択する（日本語のファイルや圧縮方式など）。
+
+参考資料
+
+- [Content Negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation)
 
 ## 課題2 HTTPヘッダに関するクイズを作成する
 
