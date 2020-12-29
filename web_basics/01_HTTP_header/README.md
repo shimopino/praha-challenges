@@ -237,6 +237,12 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 ![Quiz#2 Network](./assets/quiz2.svg)
 
+> `X-Forwarded-For`は標準ではなく、RFC7239で標準化された`Forwarded`が標準である。新しいWebサイトを構築する場合には、`Forwarded`を付与することがいいのか?
+
 ### #3 Quiz
 
+[clickjacking.html](./clickjacking.html)で生じているクリックジャッキングは、特定のHTTPヘッダをレスポンスヘッダに付与することで回避することができるが、それはどのようなヘッダと値になるでしょうか
 
+参考資料
+
+- [セキュリティ対策のHTTPヘッダがついているのかチェックするツール](https://securityheaders.com/)
