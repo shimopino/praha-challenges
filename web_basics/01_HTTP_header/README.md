@@ -27,7 +27,7 @@ Hostヘッダの特徴は以下になる。
 
 参考資料
 
-- [MDN Web Docs HTTP](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Host)
+- [MDN Web Docs Host](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Host)
 
 ---
 
@@ -45,7 +45,7 @@ Content-Typeヘッダの特徴は以下になる。
 
 参考資料
 
-- [MDN Web Docs Host](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Type)
+- [MDN Web Docs Content-Type](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Content-Type)
 
 ---
 
