@@ -1,0 +1,10 @@
+<body>
+    <a href="index.html" target="_blank" rel="noopener">Link index with noopener</a>
+    <br />
+    <a href="index3.html" target="_blank" rel="noreferrer">Link index3 with noreferrer</a>
+
+    <script>
+        console.log(window.opener.location);
+        window.opener.location = "https://google.com"
+    </script>
+</body>
