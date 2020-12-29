@@ -222,7 +222,10 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 ### #2 Quiz
 
+以下のネットワーク構成の場合、`X-Forwarded-For`を設定していなければ、どのような問題が発生するでしょうか。
+また、実際の`X-Forwareded-For`の値はどのようになるでしょうか
 
+![Quiz#2 Network](./assets/quiz2.svg)
 
 ### #3 Quiz
 
