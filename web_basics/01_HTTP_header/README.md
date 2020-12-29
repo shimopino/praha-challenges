@@ -154,6 +154,16 @@ Locationヘッダの特徴は以下になる。
 
 > 同じオリジンの時はrefererの情報を全部送って、別オリジンの時は、オリジン情報だけをrefererとして送信するために、HTTPリクエストのヘッダーにはどのような値を追加すればいいでしょうか
 
+そもそものオリジンとは、とあるページの**プロトコル、ポート番号、ホスト**で定義されており、パスやクエリ文字列には依存していない。例えば、`https://example.com`に対して、同一オリジンかどうかは以下のように表にまとめることができる。
+
+| URL                                 | 同一オリジン | 
+| ----------------------------------- | ------------ | 
+| https://example.com/first.html      | Yes          | 
+| https://example.com/second.html     | Yes          | 
+| http://example.com/first.html       | No           | 
+| https://example.com:8080/first.html | No           | 
+| https://example2.com/first.html     | No           | 
+
 HTTPリクエストの`Referer`ヘッダに設定する情報は、サーバ側のレスポンスヘッダである`Referrer-Policy`ヘッダで制御することができる。
 
 なお、Referrerに設定する値には以下のパターンが存在している。
