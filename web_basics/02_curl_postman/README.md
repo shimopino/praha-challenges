@@ -1,5 +1,7 @@
 # #2 curlとpostmanに慣れる
 
+curlのバージョンは以下になる。
+
 ```bash
 $ curl --version
 curl 7.68.0 (x86_64-pc-linux-gnu) libcurl/7.68.0 OpenSSL/1.1.1f zlib/1.2.11 brotli/1.0.7 libidn2/2.2.0 libpsl/0.21.0 (+libidn2/2.2.0) libssh/0.9.3/openssl/zlib nghttp2/1.40.0 librtmp/2.3
@@ -8,12 +10,17 @@ Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s
 Features: AsynchDNS brotli GSS-API HTTP2 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM NTLM_WB PSL SPNEGO SSL TLS-SRP UnixSockets
 ```
 
-## 課題1 cURLでのGetリクエスト
-
-### Docker環境の準備
+また課題に取り組む際は、ローカルのコンテナ上で動かしているhttpbinに対してcurlを実行する。
 
 ```bash
 $ docker run -it -d -p 80:80 --rm kennethreitz/httpbin
+```
+
+
+## 課題1 cURLでのGetリクエスト
+
+```bash
+$ curl -X GET -H "X-Test: hello" "http://localhost:80/get"
 ```
 
 
@@ -34,6 +41,9 @@ URLはhttps://httpbin.org/headers
   }
 }
 
+```bash
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "http://localhost:80/post"
+```
 
 問題２
 Content-Typeは"application/json"
@@ -58,7 +68,9 @@ URLはhttps://httpbin.org/post
 }
 
 
-
+```bash
+$ curl -X POST "http://localhost:80/post" -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'
+```
 
 問題３
 もう少し複雑なbodyを送信してみましょう。以下のようなオブジェクトをbodyに含めて、送信してください
@@ -66,6 +78,9 @@ URLはhttps://httpbin.org/post
 
 {userA: {name: "hoge", age: 29}}
 
+```bash
+$ curl -X POST "http://localhost:80/post" -H "Content-Type: application/x-www-form-urlencoded" -d '{"name": "hoge"}'
+```
 
 問題４
 「ごめんごめん、このエンドポイント、まだapplication/jsonに対応してないから、Content-Typeはapplication/x-www-form-urlencodedで送ってもらえる？」と先輩に頼まれました
