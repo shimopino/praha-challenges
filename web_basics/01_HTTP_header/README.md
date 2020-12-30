@@ -246,3 +246,18 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 参考資料
 
 - [セキュリティ対策のHTTPヘッダがついているのかチェックするツール](https://securityheaders.com/)
+
+### 参考資料まとめ
+
+- 知識情報
+  - [Links to cross-origin destinations are unsafe](https://web.dev/external-anchors-use-rel-noopener/)
+  - [Referrer を制御する](https://qiita.com/wakaba@github/items/707d72f97f2862cd8000)
+  - [MDN Web Docs: Content-Security-Policy](https://developer.mozilla.org/ja/docs/Web/HTTP/CSP)
+  - [Google Web Fundamentals: コンテンツセキュリティポリシー](https://developers.google.com/web/fundamentals/security/csp)
+  - [MDN Web Docs: X-Frame-Options](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/X-Frame-Options)
+  - [MDN Web Docs: オリジン間リソース共有(CORS)](https://developer.mozilla.org/ja/docs/Web/HTTP/CORS#Preflighted_requests)
+  - [CORSまとめ](https://qiita.com/tomoyukilabs/items/81698edd5812ff6acb34)
+  - [改行コードに要注意！ HTTP ヘッダインジェクションの概要と対策](https://yamory.io/blog/about-http-header-injection/)
+- ツール
+  - [Proxyman](https://www.softantenna.com/wp/review/proxyman/)
+  - [mitmproxy](https://qiita.com/hkurokawa/items/9034274cc1b9e1405c68)
