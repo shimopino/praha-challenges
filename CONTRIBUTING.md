@@ -22,7 +22,7 @@
 記事の元ネタである[angular/angular.js](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type)では、実際のコミットメッセージは上記のTypeに合わせて次のようになっていることが多い。
 
 ```bash
-type(概要): 理由付きのコミット内容
+type(<scope>): 理由付きのコミット内容
 ```
 
 ## ブランチ運用
@@ -42,6 +42,7 @@ Gitのブランチモデルとしては、「[Github-Flow](http://scottchacon.co
 3. 作業用ブランチに定期的にプッシュする
 4. プルリクエストを実施
 5. プルリクエストが承認されたら`main`ブランチにマージ
+6. 作業用ブランチの削除
 
 ## 文書作成時の注意点
 
