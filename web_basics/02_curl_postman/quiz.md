@@ -3,7 +3,8 @@
 curlとpostmanに関するクイズを作成する。
 （作問数の制限なし）
 
-## #1 Quiz
+## cURLに関するQuiz
+### #1 Quiz
 
 `https://httpbin.org`にパラメータとして`show_env=1`を追加してGETリクエストを以下のように送信する。
 
@@ -42,8 +43,67 @@ curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_e
 
 </details>
 
-## #2 Quiz
+### #2 Quiz
 
+クイズ1で実行したcurlコマンドに関して、リクエスト内容ではなく、サーバからのレスポンスヘッダとレスポンスボディを確認してみましょう。
 
-## #3 Quiz
+<details>
+<summary>回答例</summary>
 
+`-i`オプションを付与することでレスポンスを確認することができる。
+
+```bash
+$ curl -i -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_env=1
+```
+
+</details>
+
+### #3 Quiz
+
+このファイルと同じフォルダ階層に存在する`quiz.json`を、POSTリクエスト時に送信するリクエストボディとして設定し、`https://httpbin.org/post`にリクエストを送信してみましょう
+
+<details>
+<summary>回答例</summary>
+
+`-d`オプションでボディのデータを指定する際に、`@`プレフィックスを使用することで、ファイルを指定できる。
+
+```bash
+$ curl -X POST -d "@quiz.json" -H "Content-Type: application/json" "https://httpbin.org/post"
+```
+
+</details>
+
+## Postmanに関するQuiz
+
+なお回答は以下のURLで公開している。
+
+[https://documenter.getpostman.com/view/9645891/TVt2bNXz](https://documenter.getpostman.com/view/9645891/TVt2bNXz)
+
+### #1 Quiz
+
+Postmanで環境変数に以下の値を設定し、環境変数を参照する形でGETリクエストを送信してみましょう。
+
+| 環境変数 | 値                  |
+| :------- | :------------------ |
+| HOST_URL | https://httpbin.org |
+
+### #2 Quiz
+
+Postmanで環境変数として`UUID4_Token`という変数名に、値を何も設定しない状態にする。
+
+その状態で、`https://httpbin.org/uuid`に対してGETリクエストを送信する。
+
+ではPostmanで、リクエストを送信した後で自動的にレスポンスボディに含まれる`uuid`プロパティの値を、環境変数`UUID4_Token`に格納するスクリプトを作成してみましょう。
+
+<details>
+<summary>ヒント</summary>
+
+Postmanでは`Tests`タブにスクリプトを登録できる。
+
+`Tests`タブの右側に表示されている[`learn more about tests script`](https://learning.postman.com/docs/writing-scripts/test-scripts/)を参考にできる。
+
+</details>
+
+### #3 Quiz
+
+`https://httpbin.org/post`へPOSTリクエストを送信する。その際にクイズ2で得られた`uuid`プロパティの値を、`x-api-key`というカスタムHTTPヘッダに設定してリクエストを送信してみましょう。
