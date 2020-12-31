@@ -207,8 +207,11 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 参考資料
 
+- [[MDN Web Docs] オリジン間リソース共有(CORS)](https://developer.mozilla.org/ja/docs/Web/HTTP/CORS#Preflighted_requests)
 - [Referer header: privacy and security concerns](https://developer.mozilla.org/en-US/docs/Web/Security/Referer_header:_privacy_and_security_concerns)
 - [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
+- [Links to cross-origin destinations are unsafe](https://web.dev/external-anchors-use-rel-noopener/)
+- [Referrer を制御する](https://qiita.com/wakaba@github/items/707d72f97f2862cd8000)
 - [W3C Referrer-Policy](https://triple-underscore.github.io/webappsec-referrer-policy-ja.html)
 - [Markdown表テーブル作成ツール | NotePM](https://notepm.jp/markdown-table-tool)
 
@@ -242,10 +245,10 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 ![Quiz1回答](./assets/quiz1_answer.svg)
 
-関連資料
+参考資料
 
-- [MDN Web Docs [ETag]](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/ETag)
-- [MDN Web Docs [If-None-Match]](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/If-None-Match)
+- [[MDN Web Docs] ETag](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/ETag)
+- [[MDN Web Docs] If-None-Match](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/If-None-Match)
 
 </details>
 
@@ -258,25 +261,34 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 > `X-Forwarded-For`は標準ではなく、RFC7239で標準化された`Forwarded`が標準である。新しいWebサイトを構築する場合には、`Forwarded`を付与することがいいのか?
 
+<details>
+<summary>回答例</summary>
+
+
+
+参考資料
+
+- [[MDN Web Docs] X-Forwarded-For](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/X-Forwarded-For)
+
+</details>
+
 ### #3 Quiz
 
 [clickjacking.html](./clickjacking.html)で生じているクリックジャッキングは、特定のHTTPヘッダをレスポンスヘッダに付与することで回避することができるが、それはどのようなヘッダと値になるでしょうか
 
+<details>
+<summary>回答例</summary>
+
 参考資料
 
+- [CORSまとめ](https://qiita.com/tomoyukilabs/items/81698edd5812ff6acb34)
+- [[MDN Web Docs] Content-Security-Policy](https://developer.mozilla.org/ja/docs/Web/HTTP/CSP)
+- [Google Web Fundamentals: コンテンツセキュリティポリシー](https://developers.google.com/web/fundamentals/security/csp)
+- [[MDN Web Docs] X-Frame-Options](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/X-Frame-Options)
 - [セキュリティ対策のHTTPヘッダがついているのかチェックするツール](https://securityheaders.com/)
 
-### 参考資料まとめ
+</details>
 
-- 知識情報
-  - [Links to cross-origin destinations are unsafe](https://web.dev/external-anchors-use-rel-noopener/)
-  - [Referrer を制御する](https://qiita.com/wakaba@github/items/707d72f97f2862cd8000)
-  - [MDN Web Docs: Content-Security-Policy](https://developer.mozilla.org/ja/docs/Web/HTTP/CSP)
-  - [Google Web Fundamentals: コンテンツセキュリティポリシー](https://developers.google.com/web/fundamentals/security/csp)
-  - [MDN Web Docs: X-Frame-Options](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/X-Frame-Options)
-  - [MDN Web Docs: オリジン間リソース共有(CORS)](https://developer.mozilla.org/ja/docs/Web/HTTP/CORS#Preflighted_requests)
-  - [CORSまとめ](https://qiita.com/tomoyukilabs/items/81698edd5812ff6acb34)
-  - [改行コードに要注意！ HTTP ヘッダインジェクションの概要と対策](https://yamory.io/blog/about-http-header-injection/)
-- ツール
-  - [Proxyman](https://www.softantenna.com/wp/review/proxyman/)
-  - [mitmproxy](https://qiita.com/hkurokawa/items/9034274cc1b9e1405c68)
+
+  
+  
