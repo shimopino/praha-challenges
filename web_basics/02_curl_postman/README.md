@@ -165,17 +165,66 @@ Dockerコンテナの場合は、すべての通信がローカルネットワ�
 
 ```bash
 # to https
-$ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'  "http://localhost:80/post"
+$ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'  "https://httpbin.org/post"
 
 # to Docker Container
 $ curl -X POST-H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}' "http://localhost:80/post" 
 ```
 
-問題３
-もう少し複雑なbodyを送信してみましょう。以下のようなオブジェクトをbodyに含めて、送信してください
+サービス提供元にリクエストを送信した場合
 
+```bash
+{
+  "args": {}, 
+  "data": "{\"userA\": {\"name\": \"hoge\", \"age\": 29}}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "38", 
+    "Content-Type": "application/json", 
+    "Host": "httpbin.org", 
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedd834-25b5dfa551e03cae54e1c547"
+  }, 
+  "json": {
+    "userA": {
+      "age": 29, 
+      "name": "hoge"
+    }
+  }, 
+  "origin": "133.204.161.1", 
+  "url": "https://httpbin.org/post"
+}
+```
 
+ローカルのDockerコンテナ上にリクエストを送信した場合
 
+```bash
+{
+  "args": {}, 
+  "data": "{\"userA\": {\"name\": \"hoge\", \"age\": 29}}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "38", 
+    "Content-Type": "application/json", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0"
+  }, 
+  "json": {
+    "userA": {
+      "age": 29, 
+      "name": "hoge"
+    }
+  }, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost/post"
+}
+```
+
+## 課題4
 
 ```bash
 $ curl -X POST "http://localhost:80/post" -H "Content-Type: application/x-www-form-urlencoded" -d '{"name": "hoge"}'
