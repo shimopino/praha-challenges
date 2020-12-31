@@ -69,48 +69,113 @@ $ curl -X GET -H "X-Test: hello" "http://localhost:80/headers"
 
 送信先環境の違い
 
+#### `Host`
+
+`Host`にはリクエストの送信先のホスト名が入る。Dockerの場合はローカル環境が送信先になるため、`localhost`が格納されている。
+
+#### `X-Amzn-Trace-Id`
+
 サービス提供元へGETリクエストを送信した際、HTTPヘッダに`X-Amzn-Trace-Id`が確認された。
 
 これはおそらく、httpbinにリクエストが送信される前段に、負荷分散のためにApplication Load Balancerを組み込みこんでおり、自動的にHTTPヘッダが追加されるため?
 
+- [X-Amzn-Trace-Id を使用して Application Load Balancer リクエストをトレースする方法を教えてください。](https://aws.amazon.com/jp/premiumsupport/knowledge-center/trace-elb-x-amzn-trace-id/)
+
 ## 課題2
 
+cURLにて、POSTリクエストを`https://httpbin.org/post`に送信する。その際にHTTPヘッダとして`Content-Type: "application/json"`を追加し、ボディには`{"name": "hoge"}`を追加してください。
+
 ```bash
+# to https
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "https://httpbin.org/post"
+
+# to Docker Container
 $ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "http://localhost:80/post"
 ```
 
-問題２
-Content-Typeは"application/json"
-methodはPOST
-bodyは {"name": "hoge"}
-URLはhttps://httpbin.org/post
-以下のようなレスポンスを得られるはずです
+サービス提供元にリクエストを送信した場合
+
+```bash
 {
-  "data": "{\"name\": \"hoge\"}",  // ここが重要！
+  "args": {}, 
+  "data": "{\"name\": \"hoge\"}", 
+  "files": {}, 
+  "form": {}, 
   "headers": {
     "Accept": "*/*", 
     "Content-Length": "16", 
     "Content-Type": "application/json", 
     "Host": "httpbin.org", 
-    "User-Agent": "curl/7.54.0"
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedd333-2004a9504bb454e574d7de23"
   }, 
   "json": {
-    "name": "hoge" // ここが重要！
+    "name": "hoge"
   }, 
-  "origin": "xxxxxxxxxx",  // 自分自身のIPアドレス
+  "origin": "133.204.161.1", 
   "url": "https://httpbin.org/post"
 }
+```
 
+ローカルのDockerコンテナ上にリクエストを送信した場合
 
 ```bash
-$ curl -X POST "http://localhost:80/post" -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'
+{
+  "args": {}, 
+  "data": "{\"name\": \"hoge\"}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "16", 
+    "Content-Type": "application/json", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0"
+  }, 
+  "json": {
+    "name": "hoge"
+  }, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost/post"
+}
+```
+
+### 得られた知見
+
+使用したcURLのオプション
+
+| オプション          | 設定例                  | 
+| ------------------- | ----------------------- | 
+| `-d, --data <data>` | `-d '{"name": "hoge"}'` | 
+
+#### `origin`
+
+`origin`の値には、クライアントの送信元IPアドレスが格納される。
+
+Dockerコンテナの場合は、すべての通信がローカルネットワーク上で行われるため、ローカルIPアドレスが適用される。
+
+サービス提供元の場合は、クライアントのローカルIPアドレスは、ブロードバンドルーターなどのNAT機能により、グローバルIPアドレスに変換されるため、サービス提供元からはこのグローバルIPアドレスしか見ることはできない。
+
+- [あなたの情報確認くん](https://www.ugtop.com/spill.shtml)
+- [IPアドレス確認（IPアドレスチェック）ツール](luft.co.jp/cgi/ipcheck.php)
+
+## 課題3
+
+多少複雑なボディである`{userA: {name: "hoge", age: 29}}`を同様にPOSTリクエストで送信してみましょう。
+
+```bash
+# to https
+$ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'  "http://localhost:80/post"
+
+# to Docker Container
+$ curl -X POST-H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}' "http://localhost:80/post" 
 ```
 
 問題３
 もう少し複雑なbodyを送信してみましょう。以下のようなオブジェクトをbodyに含めて、送信してください
 
 
-{userA: {name: "hoge", age: 29}}
+
 
 ```bash
 $ curl -X POST "http://localhost:80/post" -H "Content-Type: application/x-www-form-urlencoded" -d '{"name": "hoge"}'
