@@ -321,6 +321,11 @@ name=hoge
 
 ![](./assets/question4.JPG)
 
+なお上記はローカル環境で立ち上げているPostmanのスナップショットになる。
+オンライン環境で作成したリクエストをドキュメント化したものは以下に配置している。
+
+[https://documenter.getpostman.com/view/9645891/TVt1ARGc](https://documenter.getpostman.com/view/9645891/TVt1ARGc)
+
 ## 参考資料
 
 - [curl コマンド 使い方メモ](https://qiita.com/yasuhiroki/items/a569d3371a66e365316f)
