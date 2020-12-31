@@ -226,34 +226,64 @@ $ curl -X POST-H "Content-Type: application/json" -d '{"userA": {"name": "hoge",
 
 ## 課題4
 
+cURLにて、POSTリクエストを`https://httpbin.org/post`に送信する。その際にHTTPヘッダとして`Content-Type: "application/json"`を追加し、ボディには`{"name": "hoge"}`を追加してください。
+
 ```bash
-$ curl -X POST "http://localhost:80/post" -H "Content-Type: application/x-www-form-urlencoded" -d '{"name": "hoge"}'
+# to https
+$ curl -X POST -d '{"name": "hoge"}' "https://httpbin.org/post"
+
+# to Docker Container
+$ curl -X POST -d '{"name": "hoge"}' "http://localhost:80/post"
 ```
 
-問題４
-「ごめんごめん、このエンドポイント、まだapplication/jsonに対応してないから、Content-Typeはapplication/x-www-form-urlencodedで送ってもらえる？」と先輩に頼まれました
-Content-Typeを変更して、リクエストを送信してみましょう
-以下のようなレスポンスを得られるはずです
+サービス提供元へリクエストを送信した場合
 
-
+```bash
 {
-  "data": "",  // 先ほどはここにname:hogeが含まれていた
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
   "form": {
-    "{\"name\": \"hoge\"}": "" // 今はここに含まれている
+    "{\"name\": \"hoge\"}": ""
   }, 
   "headers": {
     "Accept": "*/*", 
     "Content-Length": "16", 
     "Content-Type": "application/x-www-form-urlencoded", 
     "Host": "httpbin.org", 
-    "User-Agent": "curl/7.54.0"
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedd9b3-0e2949bc0f9c8fc0535346d7"
   }, 
-  "json": null,  // 先ほどはここにname:hogeが含まれていた
+  "json": null, 
+  "origin": "133.204.161.1", 
   "url": "https://httpbin.org/post"
 }
+```
 
+ローカルのDockerコンテナ上にリクエストを送信した場合
 
+```bash
+{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {
+    "{\"name\": \"hoge\"}": ""
+  }, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "16", 
+    "Content-Type": "application/x-www-form-urlencoded", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0"
+  }, 
+  "json": null, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost/post"
+}
+```
 
+## 課題5
 
 （postman）
 
