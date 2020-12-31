@@ -156,13 +156,13 @@ Locationヘッダの特徴は以下になる。
 
 そもそものオリジンとは、とあるページの**プロトコル、ポート番号、ホスト**で定義されており、パスやクエリ文字列には依存していない。例えば、`https://example.com`に対して、同一オリジンかどうかは以下のように表にまとめることができる。
 
-| URL                                 | 同一オリジン | 
-| ----------------------------------- | ------------ | 
-| https://example.com/first.html      | Yes          | 
-| https://example.com/second.html     | Yes          | 
-| http://example.com/first.html       | No           | 
-| https://example.com:8080/first.html | No           | 
-| https://example2.com/first.html     | No           | 
+| URL                                 | 同一オリジン |
+| ----------------------------------- | ------------ |
+| https://example.com/first.html      | Yes          |
+| https://example.com/second.html     | Yes          |
+| http://example.com/first.html       | No           |
+| https://example.com:8080/first.html | No           |
+| https://example2.com/first.html     | No           |
 
 HTTPリクエストの`Referer`ヘッダに設定する情報は、サーバ側のレスポンスヘッダである`Referrer-Policy`ヘッダで制御することができる。
 
@@ -175,16 +175,16 @@ HTTPリクエストの`Referer`ヘッダに設定する情報は、サーバ側�
 
 実際の`Referrer-Policy`ヘッダに設定できる値は以下になる。
 
-| Referrer-Policy                   | 同一オリジン | 異なるオリジン | HTTPS → HTTP | HTTP → HTTPS | 
-| --------------------------------- | ------------ | -------------- | ------------- | ------------- | 
-| `no-referrer`                     | ×            | ×              | ×             | ×             | 
-| `no-referrer-when-downgrade`      | 完全         | 完全           | ×             | 完全          | 
-| `origin`                          | オリジンのみ | オリジンのみ   | オリジンのみ  | オリジンのみ  | 
-| `origin-when-cross-origin`        | 完全         | オリジンのみ   | オリジンのみ  | オリジンのみ  | 
-| `same-origin`                     | 完全         | ×              | ×             | ×             | 
-| `strict-origin`                   | オリジンのみ | オリジンのみ   | ×             | オリジンのみ  | 
-| `strict-origin-when-cross-origin` | 完全         | オリジンのみ   | ×             | オリジンのみ  | 
-| `unsafe-url`                      | 完全         | 完全           | 完全          | 完全          | 
+| Referrer-Policy                   | 同一オリジン | 異なるオリジン | HTTPS → HTTP | HTTP → HTTPS |
+| --------------------------------- | ------------ | -------------- | ------------ | ------------ |
+| `no-referrer`                     | ×            | ×              | ×            | ×            |
+| `no-referrer-when-downgrade`      | 完全         | 完全           | ×            | 完全         |
+| `origin`                          | オリジンのみ | オリジンのみ   | オリジンのみ | オリジンのみ |
+| `origin-when-cross-origin`        | 完全         | オリジンのみ   | オリジンのみ | オリジンのみ |
+| `same-origin`                     | 完全         | ×              | ×            | ×            |
+| `strict-origin`                   | オリジンのみ | オリジンのみ   | ×            | オリジンのみ |
+| `strict-origin-when-cross-origin` | 完全         | オリジンのみ   | ×            | オリジンのみ |
+| `unsafe-url`                      | 完全         | 完全           | 完全         | 完全         |
 
 そのほかの特徴は以下になる。
 
@@ -208,6 +208,7 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 参考資料
 
 - [[MDN Web Docs] オリジン間リソース共有(CORS)](https://developer.mozilla.org/ja/docs/Web/HTTP/CORS#Preflighted_requests)
+- [CORSまとめ](https://qiita.com/tomoyukilabs/items/81698edd5812ff6acb34)
 - [Referer header: privacy and security concerns](https://developer.mozilla.org/en-US/docs/Web/Security/Referer_header:_privacy_and_security_concerns)
 - [Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
 - [Links to cross-origin destinations are unsafe](https://web.dev/external-anchors-use-rel-noopener/)
@@ -238,10 +239,10 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 上記の場合には、2つのHTTPヘッダが関連している。
 
-| HTTPヘッダ    | 種別     | 内容                                                                                                                                                                                                                                | 例                                                          | 
-| ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | 
-| ETag          | Response | URLで指定されたリソースの特定バージョンの識別子である。<br>クライアントから要求されたリソースに対して、コンテンツが変更されていない場合は、レスポンス全体を再送しないようにすることで通信帯域を節約可となる。                       | `ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"`          | 
-| If-None-Match | Request  | `GET`および`HEAD`メソッドを使用してリソースの要求を行う場合、サーバ側の対象リソースが変更されている場合は、コンテンツ全体を含むレスポンスを取得する。<br>対象リソースが変更されていない場合は、キャッシュからコンテンツを読み込む。 | `If-None-Match: "bfc13a64729c4290ef5b2c2730249c88ca92d82d"` | 
+| HTTPヘッダ    | 種別     | 内容                                                                                                                                                                                                                                | 例                                                          |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| ETag          | Response | URLで指定されたリソースの特定バージョンの識別子である。<br>クライアントから要求されたリソースに対して、コンテンツが変更されていない場合は、レスポンス全体を再送しないようにすることで通信帯域を節約可となる。                       | `ETag: "33a64df551425fcc55e4d42a148795d9f25f89d4"`          |
+| If-None-Match | Request  | `GET`および`HEAD`メソッドを使用してリソースの要求を行う場合、サーバ側の対象リソースが変更されている場合は、コンテンツ全体を含むレスポンスを取得する。<br>対象リソースが変更されていない場合は、キャッシュからコンテンツを読み込む。 | `If-None-Match: "bfc13a64729c4290ef5b2c2730249c88ca92d82d"` |
 
 ![Quiz1回答](./assets/quiz1_answer.svg)
 
@@ -264,12 +265,12 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 例: `192.168.0.1`のクライアントから送信する場合
 
-| タイミング           | X-Forwarded-For                       | 
-| -------------------- | ------------------------------------- | 
-| クライアント送信時   | なし                                  | 
-| プロキシサーバ通過時 | `192.168.0.1`                         | 
-| ロードバランサ通過時 | `192.168.0.1, 192.0.2.1`              | 
-| Webサーバ#1到着時    | `192.168.0.1, 192.0.2.1, 203.0.113.1` | 
+| タイミング           | X-Forwarded-For                       |
+| -------------------- | ------------------------------------- |
+| クライアント送信時   | なし                                  |
+| プロキシサーバ通過時 | `192.168.0.1`                         |
+| ロードバランサ通過時 | `192.168.0.1, 192.0.2.1`              |
+| Webサーバ#1到着時    | `192.168.0.1, 192.0.2.1, 203.0.113.1` |
 
 `X-Forwarded-For`ヘッダは、HTTPプロキシまたはロードバランサーを通過して、Webサーバへ接続するクライアントの、送信元IPアドレスを特定するための事実上の標準になっている。
 
@@ -285,14 +286,44 @@ HTML内で上記の`Referrer-Policy`ヘッダを制御することが可能で�
 
 ### #3 Quiz
 
-[clickjacking.html](./clickjacking.html)で生じているクリックジャッキングは、特定のHTTPヘッダをレスポンスヘッダに付与することで回避することができるが、それはどのようなヘッダと値になるでしょうか
+[clickjacking.html](./clickjacking.html)で生じているクリックジャッキングは、特定のHTTPヘッダをレスポンスヘッダに付与することで回避することができるが、それはどのようなヘッダと値になるでしょうか。
 
 <details>
 <summary>回答例</summary>
 
+選択肢は2つ存在する。
+
+- `X-Frame-Options`を設定する
+- `Content-Security-Policy`を設定する
+
+まずは`X-Frame-Options`ヘッダの内容を確認する。
+
+- HTTPのレスポンスヘッダ
+- ブラウザが取得したページを、`<frame>`, `<iframe>`, `<embed>`, `<object>`の中に表示することを許可するかどうかを決める
+- サイト内のコンテンツが、他のサイトに埋め込まれないようにすることで、クリックジャッキング攻撃を防ぐことができる
+- `Content-Security-Policy`ヘッダの`frame-ancestors`ディレクティブで代替できる
+
+| ヘッダ値                      | 内容                                                     |
+| :---------------------------- | :------------------------------------------------------- |
+| `X-Frame-Options: DENY`       | ページをフレーム内に表示することを許可しない             |
+| `X-Frame-Options: SAMEORIGIN` | ページ自体と同じオリジンのフレーム内でのみ表示を許可する |
+
+次に`Content-Security-Policy`ヘッダの内容を確認する。
+
+- クロスサイトスクリプティング(XSS)やデータインジェクション攻撃など、様々な種類の攻撃に対して対処することのできるセキュリティレイヤーになる
+- 後方互換性のため、CSPに未対応のブラウザでも、CSP実装済みのサーバと通信でき、その反対も同様である
+
+以下の設定例をいくつかの載せる
+
+| ヘッダ値                                                                   | 内容                                                                                                 | 
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | 
+| `Content-Security-Policy: default-src 'self'`                              | すべてのコンテンツをサイト自身のドメインから取得させる                                               | 
+| `Content-Security-Policy: default-src 'self' *.trusted.com`                | 信頼されたドメインと、そのすべてのサブドメインからのコンテンツを許可したい                           | 
+| `Content-Security-Policy: default-src https://onlinebanking.jumbobank.com` | リクエスト時の盗聴攻撃を防ぐため、すべてのコンテンツをLTSで読み込まさるためにHTTPSのみに制限している |
+
 参考資料
 
-- [CORSまとめ](https://qiita.com/tomoyukilabs/items/81698edd5812ff6acb34)
+
 - [[MDN Web Docs] Content-Security-Policy](https://developer.mozilla.org/ja/docs/Web/HTTP/CSP)
 - [Google Web Fundamentals: コンテンツセキュリティポリシー](https://developers.google.com/web/fundamentals/security/csp)
 - [[MDN Web Docs] X-Frame-Options](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/X-Frame-Options)
