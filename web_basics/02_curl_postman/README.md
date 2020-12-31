@@ -1,6 +1,6 @@
 # #2 curlとpostmanに慣れる
 
-curlのバージョンは以下になる。
+課題に使用するcurlのバージョンは以下にな\る。
 
 ```bash
 $ curl --version
@@ -10,36 +10,70 @@ Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s
 Features: AsynchDNS brotli GSS-API HTTP2 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM NTLM_WB PSL SPNEGO SSL TLS-SRP UnixSockets
 ```
 
-また課題に取り組む際は、ローカルのコンテナ上で動かしているhttpbinに対してcurlを実行する。
+- [cURL Tool Documentation](https://curl.se/docs/manpage.html)
+
+また課題に取り組む際は、[`https://httpbin.org/`](https://httpbin.org/)と、ローカルのコンテナ上で動かしているhttpbinに対してcurlを実行する。
 
 ```bash
+# コンテナ起動時のコマンド
 $ docker run -it -d -p 80:80 --rm kennethreitz/httpbin
 ```
 
+## 課題1
 
-## 課題1 cURLでのGetリクエスト
+cURLにて、HTTPリクエスト内のHTTPヘッダをレスポンスで返すAPIである`https://httpbin.org/headers`に対してGETリクエストを発行する。その際にカスタムHTTPヘッダとして`X-Test: hello`を付与する。
 
 ```bash
-$ curl -X GET -H "X-Test: hello" "http://localhost:80/get"
+# to https
+$ curl -X GET -H "X-Test: hello" "https://httpbin.org/headers"
+
+# to Docker Container
+$ curl -X GET -H "X-Test: hello" "http://localhost:80/headers"
 ```
 
+サービス提供元にリクエストを送信した場合
 
-
-以下のリクエストをcurlコマンドでhttpbinに送信してください
-curlコマンドをペアと比較して、なぜそのような書き方をしたのか、話し合ってみましょう
-問題１
-カスタムヘッダーを加える（X-Test='hello'）
-methodはGET
-URLはhttps://httpbin.org/headers
-以下のようなレスポンスを得られるはずです
+```json
 {
   "headers": {
     "Accept": "*/*", 
     "Host": "httpbin.org", 
-    "User-Agent": "curl/7.54.0", 
-    "X-Test": "hello" // ここが重要！
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedcb94-43e04f8740f47ae43efbb7a9", 
+    "X-Test": "hello"
   }
 }
+```
+
+ローカルのDockerコンテナ上にリクエストを送信した場合
+
+```json
+{
+  "headers": {
+    "Accept": "*/*", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0", 
+    "X-Test": "hello"
+  }
+}
+```
+
+### 得られた知見
+
+使用したcURLのオプション
+
+| オプション                    | 設定例                      | 
+| ----------------------------- | --------------------------- | 
+| `-X, --request <command>`     | `-X GET`                    | 
+| `-H, --header <header/@file>` | `-H "X-Custom-Header: XXX"` | 
+
+送信先環境の違い
+
+サービス提供元へGETリクエストを送信した際、HTTPヘッダに`X-Amzn-Trace-Id`が確認された。
+
+これはおそらく、httpbinにリクエストが送信される前段に、負荷分散のためにApplication Load Balancerを組み込みこんでおり、自動的にHTTPヘッダが追加されるため?
+
+## 課題2
 
 ```bash
 $ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "http://localhost:80/post"
@@ -133,3 +167,9 @@ postmanをインストールしてください
 curlに関するクイズを作成してください
 postmanに関するクイズを作成してください
 クイズに関する詳細は　コチラ　を参照してください
+
+### 参考資料
+
+- [curl コマンド 使い方メモ](https://qiita.com/yasuhiroki/items/a569d3371a66e365316f)
+- [よく使うcurlコマンドのオプション](https://qiita.com/ryuichi1208/items/e4e1b27ff7d54a66dcd9)
+- [How to make a POST request with cURL](https://linuxize.com/post/curl-post-request/)
