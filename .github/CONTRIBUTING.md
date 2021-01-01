@@ -44,6 +44,18 @@ Gitのブランチモデルとしては、「[Github-Flow](http://scottchacon.co
 5. プルリクエストが承認されたら`main`ブランチにマージ
 6. 作業用ブランチの削除
 
+## issue依頼
+
+以下に記載しているテンプレートに従う形式でISSUEの依頼をよろしくお願いします！
+
+[https://github.com/angular/angular/issues/new/choose](https://github.com/angular/angular/issues/new/choose)
+
+## pull request
+
+プルリク時はテンプレートにしたがって記載をお願いします。
+
+説明文にissueなどを紐づけていただけるとありがたいです。
+
 ## 文書作成時の注意点
 
 文書中にIPアドレスなどを記載する場合は、以下を参考にする。
