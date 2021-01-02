@@ -1,5 +1,29 @@
 # #1 よく使うHTTPヘッダを理解する
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [課題1 主要なHTTPヘッダの役割を理解する](#%E8%AA%B2%E9%A1%8C1-%E4%B8%BB%E8%A6%81%E3%81%AAhttp%E3%83%98%E3%83%83%E3%83%80%E3%81%AE%E5%BD%B9%E5%89%B2%E3%82%92%E7%90%86%E8%A7%A3%E3%81%99%E3%82%8B)
+  - [Host](#host)
+  - [Content-Type](#content-type)
+  - [User-Agent](#user-agent)
+  - [Accept](#accept)
+  - [Referer](#referer)
+  - [Accept-Encoding](#accept-encoding)
+  - [Authorization](#authorization)
+  - [Location](#location)
+  - [Refererの追加質問](#referer%E3%81%AE%E8%BF%BD%E5%8A%A0%E8%B3%AA%E5%95%8F)
+  - [コンテンツネゴシエーション](#%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84%E3%83%8D%E3%82%B4%E3%82%B7%E3%82%A8%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3)
+- [課題2 HTTPヘッダに関するクイズを作成する](#%E8%AA%B2%E9%A1%8C2-http%E3%83%98%E3%83%83%E3%83%80%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E3%82%AF%E3%82%A4%E3%82%BA%E3%82%92%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B)
+  - [&#035;1 Quiz](#1-quiz)
+  - [&#035;2 Quiz](#2-quiz)
+  - [&#035;3 Quiz](#3-quiz)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## 課題1 主要なHTTPヘッダの役割を理解する
 
 | ヘッダ名         | ヘッダ種類 | 送信元        |

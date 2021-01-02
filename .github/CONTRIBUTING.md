@@ -48,7 +48,7 @@ Gitのブランチモデルとしては、「[Github-Flow](http://scottchacon.co
 
 以下に記載しているテンプレートに従う形式でISSUEの依頼をよろしくお願いします！
 
-[https://github.com/angular/angular/issues/new/choose](https://github.com/angular/angular/issues/new/choose)
+[https://github.com/KeisukeShimokawa/praha-challenges/issues/new/choose](https://github.com/KeisukeShimokawa/praha-challenges/issues/new/choose)
 
 ## pull request
 
