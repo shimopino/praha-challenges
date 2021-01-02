@@ -11,6 +11,25 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Node.jsの基礎
+## 課題1
 
-## Expressの基礎
+### cURL
+
+```bash
+$ curl localhost:8080 -H "Content-Type: application/json"
+{"text":"hello world"}
+
+$ curl localhost:8080 -d '{"name": "hoge"}' -H "Content-Type: application/json"
+{"name":"hoge"}
+
+$ curl localhost:8080 -d '{"name": "hoge"}'
+{"error":"400! Bad Request"}
+```
+
+### Postman
+
+[https://documenter.getpostman.com/view/9645891/TVt2c3oU](https://documenter.getpostman.com/view/9645891/TVt2c3oU
+)
+
+## 課題2
+
