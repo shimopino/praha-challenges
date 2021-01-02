@@ -5,15 +5,20 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題1](#%E8%AA%B2%E9%A1%8C1)
-  - [cURL](#curl)
-  - [Postman](#postman)
-- [課題2](#%E8%AA%B2%E9%A1%8C2)
+- [リクエストをパースするWebサーバを構築する](#リクエストをパースするwebサーバを構築する)
+  - [課題1](#課題1)
+    - [cURL](#curl)
+    - [Postman](#postman)
+  - [課題2](#課題2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 課題1
+
+リクエストをparseする際に、以前は`body-parser`モジュールが使用されていたが、Express4.x以降からは`express`自体がラップを提供している。
+
+- [express.jsonなどの実装](https://github.com/expressjs/express/blob/508936853a6e311099c9985d4c11a4b1b8f6af07/lib/express.js#L78)
 
 ### cURL
 
