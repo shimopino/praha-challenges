@@ -1,36 +1,19 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<details>
-<summary>Table of Contents</summary>
-
-- [Quiz](#quiz)
-  - [cURLに関するQuiz](#curl%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8Bquiz)
-    - [&#035;1 Quiz](#1-quiz)
-    - [&#035;2 Quiz](#2-quiz)
-    - [&#035;3 Quiz](#3-quiz)
-  - [Postmanに関するQuiz](#postman%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8Bquiz)
-    - [&#035;1 Quiz](#1-quiz-1)
-    - [&#035;2 Quiz](#2-quiz-1)
-    - [&#035;3 Quiz](#3-quiz-1)
-
-</details>
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Quiz
 
-curlとpostmanに関するクイズを作成する。
-（作問数の制限なし）
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 ## cURLに関するQuiz
+
 ### #1 Quiz
 
-`https://httpbin.org`にパラメータとして`show_env=1`を追加してGETリクエストを以下のように送信する。
+`https://httpbin.org`にパラメータとして`show_env=1`を追加してGETリクエストを以下のように送信します。
 
 ```bash
 curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_env=1
 ```
 
-この出力結果は以下のようになる。
+この出力結果は以下のようになります。
 
 ```json
 {
@@ -39,19 +22,19 @@ curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_e
     "Host": "httpbin.org", 
     "User-Agent": "curl/7.68.0", 
     "X-Amzn-Trace-Id": "Root=1-5fedd223-4c94d877234f441660a03807", 
-    "X-Forwarded-For": "192.168.0.1, 133.204.161.1", 
+    "X-Forwarded-For": "192.168.0.1, 203.0.111.1", 
     "X-Forwarded-Port": "80", 
     "X-Forwarded-Proto": "http"
   }
 }
 ```
 
-この時、`X-Forwarded-***`の値が上記のように設定されている理由は何でしょうか
+この時、`X-Forwarded-***`の値が上記のように設定されている理由は何でしょうか。
 
 <details>
 <summary>回答例</summary>
 
-`X-Forwarded-Proto`ヘッダは、プロキシやロードバランサへ接続するために使用したクライアントのプロトコル（HTTP、HTTPS）を特定するためのヘッダである。
+`X-Forwarded-Proto`ヘッダは、プロキシやロードバランサへ接続するために使用したクライアントのプロトコル（HTTP、HTTPS）を特定するためのヘッダです。
 
 ![](./assets/quiz1_answer.svg)
 
@@ -68,7 +51,7 @@ curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_e
 <details>
 <summary>回答例</summary>
 
-`-i`オプションを付与することでレスポンスを確認することができる。
+`-i`あるいは`--include`オプションを付与することでレスポンスを確認することができます。
 
 ```bash
 $ curl -i -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_env=1
@@ -78,12 +61,12 @@ $ curl -i -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?s
 
 ### #3 Quiz
 
-このファイルと同じフォルダ階層に存在する`quiz.json`を、POSTリクエスト時に送信するリクエストボディとして設定し、`https://httpbin.org/post`にリクエストを送信してみましょう
+このファイルと同じフォルダ階層に存在する`quiz.json`を、POSTリクエスト時に送信するリクエストボディとして設定し、`https://httpbin.org/post`にリクエストを送信してみましょう。
 
 <details>
 <summary>回答例</summary>
 
-`-d`オプションでボディのデータを指定する際に、`@`プレフィックスを使用することで、ファイルを指定できる。
+`-d`オプションでボディのデータを指定する際に、`@`プレフィックスを使用することで、ファイルを指定できます。
 
 ```bash
 $ curl -X POST -d "@quiz.json" -H "Content-Type: application/json" "https://httpbin.org/post"
@@ -93,7 +76,7 @@ $ curl -X POST -d "@quiz.json" -H "Content-Type: application/json" "https://http
 
 ## Postmanに関するQuiz
 
-なお回答は以下のURLで公開している。
+なお回答は以下のURLで公開しています。
 
 [https://documenter.getpostman.com/view/9645891/TVt2bNXz](https://documenter.getpostman.com/view/9645891/TVt2bNXz)
 
@@ -107,9 +90,9 @@ Postmanで環境変数に以下の値を設定し、環境変数を参照する�
 
 ### #2 Quiz
 
-Postmanで環境変数として`UUID4_Token`という変数名に、値を何も設定しない状態にする。
+Postmanで環境変数として`UUID4_Token`という変数名に、値を何も設定しない状態にします。
 
-その状態で、`https://httpbin.org/uuid`に対してGETリクエストを送信する。
+その状態で、`https://httpbin.org/uuid`に対してGETリクエストを送信します。
 
 ではPostmanで、リクエストを送信した後で自動的にレスポンスボディに含まれる`uuid`プロパティの値を、環境変数`UUID4_Token`に格納するスクリプトを作成してみましょう。
 
@@ -118,10 +101,24 @@ Postmanで環境変数として`UUID4_Token`という変数名に、値を何も
 
 Postmanでは`Tests`タブにスクリプトを登録できる。
 
-`Tests`タブの右側に表示されている[`learn more about tests script`](https://learning.postman.com/docs/writing-scripts/test-scripts/)を参考にできる。
+`Tests`タブの右側に表示されている[`learn more about tests script`](https://learning.postman.com/docs/writing-scripts/test-scripts/)を参考にできます。
+
+</details>
+
+<details>
+<summary>回答例</summary>
+
+```js
+if(pm.response.to.have.status(200)){
+    // 環境変数の値を初期化する
+    pm.environment.unset('UUID4_Token')
+    // UUID4_Toknnという環境変数に、レスポンスのuuidの値を格納する
+    pm.environment.set('UUID4_Token', pm.response.json().uuid)
+}
+```
 
 </details>
 
 ### #3 Quiz
 
-`https://httpbin.org/post`へPOSTリクエストを送信する。その際にクイズ2で得られた`uuid`プロパティの値を、`x-api-key`というカスタムHTTPヘッダに設定してリクエストを送信してみましょう。
+`https://httpbin.org/post`へPOSTリクエストを送信します。その際にクイズ2で得られた`uuid`プロパティの値を、`x-api-key`というカスタムHTTPヘッダに設定してリクエストを送信してみましょう。
