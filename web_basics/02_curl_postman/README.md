@@ -5,7 +5,18 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題1 cURLでのGetリクエスト](#%E8%AA%B2%E9%A1%8C1-curl%E3%81%A7%E3%81%AEget%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88)
+- [課題1](#%E8%AA%B2%E9%A1%8C1)
+  - [得られた知見](#%E5%BE%97%E3%82%89%E3%82%8C%E3%81%9F%E7%9F%A5%E8%A6%8B)
+    - [`Host`](#host)
+    - [`X-Amzn-Trace-Id`](#x-amzn-trace-id)
+- [課題2](#%E8%AA%B2%E9%A1%8C2)
+  - [得られた知見](#%E5%BE%97%E3%82%89%E3%82%8C%E3%81%9F%E7%9F%A5%E8%A6%8B-1)
+    - [`origin`](#origin)
+- [課題3](#%E8%AA%B2%E9%A1%8C3)
+- [課題4](#%E8%AA%B2%E9%A1%8C4)
+  - [得られた知見](#%E5%BE%97%E3%82%89%E3%82%8C%E3%81%9F%E7%9F%A5%E8%A6%8B-2)
+- [課題5](#%E8%AA%B2%E9%A1%8C5)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
