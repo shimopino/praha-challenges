@@ -49,11 +49,11 @@ const requestHandler = (request, response) => {
 };
 ```
 
-Expressを使用する場合は、より簡単にCookieの値はオプションを設定することができる。
+Expressを使用する場合は、より簡単にCookieとそのオプションを設定することができる。
 
 ```js
 app.get("/", (request, respose) => {
-  response.cookie("cookie-name", "cookie-value", {
+  response.cookie("session_id", "1234", {
     // オプション設定
     httpOnly: true,
     secure: true,
@@ -71,12 +71,11 @@ Cookieで使用できるディレクティブは以下になる。
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
 | `Expires=<date>`            | クッキーの有効期限をHTTPの日時スタンプで指定する<br>指定されなかった場合は**セッションクッキー**の寿命になるが、ブラウザは**セッション復元**により次回のブラウザ起動時にセッションクッキーも復元するので注意                                       | 
 | `Max-Age=<number>`          | クッキーの期限までの秒数である<br>0や負の値が設定されている場合は、すぐに期限切れになる<br>`Expires`よりも優先度は高い                                                                                                                             | 
-| `Secure`                    | リクエストが**SSL**と**HTTPS**を使用している場合のみ、クッキーをサーバに送信するようにする<br>ただし情報が暗号化されるわけではないので、機密情報は付与しないようにすべきである                                                                     | 
+| `Secure`                    | リクエストが**SSL**と**HTTPS**を使用している場合のみ、クッキーをサーバに送信するようにする<br>ただしユーザは自由に情報を閲覧・修正できるため、機密情報は付与しないようにすべきである                                                                     | 
 | `HttpOnly`                  | JavaSccriptから`Document.cookie`プロパティを使用してクッキーにアクセスすることを禁止する<br>HttpOnlyで生成されたクッキーは、`XMLHttpRequest.send()`や`fetch()`で送信される                                                                         | 
-| `Domain=<domain-value>`     | クッキーの送信先ホストを指定する<br>指定されていない場合はサブドメインを含まない<br>ドメインが指定された場合、すべてのサブドメインも常に含まれる                                                                                                   | 
+| `Domain=<domain-value>`     | クッキーの送信先ホストを指定する<br>- 指定されていない場合はサブドメインを含まない<br>- ドメインが指定された場合、すべてのサブドメインも常に含まれる<br>  `Domain=mozilla.org`を指定した場合、`developer.mozilla.org`のようなサブドメインを含む    | 
 | `Path=<path-value>`         | リクエストのURLに含まれるべきパスであり、設定されていない場合はブラウザは`Cookie`を送信しない<br>指定したパスのサブディレクトも一致する<br>（`/docs`の場合は`/docs`、`/docs/Web/`、`/docs/web/HTTP`が一致する）                                    | 
 | `SameSite=<samesite-value>` | - `Strict`: 同一オリジンへのリクエストに対してのみクッキーを送信する<br>- `Lax`: ユーザがリンクをクリックすることで外部サイトからURLに移動すると送信される<br>- `None`: 同一オリジンだけでなく、異なるオリジンへのリクエストでもクッキーを送信する | 
-
 注意点
 
 - `SameSite`
@@ -86,9 +85,32 @@ Cookieで使用できるディレクティブは以下になる。
 
 ## Cookieの危険性と対策
 
+情報をクッキーに保存するときの前提として、クッキーの値がエンドユーザーは自由に確認・変更できることである。
+
+### セッション固定攻撃
+
+### 中間者攻撃
+
+### クロスサイトスクリプティング (XSS)
+
+### クロスサイトリクエストフォージェリ攻撃 (CSRF)
+
+
+
 サイトがユーザーを認証する場合、ユーザーが認証するたびに、すでに存在するセッションクッキーも含めて、セッションクッキーを再生成して再送する必要があります。この手法は、第三者がユーザーのセッションを再利用するセッション固定攻撃を防ぐのに役立ちます。
 
 HttpOnly 属性を持つクッキーは、JavaScript の Document.cookie API にはアクセスできません。サーバーに送信されるだけです。例えば、サーバー側のセッションを持続させるクッキーは JavaScript が利用する必要はないので、 HttpOnly 属性をつけるべきです。この予防策は、クロスサイトスクリプティング (XSS) 攻撃を緩和するのに役立ちます。
 
 クッキーがオリジン間リクエストで送信されないことを主張することで、クロスサイトリクエストフォージェリ攻撃 (CSRF) に対していくらか防御することができます。
+
+
+## 参考資料
+
+- [[MDN Web Docs] Set-Cookie](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Set-Cookie)
+- [[MDN Web Docs] HTTP Cookie の使用](https://developer.mozilla.org/ja/docs/Web/HTTP/Cookies)
+- [GDPR.EUによるCookieの分類](https://gdpr.eu/cookies/)
+- [新しい Cookie 設定 SameSite=None; Secure の準備を始めましょう](https://developers-jp.googleblog.com/2019/11/cookie-samesitenone-secure.html)
+- [Googleのポリシーと規約](https://policies.google.com/technologies/cookies#managing-cookies)
+- [[MDN Web Docs] 同一オリジンポリシー](https://developer.mozilla.org/ja/docs/Web/Security/Same-origin_policy)
+- [[MDN Web Docs] 攻撃の種類](https://developer.mozilla.org/ja/docs/Web/Security/Types_of_attacks#Cross-site_scripting_(XSS))
 
