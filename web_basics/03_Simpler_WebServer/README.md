@@ -39,3 +39,36 @@ $ curl localhost:8080 -d '{"name": "hoge"}'
 
 ## 課題2
 
+POSTリクエストを送信する際に、`Content-Type`による挙動の違いをまとめる。
+
+### `application/x-www-form-urlencoded`
+
+```bash
+$ curl --request POST --data "name=hoge" "https://httpbin.org/post"
+
+>>
+POST /post HTTP/2
+Host: httpbin.org
+user-agent: curl/7.68.0
+accept: */*
+content-length: 9
+content-type: application/x-www-form-urlencoded
+
+name=hoge
+```
+
+### `application/json`
+
+```bash
+$ curl --data '{"name": "hoge"}' --header "Content-Type: application/json" "https://httpbin.org/post"
+
+>>
+POST /post HTTP/2
+Host: httpbin.org
+user-agent: curl/7.68.0
+accept: */*
+content-type: application/json
+content-length: 16
+
+{"name": "hoge"}
+```
