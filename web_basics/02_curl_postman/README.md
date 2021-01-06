@@ -189,7 +189,7 @@ Dockerコンテナの場合は、すべての通信がローカルネットワ�
 $ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'  "https://httpbin.org/post"
 
 # to Docker Container
-$ curl -X POST-H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}' "http://localhost:80/post" 
+$ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}' "http://localhost:80/post" 
 ```
 
 サービス提供元にリクエストを送信した場合は以下になります。
