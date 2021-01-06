@@ -98,7 +98,7 @@ $ curl -X GET -H "X-Test: hello" "http://localhost:80/headers"
 
 サービス提供元へGETリクエストを送信した際、HTTPヘッダに`X-Amzn-Trace-Id`が確認されました。
 
-これはおそらく、httpbinにリクエストが送信される前段に、負荷分散のためにApplication Load Balancerを組み込みこんでおり、自動的にHTTPヘッダが追加されるためだと考えている。（確証なし）
+これはおそらく、httpbinにリクエストが送信される前段に、負荷分散のためにApplication Load Balancerを組み込みこんでおり、自動的にHTTPヘッダが追加されるためです。
 
 - [X-Amzn-Trace-Id を使用して Application Load Balancer リクエストをトレースする方法を教えてください。](https://aws.amazon.com/jp/premiumsupport/knowledge-center/trace-elb-x-amzn-trace-id/)
 
@@ -169,6 +169,8 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "http:/
 | ------------------- | ----------------------- | 
 | `-d, --data <data>` | `-d '{"name": "hoge"}'` | 
 
+送信先環境の違いによって、特定のHTTPヘッダに格納される値は異なっている。
+
 #### `origin`
 
 `origin`の値には、クライアントの送信元IPアドレスが格納されます。
@@ -177,8 +179,16 @@ Dockerコンテナの場合は、すべての通信がローカルネットワ�
 
 サービス提供元の場合は、クライアントのローカルIPアドレスは、ブロードバンドルーターなどのNAT機能により、グローバルIPアドレスに変換されるため、サービス提供元からはこのグローバルIPアドレスしか見ることはできません。
 
+以下のサービスからグローバアルIPアドレスを知ることが可能です。
+
 - [あなたの情報確認くん](https://www.ugtop.com/spill.shtml)
 - [IPアドレス確認（IPアドレスチェック）ツール](luft.co.jp/cgi/ipcheck.php)
+
+コマンドラインからでも、以下のようにグローバルIPアドレスを知ることが可能です。
+
+```bash
+curl inet-ip.info
+```
 
 ## 課題3
 
