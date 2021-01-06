@@ -5,16 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Quiz](#quiz)
-  - [cURLに関するQuiz](#curlに関するquiz)
-    - [#1 Quiz](#1-quiz)
-    - [#2 Quiz](#2-quiz)
-    - [#3 Quiz](#3-quiz)
-  - [Postmanに関するQuiz](#postmanに関するquiz)
-    - [#1 Quiz](#1-quiz-1)
-    - [#2 Quiz](#2-quiz-1)
-    - [#3 Quiz](#3-quiz-1)
-    - [参考情報](#参考情報)
+- [cURLに関するQuiz](#curl%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8Bquiz)
+  - [&#035;1 Quiz](#1-quiz)
+  - [&#035;2 Quiz](#2-quiz)
+  - [&#035;3 Quiz](#3-quiz)
+- [Postmanに関するQuiz](#postman%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8Bquiz)
+  - [&#035;1 Quiz](#1-quiz-1)
+  - [&#035;2 Quiz](#2-quiz-1)
+  - [&#035;3 Quiz](#3-quiz-1)
+  - [参考情報](#%E5%8F%82%E8%80%83%E6%83%85%E5%A0%B1)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
