@@ -5,14 +5,16 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [cURLに関するQuiz](#curl%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8Bquiz)
-  - [&#035;1 Quiz](#1-quiz)
-  - [&#035;2 Quiz](#2-quiz)
-  - [&#035;3 Quiz](#3-quiz)
-- [Postmanに関するQuiz](#postman%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8Bquiz)
-  - [&#035;1 Quiz](#1-quiz-1)
-  - [&#035;2 Quiz](#2-quiz-1)
-  - [&#035;3 Quiz](#3-quiz-1)
+- [Quiz](#quiz)
+  - [cURLに関するQuiz](#curlに関するquiz)
+    - [#1 Quiz](#1-quiz)
+    - [#2 Quiz](#2-quiz)
+    - [#3 Quiz](#3-quiz)
+  - [Postmanに関するQuiz](#postmanに関するquiz)
+    - [#1 Quiz](#1-quiz-1)
+    - [#2 Quiz](#2-quiz-1)
+    - [#3 Quiz](#3-quiz-1)
+    - [参考情報](#参考情報)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -24,7 +26,9 @@
 `https://httpbin.org`にパラメータとして`show_env=1`を追加してGETリクエストを以下のように送信します。
 
 ```bash
-curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_env=1
+$ curl https://httpbin.org/headers\?show_env=1 \
+  --request GET \
+  --header "X-Forwarded-For: 192.168.0.1"
 ```
 
 この出力結果は以下のようになります。
@@ -50,6 +54,8 @@ curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_e
 
 `X-Forwarded-Proto`ヘッダは、プロキシやロードバランサへ接続するために使用したクライアントのプロトコル（HTTP、HTTPS）を特定するためのヘッダです。
 
+以下のようにALBがEC2に通信を転送する際にHTTPヘッダを付与しています。
+
 ![](./assets/quiz1_answer.svg)
 
 参考資料
@@ -60,7 +66,7 @@ curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_e
 
 ### #2 Quiz
 
-クイズ1で実行したcurlコマンドに関して、リクエスト内容ではなく、サーバからのレスポンスヘッダとレスポンスボディを確認してみましょう。
+クイズ1で実行したcurlコマンドに関して、リクエスト内容だけではなく、サーバからのレスポンスヘッダも表示してみましょう。
 
 <details>
 <summary>回答例</summary>
@@ -68,7 +74,10 @@ curl -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_e
 `-i`あるいは`--include`オプションを付与することでレスポンスを確認することができます。
 
 ```bash
-$ curl -i -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?show_env=1
+$ curl https://httpbin.org/headers\?show_env=1 \
+  --request GET \
+  --header "X-Forwarded-For: 192.168.0.1" \
+  --include
 ```
 
 </details>
@@ -83,7 +92,10 @@ $ curl -i -X GET -H "X-Forwarded-For: 192.168.0.1" http://httpbin.org/headers\?s
 `-d`オプションでボディのデータを指定する際に、`@`プレフィックスを使用することで、ファイルを指定できます。
 
 ```bash
-$ curl -X POST -d "@quiz.json" -H "Content-Type: application/json" "https://httpbin.org/post"
+$ curl https://httpbin.org/post \
+  --request POST \
+  --data "@quiz.json" \
+  --header "Content-Type: application/json"
 ```
 
 </details>
@@ -136,3 +148,48 @@ if(pm.response.to.have.status(200)){
 ### #3 Quiz
 
 `https://httpbin.org/post`へPOSTリクエストを送信します。その際にクイズ2で得られた`uuid`プロパティの値を、`x-api-key`というカスタムHTTPヘッダに設定してリクエストを送信してみましょう。
+
+### 参考情報
+
+クイズ2とクイズ3は、スクリプトを活用することで1つのリクエストにまとめることができます。
+
+<details>
+<summary>実装例</summary>
+
+@kamimi01 さんより
+
+1. Pre-request Scripts
+   
+    ```js
+    // UUIDを取得するURL
+    const requestURL = `${pm.environment.get("HOST_URL")}/uuid`;
+
+    pm.sendRequest(requestURL, (err, response) => {
+        pm.environment.unset('UUID4_Token'); // initialize environment variable
+
+        const uuid = response.json()["uuid"];
+        pm.globals.set("UUID4_Token", uuid);
+    });
+    ```
+
+2. Request
+    
+    ```bash
+    >> POST {{HOST_URL}}/post
+    >> Headers x-api-key: {{UUID4_TOKEN}}
+    ```
+
+3. Tests
+
+    ```js
+    const expectedKey = "X-Api-Key";
+    const expectedValue = pm.globals.get("UUID4_Token");
+
+    // confirm the response headers contains the generated uuid value
+    pm.test("headers_check", () => {
+        const actualValue = pm.response.json()["headers"][expectedKey];
+        pm.expect(actualValue).to.eql(expectedValue);
+    });
+    ```
+
+</details>
