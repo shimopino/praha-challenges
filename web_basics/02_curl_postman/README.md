@@ -5,12 +5,23 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題1 cURLでのGetリクエスト](#%E8%AA%B2%E9%A1%8C1-curl%E3%81%A7%E3%81%AEget%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88)
+- [課題1](#%E8%AA%B2%E9%A1%8C1)
+  - [得られた知見](#%E5%BE%97%E3%82%89%E3%82%8C%E3%81%9F%E7%9F%A5%E8%A6%8B)
+    - [`Host`](#host)
+    - [`X-Amzn-Trace-Id`](#x-amzn-trace-id)
+- [課題2](#%E8%AA%B2%E9%A1%8C2)
+  - [得られた知見](#%E5%BE%97%E3%82%89%E3%82%8C%E3%81%9F%E7%9F%A5%E8%A6%8B-1)
+    - [`origin`](#origin)
+- [課題3](#%E8%AA%B2%E9%A1%8C3)
+- [課題4](#%E8%AA%B2%E9%A1%8C4)
+  - [得られた知見](#%E5%BE%97%E3%82%89%E3%82%8C%E3%81%9F%E7%9F%A5%E8%A6%8B-2)
+- [課題5](#%E8%AA%B2%E9%A1%8C5)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-curlのバージョンは以下になる。
+curlのバージョンは以下になります。
 
 ```bash
 $ curl --version
@@ -20,126 +31,317 @@ Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s
 Features: AsynchDNS brotli GSS-API HTTP2 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM NTLM_WB PSL SPNEGO SSL TLS-SRP UnixSockets
 ```
 
-また課題に取り組む際は、ローカルのコンテナ上で動かしているhttpbinに対してcurlを実行する。
+- [cURL Tool Documentation](https://curl.se/docs/manpage.html)
+
+また課題に取り組む際は、[`https://httpbin.org/`](https://httpbin.org/)と、ローカルのコンテナ上で動かしているhttpbinに対してcurlを実行します。
 
 ```bash
+# コンテナ起動時のコマンド
 $ docker run -it -d -p 80:80 --rm kennethreitz/httpbin
 ```
 
+## 課題1
 
-## 課題1 cURLでのGetリクエスト
+cURLにて、HTTPリクエスト内のHTTPヘッダをレスポンスで返すAPIである`https://httpbin.org/headers`に対してGETリクエストを発行します。その際にカスタムHTTPヘッダとして`X-Test: hello`を付与します。
 
 ```bash
-$ curl -X GET -H "X-Test: hello" "http://localhost:80/get"
+# to https
+$ curl -X GET -H "X-Test: hello" "https://httpbin.org/headers"
+
+# to Docker Container
+$ curl -X GET -H "X-Test: hello" "http://localhost:80/headers"
 ```
 
+サービス提供元にリクエストを送信した場合の結果は以下になります。
 
-
-以下のリクエストをcurlコマンドでhttpbinに送信してください
-curlコマンドをペアと比較して、なぜそのような書き方をしたのか、話し合ってみましょう
-問題１
-カスタムヘッダーを加える（X-Test='hello'）
-methodはGET
-URLはhttps://httpbin.org/headers
-以下のようなレスポンスを得られるはずです
+```json
 {
   "headers": {
     "Accept": "*/*", 
     "Host": "httpbin.org", 
-    "User-Agent": "curl/7.54.0", 
-    "X-Test": "hello" // ここが重要！
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedcb94-43e04f8740f47ae43efbb7a9", 
+    "X-Test": "hello"
   }
 }
+```
+
+ローカルのDockerコンテナ上にリクエストを送信した場合は以下になります。
+
+```json
+{
+  "headers": {
+    "Accept": "*/*", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0", 
+    "X-Test": "hello"
+  }
+}
+```
+
+### 得られた知見
+
+使用したcURLのオプションは以下になります。
+
+| オプション                    | 設定例                      | 
+| ----------------------------- | --------------------------- | 
+| `-X, --request <command>`     | `-X GET`                    | 
+| `-H, --header <header/@file>` | `-H "X-Custom-Header: XXX"` | 
+
+送信先環境の違いによって、特定のHTTPヘッダに格納される値は異なっている。
+
+#### `Host`
+
+`Host`にはリクエストの送信先のホスト名が入る。Dockerの場合はローカル環境が送信先になるため、`localhost`が格納されています。
+
+#### `X-Amzn-Trace-Id`
+
+サービス提供元へGETリクエストを送信した際、HTTPヘッダに`X-Amzn-Trace-Id`が確認されました。
+
+これはおそらく、httpbinにリクエストが送信される前段に、負荷分散のためにApplication Load Balancerを組み込みこんでおり、自動的にHTTPヘッダが追加されるためです。
+
+- [X-Amzn-Trace-Id を使用して Application Load Balancer リクエストをトレースする方法を教えてください。](https://aws.amazon.com/jp/premiumsupport/knowledge-center/trace-elb-x-amzn-trace-id/)
+
+## 課題2
+
+cURLにて、POSTリクエストを`https://httpbin.org/post`に送信します。その際にHTTPヘッダとして`Content-Type: "application/json"`を追加し、ボディには`{"name": "hoge"}`を追加します。
 
 ```bash
+# to https
+$ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "https://httpbin.org/post"
+
+# to Docker Container
 $ curl -X POST -H "Content-Type: application/json" -d '{"name": "hoge"}' "http://localhost:80/post"
 ```
 
-問題２
-Content-Typeは"application/json"
-methodはPOST
-bodyは {"name": "hoge"}
-URLはhttps://httpbin.org/post
-以下のようなレスポンスを得られるはずです
+サービス提供元にリクエストを送信した場合は以下になります。
+
+```bash
 {
-  "data": "{\"name\": \"hoge\"}",  // ここが重要！
+  "args": {}, 
+  "data": "{\"name\": \"hoge\"}", 
+  "files": {}, 
+  "form": {}, 
   "headers": {
     "Accept": "*/*", 
     "Content-Length": "16", 
     "Content-Type": "application/json", 
     "Host": "httpbin.org", 
-    "User-Agent": "curl/7.54.0"
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedd333-2004a9504bb454e574d7de23"
   }, 
   "json": {
-    "name": "hoge" // ここが重要！
+    "name": "hoge"
   }, 
-  "origin": "xxxxxxxxxx",  // 自分自身のIPアドレス
+  "origin": "203.0.111.1", # RFC5737に準拠した値に変換
   "url": "https://httpbin.org/post"
 }
-
-
-```bash
-$ curl -X POST "http://localhost:80/post" -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'
 ```
 
-問題３
-もう少し複雑なbodyを送信してみましょう。以下のようなオブジェクトをbodyに含めて、送信してください
-
-
-{userA: {name: "hoge", age: 29}}
+ローカルのDockerコンテナ上にリクエストを送信した場合は以下になります。
 
 ```bash
-$ curl -X POST "http://localhost:80/post" -H "Content-Type: application/x-www-form-urlencoded" -d '{"name": "hoge"}'
-```
-
-問題４
-「ごめんごめん、このエンドポイント、まだapplication/jsonに対応してないから、Content-Typeはapplication/x-www-form-urlencodedで送ってもらえる？」と先輩に頼まれました
-Content-Typeを変更して、リクエストを送信してみましょう
-以下のようなレスポンスを得られるはずです
-
-
 {
-  "data": "",  // 先ほどはここにname:hogeが含まれていた
+  "args": {}, 
+  "data": "{\"name\": \"hoge\"}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "16", 
+    "Content-Type": "application/json", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0"
+  }, 
+  "json": {
+    "name": "hoge"
+  }, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost/post"
+}
+```
+
+### 得られた知見
+
+使用したcURLのオプションは以下になります。
+
+| オプション          | 設定例                  | 
+| ------------------- | ----------------------- | 
+| `-d, --data <data>` | `-d '{"name": "hoge"}'` | 
+
+送信先環境の違いによって、特定のHTTPヘッダに格納される値は異なっている。
+
+#### `origin`
+
+`origin`の値には、クライアントの送信元IPアドレスが格納されます。
+
+Dockerコンテナの場合は、すべての通信がローカルネットワーク上で行われるため、ローカルIPアドレスが適用されます。
+
+サービス提供元の場合は、クライアントのローカルIPアドレスは、ブロードバンドルーターなどのNAT機能により、グローバルIPアドレスに変換されるため、サービス提供元からはこのグローバルIPアドレスしか見ることはできません。
+
+以下のサービスからグローバアルIPアドレスを知ることが可能です。
+
+- [あなたの情報確認くん](https://www.ugtop.com/spill.shtml)
+- [IPアドレス確認（IPアドレスチェック）ツール](luft.co.jp/cgi/ipcheck.php)
+
+コマンドラインからでも、以下のようにグローバルIPアドレスを知ることが可能です。
+
+```bash
+curl inet-ip.info
+```
+
+## 課題3
+
+多少複雑なボディである`{userA: {name: "hoge", age: 29}}`を同様にPOSTリクエストで送信します。
+
+```bash
+# to https
+$ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}'  "https://httpbin.org/post"
+
+# to Docker Container
+$ curl -X POST -H "Content-Type: application/json" -d '{"userA": {"name": "hoge", "age": 29}}' "http://localhost:80/post" 
+```
+
+サービス提供元にリクエストを送信した場合は以下になります。
+
+```bash
+{
+  "args": {}, 
+  "data": "{\"userA\": {\"name\": \"hoge\", \"age\": 29}}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "38", 
+    "Content-Type": "application/json", 
+    "Host": "httpbin.org", 
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedd834-25b5dfa551e03cae54e1c547"
+  }, 
+  "json": {
+    "userA": {
+      "age": 29, 
+      "name": "hoge"
+    }
+  }, 
+  "origin": "203.0.111.1", # RFC5737に準拠した値に変換
+  "url": "https://httpbin.org/post"
+}
+```
+
+ローカルのDockerコンテナ上にリクエストを送信した場合は以下になります。
+
+```bash
+{
+  "args": {}, 
+  "data": "{\"userA\": {\"name\": \"hoge\", \"age\": 29}}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "38", 
+    "Content-Type": "application/json", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0"
+  }, 
+  "json": {
+    "userA": {
+      "age": 29, 
+      "name": "hoge"
+    }
+  }, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost/post"
+}
+```
+
+## 課題4
+
+cURLにて、POSTリクエストを`https://httpbin.org/post`に送信します。その際にHTTPヘッダとして`Content-Type: "application/json"`を追加し、ボディには`{"name": "hoge"}`を追加します。
+
+```bash
+# to https
+$ curl -X POST -d '{"name": "hoge"}' "https://httpbin.org/post"
+
+# to Docker Container
+$ curl -X POST -d '{"name": "hoge"}' "http://localhost:80/post"
+```
+
+サービス提供元へリクエストを送信した場合は以下になります。
+
+```bash
+{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
   "form": {
-    "{\"name\": \"hoge\"}": "" // 今はここに含まれている
+    "{\"name\": \"hoge\"}": ""
   }, 
   "headers": {
     "Accept": "*/*", 
     "Content-Length": "16", 
     "Content-Type": "application/x-www-form-urlencoded", 
     "Host": "httpbin.org", 
-    "User-Agent": "curl/7.54.0"
+    "User-Agent": "curl/7.68.0", 
+    "X-Amzn-Trace-Id": "Root=1-5fedd9b3-0e2949bc0f9c8fc0535346d7"
   }, 
-  "json": null,  // 先ほどはここにname:hogeが含まれていた
+  "json": null, 
+  "origin": "203.0.111.1", # RFC5737に準拠した値に変換
   "url": "https://httpbin.org/post"
 }
+```
 
+ローカルのDockerコンテナ上にリクエストを送信した場合は以下になります。
 
+```bash
+{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {
+    "{\"name\": \"hoge\"}": ""
+  }, 
+  "headers": {
+    "Accept": "*/*", 
+    "Content-Length": "16", 
+    "Content-Type": "application/x-www-form-urlencoded", 
+    "Host": "localhost", 
+    "User-Agent": "curl/7.68.0"
+  }, 
+  "json": null, 
+  "origin": "172.17.0.1", 
+  "url": "http://localhost/post"
+}
+```
 
+### 得られた知見
 
-（postman）
+リクエストの本文のタイプを指定する`Content-Type`は、指定しなければ`application/x-www-form-urlencoded`が格納されます。
 
-ここまで上記課題で何度もcurlコマンドを作成しましたが、毎回コマンドを作成するのは大変です。課題を解いている間、こんなことを考えたのではないでしょうか：
-以前作成したコマンドを保存しておきたい
-複雑なリクエストを作成するのが辛い
-もうちょっと簡単にリクエストを作成する方法があっても良さそうですよね
-あるんです
+これはリクエストを以下のように変換することと同じです。
 
+```bash
+POST /post HTTP/1.1
+HOST httpbin.org
+Content-Type: application/x-www-form-urlencoded
 
-postman　とは？
-過去のリクエストを保存したり、複雑なリクエストをGUIから作成したり、様々な機能を備えた強化版curlみたいな物です
-簡単なリクエストならcurlで事足りるのですが、複雑なリクエストになってくるとpostmanの方が便利です
-例えば（後に説明しますが）OAuth2.0の認可により守られたAPIを開発している場合、認可を突破するまでに何度も通信が発生します
-そのやりとりを手動でcurlで実施するのはとても面倒で、現実的ではありません
-こうした認証もpostmanは一部自動化してくれます
-これを機に使い方に慣れておきましょう！
+name=hoge
+```
 
+なお`Content-Type`が上記の形式であれば、以下に定義されている単純リクエストの条件を満たすため、プリフライトリクエストは送信されません。
 
-postmanをインストールしてください
-上記の課題（curlコマンド）と同じ結果を得られるよう、リクエストを全てpostmanで再現してください
+- `application/x-www-form-urlencoded`
+- `multipart/form-data`
+- `text/plain`
 
+## 課題5
 
-クイズ
-curlに関するクイズを作成してください
-postmanに関するクイズを作成してください
-クイズに関する詳細は　コチラ　を参照してください
+ローカル環境のPostmanでも同じ結果は得られていますが、情報共有としてオンライン環境で作成したリクエストをドキュメント化したほうが便利なので、以下に配置します。
+
+[https://documenter.getpostman.com/view/9645891/TVt1ARGc](https://documenter.getpostman.com/view/9645891/TVt1ARGc)
+
+## 参考資料
+
+- [curl コマンド 使い方メモ](https://qiita.com/yasuhiroki/items/a569d3371a66e365316f)
+- [よく使うcurlコマンドのオプション](https://qiita.com/ryuichi1208/items/e4e1b27ff7d54a66dcd9)
+- [How to make a POST request with cURL](https://linuxize.com/post/curl-post-request/)
