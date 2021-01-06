@@ -5,7 +5,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <details>
-<summary>Details</summary>
+<summary>Table of Contents</summary>
 
 - [課題：HTTPヘッダーに関するクイズを3問、作成してください（作成）](#%E8%AA%B2%E9%A1%8Chttp%E3%83%98%E3%83%83%E3%83%80%E3%83%BC%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E3%82%AF%E3%82%A4%E3%82%BA%E3%82%923%E5%95%8F%E4%BD%9C%E6%88%90%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E4%BD%9C%E6%88%90)
   - [クイズ1](#%E3%82%AF%E3%82%A4%E3%82%BA1)
