@@ -5,9 +5,10 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [&#035;1 Quiz](#1-quiz)
-- [&#035;2 Quiz](#2-quiz)
-- [&#035;3 Quiz](#3-quiz)
+- [課題2 HTTPヘッダに関するクイズを作成する](#課題2-httpヘッダに関するクイズを作成する)
+  - [#1 Quiz](#1-quiz)
+  - [#2 Quiz](#2-quiz)
+  - [#3 Quiz](#3-quiz)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -68,7 +69,7 @@
 
 ### #3 Quiz
 
-[clickjacking.html](./clickjacking.html)で生じているクリックジャッキングは、特定のHTTPヘッダをレスポンスヘッダに付与することで回避することができるが、それはどのようなヘッダと値になるでしょうか。
+[クリックジャッキングの実験](./click-jacking)で行っているように、クリックジャッキングによる攻撃は特定のHTTPヘッダをレスポンスヘッダに付与することで回避することができるが、それはどのようなヘッダと値になるでしょうか。
 
 <details>
 <summary>回答例</summary>
