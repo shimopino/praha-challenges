@@ -1,25 +1,28 @@
-# リクエストをパースするWebサーバを構築する
+# リクエストをパースする Web サーバを構築する
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <details>
 <summary>Table of Contents</summary>
 
-- [課題1](#%E8%AA%B2%E9%A1%8C1)
-  - [cURL](#curl)
-  - [Postman](#postman)
-- [課題2](#%E8%AA%B2%E9%A1%8C2)
-  - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
-  - [`application/json`](#applicationjson)
+- [リクエストをパースする Web サーバを構築する](#リクエストをパースするwebサーバを構築する)
+  - [課題 1](#課題1)
+    - [cURL](#curl)
+    - [Postman](#postman)
+  - [課題 2](#課題2)
+    - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
+    - [`application/json`](#applicationjson)
+    - [使い分け](#使い分け)
+  - [VSCode で行う ESLint と Prettier](#vscodeで行うeslintとprettier)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 課題1
+## 課題 1
 
-リクエストをparseする際に、以前は`body-parser`モジュールが使用されていたが、Express4.x以降からは`express`自体がラップを提供している。
+リクエストを parse する際に、以前は`body-parser`モジュールが使用されていたが、Express4.x 以降からは`express`自体がラップを提供している。
 
-- [express.jsonなどの実装](https://github.com/expressjs/express/blob/508936853a6e311099c9985d4c11a4b1b8f6af07/lib/express.js#L78)
+- [express.json などの実装](https://github.com/expressjs/express/blob/508936853a6e311099c9985d4c11a4b1b8f6af07/lib/express.js#L78)
 
 ### cURL
 
@@ -36,12 +39,11 @@ $ curl localhost:8080 -d '{"name": "hoge"}'
 
 ### Postman
 
-[https://documenter.getpostman.com/view/9645891/TVt2c3oU](https://documenter.getpostman.com/view/9645891/TVt2c3oU
-)
+[https://documenter.getpostman.com/view/9645891/TVt2c3oU](https://documenter.getpostman.com/view/9645891/TVt2c3oU)
 
-## 課題2
+## 課題 2
 
-POSTリクエストを送信する際に、`Content-Type`による挙動の違いをまとめる。
+POST リクエストを送信する際に、`Content-Type`による挙動の違いをまとめる。
 
 ### `application/x-www-form-urlencoded`
 
@@ -74,3 +76,11 @@ content-length: 16
 
 {"name": "hoge"}
 ```
+
+### 使い分け
+
+- URL-Encoding の特徴
+  - `+`や`%20`などの統一がされていない
+  - 末尾の改行に敏感
+
+## VSCode で行う設定など
