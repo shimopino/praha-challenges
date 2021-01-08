@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Cookie Sample</h1>
+
+    <a href="page.html">page link</a>
+
+    <a href="https://www.google.com" onclick="getAnchorFunc()" target="_blank" rel="noreferrer">Google.com as cross-site</a>
+
+    <script>
+        function getAnchorFunc(event) {
+            console.log(document.cookie);
+            return true;
+        }
+    </script>
+</body>
+</html>
