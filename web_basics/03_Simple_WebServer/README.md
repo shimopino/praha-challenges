@@ -71,10 +71,105 @@ Content-Type: application/x-www-form-urlencoded
 name=hoge
 ```
 
-### NodeJS のストリーム形式
+### request.body はなぜストリーム形式なのか
+
+- Nodejs の特徴
+
+  - コールバック関数を利用したノンブロッキング I/O を提供する
+
+    - 同期的的なファイル I/O
+
+      ```js
+      const fs = require("fs");
+      const data = fs.readFileSync("./file.md");
+      // 後続処理はファイル読み込みが終了するまでブロックされる
+      ```
+
+    - 非同期的なファイル I/O
+
+      ```js
+      const fs = require("fs");
+      fs.reaFile("./file.md", (err, data) => {
+        if (err) throw err;
+      });
+      // 後続処理はブロックされることなく実行される
+      ```
+
+- Nodejs でのストリームの取り扱い
+
+  - Nodejs では`Stream`オブジェクトでデータストリームを扱っている
+  - ノンブロッキング I/O の形式でファイルの読み書きを記載すると、以下のように書ける
+
+    ```js
+    fs.readFile("file.md", (err, data) => {
+      fs.writeFile("dest.md", data);
+    });
+    ```
+
+    - しかし上記の処理では、すべてのデータを読み切った後で、すべてのデータを書き込む処理になっている
+    - 対象のファイルの容量が 2GB の場合には、メモリも同様に 2GB 消費することになる
+
+  - ストリーム API を使用することで、ファイルをチャンクごとに読み込みから書き込みまで実行することができる。
+
+    - ストリームをそのまま使用する場合
+
+      ```js
+      const src = fs.createReadStream("file.md");
+      const dest = fs.createWriteStream("file.md");
+
+      src.on("data", (chunk) => dest.write(chunk));
+      src.on("end", () => dest.end());
+      ```
+
+    - `pipe()`を使用する場合
+
+      ```js
+      const src = fs.createReadStream("file.md");
+      const dest = fs.createWriteStream("file.md");
+
+      src.pipe(dest);
+      ```
+
+  - `body-parser`の例
+
+    - `body-parser`でもストリーム形式でリクエストを処理している。
+
+    - 例えば以下のように`Content-Encoding`をもとにパイプ処理を実行している。
+
+      ```js
+      function contentstream(req, debug, inflate) {
+        var encoding = (
+          req.headers["content-encoding"] || "identity"
+        ).toLowerCase();
+        // ...
+
+        switch (encoding) {
+          case "deflate":
+            stream = zlib.createInflate();
+            debug("inflate body");
+            req.pipe(stream);
+            break;
+          case "gzip":
+            stream = zlib.createGunzip();
+            debug("gunzip body");
+            req.pipe(stream);
+            break;
+          case "identity":
+            stream = req;
+            stream.length = length;
+            break;
+        }
+      }
+      ```
+
+    - 参考資料
+
+      - [body-parser の該当処理](https://github.com/expressjs/body-parser/blob/master/lib/read.js#L158)
 
 #### 参考資料
 
+- [Nodejs Stream API](https://nodejs.org/api/stream.html)
+- [ブロッキングとノンブロッキングの概要](https://nodejs.org/ja/docs/guides/blocking-vs-non-blocking/)
 - [strean-handbook](https://github.com/meso/stream-handbook)
 - [Node.js の Stream API の概要](https://qiita.com/takaaki7/items/fbc33dff1e17fe6a3d38)
 - [Node.js Stream を使いこなす](https://qiita.com/masakura/items/5683e8e3e655bfda6756)
@@ -125,6 +220,13 @@ content-length: 16
 
 ### 使い分け
 
-- URL-Encoding の特徴
-  - `+`や`%20`などの統一がされていない
-  - 末尾の改行に敏感
+| Content-Type | `x-www-form-urlencoded`                                                           | `json`                                |
+| ------------ | --------------------------------------------------------------------------------- | ------------------------------------- |
+| データ形式   | key=value                                                                         | {"key": "value"}                      |
+| 用途         | HTML フォームを介した POST リクエスト                                             | XMLHttpRequest<br>Fetch API           |
+| 特徴         | - json のような階層構造のデータを扱うことは難しい<br>- パーセントエンコーディング | - 近年の API でよく使用されている形式 |
+
+- 参考資料
+
+  - [[MDN Web Docs] POST](https://developer.mozilla.org/ja/docs/Web/HTTP/Methods/POST)
+  - [[OAUTH-WG] application/x-www-form-urlencoded vs JSON](https://mailarchive.ietf.org/arch/msg/oauth/D4d6dCQSvmO1G3ST5q6_xQ6En4w/)
