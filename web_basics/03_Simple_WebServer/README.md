@@ -5,6 +5,7 @@
 <details>
 <summary>Table of Contents</summary>
 
+<<<<<<< HEAD
 - [リクエストをパースする Web サーバを構築する](#リクエストをパースする-web-サーバを構築する)
   - [課題 1](#課題-1)
     - [cURL](#curl)
@@ -14,6 +15,16 @@
     - [`application/json`](#applicationjson)
     - [使い分け](#使い分け)
   - [VSCode で行う設定など](#vscode-で行う設定など)
+=======
+- [課題 1](#%E8%AA%B2%E9%A1%8C-1)
+  - [cURL](#curl)
+  - [Postman](#postman)
+- [課題 2](#%E8%AA%B2%E9%A1%8C-2)
+  - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
+  - [`application/json`](#applicationjson)
+  - [使い分け](#%E4%BD%BF%E3%81%84%E5%88%86%E3%81%91)
+- [VSCode で行う設定など](#vscode-%E3%81%A7%E8%A1%8C%E3%81%86%E8%A8%AD%E5%AE%9A%E3%81%AA%E3%81%A9)
+>>>>>>> febc912aba859c7faba4f29e63133bd5108d1160
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
