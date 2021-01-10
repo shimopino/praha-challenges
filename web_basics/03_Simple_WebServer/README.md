@@ -5,20 +5,22 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [リクエストをパースする Web サーバを構築する](#リクエストをパースするwebサーバを構築する)
-  - [課題 1](#課題1)
+- [リクエストをパースする Web サーバを構築する](#リクエストをパースする-web-サーバを構築する)
+  - [課題 1](#課題-1)
     - [cURL](#curl)
     - [Postman](#postman)
-  - [課題 2](#課題2)
+  - [課題 2](#課題-2)
     - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
     - [`application/json`](#applicationjson)
     - [使い分け](#使い分け)
-  - [VSCode で行う ESLint と Prettier](#vscodeで行うeslintとprettier)
+  - [VSCode で行う設定など](#vscode-で行う設定など)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 課題 1
+
+### Express の実装メモ
 
 リクエストを parse する際に、以前は`body-parser`モジュールが使用されていたが、Express4.x 以降からは`express`自体がラップを提供している。
 
@@ -41,6 +43,43 @@ $ curl localhost:8080 -d '{"name": "hoge"}'
 
 [https://documenter.getpostman.com/view/9645891/TVt2c3oU](https://documenter.getpostman.com/view/9645891/TVt2c3oU)
 
+### VSCode Rest Client
+
+単純なリクエストであれば VSCode の拡張機能である「[Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)」を使用することが可能である。
+
+以下のコマンドを`.http`という拡張子のファイルに記載しておけば、HTTP リクエストとそのレスポンスを確認することができる。
+
+```bash
+GET http://localhost:8080/ HTTP/1.1
+
+###
+
+POST http://localhost:8080/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "hoge"
+}
+
+###
+
+POST http://localhost:8080/ HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+name=hoge
+```
+
+### NodeJS のストリーム形式
+
+#### 参考資料
+
+- [strean-handbook](https://github.com/meso/stream-handbook)
+- [Node.js の Stream API の概要](https://qiita.com/takaaki7/items/fbc33dff1e17fe6a3d38)
+- [Node.js Stream を使いこなす](https://qiita.com/masakura/items/5683e8e3e655bfda6756)
+- [ストリーム処理とは何か？＋ 2016 年の出来事](https://qiita.com/kimutansk/items/60e48ec15e954fa95e1c)
+- [Why is Node.js scalable?](https://stackoverflow.com/questions/16949483/why-is-node-js-scalable)
+- [Node.js の Stream API で大量プッシュ通知を高速化するテクニック (1/2)](https://www.atmarkit.co.jp/ait/articles/1502/12/news026.html)
+
 ## 課題 2
 
 POST リクエストを送信する際に、`Content-Type`による挙動の違いをまとめる。
@@ -48,7 +87,9 @@ POST リクエストを送信する際に、`Content-Type`による挙動の違�
 ### `application/x-www-form-urlencoded`
 
 ```bash
-$ curl --request POST --data "name=hoge" "https://httpbin.org/post"
+$ curl https://httpbin.org/post \
+  --request POST \
+  --data "name=hoge"
 
 >>
 POST /post HTTP/2
@@ -64,7 +105,10 @@ name=hoge
 ### `application/json`
 
 ```bash
-$ curl --data '{"name": "hoge"}' --header "Content-Type: application/json" "https://httpbin.org/post"
+$ curl https://httpbin.org/post \
+  --request POST \
+  --data '{"name": "hoge"}' \
+  --header "Content-Type: application/json"
 
 >>
 POST /post HTTP/2
@@ -82,5 +126,3 @@ content-length: 16
 - URL-Encoding の特徴
   - `+`や`%20`などの統一がされていない
   - 末尾の改行に敏感
-
-## VSCode で行う設定など
