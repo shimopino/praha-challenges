@@ -10,7 +10,7 @@
   - [cURL](#curl)
   - [Postman](#postman)
   - [VSCode Rest Client](#vscode-rest-client)
-  - [NodeJS のストリーム形式](#nodejs-%E3%81%AE%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E5%BD%A2%E5%BC%8F)
+  - [request.body はなぜストリーム形式なのか](#requestbody-%E3%81%AF%E3%81%AA%E3%81%9C%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E5%BD%A2%E5%BC%8F%E3%81%AA%E3%81%AE%E3%81%8B)
     - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 - [課題 2](#%E8%AA%B2%E9%A1%8C-2)
   - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
