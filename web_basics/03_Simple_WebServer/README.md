@@ -5,18 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#%E8%AA%B2%E9%A1%8C-1)
-  - [Express の実装メモ](#express-%E3%81%AE%E5%AE%9F%E8%A3%85%E3%83%A1%E3%83%A2)
-  - [cURL](#curl)
-  - [Postman](#postman)
-  - [VSCode Rest Client](#vscode-rest-client)
-  - [request.body はなぜストリーム形式なのか](#requestbody-%E3%81%AF%E3%81%AA%E3%81%9C%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E5%BD%A2%E5%BC%8F%E3%81%AA%E3%81%AE%E3%81%8B)
-    - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
-  - [ストリームの挙動確認](#%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E3%81%AE%E6%8C%99%E5%8B%95%E7%A2%BA%E8%AA%8D)
-- [課題 2](#%E8%AA%B2%E9%A1%8C-2)
-  - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
-  - [`application/json`](#applicationjson)
-  - [使い分け](#%E4%BD%BF%E3%81%84%E5%88%86%E3%81%91)
+- [リクエストをパースする Web サーバを構築する](#リクエストをパースする-web-サーバを構築する)
+  - [課題 1](#課題-1)
+    - [Express の実装メモ](#express-の実装メモ)
+    - [cURL](#curl)
+    - [Postman](#postman)
+    - [VSCode Rest Client](#vscode-rest-client)
+    - [request.body はなぜストリーム形式なのか](#requestbody-はなぜストリーム形式なのか)
+      - [参考資料](#参考資料)
+    - [ストリームの挙動確認](#ストリームの挙動確認)
+  - [課題 2](#課題-2)
+    - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
+    - [`application/json`](#applicationjson)
+    - [使い分け](#使い分け)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -37,6 +38,8 @@ Jsonオブジェクトをパースする際に`express.json()`をミドルウェ
 
 ### cURL
 
+[parsing-server](./parsing-server)フォルダで、`npm start`を実行した後で、 HTTP リクエストを送信した。
+
 ```bash
 $ curl localhost:8080 -H "Content-Type: application/json"
 {"text":"hello world"}
@@ -54,7 +57,7 @@ $ curl localhost:8080 -d '{"name": "hoge"}'
 
 ### VSCode Rest Client
 
-単純なリクエストであれば VSCode の拡張機能である「[Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)」を使用することが可能である。
+単純なリクエストであれば VSCode の拡張機能である「[Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)」を使用することで VSCode 内でレスポンスの確認を完結させることができる。
 
 以下のコマンドを`.http`という拡張子のファイルに記載しておけば、HTTP リクエストとそのレスポンスを確認することができる。
 
@@ -212,6 +215,7 @@ Memory: rss: 223.14 MB, heapTotal: 102.88 MB, heapUsed: 97.44 MB, external: 96.3
 $ node app-stream.js
 >>
 File size: 95.367431640625 MB
+Read bytelength:  65536
 Memory: rss: 41.73 MB, heapTotal: 8.31 MB, heapUsed: 3.52 MB, external: 1.22 MB, arrayBuffers: 0.26 MB
 ~~~
 Read bytelength:  65536
