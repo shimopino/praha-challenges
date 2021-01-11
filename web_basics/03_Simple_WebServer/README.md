@@ -5,18 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#%E8%AA%B2%E9%A1%8C-1)
-  - [Express の実装メモ](#express-%E3%81%AE%E5%AE%9F%E8%A3%85%E3%83%A1%E3%83%A2)
-  - [cURL](#curl)
-  - [Postman](#postman)
-  - [VSCode Rest Client](#vscode-rest-client)
-  - [request.body はなぜストリーム形式なのか](#requestbody-%E3%81%AF%E3%81%AA%E3%81%9C%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E5%BD%A2%E5%BC%8F%E3%81%AA%E3%81%AE%E3%81%8B)
-    - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
-  - [ストリームの挙動確認](#%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E3%81%AE%E6%8C%99%E5%8B%95%E7%A2%BA%E8%AA%8D)
-- [課題 2](#%E8%AA%B2%E9%A1%8C-2)
-  - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
-  - [`application/json`](#applicationjson)
-  - [使い分け](#%E4%BD%BF%E3%81%84%E5%88%86%E3%81%91)
+- [リクエストをパースする Web サーバを構築する](#リクエストをパースする-web-サーバを構築する)
+  - [課題 1](#課題-1)
+    - [Express の実装メモ](#express-の実装メモ)
+    - [cURL](#curl)
+    - [Postman](#postman)
+    - [VSCode Rest Client](#vscode-rest-client)
+    - [request.body はなぜストリーム形式なのか](#requestbody-はなぜストリーム形式なのか)
+      - [参考資料](#参考資料)
+    - [ストリームの挙動確認](#ストリームの挙動確認)
+  - [課題 2](#課題-2)
+    - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
+    - [`application/json`](#applicationjson)
+    - [使い分け](#使い分け)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -179,7 +180,7 @@ name=hoge
 
 - [Nodejs Stream API](https://nodejs.org/api/stream.html)
 - [ブロッキングとノンブロッキングの概要](https://nodejs.org/ja/docs/guides/blocking-vs-non-blocking/)
-- [strean-handbook](https://github.com/meso/stream-handbook)
+- [stremn-handbook](https://github.com/meso/stream-handbook)
 - [Node.js の Stream API の概要](https://qiita.com/takaaki7/items/fbc33dff1e17fe6a3d38)
 - [Node.js Stream を使いこなす](https://qiita.com/masakura/items/5683e8e3e655bfda6756)
 - [ストリーム処理とは何か？＋ 2016 年の出来事](https://qiita.com/kimutansk/items/60e48ec15e954fa95e1c)
