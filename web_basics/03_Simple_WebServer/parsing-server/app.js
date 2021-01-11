@@ -23,13 +23,14 @@ app.post("/", (req, res) => {
   console.log(req.headers);
   console.log(req.body);
 
-  if (!req.is("application/json")) {
-    res.status(400).json({ error: "400! Bad Request" });
+  if (req.is("application/json")) {
+    res.status(201).json(req.body);
     return;
   }
-
-  const name = req.body.name;
-  res.status(201).json({ name });
+  
+  res.status(400).json({ 
+    error: "Invalid Content-Type" 
+  });
 });
 
 http.createServer(app).listen(PORT, () => {
