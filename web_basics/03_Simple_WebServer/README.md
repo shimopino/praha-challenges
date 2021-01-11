@@ -5,18 +5,20 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#%E8%AA%B2%E9%A1%8C-1)
-  - [Express の実装メモ](#express-%E3%81%AE%E5%AE%9F%E8%A3%85%E3%83%A1%E3%83%A2)
-  - [cURL](#curl)
-  - [Postman](#postman)
-  - [VSCode Rest Client](#vscode-rest-client)
-  - [request.body はなぜストリーム形式なのか](#requestbody-%E3%81%AF%E3%81%AA%E3%81%9C%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E5%BD%A2%E5%BC%8F%E3%81%AA%E3%81%AE%E3%81%8B)
-    - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
-  - [ストリームの挙動確認](#%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E3%81%AE%E6%8C%99%E5%8B%95%E7%A2%BA%E8%AA%8D)
-- [課題 2](#%E8%AA%B2%E9%A1%8C-2)
-  - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
-  - [`application/json`](#applicationjson)
-  - [使い分け](#%E4%BD%BF%E3%81%84%E5%88%86%E3%81%91)
+- [リクエストをパースする Web サーバを構築する](#リクエストをパースする-web-サーバを構築する)
+  - [課題 1](#課題-1)
+    - [Express の実装メモ](#express-の実装メモ)
+    - [cURL](#curl)
+    - [Postman](#postman)
+    - [VSCode Rest Client](#vscode-rest-client)
+    - [request.body はなぜストリーム形式なのか](#requestbody-はなぜストリーム形式なのか)
+      - [参考資料](#参考資料)
+    - [ストリームの挙動確認](#ストリームの挙動確認)
+    - [JSのメモリ管理](#jsのメモリ管理)
+  - [課題 2](#課題-2)
+    - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
+    - [`application/json`](#applicationjson)
+    - [使い分け](#使い分け)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -226,6 +228,53 @@ Memory: rss: 41.73 MB, heapTotal: 8.31 MB, heapUsed: 3.65 MB, external: 1.34 MB,
 ```
 
 以上の結果を見てみても、巨大なファイルを取り扱う場合にはストリーム形式を使用したほうがいいことがわかる。
+
+### JSのメモリ管理
+
+- JavaScript のメモリ管理の概要
+
+  - オブジェクトや文字列などの実体の生成時にメモリが割り当てられ、使用されてなくなると**ガベージコレクタ**により自動的にメモリは解放される。
+  
+- メモリーライフサイクル
+
+  - プログラミング言語に関係なく、メモリのライフサイクルは以下の流れである。
+
+    1. 必要なメモリを割り当てる
+    
+    2. 割り当てられたメモリを使用する（Read、Write）
+    
+    3. 必要なくなったら割り当てられたメモリを解放する
+
+  - JavaScript などの高級言語では 1 と 3 が暗黙的に実行されることが多い
+
+- ストリーム処理との関連
+
+  - Node.js でのメモリ管理では、実行エンジンである `V8` エンジンのメモリスキームを理解する必要がある。
+  
+    - 実行中のプログラムは、メモリ空間に割り当てられている複数の空間（`Resident Set`）から構成されている。
+    
+    - V8 では JVM のようにメモリ空間を複数のセグメントに分割している。
+      
+      - `Code`: 実行中のプログラム
+      
+      - `Stack`: プリミティブ型の値や、ヒープ領域のオブジェクトへのポインタ
+      
+      - `Heap`: オブジェクトや文字列、クロージャ
+    
+        ![](assets/resident-set.svg)
+    
+    - `process.memoryUsage()`で出力される内容
+    
+      - `rss`: Resident Set Size
+      
+      - `heapTotal`: Heap
+      
+      - `heapUsed`: Used Heap
+
+参考資料
+
+- [メモリの管理](https://developer.mozilla.org/ja/docs/Web/JavaScript/Memory_Management)
+- [Understanding Garbage Collection and hunting Memory Leaks in Node.js](https://www.dynatrace.com/news/blog/understanding-garbage-collection-and-hunting-memory-leaks-in-node-js/)
 
 ## 課題 2
 
