@@ -5,17 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#%E8%AA%B2%E9%A1%8C-1)
-  - [Express の実装メモ](#express-%E3%81%AE%E5%AE%9F%E8%A3%85%E3%83%A1%E3%83%A2)
-  - [cURL](#curl)
-  - [Postman](#postman)
-  - [VSCode Rest Client](#vscode-rest-client)
-  - [request.body はなぜストリーム形式なのか](#requestbody-%E3%81%AF%E3%81%AA%E3%81%9C%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0%E5%BD%A2%E5%BC%8F%E3%81%AA%E3%81%AE%E3%81%8B)
-    - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
-- [課題 2](#%E8%AA%B2%E9%A1%8C-2)
-  - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
-  - [`application/json`](#applicationjson)
-  - [使い分け](#%E4%BD%BF%E3%81%84%E5%88%86%E3%81%91)
+- [リクエストをパースする Web サーバを構築する](#リクエストをパースする-web-サーバを構築する)
+  - [課題 1](#課題-1)
+    - [Express の実装メモ](#express-の実装メモ)
+    - [cURL](#curl)
+    - [Postman](#postman)
+    - [VSCode Rest Client](#vscode-rest-client)
+    - [request.body はなぜストリーム形式なのか](#requestbody-はなぜストリーム形式なのか)
+      - [参考資料](#参考資料)
+    - [ストリームの挙動確認](#ストリームの挙動確認)
+  - [課題 2](#課題-2)
+    - [`application/x-www-form-urlencoded`](#applicationx-www-form-urlencoded)
+    - [`application/json`](#applicationjson)
+    - [使い分け](#使い分け)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -182,6 +184,46 @@ name=hoge
 - [ストリーム処理とは何か？＋ 2016 年の出来事](https://qiita.com/kimutansk/items/60e48ec15e954fa95e1c)
 - [Why is Node.js scalable?](https://stackoverflow.com/questions/16949483/why-is-node-js-scalable)
 - [Node.js の Stream API で大量プッシュ通知を高速化するテクニック (1/2)](https://www.atmarkit.co.jp/ait/articles/1502/12/news026.html)
+
+### ストリームの挙動確認
+
+ストリームの実際の挙動を[streaming](./streaming)フォルダで確認した。
+
+まずはランダムなテキストファイルを作成するために、以下のコマンドを使用して`text.txt`を生成する。
+
+```bash
+# 100MBのテキストデータを作成する
+base64 /dev/urandom | head -c 10000000 > text.txt
+```
+
+以下にストリームを使用した場合と、そうではない場合とのメモリ使用量を見てみる。
+
+まずはストリームを使用しない場合を見てみると、オブジェクトに対して確保されるヒープ領域に、ファイルサイズと同程度のメモリが確保されていることがわかる。
+
+```bash
+$ node app-non-stream.js
+>>
+File size: 95.367431640625 MB
+Memory: rss: 223.14 MB, heapTotal: 102.88 MB, heapUsed: 97.44 MB, external: 96.33 MB, arrayBuffers: 95.38 MB
+```
+
+次にストリームを使用した場合では、65536バイト（=`2^16`バイト、TCPパケットの最大サイズ）程度のチャンクが生成されており、ヒープ領域のメモリ使用量もかなり抑えられていることがわかる。
+
+```bash
+$ node app-stream.js
+>>
+File size: 95.367431640625 MB
+Memory: rss: 41.73 MB, heapTotal: 8.31 MB, heapUsed: 3.52 MB, external: 1.22 MB, arrayBuffers: 0.26 MB
+~~~
+Read bytelength:  65536
+Memory: rss: 41.73 MB, heapTotal: 8.31 MB, heapUsed: 3.58 MB, external: 1.28 MB, arrayBuffers: 0.32 MB
+Read bytelength:  57600
+Memory: rss: 41.73 MB, heapTotal: 8.31 MB, heapUsed: 3.64 MB, external: 1.34 MB, arrayBuffers: 0.38 MB
+end
+Memory: rss: 41.73 MB, heapTotal: 8.31 MB, heapUsed: 3.65 MB, external: 1.34 MB, arrayBuffers: 0.38 MB
+```
+
+以上の結果を見てみても、巨大なファイルを取り扱う場合にはストリーム形式を使用したほうがいいことがわかる。
 
 ## 課題 2
 
