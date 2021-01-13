@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [APIの構築](#api%E3%81%AE%E6%A7%8B%E7%AF%89)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # APIの構築
 
 - ではJSONを使ったAPIを構築していく

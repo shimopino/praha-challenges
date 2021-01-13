@@ -1,3 +1,13 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [ルーティングの基礎](#%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0%E3%81%AE%E5%9F%BA%E7%A4%8E)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # ルーティングの基礎
 
 - ルーティングにより、リクエストに対応するリクエストハンドラを呼び出せる
