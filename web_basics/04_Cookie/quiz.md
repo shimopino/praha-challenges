@@ -16,12 +16,29 @@
 
 実際にユーザセッションを使用して、セッションハイジャックを試してみましょう。
 
-- [github.com](https://github.com/)にアクセスする
-- Chromeの検証ツールの`Application`タブから `github.com` ドメインに対応するCookieを確認する
-- ユーザセッションを取得
-- 別のブラウザで `github.com` からログアウトする
-- 検証ツールの`Application`タブに直接ユーザセッションに取得したセッションIDを格納する
-- ページを再リロードする
+- Step1
+  - 検証のために2つのブラウザを使用する
+    - Safari
+    - Chrome
+  - どちらとも[github.com](https://github.com)にアクセスする
+  - Chromeから全てのCookieをクリアし、Githubのトップページが表示されていることを確認する
+- Step2
+  - Safariに登録されている **user_session** の値をコピーする
+  - Chromeの検証ツールの`Application`タブから `github.com` ドメインに対応するCookieにコピーした値と対応する **user_session** を登録する
+- Step3
+  - ページを再ロードして、ユーザーページに遷移することを確認する
+
+<details>
+<summary>回答例</summary>
+
+- Step1
+  ![](./assets/Step1.png)
+- Step2
+  ![](./assets/Step2.png)
+- Step3
+  ![](./assets/Step3.png)
+
+</details>
 
 ## クイズ #2
 
