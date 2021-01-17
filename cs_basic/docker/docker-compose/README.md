@@ -1,7 +1,15 @@
 # Docker-Composeの基礎
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [Composeの始め方](#compose%E3%81%AE%E5%A7%8B%E3%82%81%E6%96%B9)
+  - [command](#command)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Composeの始め方
 
