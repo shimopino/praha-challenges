@@ -16,12 +16,6 @@ RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip \
     && mv ngrok /usr/local/bin \
     && rm -rf ngrok-stable-linux-amd64.zip
 
-# ユーザー設定を追加する
-USER node
-
-# アプリケーション用のディレクトリを設定する
-WORKDIR /home/src/app
-
 # アプリケーションの依存関係をインストールする
 # package.json と package-lock.json から依存関係をインストールする
 COPY package*.json ./
@@ -32,6 +26,12 @@ RUN npm install
 
 # アプリケーションのソースをバンドルする
 COPY . .
+
+# ユーザー設定を追加する
+USER node
+
+# アプリケーション用のディレクトリを設定する
+WORKDIR /home/src/app
 
 # ポート番号を解放する
 EXPOSE ${PORT}
