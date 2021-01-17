@@ -20,6 +20,29 @@
 
 ### サードパーティクッキーとファーストパーティクッキーの違いは何か
 
+Cookieの流れを振り返ってみると、サーバがクライアントへのレスポンスに対して `Set-Cookie` を使用してクライアントにCookieを送信し、クライアントから次のリクエストをサーバに送信する際に `Cookie` ヘッダを使用してCookieを送信できる。
+
+つまりCookieとは、どこかのサイトに紐づいている情報である。
+
+なおこの時のサイトとは、以下の組み合わせで表現されている。
+（議論を簡単にするため、Schemeless-Same-Siteを考える。）
+
+- [Public Suffix List]で定義されている **eTLD**
+- **eTLD+1**
+
+例えば以下の状況を考える。
+
+![](./assets/fig1.svg)
+
+この場合、3つのサイトに紐づくCookieは以下のように分類できる
+
+- 1st-party cookie: `www.example.com` に紐づくCookie
+- 3rd-party cookie: `adsense.google.com` に紐づくCookie
+- 3rd-party cookie: `third.example.com` に紐づくCookie
+
+これは [RFC6265bisの5.2.1](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-5.2.1)で言及されている（厳密な定義は見当たらない）ように、ブラウザのアドレスバーに指定されているURLに対して、Cookieを分類することができる。
+
+これが 1st-party cookie と 3rd-party cookie の違いである。
 
 ### サードパーティクッキーを用いて、広告配信ネットワーク（Google Adsense など）はどのようにユーザーの訪問履歴を把握しているのか
 
