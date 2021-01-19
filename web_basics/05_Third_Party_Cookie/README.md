@@ -111,6 +111,11 @@ HTTPリクエストを発行すれば、サーバ側から Cookie を設定す�
   - これはユーザの嗜好に合わせて配信コンテンツを決定する場合などで使用されている
   - 注意点
     - `<script>`で呼び出した JavaScript から `document.cookie` を使用して Cookie を生成した場合、これはFirst-Party Cookie として保存される
+  - 実験
+    - [request-script](./request-script) で ngrok でHTTPS化させたサービスから配信されている [script.js](./request-script/third-script/script.js) を読み込んでみる
+    - 結果としてブラウザに保存された Cookie の Domain が外部リソースから読み込んでいるにもかかわらず、確かに異なっていることがわかる。
+
+      ![](./assets/third-2.png)
 
 参考資料
 
@@ -151,3 +156,7 @@ HTTPリクエストを発行すれば、サーバ側から Cookie を設定す�
   - httponly属性がついている
 - 実装
   - [third-party cookie](./third-party-cookie)
+
+なお課題では画像を読み込む際にサードパーティクッキーを設定したが、他の方法でもサードパーティクッキーの設定を試した。
+
+その際の証跡は [expreriment-cookie](./experiment-cookie) で実施している。

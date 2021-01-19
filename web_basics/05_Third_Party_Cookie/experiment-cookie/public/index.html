@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>First Domain</h1>
+
+    <!-- .ngrok.ioに置き換える -->
+    <img src="https://2b24091a0837.ngrok.io/cookie-tiny.jpg" alt="Cross-Siteの画像">
+
+    <!-- .ngrok.ioに置き換える -->
+    <script src="https://2b24091a0837.ngrok.io/script.js"></script>
+
+    <!-- .ngrok.ioに置き換える -->
+    <form action="https://2b24091a0837.ngrok.io/data.txt" method="GET">
+        <input type="submit">
+    </form>
+
+    <script>
+        // .ngrok.ioに置き換える
+        fetch("https://2b24091a0837.ngrok.io/data.txt")
+          .then((res) => res.text())
+          .then((text) => console.log(text))
+          .catch((err) => console.log(err))
+    </script>
+
+    <!-- Credentialsはデフォルトだと拒否 -->
+    <script>
+        // .ngrok.ioに置き換える
+        fetch("https://2b24091a0837.ngrok.io/data-cookie.txt", {
+            credentials: "include"
+        })
+        .then((res) => res.text())
+        .then((text) => console.log(text))
+        .catch((err) => console.log(err))
+    </script>
+
+    <!-- プリフライト越し -->
+    <script>
+        fetch("https://2b24091a0837.ngrok.io/data.json", {
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then((res) => res.json())
+        .then((json) => console.log(JSON.stringify(json)))
+        .catch((err) => console.log(err))
+    </script>
+</body>
+</html>
