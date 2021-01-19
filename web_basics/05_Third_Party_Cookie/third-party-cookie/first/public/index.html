@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>img Load</h1>
+    <img id="img-container" src="https://a88bea2df62a.ngrok.io/img" alt="かわいい猫">
+
+    <div id="container"></div>
+
+    <script>
+        const imgElem = document.querySelector("#img-container");
+        const divElem = document.querySelector("#container");
+        imgElem.addEventListener("load", () => {
+            // httpOnly; を設定するとJavaScriptからは読み込めない
+            console.log(document.cookie);
+            divElem.innerHTML = "cookies: \n" + document.cookie;
+        })
+    </script>
+</body>
+</html>
