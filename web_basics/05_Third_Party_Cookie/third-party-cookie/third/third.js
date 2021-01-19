@@ -22,4 +22,11 @@ appThird.get("/img", (req, res) => {
   res.sendFile(resolve(join(__dirname, "public", "mycat-tiny.jpg")));
 });
 
+appThird.get("/frame", (req, res) => {
+  res.cookie("3p-1pcookie", "sample", {
+    httpOnly: true
+  })
+  res.sendFile(resolve(join(__dirname, "public", "frame.html")));
+});
+
 module.exports = appThird;
