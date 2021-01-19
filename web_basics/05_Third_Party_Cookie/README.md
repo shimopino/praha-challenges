@@ -46,34 +46,71 @@ Cookieの流れを振り返ってみると、サーバがクライアントへ�
 
 ### サードパーティクッキーを用いて、広告配信ネットワーク（Google Adsense など）はどのようにユーザーの訪問履歴を把握しているのか
 
-- facebook login
+Google AdSenseでは、Cookieを使用してユーザーの訪問履歴を把握している。
 
-- embed good button
+Cookieが基本的にはいかなるリクエストに対しても送信される性質を利用して、以下のように `adsense.google.com` にリクエストを送信した際に、ブラウザを識別するためのIDを付与する。
 
-- send cookie
+これでユーザーがほかのページをアクセスしたとしても、そのページ内に `adsense.google.com` が提供する広告が存在していた場合、ブラウザからドメインに紐づくCookieが送信され、サーバはユーザーの訪問履歴を追跡することが可能である。
+
+![](./assets/fig2.svg)
+
+実際に Google Analytics では、 [gtag.js](https://developers.google.com/analytics/devguides/collection/gtagjs?hl=ja) 、 [analytics.js](https://developers.google.com/analytics/devguides/collection/analyticsjs?hl=ja) 、 [ga.js](https://developers.google.com/analytics/devguides/collection/gajs?hl=ja) の3種類の JavaScript ライブラリを使用して、ユーザーのウェブサイトの利用状況を測定している。
+
+よく見かけるであろう Cookie の代表例は以下である。
+
+| 名称                 | 有効期限 | 内容                                                                                                                                  | 
+| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- | 
+| `_ga`                | 2年      | ユーザーを区別するために使用する                                                                                                      | 
+| `_gid`               | 24時間   | ユーザーを区別するために使用する                                                                                                      | 
+| `_gat`               | 1分      | リクエスト率を抑制するために使用する<br>Googleタグマネージャーから導入された場合は `_dc_gtm_<property_id>` となる                     | 
+| `_gac_<property_id>` | 90日     | ユーザーのキャンペーン関連情報を含む<br>オプトアウトしない限り、Google広告webサイトのコンバージョンタグでこのCookie情報が読み取られる | 
+| `__utma`             | 2年      | ユーザーとセッションを区別するために使用する                                                                                          | 
+
+参考資料
+
+- [AdSense が Cookie を使用する仕組み](https://support.google.com/adsense/answer/7549925?hl=ja)
+- [GOOGLE による COOKIE の利用方法](https://policies.google.com/technologies/cookies#types-of-cookies)
+- [Google アナリティクスによるウェブサイトでの Cookie の使用](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage?hl=ja)
 
 ### サードパーティクッキーが生成される過程にはどのようなパターンが存在しているのか
 
-- Set-Cookie
+そもそも Cookie の値を設定する方法は2つ存在している。
 
-- embed img
+- ブラウザの `document.cookie` を使用する
+- サーバがブラウザに対して `Set-Cookie` ヘッダを指定する
 
-- embed script
+実際に [third-party-cookie](./third-party-cookie) フォルダ内のサーバを ngrok でスタートさせてページにアクセスすると、HTTPレスポンスで `Set-Cookie` が適用されていることがわかる。
 
 - 
 
+参考資料
+
+- [A practical, Complete Tutorial on HTTP cookies](https://www.valentinog.com/blog/cookies/)
+
 ### ブラウザごとのサードパーティクッキーの扱い方の違いはどのようなものでしょうか
 
+| ブラウザ | 対応                                                                                                                                                                                                                                                                                                                                                         | 
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | 
+| Chrome   | サードパーティクッキーはデフォルトでは許可する<br><br>サードパーティクッキーをブロックしたい場合は`SameSite`属性を利用する必要がある<br><br>また2022年にサードパーティクッキーを廃止する予定であり、代替機能としてPrivacy Sandboxを提案している<br><br>ただPrivacy Sandboxを導入することで広告業界においてGoogleがより力を強めるのではないかという懸念もある | 
+| Firefox  | サードパーティクッキーはデフォルトでブロックする<br><br>2019年に導入した Enhanced Tracking Protection機能を活用している。                                                                                                                                                                                                                                    | 
+| Safari   | サードパーティクッキーはデフォルトでブロックする<br><br>2017年に導入したITP（Intelligent Tracking Prevention）から始まり、クッキーの制限を段階的に上げている。                                                                                                                                                                                               | 
 
-- Chrome
+参考資料
 
-- Firefox
-
-- Safari
-
+- [最新のブラウザで変わるCookieの取り扱いやPrivacyの考え方](https://speakerdeck.com/yosuke_furukawa/zui-xin-falseburauzadebian-warucookiefalsequ-rixi-iyaprivacyfalsekao-efang)
+- [Privacy Sandboxの懸念事項: 5.327](https://assets.publishing.service.gov.uk/media/5fa557668fa8f5788db46efc/Final_report_Digital_ALT_TEXT.pdf)
+- [[Chromium Blog] Building a more private web: A path towards making third party cookies obsolete](https://blog.chromium.org/2020/01/building-more-private-web-path-towards.html)
+- [[InfoQ] Safari Blocks Third-Party Cookies by Default](https://www.infoq.com/news/2020/04/safari-third-party-cookies-block/)
+- [[Mozilla Blog] Today’s Firefox Blocks Third-Party Tracking Cookies and Cryptomining by Default](https://blog.mozilla.org/blog/2019/09/03/todays-firefox-blocks-third-party-tracking-cookies-and-cryptomining-by-default/)
 
 ### ポート番号が異なるクッキーはサードパーティクッキーに該当するのか
 
+- Cookieはポート番号による分離は行わない
+- 例えば `http://localhost:8080` のサービスで設定されたCookieと、 `http://localhost:8090` のサービスで設定されたCookieはお互いにアクセスすることが可能である。
+
+参考資料
+
+- [[RFC6265bis] 8.5 Weak Confidentiality](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-07#section-8.5)
 
 ## 課題2
 
@@ -82,3 +119,5 @@ Cookieの流れを振り返ってみると、サーバがクライアントへ�
   - ファーストパーティクッキーはHTTPSドメインから
   - サードパーティクッキーはHTTPSドメインから
   - httponly属性がついている
+- 実装
+  - [third-party cookie](./third-party-cookie)
