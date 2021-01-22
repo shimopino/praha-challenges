@@ -6,7 +6,13 @@
 <summary>Table of Contents</summary>
 
 - [&#035;01 TypeScript の導入](#01-typescript-%E3%81%AE%E5%B0%8E%E5%85%A5)
+  - [TypeScript の特徴](#typescript-%E3%81%AE%E7%89%B9%E5%BE%B4)
+  - [TypeScript が提供しているもの](#typescript-%E3%81%8C%E6%8F%90%E4%BE%9B%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E3%82%82%E3%81%AE)
 - [&#035;02 Types](#02-types)
+  - [プリミティブ型](#%E3%83%97%E3%83%AA%E3%83%9F%E3%83%86%E3%82%A3%E3%83%96%E5%9E%8B)
+  - [オブジェクト型](#%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E5%9E%8B)
+  - [配列型](#%E9%85%8D%E5%88%97%E5%9E%8B)
+  - [Tuple 型](#tuple-%E5%9E%8B)
 - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
