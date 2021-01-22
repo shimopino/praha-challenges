@@ -6,7 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [&#035;01 TypeScript の導入](#01-typescript-%E3%81%AE%E5%B0%8E%E5%85%A5)
-- [02 Types](#02-types)
+- [&#035;02 Types](#02-types)
 - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
