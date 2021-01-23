@@ -13,17 +13,17 @@
   - [オブジェクト型](#%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E5%9E%8B)
   - [配列型](#%E9%85%8D%E5%88%97%E5%9E%8B)
   - [Tuple 型](#tuple-%E5%9E%8B)
-  - [Enum型](#enum%E5%9E%8B)
-  - [any型](#any%E5%9E%8B)
-  - [Union型](#union%E5%9E%8B)
-  - [Literal型](#literal%E5%9E%8B)
-  - [Alias型 && Union型](#alias%E5%9E%8B--union%E5%9E%8B)
-  - [Alias型 && Object型](#alias%E5%9E%8B--object%E5%9E%8B)
-  - [function型 && void](#function%E5%9E%8B--void)
-  - [function型](#function%E5%9E%8B)
-  - [CallBack Function型](#callback-function%E5%9E%8B)
-  - [unknown型](#unknown%E5%9E%8B)
-  - [never型](#never%E5%9E%8B)
+  - [Enum 型](#enum%E5%9E%8B)
+  - [any 型](#any%E5%9E%8B)
+  - [Union 型](#union%E5%9E%8B)
+  - [Literal 型](#literal%E5%9E%8B)
+  - [Alias 型 && Union 型](#alias%E5%9E%8B--union%E5%9E%8B)
+  - [Alias 型 && Object 型](#alias%E5%9E%8B--object%E5%9E%8B)
+  - [function 型 && void](#function%E5%9E%8B--void)
+  - [function 型](#function%E5%9E%8B)
+  - [CallBack Function 型](#callback-function%E5%9E%8B)
+  - [unknown 型](#unknown%E5%9E%8B)
+  - [never 型](#never%E5%9E%8B)
   - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-1)
 
@@ -192,13 +192,13 @@ JavaScript での主な型
   person.role[1] = 10;
   ```
 
-### Enum型
+### Enum 型
 
-| 型      | 具体例 | 内容                                    |
-| :------ | :----- | :-------------------------------------- |
+| 型     | 具体例          | 内容                            |
+| :----- | :-------------- | :------------------------------ |
 | `Enum` | enum {NEW, OLD} | TypeScript 独自の型であり列挙型 |
 
-- JavaScriptで定数として文字列をそのまま指定することはエラーの元となる
+- JavaScript で定数として文字列をそのまま指定することはエラーの元となる
 
   ```js
   const person = {
@@ -209,7 +209,7 @@ JavaScript での主な型
   }
   ```
 
-- TypeScriptの`Enum`では定数を事前に型として準備することができる
+- TypeScript の`Enum`では定数を事前に型として準備することができる
 
   ```js
   // 定数の値を指定しない場合は、0から自動的にインクリメントされる
@@ -228,28 +228,28 @@ JavaScript での主な型
   }
   ```
 
-### any型
+### any 型
 
-| 型      | 具体例 | 内容                                    |
-| :------ | :----- | :-------------------------------------- |
-| `Any` | * | どんな型での許容される |
+| 型    | 具体例 | 内容                   |
+| :---- | :----- | :--------------------- |
+| `Any` | \*     | どんな型での許容される |
 
 - 可能なら使用しないほうがいい
 
-### Union型
+### Union 型
 
 - 以下の関数に関して、文字列も受け取ることができるようにするにはどうすればいいのか
 
-    ```js
-    // sample.ts
-    const combine = (x: number, y: number): number => {
-      const result =  x + y;
-      return result;
-    };
+  ```js
+  // sample.ts
+  const combine = (x: number, y: number): number => {
+    const result = x + y;
+    return result;
+  };
 
-    const combinedAges = combine(30, 26);
-    console.log(combinedAges)
-    ```
+  const combinedAges = combine(30, 26);
+  console.log(combinedAges);
+  ```
 
 - 縦線`|`を付与することで、型を複数指定することができる
 
@@ -269,10 +269,10 @@ JavaScript での主な型
   }
   ```
 
-### Literal型
+### Literal 型
 
 - 値を厳密に決定するための型
-  Union型と組み合わせることで、引数に受け取れる文字列などを制御することができる
+  Union 型と組み合わせることで、引数に受け取れる文字列などを制御することができる
 
   ```js
   const combine = (
@@ -280,13 +280,12 @@ JavaScript での主な型
     y: number | string,
     // 以下では2つの文字列しか受け取れないようにしている
     // これで文字列が間違っている場合には、IDEにエラーが表示される
-    resultConversion: "as-number" | "as-text",
+    resultConversion: "as-number" | "as-text"
   ) => {
     let result;
     if (
-      (typeof x === "number" && typeof y === "number")
-      ||
-      (resultConversion === "as-number")
+      (typeof x === "number" && typeof y === "number") ||
+      resultConversion === "as-number"
     ) {
       // parseFloatなどでもいいが、表記が短いほうに併せている
       result = +x + +y;
@@ -294,10 +293,10 @@ JavaScript での主な型
       result = x.toString() + y.toString();
     }
     return result;
-  }
+  };
   ```
 
-### Alias型 && Union型
+### Alias 型 && Union 型
 
 - `type`キーワードを使用することで、独自の型を指定することができる
 
@@ -309,13 +308,12 @@ JavaScript での主な型
     // 事前に定義した独自の型を指定することができる
     x: Combinable,
     y: Combinable,
-    resultConversion: ConversionDescriptor,
+    resultConversion: ConversionDescriptor
   ) => {
     let result;
     if (
-      (typeof x === "number" && typeof y === "number")
-      ||
-      (resultConversion === "as-number")
+      (typeof x === "number" && typeof y === "number") ||
+      resultConversion === "as-number"
     ) {
       // parseFloatなどでもいいが、表記が短いほうに併せている
       result = +x + +y;
@@ -323,12 +321,12 @@ JavaScript での主な型
       result = x.toString() + y.toString();
     }
     return result;
-  }
+  };
   ```
 
-### Alias型 && Object型
+### Alias 型 && Object 型
 
-- 独自のObjectを定義することもできる
+- 独自の Object を定義することもできる
 
   ```js
   type User = {
@@ -345,7 +343,7 @@ JavaScript での主な型
   }
   ```
 
-### function型 && void
+### function 型 && void
 
 - 関数の戻り値の型を指定することができる
 
@@ -369,7 +367,7 @@ JavaScript での主な型
     printResult(10);
     ```
 
-### function型
+### function 型
 
 - 変数に関数を受け取ることができるように型指定を使うことができる
 
@@ -390,7 +388,7 @@ JavaScript での主な型
     conbineValues = printResult; // raise Error
     ```
 
-### CallBack Function型
+### CallBack Function 型
 
 - 引数で関数を受け取って実行するコールバック関数に関しても、型指定することができる
 
@@ -407,7 +405,7 @@ JavaScript での主な型
   });
   ```
 
-### unknown型
+### unknown 型
 
 - `unknown`型を指定すると、`any`型と異なり、型チェックを行うことを強制することができる
 
@@ -426,7 +424,7 @@ JavaScript での主な型
   userName = userInput;
   ```
 
-### never型
+### never 型
 
 - 関数の返り値として、何も返さないことを指定することができる
 
@@ -457,7 +455,254 @@ JavaScript での主な型
 ### 参考資料
 
 - [[TypeScript Docs] Basic Types](https://www.typescriptlang.org/docs/handbook/basic-types.html)
-- [[TypeScript Deep Dive] TypeScriptの型システム](https://typescript-jp.gitbook.io/deep-dive/type-system)
+- [[TypeScript Deep Dive] TypeScript の型システム](https://typescript-jp.gitbook.io/deep-dive/type-system)
+
+## #3 Compiler
+
+### Wach Mode
+
+- ファイルを変更するたびに、自動的に TypeScript にコンパイルすることができる
+
+  - コンパイルオプションを指定するだけでいい
+
+    ```bash
+    # -w, --watch : ファイルの監視を行って自動的コンパイルを実行する
+    $ tsc app.ts -w
+    ```
+
+  - ただしこの方法だと、特定のファイルしか指定することができない
+
+### tsconfig.json
+
+- TypeScript が管理するフォルダを指定するために、以下のコマンドを実行して設定ファイルを作成する
+
+  ```bash
+  $ tsc --init
+  >
+  tsconfig.json
+  ```
+
+### コンパイル対象の絞り込みと除外
+
+- TypeScript では、コンパイルする対象のファイルを明示的に指定したり、除外したりすることができる
+- これは `tsconfig.json` に指定すればいい
+
+  ```json
+  {
+    "conpilerOptions": {
+      // コンパイラの設定
+    },
+    "exclude": [
+      // 除外するファイルを指定する
+      // デフォルトでは "node_modules" が指定されている
+      // ただしこの設定を明示的に記載すると "node_modules" は除外されるため注意
+      "**/*.dev.ts",
+      "node_modules"
+    ],
+    "include": [
+      // コンパイルするファイルを明示的に指定する
+    ]
+  }
+  ```
+
+### target
+
+- `target` オプションを指定することで、JavaScript をどの ECMAScript の仕様にのっとったものにコンパイルするのか指定することができる
+
+  - 例えば `es5` を指定すると、`const`や`let`はサポートされていないため、変数宣言部分はすべて`var`に変換される
+
+    ```json
+    {
+      "compilerOptions": {
+        /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+        /* Basic Options */
+        "target": "es5" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */,
+    }
+    ```
+
+### lib
+
+- TypeScript で使用するライブラリを設定することができる
+- コメントアウトしていた場合には、`target`に合わせて自動的にライブラリが選択される
+
+  ```json
+  {
+    "compilerOptions": {
+      "target": "es6",
+      // 以下は "es6" を指定した際に自動的に読み込まれるライブラリ
+      "lib": [
+        "DOM",
+        "ES6",
+        "DOM.Iterable",
+        "ScriptHost"
+      ]
+  }
+  ```
+
+### allowJs & checkJs
+
+- TypeScript の機能を使って、JavaScript のコード自体もコンパイルすることができる
+- また JavaScript のコードの検証を実行することも可能である
+  ただしこの場合は TypeScript がコンパイルした JavaScript を対象に含めないように、`exclude`や`include`を設定する必要がある
+
+  ```json
+  {
+    "compilerOptions": {
+      // ...
+      "allowJs": true, // Allow javascript files to be compiled.
+      "checkJs": true // Report errors in .js files.
+      // ...
+    }
+  }
+  ```
+
+### sourceMap
+
+- デバッグ役立つオプションである
+- TypeScript と JavaScript のソースコードの対応つけを行うファイルが生成される
+- Chrome の検証ツールから、Sources に TypeScript を表示することができ、デバッグを実行することも可能となる
+
+  ```json
+  {
+    "compilerOptions": {
+      // ...
+      "sourceMap": true // Generates corresponding '.map' file.
+    }
+  }
+  ```
+
+### outDir & rootDir
+
+- TypeScript をコンパイルする際に、コンパイル対象となる TypeScript ファイルの配置場所を指定したり、コンパイルした JavaScript のファイルを出力する場所を指定することができる
+- なおコンパイル元のフォルダ構造もそのまま保持される
+- 実験
+
+  - 以下のようなフォルダ構成にする
+
+    ```bash
+    -- root
+       |-- dist
+       |   |-- sample.js
+       |-- src
+       |   |-- sample.ts
+    ```
+
+  - この時にコンパイル設定を以下のように設定できる
+
+    ```json
+    {
+      "compilerOptions": {
+        "outDir": "./dist", // .js の出力先フォルダ
+        "rootDir": "./src" // .ts のコンパイル対象フォルダ
+      }
+    }
+    ```
+
+### removeComments
+
+- TypeScript 内に記載されているコメントを出力しないようにする
+- 出力される JavaScript のコード量を減らすことができる
+
+  ```json
+  {
+    "compilerOptions": {
+      "removeComments": true // コメントを出力しない
+    }
+  }
+  ```
+
+### noEmit
+
+- コンパイル結果として JavaScript を出力しない
+- TypeScript の機能を使ったエラー検証だけを実施したい場合に使用する
+
+  ```json
+  {
+    "compilerOptions": {
+      "noEmit": true // JavaScriptを出力しない
+    }
+  }
+  ```
+
+### downlevelIteration
+
+- 最新の JavaScript の仕様で提案されているいくつかの for 文は、古い JavaScript だと動作しない場合がある
+- そうした場合に for 文を正しく実行できるようにする
+- ただしコード量が非常に増大するため、うまくいかない場合にのみ使用するといい
+
+  ```json
+  {
+    "compilerOptions": {
+      "downlevelIteration": true
+    }
+  }
+  ```
+
+### noEmitOnError
+
+- TypeScript でコンパイルエラーが発生した場合に、JavaScript が生成されないようにする
+- デフォルトだと、コンパイルエラーであっても JavaScript が生成される
+
+  ```json
+  {
+    "compilerOptions": {
+      "noEmitOnError": true
+    }
+  }
+  ```
+
+### Strict Type-Checking Options
+
+- 厳密な型チェックを実行するためのオプションになる
+- `strict` が `true` に設定されている場合、後続のオプションはすべて `true` と判断される
+
+  ```js
+  {
+    "compilerOptions": {
+      /* Strict Type-Checking Options */
+      "strict": true /* すべての厳密な型チェックを有効化させる */,
+      // "noImplicitAny": true,                 /* 暗黙的にanyの場合にエラーを発生させる */
+      // "strictNullChecks": true,              /* nullではない可能性が存在する場合にエラーを発生させる */
+      // "strictFunctionTypes": true,           /* 関数のパラメータや戻り値を厳密にチェックする。継承など */
+      // "strictBindCallApply": true,           /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
+      // "strictPropertyInitialization": true,  /* Enable strict checking of property initialization in classes. */
+      // "noImplicitThis": true,                /* Raise error on 'this' expressions with an implied 'any' type. */
+      // "alwaysStrict": true,                  /* "use strict"を必ず付与する */
+    }
+  }
+  ```
+
+### Additional Checks
+
+- 細かいチェックを実行することができる
+
+  ```js
+  {
+    "compilerOptions": {
+      /* Additional Checks */
+      // "noUnusedLocals": true,                /* ローカル変数が使用されていない場合にエラーを発生させる */
+      // "noUnusedParameters": true,            /* 関数などのパラメータが使用されていない場合にエラーを発生させる */
+      // "noImplicitReturns": true,             /* 暗黙的にreturnした場合にエラーを発生させる */
+      // "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
+      // "noUncheckedIndexedAccess": true,      /* Include 'undefined' in index signature results */
+    }
+  }
+  ```
+
+### Debugging
+
+- 便利な拡張機能
+  - ESLint
+  - prettier
+  - Debugger for Chrome
+    - `sourceMap` を設定しておく必要がある
+
+### 参考資料
+
+- [What is a tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
+- [tsc CLI Options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
+- [Debugging TypeScript](https://code.visualstudio.com/docs/typescript/typescript-debugging)
 
 ## 参考資料
 
@@ -465,4 +710,3 @@ JavaScript での主な型
   - [最短・最速で学ぶ TypeScript 実践入門 - 最新モダン開発には欠かせない TypeScript をマスターしよう！](https://www.udemy.com/course/typescript-typescript/)
   - [最速で学ぶ TypeScript](https://www.udemy.com/course/typescript-react-frontend/)
   - [【世界で 7 万人が受講】Understanding TypeScript - 2020 年最新版](https://nssol.udemy.com/course/understanding-typescript-jp/)
- 
