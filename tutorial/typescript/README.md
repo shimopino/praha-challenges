@@ -13,7 +13,19 @@
   - [オブジェクト型](#%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E5%9E%8B)
   - [配列型](#%E9%85%8D%E5%88%97%E5%9E%8B)
   - [Tuple 型](#tuple-%E5%9E%8B)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+  - [Enum型](#enum%E5%9E%8B)
+  - [any型](#any%E5%9E%8B)
+  - [Union型](#union%E5%9E%8B)
+  - [Literal型](#literal%E5%9E%8B)
+  - [Alias型 && Union型](#alias%E5%9E%8B--union%E5%9E%8B)
+  - [Alias型 && Object型](#alias%E5%9E%8B--object%E5%9E%8B)
+  - [function型 && void](#function%E5%9E%8B--void)
+  - [function型](#function%E5%9E%8B)
+  - [CallBack Function型](#callback-function%E5%9E%8B)
+  - [unknown型](#unknown%E5%9E%8B)
+  - [never型](#never%E5%9E%8B)
+  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-1)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
