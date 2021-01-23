@@ -839,6 +839,164 @@ JavaScript での主な型
 - [JS 機能一覧](https://kangax.github.io/compat-table/es6/)
 - [モダンな JavaScript の機能](https://typescript-jp.gitbook.io/deep-dive/future-javascript)
 
+## #15 Node.js & TypeScript
+
+### settings
+
+- まずは環境設定を行う
+- TypeScript にて以下の設定を変更しておく
+
+  ```json
+  {
+    "compilerOptions": {
+      // ...
+      "target": "es2018",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "outDir": "./dist",
+      "rootDir": "./src"
+      // ...
+    }
+  }
+  ```
+
+- 必要なパッケージをインストールする
+
+  ```bash
+  $ npm i -D @types/node @types/express
+  ```
+
+### using Types
+
+- TypeScript を Node で使用する際、ESModule を使用すれば、TypeScript からコード補間などの機能を反映させることができる
+
+  ```js
+  // src/app.ts
+  impoer express from "express";
+
+  const app = express();
+
+  app.listen(3000);
+  ```
+
+  - Express で使用するミドルウェアのハンドラーは、`@types/express` を使用することで型指定を行うことができる
+  - 実際に以下のようにアプリを起動するためのトップファイルを作成できる
+
+    ```js
+    // src/app.ts
+
+    // TypeScriptでExpressを使用するための型を読み込む
+    import express, { Request, Response, NextFunction } from "express";
+    import todoRoutes from "./routes/todos";
+
+    const app = express();
+
+    app.use(express.json());
+    app.use("/todos", todoRoutes);
+
+    // ハンドラ関数を自作する場合は、引数の型を指定することでTypeScriptの恩恵を受けることが可能となる
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+
+    app.listen(3000);
+    ```
+
+  - また上記は Todo アプリの機能であるため、まずは Todo アプリに追加する内容をモデルとして定義しておく。
+  - これで API に POST リクエストを投げた際に、オブジェクトのプロパティが暗黙的な `any` にならないようにすることができる
+
+    ```js
+    // src/models/todos.ts
+
+    export class Todo {
+      // コンストラクタを定義することで自動的にオブジェクトの値に紐づける
+      constructor(public id: string, public text: string) {}
+    }
+    ```
+
+  - では次に API にリクエストが来た際に実行する処理を行いうハンドラ関数を作成する
+  - TypeScript 用の `RequestHandler` を指定すれば、関数の引数の 1 つ 1 に型を指定する必要がなくなる
+
+    ```js
+    // src/controllers/todos.ts
+
+    // import { Request, Response, NextFunction } from "express";
+    import { RequestHandler } from "express";
+    import { Todo } from "../models/todos";
+
+    // 特定のクラスの配列のみを受け取るようにできる
+    const TODOS: Todo[] = [];
+
+    export const createTodo: RequestHandler = (req, res, next) => {
+
+      // Requestオブジェクトはどんなキーと値が含まれているのかわからない
+      // そのためRequestボディの中身を特定の型にキャストする必要がある
+      // 以下のようにキャストすると文字列型として認識される
+      const text = (req.body as {text: string}).text;
+      const newTodo = new Todo(Math.random().toString(), text);
+
+      TODOS.push(newTodo);
+
+      res.status(201).json({
+        message: "TODOを作成しました",
+        createdTodo: newTodo
+      })
+    }
+    ```
+
+  - あとは API のルートを設定すればいい
+
+    ```js
+    // src/routes/todos.ts
+
+    import { Router } from "express";
+    import { createTodo } from "../controllers/todos";
+
+    const router = Router();
+
+    router.post("/", createTodo);
+    router.get("/");
+    router.patch("/:id");
+    router.delete("/:id");
+
+    export default router;
+    ```
+
+### Complicated Handlers
+
+- 残りの部分のルーターとコントローラを作成する
+
+  - まずはルーターに残りの処理を追加する
+
+    ```js
+    // src/routes/todos
+
+    import { Router } from "express";
+    import {
+      createTodo,
+      deleteTodos,
+      getTodos,
+      updateTodos,
+    } from "../controllers/todos";
+
+    const router = Router();
+
+    router.post("/", createTodo);
+    router.get("/", getTodos);
+    router.patch("/:id", updateTodos);
+    router.delete("/:id", deleteTodos);
+
+    export default router;
+    ```
+
+  - 次はコントローラの処理を CRUD に従って作成していく
+
+    ```js
+
+    ```
+
 ## 参考資料
 
 - Udemy
