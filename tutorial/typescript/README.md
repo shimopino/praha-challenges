@@ -603,6 +603,8 @@ JavaScript での主な型
        |   |-- sample.js
        |-- src
        |   |-- sample.ts
+       |
+       |-- tsconfig.json
     ```
 
   - この時にコンパイル設定を以下のように設定できる
@@ -720,6 +722,122 @@ JavaScript での主な型
 - [What is a tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
 - [tsc CLI Options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
 - [Debugging TypeScript](https://code.visualstudio.com/docs/typescript/typescript-debugging)
+
+## #4 Modern JavaScript
+
+### const & let
+
+- Modern な JavaScript では、大体は **ES6** を指している
+- 新しく導入された機能の中でよく使用するものは `const` と `let` である
+- 古い仕様で提案された `var` には、グローバルスコープと関数スコープしかないため、意図しないエラーを発生させる可能性がある
+
+  ```js
+  const age = 30;
+
+  if (age > 29) {
+    var outerScope = "out";
+    let innerScope = "in";
+  }
+
+  console.log(outerScope); // 実行時にエラーが発生しない
+  console.log(innerScope); // 実行時にエラーが発生する
+  ```
+
+### default parameter
+
+- 関数呼び出し時などで、パラメータがデフォルトで有するパラメータを設定できる
+
+  ```js
+  const add = (a: number, b: number = 1) => {
+    return a + b;
+  };
+
+  console.log(add(2)); // => 3
+  ```
+
+### spread operator
+
+- **ES6** から導入されたスプレッド演算子を使用すれば、配列やオブジェクトのコピーを簡単に渡すことができる
+
+  - 配列から要素を取り出す
+
+    ```js
+    const hobbies = ["Sports", "Cooking"];
+    const activeHobbies = ["Hiking"];
+
+    activeHobbies.push(...hobbies);
+    // => activeHobbies.push(hobbies[0], hobbies[1]);
+    ```
+
+  - オブジェクトから、キーと値のペアを取り出す
+
+    ```js
+    const person = {
+      name: "max",
+      age: 30,
+    };
+
+    // 単なるオブジェクトの参照へのコピーではなく
+    // 異なるオブジェクトへの参照として作成される
+    const copiedPerson = {
+      ...person,
+    };
+    ```
+
+### rest parameters
+
+- スプレッド演算子を関数の引数に使用することで、任意の数の引数を受け取ることができる。
+
+  ```js
+  // 可変長の数値型を引数に受け取る
+  const add = (...numbers: number[]) => {
+    // reduce
+    // 第1引数のコールバック関数で現在の処理結果と、1つ1つの要素にアクセスできる
+    // 第2引数で初期値を設定できる
+    return numbers.reduce((curResult, curValue) => {
+      return curResult + curValue;
+    }, 0);
+  };
+
+  // 可変長で数値型を指定することができる
+  const addedNumbers = add(5, 10, 3, 5.5);
+  console.log(addedNumbers);
+  ```
+
+### Destructuring
+
+- **ES6** では配列やオブジェクトに対して分割導入を行うことが可能である
+
+  - 配列に関して分割代入を行ってみる
+
+    ```js
+    const hobbies = ["Sports", "Cooking"];
+
+    const hobby1 = bobbies[0];
+    const hobby2 = bobbies[1];
+
+    const [hobby1, hobby2, ...remainingHobbies] = hobbies;
+    ```
+
+  - オブジェクトに対してもキーを指定することで値にアクセスできる
+
+    ```js
+    const person = {
+      firstName: "max",
+      age: 30,
+    };
+
+    // キーと同じ値を指定することで、同じ変数名に同じ値を格納できる
+    const { firstName, age } = person;
+
+    // 分割代入時に異なる変数名で値を格納できる
+    const { firstName: userName, age } = person;
+    ```
+
+### 参考資料
+
+- [JS 機能一覧](https://kangax.github.io/compat-table/es6/)
+- [モダンな JavaScript の機能](https://typescript-jp.gitbook.io/deep-dive/future-javascript)
 
 ## 参考資料
 
