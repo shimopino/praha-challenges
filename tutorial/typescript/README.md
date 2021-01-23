@@ -42,7 +42,14 @@
   - [Additional Checks](#additional-checks)
   - [Debugging](#debugging)
   - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-1)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-2)
+- [&#035;4 Modern JavaScript](#4-modern-javascript)
+  - [const & let](#const--let)
+  - [default parameter](#default-parameter)
+  - [spread operator](#spread-operator)
+  - [rest parameters](#rest-parameters)
+  - [Destructuring](#destructuring)
+  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-2)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
