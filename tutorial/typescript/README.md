@@ -850,6 +850,146 @@ JavaScript での主な型
 - [JS 機能一覧](https://kangax.github.io/compat-table/es6/)
 - [モダンな JavaScript の機能](https://typescript-jp.gitbook.io/deep-dive/future-javascript)
 
+## #14 React & TypeScript
+
+### Adding TypeScript
+
+- まずは環境準備を行う
+
+  - 公式が提供している `create-react-app` を活用する
+  - TypeScript を適用する場合は以下のように行う
+
+    ```bash
+    # ローカルインストールの場合
+    $ npx create-react-app . --template typescript
+
+    # グローバルインストールの場合
+    $ create-react-app . --template typescript
+    ```
+
+    この後にソースコードを以下のように整理する
+
+    ```bash
+    src/
+    ├── App.tsx
+    ├── index.css
+    ├── index.tsx
+    └── react-app-env.d.ts
+    ```
+
+    あとは開発サーバを起動状態にしておけばいい
+
+    ```bash
+    $ npm start
+    ```
+
+### Basic React
+
+- まずは React で簡単なコンポーネントを作成する
+
+  - まずは index の整理を行う
+
+    ```js
+    import React from "react";
+    import ReactDOM from "react-dom";
+    import "./index.css";
+    import App from "./App";
+
+    ReactDOM.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+      document.getElementById("root")
+    );
+    ```
+
+  - 次に TypeScript を使用せずにコンポーネントを作成する
+
+    まずはアプリケーションを作成する
+    この時に props を使用して下層のコンポーネントに渡す
+
+    ```js
+    import React from "react";
+    import TodoList from "./components/TodoList";
+
+    const App = () => {
+      const todos = [{
+        id: "t1",
+        text: "TypeScript is Fun"
+      }]
+
+      return (
+        <div className="App">
+          <TodoList items={todos}>
+        </div>
+      )
+    }
+    ```
+
+    次に Todo リストを表示するコンポーネントを作成する
+
+    ```js
+    import React from "react";
+
+    const TodoList = (props) => {
+      return (
+        <ul>
+          {props.items.map((todo) => (
+            <li key={todo.id}>{todo.text}</li>
+          ))}
+        </ul>
+      );
+    };
+    ```
+
+- ではこのコンポーネントに TypeScript を適用する
+
+  - アプリケーションの場合、関数コンポーネントとして作成しているため、関数の型を指定するようにする￥
+
+    ```js
+    import React from "react";
+    import TodoList from "./components/TodoList";
+
+    // React.FC は関数コンポーネントに使用する
+    const App: React.FC = () => {
+      const todos = [{
+        id: "t1",
+        text: "TypeScript is Fun"
+      }]
+
+      return (
+        <div className="App">
+          <TodoList items={todos}>
+        </div>
+      )
+    }
+    ```
+
+  - 次には Todo リストを表示するコンポーネントを TypeScript に対応させる
+
+    ```js
+    import React from "react";
+
+    // 重要な点は、関数コンポーネントの引数に対して、型を指定することである
+    interface TodoListProps {
+      items: {
+        id: string,
+        text: string,
+      }[];
+    }
+
+    // 関数コンポーネントの引数であるpropsの型をジェネリクスで指定する
+    const TodoList: React.FC<TodoListProps> = (props) => {
+      return (
+        <ul>
+          {props.items.map((todo) => (
+            <li key={todo.id}>{todo.text}</li>
+          ))}
+        </ul>
+      );
+    };
+    ```
+
 ## #15 Node.js & TypeScript
 
 ### settings
@@ -1003,9 +1143,65 @@ JavaScript での主な型
     ```
 
   - 次はコントローラの処理を CRUD に従って作成していく
+  - まずは GET メソッドを実装する
 
     ```js
+    // GETメソッドはメモリに保持されている配列を返すだけでいい
+    export const getTodos: RequestHandler = (req, res, next) => {
+      res.json({ todos: TODOS });
+    };
+    ```
 
+  - 次に PATCH メソッドを実装する
+
+    ```js
+    export const updateTodos: RequestHandler<{id: string}> = (req, res, next) => {
+      const todoId = req.params.id;
+      const updateText = (req.body as {text: string}).text;
+
+      // findIndexはJavaScriptの機能
+      // コールバック関数の返り値が true になるインデックスを返す
+      const todoIndex = TODOS.findIndex(todo => todo.id === todoId)
+
+      // インデックスがマイナス値の場合は対象の要素がない
+      if (todoIndex < 0) {
+          throw new Error("対象のTODOがみつかりませんでした")
+      }
+
+      // 対象のインデックスのTodoオブジェクトを、新しく作成したオブジェクトに変換する
+      TODOS[todoIndex] = new Todo(todoId, updateText);
+
+      res.json({
+          message: "更新しました",
+          updatedTodo: TODOS[todoIndex]
+      })
+    }
+    ```
+
+  - 最後に DELETE メソッドを実装する
+
+    ```js
+    export const deleteTodos: RequestHandler<{ id: string }> = (
+      req,
+      res,
+      next
+    ) => {
+      const todoId = req.params.id;
+
+      const todoIndex = TODOS.findIndex((todo) => todo.id === todoId);
+
+      if (todoIndex < 0) {
+        throw new Error("対象のTODOがみつかりませんでした");
+      }
+
+      // 対応するインデックスの要素を削除する
+      // その際に第2引数で指定している要素数分削除する
+      TODOS.splice(todoIndex, 1);
+
+      res.json({
+        message: "削除しました",
+      });
+    };
     ```
 
 ## 参考資料
