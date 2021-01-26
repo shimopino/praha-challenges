@@ -1,7 +1,23 @@
 # キャッシュを理解する
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [課題1](#%E8%AA%B2%E9%A1%8C1)
+  - [なぜキャッシュが必要なのか](#%E3%81%AA%E3%81%9C%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%8C%E5%BF%85%E8%A6%81%E3%81%AA%E3%81%AE%E3%81%8B)
+  - [キャッシュの種類](#%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%AE%E7%A8%AE%E9%A1%9E)
+  - [HTTPヘッダによるブラウザキャッシュの制御](#http%E3%83%98%E3%83%83%E3%83%80%E3%81%AB%E3%82%88%E3%82%8B%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%AE%E5%88%B6%E5%BE%A1)
+  - [ブラウザごとのキャッシュサイズの違い](#%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%81%94%E3%81%A8%E3%81%AE%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%82%B5%E3%82%A4%E3%82%BA%E3%81%AE%E9%81%95%E3%81%84)
+  - [動的サイトへの `Expires` ヘッダの是非](#%E5%8B%95%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%81%B8%E3%81%AE-expires-%E3%83%98%E3%83%83%E3%83%80%E3%81%AE%E6%98%AF%E9%9D%9E)
+  - [ブラウザキャッシュの実例を3つ紹介](#%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%AE%E5%AE%9F%E4%BE%8B%E3%82%923%E3%81%A4%E7%B4%B9%E4%BB%8B)
+- [課題2](#%E8%AA%B2%E9%A1%8C2)
+- [課題3](#%E8%AA%B2%E9%A1%8C3)
+- [課題4](#%E8%AA%B2%E9%A1%8C4)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 課題1 
 
