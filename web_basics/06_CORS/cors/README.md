@@ -27,6 +27,21 @@
 
 ## How to Reproduce
 
+1. このフォルダを clone
+2. `yarn` でパッケージをインストールする
+3. `yarn run dev` でサーバを起動する
+4. `http://localhost:8090` にアクセスする
+
+- 単純なリクエストを送信し、レスポンスが 1 件返ってきていることを確認する
+- プリフライトリクエストを送信し、レスポンスが 2 件返って来ていることを確認する
+  - ステータスコードが `204` の場合がプリフライトリクエスト
+  - ステータスコードが `201` の場合が本来のリクエスト
+
+5. `http://localhost:8091` にアクセスする
+
+- 単純なリクエストを送信し、CORS ポリシーによってアクセスが拒否されることを確認する
+- プリフライトリクエストを送信し、CORS ポリシーによってアクセスが拒否されることを確認する
+
 ## Project settings
 
 今回の実装では、TypeScript や ESLint を導入した。
@@ -34,6 +49,12 @@
 その際の手順を残しておく。
 
 なお [Getting Started - Linting your TypeScript Codebase](https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md) に従っている。
+
+そのほかの Linting 関係の資料集
+
+- [TSLint Migration Guide](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/ROADMAP.md)
+- [ESLint Command Line Interface](https://eslint.org/docs/user-guide/command-line-interface)
+- [ESLint Rules](https://eslint.org/docs/rules/)
 
 ---
 
@@ -58,7 +79,7 @@ $ npm --version
 
 このとき Docker コンテナを立ち上げる際の設定は以下になる。
 
-```json
+```javascript
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.155.1/containers/javascript-node
 {
@@ -80,13 +101,14 @@ $ npm --version
     "esbenp.prettier-vscode",
     "hediet.vscode-drawio",
     "humao.rest-client",
-    "coenraads.bracket-pair-colorizer"
+    "coenraads.bracket-pair-colorizer",
+    "editorconfig.editorconfig"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
 
-  "appPort": [8080, 8090],
+  "appPort": [8080, 8090, 8091],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "yarn install",
@@ -301,3 +323,22 @@ $ yarn add -D @types/node @types/express
   }
 }
 ```
+
+### #15 `.editorCondig` を設定する
+
+OSS の[Crowi](https://github.com/crowi/crowi/blob/master/.editorconfig)の設定を採用する。
+
+```txt
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = lf
+max_line_length = off
+```
+
+- [どんなエディタでも EditorConfig を使ってコードの統一性を高める](https://qiita.com/naru0504/items/82f09881abaf3f4dc171)
