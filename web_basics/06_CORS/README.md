@@ -202,11 +202,14 @@ Access-Control-Allow-Credentials: true
 
 以下の条件に従うモックを作成する。
 
-- 特定の Origin からのPOSTリクエストを許可
-- それ以外の Origin からのPOSTリクエストはアクセス制限される
-- 単純なリクエストの時には Preflight Request が送信されない
-- 単純ではないリクエストの際には Preflight Request が送信される
-
+- 実験内容
+  - 特定の Origin からのPOSTリクエストを許可
+  - それ以外の Origin からのPOSTリクエストはアクセス制限される
+  - 単純なリクエストの時には Preflight Request が送信されない
+  - 単純ではないリクエストの際には Preflight Request が送信される
+- 実装
+  - [./cors](./cors)
+  
 ## 課題 4 CURL でプリフライトリクエストの送信実験
 
 まだ実験してないが、おそらくCORS制約は適用されない。
