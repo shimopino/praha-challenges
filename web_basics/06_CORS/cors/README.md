@@ -21,6 +21,7 @@
   - [&#035;12 node と express 用の型を導入する](#12-node-%E3%81%A8-express-%E7%94%A8%E3%81%AE%E5%9E%8B%E3%82%92%E5%B0%8E%E5%85%A5%E3%81%99%E3%82%8B)
   - [#13 `package.json` の設定を行う](#13-packagejson-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%A1%8C%E3%81%86)
   - [#14 `.eslintrc.json` に独自ルールを追加する](#14-eslintrcjson-%E3%81%AB%E7%8B%AC%E8%87%AA%E3%83%AB%E3%83%BC%E3%83%AB%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [#15 `.editorCondig` を設定する](#15-editorcondig-%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
