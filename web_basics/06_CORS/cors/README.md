@@ -156,7 +156,7 @@ $ yarn add -D eslint typescript @typescript-eslint/{parser,eslint-plugin}
 
 `.eslintrc.json`の設定を行う。
 
-```json
+```javascript
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
@@ -167,7 +167,7 @@ $ yarn add -D eslint typescript @typescript-eslint/{parser,eslint-plugin}
 
 ### #6 `.eslintignore` を設定する
 
-```json
+```javascript
 # don't ever lint node_modules
 node_modules
 # don't lint build output (make sure it's set to your correct build folder name)
@@ -188,7 +188,7 @@ $ yarn add -D prettier eslint-config-prettier
 
 以下の順番で追加する必要があるので注意。
 
-```json
+```javascript
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
@@ -206,7 +206,7 @@ $ yarn add -D prettier eslint-config-prettier
 
 これはお好みで設定する。
 
-```json
+```javascript
 {
   "trailingComma": "all",
   "tabWidth": 2,
@@ -222,7 +222,7 @@ $ yarn add -D prettier eslint-config-prettier
 
 `.vscode/settins.json`に以下の設定を追加する。
 
-```json
+```javascript
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -240,7 +240,7 @@ $ yarn run tsc --init
 
 設定は以下を採用した。
 
-```json
+```javascript
 {
   "compilerOptions": {
     "target": "ESNEXT",
@@ -269,7 +269,7 @@ $ yarn add -D @types/node @types/express
 
 `scripts` に以下を追加する。
 
-```json
+```javascript
 {
   "name": "cors",
   "version": "1.0.0",
@@ -305,7 +305,7 @@ $ yarn add -D @types/node @types/express
 
 このままだと `express` のエラーハンドリングで警告が発生するため、以下のルールを追加する。
 
-```json
+```javascript
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
