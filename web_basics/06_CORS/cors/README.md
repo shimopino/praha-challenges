@@ -165,6 +165,8 @@ $ yarn add -D eslint typescript @typescript-eslint/{parser,eslint-plugin}
 }
 ```
 
+---
+
 ### #6 `.eslintignore` を設定する
 
 ```javascript
@@ -176,6 +178,8 @@ dist
 coverage
 ```
 
+---
+
 ### #7 Prettier を設定する
 
 ```bash
@@ -183,6 +187,8 @@ $ yarn add -D prettier eslint-config-prettier
 ```
 
 - [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier)
+
+---
 
 ### #8 ESLint に Prettier の設定を追加する。
 
@@ -202,6 +208,8 @@ $ yarn add -D prettier eslint-config-prettier
 }
 ```
 
+---
+
 ### #9 `.prettierrc` の設定を追加する
 
 これはお好みで設定する。
@@ -218,6 +226,8 @@ $ yarn add -D prettier eslint-config-prettier
 
 - [https://prettier.io/docs/en/options.html](https://prettier.io/docs/en/options.html)
 
+---
+
 ### #10 VSCode 用の設定を追加する
 
 `.vscode/settins.json`に以下の設定を追加する。
@@ -231,6 +241,8 @@ $ yarn add -D prettier eslint-config-prettier
   }
 }
 ```
+
+---
 
 ### #11 TypeScript の設定を初期化する
 
@@ -259,11 +271,15 @@ $ yarn run tsc --init
 
 - [https://www.typescriptlang.org/tsconfig](https://www.typescriptlang.org/tsconfig)
 
+---
+
 ### #12 node と express 用の型を導入する
 
 ```bash
 $ yarn add -D @types/node @types/express
 ```
+
+---
 
 ### #13 `package.json` の設定を行う
 
@@ -301,6 +317,8 @@ $ yarn add -D @types/node @types/express
 
 これで linting や TypeScript のコンパイルを実行することができる。
 
+---
+
 ### #14 `.eslintrc.json` に独自ルールを追加する
 
 このままだと `express` のエラーハンドリングで警告が発生するため、以下のルールを追加する。
@@ -324,6 +342,8 @@ $ yarn add -D @types/node @types/express
   }
 }
 ```
+
+---
 
 ### #15 `.editorCondig` を設定する
 
