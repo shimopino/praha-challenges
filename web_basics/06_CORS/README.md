@@ -198,6 +198,8 @@ Access-Control-Allow-Credentials: true
 
 ## 課題 2 クイズ
 
+- [クイズ](./quiz.md)
+
 ## 課題 3 CORS を許可するサーバの構築
 
 以下の条件に従うモックを作成する。
