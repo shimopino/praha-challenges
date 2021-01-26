@@ -212,5 +212,13 @@ Access-Control-Allow-Credentials: true
   
 ## 課題 4 CURL でプリフライトリクエストの送信実験
 
-まだ実験してないが、おそらくCORS制約は適用されない。
-SOP境界やCORS制約は、あくまでもブラウザの機能なので、UAがcurlの場合はCORSは適用されない。
+以下の curl コマンドを送信したところ、CORS の制約には引っかからなかった。
+
+```bash
+$ curl http://localhost:8080 \
+  --header "Content-Type: application/json" \
+  --data '{"username": "preflight"}' \
+  --verbose
+```
+
+これはあくまでも SOP や CORS はブラウザに実装されている機能だからである。
