@@ -1,7 +1,29 @@
 # 課題 3 CORS の実装
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [How to Reproduce](#how-to-reproduce)
+- [Project settings](#project-settings)
+  - [&#035;1 VSCode の Remote Container で環境を立ち上げる](#1-vscode-%E3%81%AE-remote-container-%E3%81%A7%E7%92%B0%E5%A2%83%E3%82%92%E7%AB%8B%E3%81%A1%E4%B8%8A%E3%81%92%E3%82%8B)
+  - [&#035;2 プロジェクトを初期化する](#2-%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%82%92%E5%88%9D%E6%9C%9F%E5%8C%96%E3%81%99%E3%82%8B)
+  - [&#035;3 CORS を実装するためのライブラリをインストールする](#3-cors-%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B)
+  - [&#035;4 TypeScript と ESLint をインストールする](#4-typescript-%E3%81%A8-eslint-%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B)
+  - [&#035;5 ESlint を初期化する](#5-eslint-%E3%82%92%E5%88%9D%E6%9C%9F%E5%8C%96%E3%81%99%E3%82%8B)
+  - [#6 `.eslintignore` を設定する](#6-eslintignore-%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B)
+  - [&#035;7 Prettier を設定する](#7-prettier-%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B)
+  - [&#035;8 ESLint に Prettier の設定を追加する。](#8-eslint-%E3%81%AB-prettier-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [#9 `.prettierrc` の設定を追加する](#9-prettierrc-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [&#035;10 VSCode 用の設定を追加する](#10-vscode-%E7%94%A8%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [&#035;11 TypeScript の設定を初期化する](#11-typescript-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E5%88%9D%E6%9C%9F%E5%8C%96%E3%81%99%E3%82%8B)
+  - [&#035;12 node と express 用の型を導入する](#12-node-%E3%81%A8-express-%E7%94%A8%E3%81%AE%E5%9E%8B%E3%82%92%E5%B0%8E%E5%85%A5%E3%81%99%E3%82%8B)
+  - [#13 `package.json` の設定を行う](#13-packagejson-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%A1%8C%E3%81%86)
+  - [#14 `.eslintrc.json` に独自ルールを追加する](#14-eslintrcjson-%E3%81%AB%E7%8B%AC%E8%87%AA%E3%83%AB%E3%83%BC%E3%83%AB%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## How to Reproduce
 
