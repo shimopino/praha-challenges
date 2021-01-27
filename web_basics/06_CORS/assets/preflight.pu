@@ -1,0 +1,19 @@
+@startuml
+
+hide footbox
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+JavaScript -> Browser: fetch()
+
+Browser -> Server: OPTIONS /users/1234 HTTP/1.1 \nOrigin: https://foo.example.com \nAccess-Control-Allow-Method: PUT \nAccess-Control-Allow-Headers: Content-Type, X-API-KEY
+
+Server -> Browser: HTTP/1.1 204 No Content \nAccess-Control-Allow-Origin: https://foo.example.com \nAccess-Control-Allow-Methods: GET, POST, PUT, OPTIONS \nAccess-Control-Allow-Headers: Content-Type, X-API-KEY \nAccess-Control-Max-Age: 86400
+
+Browser -> Server: PUT /users/1234 HTTP/1.1 \nX-API-KEY: abcdefg \nContent-Type: application/json \nOrigin: https://foo.example.com
+
+Server -> Browser: HTTP/1.1 200 OK \nAccess-Control-Allow-Origin: https://foo.example.com \nContent-Encoding: gzip \nContent-Length: 255
+
+Browser -> JavaScript: if allowed success \n otherwise error
+
+@enduml

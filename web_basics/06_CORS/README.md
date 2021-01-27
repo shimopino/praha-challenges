@@ -82,7 +82,7 @@ SOP を回避するための CORS 設定は、サーバ側で実装する必要�
 
 このとき、CORS を実装しているサーバは以下のようなリクエストを返す。
 
-![](./assets/cors-get.svg)
+![](./assets/simple.png)
 
 重要な情報は `Access-Control-Allow-Origin: foo.example.com` である。
 この HTTP ヘッダをブラウザに通知することで、ブラウザはサーバ側から自身が送信している Origin から、サーバ側のリソースに対するアクセス権を得る事ができる。
@@ -130,7 +130,7 @@ SOP によるリソース分離と、CORS による SOP の緩和はブラウザ
   - `Content-Type` はjson
   - カスタムヘッダとして `X-API-KEY` を送信
 
-![](./assets/cors-fetch-delete.svg)
+![](./assets/preflight.png)
 
 上記の挙動を見ると、 Preflight Request を送信する際に `OPTIONS` メソッドを送信しており、またサーバに実際のリクエストで使用するHTTPメソッドとHTTPヘッダを送信している。
 
