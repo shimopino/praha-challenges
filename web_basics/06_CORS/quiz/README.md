@@ -7,7 +7,6 @@
 
 - [&#035;1 Quiz](#1-quiz)
 - [&#035;2 Quiz](#2-quiz)
-- [&#035;3 Quiz](#3-quiz)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
