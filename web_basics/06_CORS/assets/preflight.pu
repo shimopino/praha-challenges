@@ -6,13 +6,13 @@ skinparam handwritten true
 
 JavaScript -> Browser: fetch()
 
-Browser -> Server: OPTIONS /users/1234 HTTP/1.1 \nOrigin: https://foo.example.com \nAccess-Control-Allow-Method: PUT \nAccess-Control-Allow-Headers: Content-Type, X-API-KEY
+Browser -> Server: OPTIONS /users/1234 HTTP/1.1 \nOrigin: https://foo.example.com \n**Access-Control-Allow-Method: PUT** \n**Access-Control-Allow-Headers: Content-Type, X-API-KEY**
 
-Server -> Browser: HTTP/1.1 204 No Content \nAccess-Control-Allow-Origin: https://foo.example.com \nAccess-Control-Allow-Methods: GET, POST, PUT, OPTIONS \nAccess-Control-Allow-Headers: Content-Type, X-API-KEY \nAccess-Control-Max-Age: 86400
+Server -> Browser: HTTP/1.1 204 No Content \n**Access-Control-Allow-Origin: https://foo.example.com** \n**Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS** \n**Access-Control-Allow-Headers: Content-Type, X-API-KEY** \n**Access-Control-Max-Age: 86400**
 
 Browser -> Server: PUT /users/1234 HTTP/1.1 \nX-API-KEY: abcdefg \nContent-Type: application/json \nOrigin: https://foo.example.com
 
-Server -> Browser: HTTP/1.1 200 OK \nAccess-Control-Allow-Origin: https://foo.example.com \nContent-Encoding: gzip \nContent-Length: 255
+Server -> Browser: HTTP/1.1 200 OK \n**Access-Control-Allow-Origin: https://foo.example.com** \nContent-Encoding: gzip \nContent-Length: 255
 
 Browser -> JavaScript: if allowed success \n otherwise error
 

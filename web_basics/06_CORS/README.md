@@ -21,14 +21,11 @@
 
 ## 課題 1「CORS」の仕組み
 
-CORS を理解するために、以下の解説を行う。
+> 「**preflight request**」、「**simple request**」、「**Access-Control-Allow-Origin**」の単語を使ってCORSの仕組みを説明せよ
 
-1. Same Origin Policy (SOP) とは何か
-2. Cross Origin Resource Sharing (CORS) とは何か
-3. Access-Control-Allow-XXX による SOP の回避方法
-4. Simple Request と Preflight Request とは何か
-5. CORS を実装していないサーバへの　 Simple Request へのアクセス
-6. CORS で認証情報を渡す方法
+こちらの課題に対しては、内容をまとめるために以下から順を追って説明していく。
+
+---
 
 ### #1 Same Origin Policy (SOP) とは何か
 
@@ -55,9 +52,21 @@ Web 上のあるサイト A から異なるサイト B のリソースを呼び�
 
 実際にどのような制限を行なっているのか、適当に HTML ファイルを作成して挙動を確認する。
 
-- `<iframe>`　を活用した異なる Origin に対するブラウザ内アクセス
-- `fetch` を活用した異なる Origin に対するネットワーク越しのアクセス
-- `<form>` タグを使用した異なる Origin に対するネットワーク越しのアクセス
+- 実験内容
+  1. `<form>` タグを使用して、Same-Origin と Cross-Origin の両方へアクセス
+  2. `fetch` を使用して、Same-Origin と Cross-Origin の両方へアクセス
+- 結果
+  - [./no-cors](./no-cors) でSOPの挙動を確認した
+    1. `<form>` の場合は、Cross-Originであってもページ遷移可能
+    2. `fetch` の場合は、Cross-Originへのアクセスは拒否される
+
+        ![](./assets/no-cors.png)
+
+  - つまり以下のような挙動になっている
+  
+    ![](./assets/sop.png)
+
+---
 
 ### #2 Cross Origin Resource Sharing (CORS) とは何か
 
@@ -69,11 +78,18 @@ SOP を回避するための CORS 設定は、サーバ側で実装する必要�
 
 では実際にその具体例を見ていく。
 
+---
+
 ### #3 Access-Control-Allow-XXX による SOP の回避方法
 
 具体的にどのような HTTP ヘッダが存在しているのかは、[[Fetch Standard] Section 3.2 CORS protocol](https://fetch.spec.whatwg.org/#http-cors-protocol) に記載されている。
 
-基本的な考え方としては、サーバがリクエストを受け取った時に、リクエスト元の URL を信頼できるものとして判断するのか、リクエストが実行しようとしている HTTP メソッドを許可するのか、リクエストのヘッダを許可するのか、といったサーバ側視点での制約である。
+これらの HTTP ヘッダを使用することで、サーバはリクエストに対して以下のような確認を行うことができる。
+
+- リクエストの送信元を受け入れるかどうか
+- リクエストの HTTP メソッドを受け入れるかどうか
+- リクエストの HTTP ヘッダを受け入れるかどうか
+- リクエストの 認証情報を受け入れるかどうか
 
 では、ブラウザが現在開いている `https://foo.example.com` のリソースから、 `https://bar.example.com` に対して以下の条件にあうリクエストを送信しようとしている状況を考える。
 
@@ -85,7 +101,10 @@ SOP を回避するための CORS 設定は、サーバ側で実装する必要�
 ![](./assets/simple.png)
 
 重要な情報は `Access-Control-Allow-Origin: foo.example.com` である。
+
 この HTTP ヘッダをブラウザに通知することで、ブラウザはサーバ側から自身が送信している Origin から、サーバ側のリソースに対するアクセス権を得る事ができる。
+
+> ただし最初の実験で見たように、昔から実装されている `top-level navigation` などでは関係ない。
 
 サーバからブラウザに送信できる CORS 設定を行うためのヘッダは以下になる。
 
@@ -97,6 +116,8 @@ SOP を回避するための CORS 設定は、サーバ側で実装する必要�
 | `Access-Control-Allow-Credentials` | 資格情報つきのリクエストを許可するかどうか決定する。<br><br>Simple Request の場合では、リソースへのレスポンスにこのヘッダが含まれていない場合は、ブラウザはレスポンスを無視する。<br><br>Preflight Request の場合では、後続の本来送信したいリクエストに資格情報を使用していいかどうかを通知する。 |
 | `Access-Control-Max-Age`           | Preflight Request の結果をどの程度の時間キャッシュするのか決定する。<br><br>単位は **秒** である                                                                                                                                                                                                  |
 | `Access-Control-Expose-Headers`    | クライアントに対して、サーバ側が許可している HTTP ヘッダを公開する。<br><br>デフォルトでは 7 つのヘッダが公開される。                                                                                                                                                                             |
+
+---
 
 ### #4 Simple Request と Preflight Request とは何か
 
@@ -141,25 +162,9 @@ SOP によるリソース分離と、CORS による SOP の緩和はブラウザ
 
 これが Preflight Request の動作である。
 
-### #5 CORS を実装していないサーバへの　 Simple Request へのアクセス
+---
 
-> TODO
-> 単純なPOSTリクエストをformとfetchから送信して動作検証を行う
-
-CORSを実装していないサーバに対して、単純なリクエストを送信した場合の挙動は、サーバ側に副作用を発生させる可能性がある。
-
-これはあくまでもCORSがブラウザで実装されているものだということに関係する。
-
-検証を行うために、以下の条件に従うクライアントとサーバを実装する。
-
-- リクエスト
-  - 送信元は `https://foo.example.com`
-  - `POST` メソッド
-  - リソースは `https://bar.example.com/users/1234`
-
-![](./assets/cors-post-nocors.svg)
-
-### #6 CORS で認証情報を渡す方法
+### #5 CORS で認証情報を渡す方法
 
 Cookieなどの認証情報は、デフォルトでは `Fetch API` や `XMLHttpRequest` からは送信することができず、必ず明示的に設定を追加する必要がある。
 
@@ -195,6 +200,17 @@ Access-Control-Allow-Credentials: true
 ```
 
 ただし、 `Access-Control-Allow-Credentials` ヘッダを使用する場合は、 `Access-Control-Allow-Origin` に全ての Origin をあらわすワイルドカード（`*`）は設定できない点に注意する必要がある。
+
+---
+
+### #6 `Access-Control-Allow-Origin: "*"` の危険性
+
+たいていの場合、 `Access-Control-Allow-Origin` に対してワイルドカード（`"*"`）を設定していても、Cookieなどの機密情報が盗み出されることはない。
+
+しかしURL自体に機密情報が含まれている場合、攻撃される可能性はある。基本的にはこのヘッダはドメイン全体に適用せずに、クロスドメインアクセスが必要な特定のURLのみに使用することが重要である。
+
+- [[OWASP] Cross Origin Resource Sharing](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html#cross-origin-resource-sharing)
+- [Is Access-Control-Allow-Origin: * insecure?](https://advancedweb.hu/is-access-control-allow-origin-star-insecure/)
 
 ## 課題 2 クイズ
 
