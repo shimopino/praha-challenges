@@ -5,16 +5,17 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1「CORS」の仕組み](#%E8%AA%B2%E9%A1%8C-1cors%E3%81%AE%E4%BB%95%E7%B5%84%E3%81%BF)
-  - [&#035;1 Same Origin Policy (SOP) とは何か](#1-same-origin-policy-sop-%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [&#035;2 Cross Origin Resource Sharing (CORS) とは何か](#2-cross-origin-resource-sharing-cors-%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [&#035;3 Access-Control-Allow-XXX による SOP の回避方法](#3-access-control-allow-xxx-%E3%81%AB%E3%82%88%E3%82%8B-sop-%E3%81%AE%E5%9B%9E%E9%81%BF%E6%96%B9%E6%B3%95)
-  - [&#035;4 Simple Request と Preflight Request とは何か](#4-simple-request-%E3%81%A8-preflight-request-%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [&#035;5 CORS で認証情報を渡す方法](#5-cors-%E3%81%A7%E8%AA%8D%E8%A8%BC%E6%83%85%E5%A0%B1%E3%82%92%E6%B8%A1%E3%81%99%E6%96%B9%E6%B3%95)
-  - [#6 `Access-Control-Allow-Origin: "*"` の危険性](#6-access-control-allow-origin--%E3%81%AE%E5%8D%B1%E9%99%BA%E6%80%A7)
-- [課題 2 クイズ](#%E8%AA%B2%E9%A1%8C-2-%E3%82%AF%E3%82%A4%E3%82%BA)
-- [課題 3 CORS を許可するサーバの構築](#%E8%AA%B2%E9%A1%8C-3-cors-%E3%82%92%E8%A8%B1%E5%8F%AF%E3%81%99%E3%82%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AE%E6%A7%8B%E7%AF%89)
-- [課題 4 CURL でプリフライトリクエストの送信実験](#%E8%AA%B2%E9%A1%8C-4-curl-%E3%81%A7%E3%83%97%E3%83%AA%E3%83%95%E3%83%A9%E3%82%A4%E3%83%88%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%AE%E9%80%81%E4%BF%A1%E5%AE%9F%E9%A8%93)
+- [CORS を理解する](#cors-を理解する)
+  - [課題 1「CORS」の仕組み](#課題-1corsの仕組み)
+    - [#1 Same Origin Policy (SOP) とは何か](#1-same-origin-policy-sop-とは何か)
+    - [#2 Cross Origin Resource Sharing (CORS) とは何か](#2-cross-origin-resource-sharing-cors-とは何か)
+    - [#3 Access-Control-Allow-XXX による SOP の回避方法](#3-access-control-allow-xxx-による-sop-の回避方法)
+    - [#4 Simple Request と Preflight Request とは何か](#4-simple-request-と-preflight-request-とは何か)
+    - [#5 CORS で認証情報を渡す方法](#5-cors-で認証情報を渡す方法)
+    - [#6 `Access-Control-Allow-Origin: "*"` の危険性](#6-access-control-allow-origin--の危険性)
+  - [課題 2 クイズ](#課題-2-クイズ)
+  - [課題 3 CORS を許可するサーバの構築](#課題-3-cors-を許可するサーバの構築)
+  - [課題 4 CURL でプリフライトリクエストの送信実験](#課題-4-curl-でプリフライトリクエストの送信実験)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -214,7 +215,7 @@ Access-Control-Allow-Credentials: true
 
 ## 課題 2 クイズ
 
-- [クイズ](./quiz.md)
+- [クイズ](./quiz/README.md)
 
 ## 課題 3 CORS を許可するサーバの構築
 
