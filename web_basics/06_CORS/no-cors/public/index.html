@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- Simple Request -->
+    <h3>Simple POST Request by HTML Form</h3>
+    <form action="http://localhost:8080/no-cors" method="post">
+      <label for="username1">username</label>
+      <input
+        type="text"
+        id="username1"
+        name="username"
+        placeholder="type anything"
+      />
+      <input type="submit" />
+    </form>
+
+    <br />
+    <!-- Simple Request -->
+    <h3>Simple POST Request by Fetch APi</h3>
+    <button id="simple">Send x-www-form-urlencoded</button>
+
+    <br />
+    <!-- Not Simple Request -->
+    <h3>Not Simple POST Request by Fetch API</h3>
+    <button id="not-simple">Send JSON</button>
+
+    <script>
+      const simpleBtn = document.querySelector('#simple');
+      simpleBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        const simpleOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'username=url-encoded',
+        };
+
+        try {
+          const response = await fetch(
+            'http://localhost:8080/no-cors',
+            simpleOptions,
+          );
+          const result = await response.json();
+          console.log(result);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    </script>
+
+    <script>
+      const notSimpleBtn = document.querySelector('#not-simple');
+      notSimpleBtn.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        const notSimpleOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: 'Not Simple Request' }),
+        };
+
+        try {
+          const response = await fetch(
+            'http://localhost:8080/no-cors',
+            notSimpleOptions,
+          );
+          const result = await response.json();
+          console.log(result);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    </script>
+  </body>
+</html>
