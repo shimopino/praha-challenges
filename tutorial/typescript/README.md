@@ -5,58 +5,60 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [&#035;01 TypeScript の導入](#01-typescript-%E3%81%AE%E5%B0%8E%E5%85%A5)
-  - [TypeScript の特徴](#typescript-%E3%81%AE%E7%89%B9%E5%BE%B4)
-  - [TypeScript が提供しているもの](#typescript-%E3%81%8C%E6%8F%90%E4%BE%9B%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E3%82%82%E3%81%AE)
-- [&#035;02 Types](#02-types)
-  - [プリミティブ型](#%E3%83%97%E3%83%AA%E3%83%9F%E3%83%86%E3%82%A3%E3%83%96%E5%9E%8B)
-  - [オブジェクト型](#%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E5%9E%8B)
-  - [配列型](#%E9%85%8D%E5%88%97%E5%9E%8B)
-  - [Tuple 型](#tuple-%E5%9E%8B)
-  - [Enum 型](#enum-%E5%9E%8B)
-  - [any 型](#any-%E5%9E%8B)
-  - [Union 型](#union-%E5%9E%8B)
-  - [Literal 型](#literal-%E5%9E%8B)
-  - [Alias 型 && Union 型](#alias-%E5%9E%8B--union-%E5%9E%8B)
-  - [Alias 型 && Object 型](#alias-%E5%9E%8B--object-%E5%9E%8B)
-  - [function 型 && void](#function-%E5%9E%8B--void)
-  - [function 型](#function-%E5%9E%8B)
-  - [CallBack Function 型](#callback-function-%E5%9E%8B)
-  - [unknown 型](#unknown-%E5%9E%8B)
-  - [never 型](#never-%E5%9E%8B)
-  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
-- [&#035;3 Compiler](#3-compiler)
-  - [Wach Mode](#wach-mode)
-  - [tsconfig.json](#tsconfigjson)
-  - [コンパイル対象の絞り込みと除外](#%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%AB%E5%AF%BE%E8%B1%A1%E3%81%AE%E7%B5%9E%E3%82%8A%E8%BE%BC%E3%81%BF%E3%81%A8%E9%99%A4%E5%A4%96)
-  - [target](#target)
-  - [lib](#lib)
-  - [allowJs & checkJs](#allowjs--checkjs)
-  - [sourceMap](#sourcemap)
-  - [outDir & rootDir](#outdir--rootdir)
-  - [removeComments](#removecomments)
-  - [noEmit](#noemit)
-  - [downlevelIteration](#downleveliteration)
-  - [noEmitOnError](#noemitonerror)
-  - [Strict Type-Checking Options](#strict-type-checking-options)
-  - [Additional Checks](#additional-checks)
-  - [Debugging](#debugging)
-  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-1)
-- [&#035;4 Modern JavaScript](#4-modern-javascript)
-  - [const & let](#const--let)
-  - [default parameter](#default-parameter)
-  - [spread operator](#spread-operator)
-  - [rest parameters](#rest-parameters)
-  - [Destructuring](#destructuring)
-  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-2)
-- [&#035;14 React & TypeScript](#14-react--typescript)
-  - [Adding TypeScript](#adding-typescript)
-  - [Basic React](#basic-react)
-- [&#035;15 Node.js & TypeScript](#15-nodejs--typescript)
-  - [settings](#settings)
-  - [using Types](#using-types)
-  - [Complicated Handlers](#complicated-handlers)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-3)
+- [TypeScript の基礎](#typescript-の基礎)
+  - [#01 TypeScript の導入](#01-typescript-の導入)
+    - [TypeScript の特徴](#typescript-の特徴)
+    - [TypeScript が提供しているもの](#typescript-が提供しているもの)
+  - [#02 Types](#02-types)
+    - [プリミティブ型](#プリミティブ型)
+    - [オブジェクト型](#オブジェクト型)
+    - [配列型](#配列型)
+    - [Tuple 型](#tuple-型)
+    - [Enum 型](#enum-型)
+    - [any 型](#any-型)
+    - [Union 型](#union-型)
+    - [Literal 型](#literal-型)
+    - [Alias 型 && Union 型](#alias-型--union-型)
+    - [Alias 型 && Object 型](#alias-型--object-型)
+    - [function 型 && void](#function-型--void)
+    - [function 型](#function-型)
+    - [CallBack Function 型](#callback-function-型)
+    - [unknown 型](#unknown-型)
+    - [never 型](#never-型)
+    - [参考資料](#参考資料)
+  - [#3 Compiler](#3-compiler)
+    - [Wach Mode](#wach-mode)
+    - [tsconfig.json](#tsconfigjson)
+    - [コンパイル対象の絞り込みと除外](#コンパイル対象の絞り込みと除外)
+    - [target](#target)
+    - [lib](#lib)
+    - [allowJs & checkJs](#allowjs--checkjs)
+    - [sourceMap](#sourcemap)
+    - [outDir & rootDir](#outdir--rootdir)
+    - [removeComments](#removecomments)
+    - [noEmit](#noemit)
+    - [downlevelIteration](#downleveliteration)
+    - [noEmitOnError](#noemitonerror)
+    - [Strict Type-Checking Options](#strict-type-checking-options)
+    - [Additional Checks](#additional-checks)
+    - [Debugging](#debugging)
+    - [参考資料](#参考資料-1)
+  - [#4 Modern JavaScript](#4-modern-javascript)
+    - [const & let](#const--let)
+    - [default parameter](#default-parameter)
+    - [spread operator](#spread-operator)
+    - [rest parameters](#rest-parameters)
+    - [Destructuring](#destructuring)
+    - [参考資料](#参考資料-2)
+    - [#5 Class & Interface](#5-class--interface)
+  - [#14 React & TypeScript](#14-react--typescript)
+    - [Adding TypeScript](#adding-typescript)
+    - [Basic React](#basic-react)
+  - [#15 Node.js & TypeScript](#15-nodejs--typescript)
+    - [settings](#settings)
+    - [using Types](#using-types)
+    - [Complicated Handlers](#complicated-handlers)
+  - [参考資料](#参考資料-3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -852,6 +854,92 @@ JavaScript での主な型
 
 - [JS 機能一覧](https://kangax.github.io/compat-table/es6/)
 - [モダンな JavaScript の機能](https://typescript-jp.gitbook.io/deep-dive/future-javascript)
+
+### #5 Class & Interface
+
+- TypeScriptを使用すれば、他の言語と似たような間隔でオブジェクト指向プログラミングを実現できる
+- 以下では、部署の名称を有するオブジェクトを作成してみる
+
+  ```js
+  class Department {
+    // オブジェクトが保持するプロパティを指定する
+    name: string;
+
+    constructor(name: string) {
+      this.name = name;
+    }
+  }
+
+  // クラスをインスタンス化させてコンソールに表示する
+  const accounting = new Department("Accounting");
+  console.log(accounting);
+  ```
+
+- 注意点としては、クラス内のプロパティにアクセスする際には、`this` キーワードを指定して、インスタンス自身を参照する必要がある点である
+- 引数に明示的に参照するオブジェクトを指定することができる
+
+  ```js
+  class Department {
+    // オブジェクトが保持するプロパティを指定する
+    name: string;
+
+    constructor(name: string) {
+      this.name = name;
+    }
+
+    describe(this: Department) {
+      console.log(`Department: ${this.name}`);
+    }
+  }
+  ```
+
+- 上記の `name` はメソッド経由でなくでも、インスタンスオブジェクトから直接編集することができてしまう
+- プロパティに対して修飾子を指定することで、クラス外からのプロパティへのアクセスを制限することができる
+- 設定できる修飾子の例は以下になる。
+  - `private`
+  - `public`
+
+    ```js
+    class Department {
+      // クラス外からアクセス可能
+      public name: string;
+      // クラス外からアクセス不可能
+      private employees: string = [];
+
+      constructor(name: string) {
+        this.name = name;
+      }
+
+      addEmployee(employee) {
+        this.employees.push(employee);
+      }
+    }
+  ```
+
+- なおコンストラクタでアクセス修飾子を使用することで、コンストラクタ実行時に、引数と全く同じ名称のプロパティを設定できる。
+
+  ```js
+  class Department {
+
+    constructor(private id: string, public name: string)
+  }
+  ```
+
+- 読み取り専用のアクセス修飾子も存在している。
+- 例えば初期化時に実行するIDの決定などで `readonly` を設定することで、読み取り不可の設定を追加できる。
+
+  ```js
+  class Department {
+
+    constructor(private readonly id: string, public name: string) {
+      // ...
+    }
+  }
+  ```
+
+- なお生成されるJavaScriptではプロトタイプオブジェクトにメソッドが追加されている
+- 参考資料
+  - [継承とプロトタイプチェーン](https://developer.mozilla.org/ja/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
 
 ## #14 React & TypeScript
 
