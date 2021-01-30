@@ -20,7 +20,8 @@
     "hediet.vscode-drawio",
     "humao.rest-client",
     "coenraads.bracket-pair-colorizer",
-    "editorconfig.editorconfig"
+    "editorconfig.editorconfig",
+    "christian-kohler.path-intellisense"
   ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
