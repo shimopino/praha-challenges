@@ -1,0 +1,8 @@
+@startuml
+
+hide footbox
+
+Client -> BrowserCache
+BrowserCache -> Server
+
+@enduml
