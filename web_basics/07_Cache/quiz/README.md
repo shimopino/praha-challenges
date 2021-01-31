@@ -1,7 +1,16 @@
 # 課題4 クイズ
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [&#035;1 クイズ](#1-%E3%82%AF%E3%82%A4%E3%82%BA)
+- [&#035;2 クイズ](#2-%E3%82%AF%E3%82%A4%E3%82%BA)
+- [任意課題](#%E4%BB%BB%E6%84%8F%E8%AA%B2%E9%A1%8C)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## #1 クイズ
 
