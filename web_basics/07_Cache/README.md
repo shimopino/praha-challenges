@@ -41,8 +41,9 @@
 
 ネットワークにおけるキャッシュも似たような考え方に基づいている。
 
-- 参考資料
-  - [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
+参考資料
+
+- [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
 
 ---
 
@@ -159,7 +160,7 @@ Fetch API で設定できるキャッシュの種類は以下になる。
 
 ### 実際に設定するレスポンスヘッダの値
 
-
+#### 
 
 ### ブラウザごとのキャッシュサイズの違い
 
@@ -174,11 +175,13 @@ Fetch API で設定できるキャッシュの種類は以下になる。
 - Firefox
 - Safari
 
-
+- [[Chronium Code Search] cache_util.cc](https://source.chromium.org/chromium/chromium/src/+/master:net/disk_cache/cache_util.cc;l=87?q=defaultCacheSize&ss=chromium)
+- [[SearchFox] CacheFileIOManager](https://searchfox.org/mozilla-central/source/netwerk/cache2/CacheFileIOManager.cpp#2769)
+- [Set the Maximum Cache Size in FireFox](https://ccm.net/faq/40819-firefox-36-how-to-set-the-maximum-cache-size)
 
 ### 動的サイトへの `Expires` ヘッダの是非
 
-リクエストを送信するタイミングで特定の日時を指定して、キャッシュに設定されている日時よりも新しければ、必ずサーバに対してリクエストを発行する挙動となる。
+
 
 
 参考資料
