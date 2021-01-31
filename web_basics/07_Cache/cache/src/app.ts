@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
+import loggingHandler from './middleware/logging';
 
 /**
  * https://expressjs.com/en/api.html#res.sendFile
@@ -30,6 +31,8 @@ import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+app.use(loggingHandler('short'));
 
 app.get('/', (req: Request, res: Response): void => {
   res.json({
