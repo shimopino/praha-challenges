@@ -23,8 +23,10 @@
 2. パッケージをインストールする
 
     ```bash
-    $ yarn
+    $ yarn install --frozen-lockfile
     ```
+
+    - [yarn install --frozen-lockfile](https://classic.yarnpkg.com/en/docs/cli/install/#toc-yarn-install-frozen-lockfile)
 
 3. TypeScript のコンパイルを実行する
 
