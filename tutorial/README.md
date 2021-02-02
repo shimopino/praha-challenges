@@ -1,7 +1,16 @@
 # 参考資料一覧
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [JavaScript](#javascript)
+- [TypeScript](#typescript)
+- [クラウド](#%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%89)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## JavaScript
 
