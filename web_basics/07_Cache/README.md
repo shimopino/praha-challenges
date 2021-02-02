@@ -359,3 +359,25 @@ Fetch API で設定できるキャッシュの種類は以下になる。
 ## 課題4
 
 - [./quiz](./quiz)
+
+## 参考資料
+
+- HTTPキャッシュ全般に関する資料
+  - [[web.dev] Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
+  - [Caching Tutorial](https://www.mnot.net/cache_docs/#REF)
+  - [Caching best practices & max-age gotchas](https://jakearchibald.com/2016/caching-best-practices/)
+  - [[Sansan] Webアプリケーションにおける正しいキャッシュ戦略](https://buildersbox.corp-sansan.com/entry/2019/03/25/150000)
+  - [HTTP キャッシュおさらい](https://techblog.lclco.com/entry/2019/02/28/170051)
+  - [HTTP Caching](https://developers.google.com/web/fundamentals/performance/get-started/httpcaching-6)
+- ブラウザごとのキャッシュサイズの調査
+  - [[Chronium Code Search] cache_util.cc](https://source.chromium.org/chromium/chromium/src/+/master:net/disk_cache/cache_util.cc;l=87?q=defaultCacheSize&ss=chromium)
+  - [What is Chrome default cache size limit?](https://superuser.com/questions/378991/what-is-chrome-default-cache-size-limit)
+  - [Storage for the web](https://web.dev/storage-for-the-web/#how-much)
+  - [[firefox] how to increase cache size](https://support.mozilla.org/en-US/questions/1272857)
+  - [Offline Storage for Progressive Web Apps](https://medium.com/dev-channel/offline-storage-for-progressive-web-apps-70d52695513c#.mj8pndkae)
+- キャッシュの性能への影響
+  - [Increasing Application Performance with HTTP Cache Headers](https://devcenter.heroku.com/articles/increasing-application-performance-with-http-cache-headers#use-cases)
+  - [HOW WEB CACHING IMPROVES INTERNET PERFORMANCE](https://www.3pillarglobal.com/insights/blog-posts/how-web-caching-improves-internet-performance/)
+  - [キャッシュとは？Webサイト高速化にかかせない機能をご紹介！](https://digitalidentity.co.jp/blog/seo/seo-tech/cash-speed-up.html)
+  - [[キャッシュ屋ブログ] HTTPヘッダチューニング Expiresヘッダについて](https://blog.redbox.ne.jp/http-header-expires.html)
+  - [[さくらのナレッジ] CDNのメリットとデメリット〜Web制作/運営の幅が広がるCDNを知ろう第2回〜](https://knowledge.sakura.ad.jp/19825/)
