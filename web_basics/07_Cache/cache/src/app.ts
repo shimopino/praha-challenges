@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
-import loggingHandler from './middleware/logging';
 
 /**
  * https://expressjs.com/en/api.html#res.sendFile
@@ -32,8 +31,6 @@ import loggingHandler from './middleware/logging';
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(loggingHandler('short'));
-
 app.get('/', (req: Request, res: Response): void => {
   res.json({
     message: 'Welcome !!',
@@ -41,12 +38,14 @@ app.get('/', (req: Request, res: Response): void => {
 });
 
 app.get('/home', (req: Request, res: Response): void => {
+  console.log('Welcome Home');
   res.sendFile('index.html', {
     root: path.join(__dirname, '../public'),
   });
 });
 
 app.get('/cached', (req: Request, res: Response): void => {
+  console.log('GET /cached');
   const cachedOptions = {
     root: path.join(__dirname, '../public'),
     headers: {
@@ -54,18 +53,19 @@ app.get('/cached', (req: Request, res: Response): void => {
     },
   };
   // Cache-Control: 1 minute
-  res.set('Cache-Control', 'public, max=age=0');
+  res.set('Cache-Control', 'private, max-age=10');
   res.sendFile('cached.jpg', cachedOptions);
 });
 
 app.get('/no-cached', (req: Request, res: Response): void => {
+  console.log('GET /no-cache');
   const cachedOptions = {
     root: path.join(__dirname, '../public'),
     headers: {
       sentTime: Date.now(),
     },
   };
-  // Cache-Control: 1 minute
+  // Cache-Control: don't save any cache
   res.set('Cache-Control', 'no-store');
   res.sendFile('no-cached.jpg', cachedOptions);
 });
