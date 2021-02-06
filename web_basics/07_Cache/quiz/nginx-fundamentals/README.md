@@ -9,7 +9,23 @@
 
 なお Docker に関しては基礎知識を有していることを前提にクイズを作成している。
 
-### #1 Nginx ってなにもの?
+### #1 NGINX とは
+
+
+
+<details>
+<summary>回答例</summary>
+
+</details>
+
+
+
+
+
+
+
+
+### Nginxはどのように動いているの?
 
 
 
@@ -21,6 +37,25 @@
 </details>
 
 
+### mine.typesってなにもの?
+
+
+<details>
+<summary>回答例</summary>
+
+```bash
+types {
+    text/html                                        html htm shtml;
+    text/css                                         css;
+    text/xml                                         xml;
+    image/gif                                        gif;
+    image/jpeg                                       jpeg jpg;
+    application/javascript                           js;
+    ...
+}
+```
+
+</details>
 
 ### Dockerでnginxを起動してみましょう
 
@@ -32,7 +67,7 @@ Dockerコンテナでnginxを立ち上げて、`http://localhost`からWelcome�
 80番ポートでコンテナを起動する
 
 ```bash
-$ docker container run -it -p 80:80 --rm --name nginx nginx:1.19.6-alpine
+$ docker container run -it -p 80:80 --rm --name nginx-container nginx:1.19.6-alpine
 >>
 /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
 /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
@@ -47,3 +82,29 @@ $ docker container run -it -p 80:80 --rm --name nginx nginx:1.19.6-alpine
 これで`http://localhost`にアクセスすれば、NginxのWelcomeページが確認できる。
 
 </details>
+
+
+### Nginxをリバースプロキシとして動作させましょう
+
+
+
+
+
+<details>
+<summary>回答例</summary>
+
+
+
+</details>
+
+
+
+## 参考資料
+
+- [[Nginx] NGINX Documentation](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-docker/)
+- [[Nginx] Admin Guide](https://docs.nginx.com/nginx/admin-guide/)
+- [[Andrew Alexeev's Blog] nginx](https://aosabook.org/en/nginx.html)
+- [[Antoine Bonavita's Blog] nginx](https://www.nginx-discovery.com/)
+- [Deploying NGINX and NGINX Plus on Docker](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-docker/)
+
+
