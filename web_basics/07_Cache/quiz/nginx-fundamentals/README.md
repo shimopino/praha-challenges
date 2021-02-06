@@ -6,8 +6,12 @@
 <summary>Table of Contents</summary>
 
 - [概要](#%E6%A6%82%E8%A6%81)
-  - [&#035;1 Nginx ってなにもの?](#1-nginx-%E3%81%A3%E3%81%A6%E3%81%AA%E3%81%AB%E3%82%82%E3%81%AE)
+  - [&#035;1 NGINX とは](#1-nginx-%E3%81%A8%E3%81%AF)
+  - [Nginxはどのように動いているの?](#nginx%E3%81%AF%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E5%8B%95%E3%81%84%E3%81%A6%E3%81%84%E3%82%8B%E3%81%AE)
+  - [mine.typesってなにもの?](#minetypes%E3%81%A3%E3%81%A6%E3%81%AA%E3%81%AB%E3%82%82%E3%81%AE)
   - [Dockerでnginxを起動してみましょう](#docker%E3%81%A7nginx%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%97%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%82%87%E3%81%86)
+  - [Nginxをリバースプロキシとして動作させましょう](#nginx%E3%82%92%E3%83%AA%E3%83%90%E3%83%BC%E3%82%B9%E3%83%97%E3%83%AD%E3%82%AD%E3%82%B7%E3%81%A8%E3%81%97%E3%81%A6%E5%8B%95%E4%BD%9C%E3%81%95%E3%81%9B%E3%81%BE%E3%81%97%E3%82%87%E3%81%86)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
