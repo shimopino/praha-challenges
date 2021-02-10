@@ -5,16 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [SQL Injection](#sql-injection)
-  - [Low Level](#low-level)
-    - [実験結果](#実験結果)
-    - [原因](#原因)
-  - [Medium Level](#medium-level)
-    - [実験結果](#実験結果-1)
-    - [原因](#原因-1)
-  - [High Level](#high-level)
-    - [実験結果](#実験結果-2)
-    - [原因](#原因-2)
+- [Low Level](#low-level)
+  - [実験結果](#%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C)
+  - [原因](#%E5%8E%9F%E5%9B%A0)
+- [Medium Level](#medium-level)
+  - [実験結果](#%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C-1)
+  - [原因](#%E5%8E%9F%E5%9B%A0-1)
+- [High Level](#high-level)
+  - [実験結果](#%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C-2)
+  - [原因](#%E5%8E%9F%E5%9B%A0-2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
