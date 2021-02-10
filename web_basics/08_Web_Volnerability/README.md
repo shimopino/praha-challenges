@@ -33,7 +33,18 @@
 
 ## 課題1 基本的な脆弱性を理解する
 
+OWASP は2・3年ごとに開発者に向けて、Webアプリケーションで考慮すべきセキュリティリスクのTOP10をまとめている。
+
+以下が最新の2017年時点でのセキュリティリスクの順位である。
+
+![](https://www.synopsys.com/content/dam/synopsys/sig-assets/images/owasp-top-10.jpg.imgw.850.x.jpg)
+
+> 「Open Web Application Security Project Top 10（OWASP Top 10）」
+> https://www.synopsys.com/ja-jp/glossary/what-is-owasp-top-10.html
+
 ### クロスサイトスクリプティング
+
+---
 
 #### どういった脆弱性なのか
 
@@ -52,6 +63,8 @@ XSS には主に以下の3種類が存在している。
 | Stored XSS    | データベース、メッセージフォーラム、訪問者ログ、コメントフィールドなど、対象のサーバにユーザの入力が蓄積されている場合に発生する。<br><br>被害者は、サーバからのデータを検証することなくブラウザでレンダリングを実行すると、悪意のあるスクリプトが実行される。                             | 
 | Refrected XSS | ユーザからの入力を受けて、その一部や全部を即座にエラーメッセージ、検索結果、そのほかのレスポンスに反映してしまう場合に発生する。                                                                                                                                                           | 
 | DOM based XSS | 悪意のあるデータの流れがすべてブラウザ上で発生する、つまり悪意のあるデータがDOMにあり、そのDOMからほかのDOMへのデータが流れるような場合に発生する。<br><br>例えば悪意のあるデータ、DOMのHTML要素（document.location.href）から注入されたり、document.writeで書き込まれたりする場合である。 | 
+
+---
 
 #### どういった被害が発生しているのか
 
@@ -72,6 +85,8 @@ var adr = '../evil.php?cakemonster=' + escape(document.cookie);
 実際に発生した被害内容と事例は以下にまとめられており、DOMにアクセスしてWebサイトを改ざんしたり、ユーザアカウントのハイジャックなどが発生している。
 
 - [クロスサイトスクリプティングの被害内容と事例](https://securitynavi.jp/7503)
+
+---
 
 #### どのような対策を講じるべきか
 
@@ -97,7 +112,11 @@ var adr = '../evil.php?cakemonster=' + escape(document.cookie);
 - [Types of XSS](https://owasp.org/www-community/Types_of_Cross-Site_Scripting)
 - [Cross Site Scripting Prevention Cheat Sheet¶](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 
+---
+
 ### コマンドインジェクション
+
+---
 
 #### どういった脆弱性なのか
 
@@ -120,12 +139,16 @@ system(“rm $file”);
 ?>
 ```
 
+---
+
 #### どういった被害が発生しているのか
 
 実際に大量の個人情報が盗まれてしまう被害が発生している。
 
 - [日テレで43万件の個人情報流出--攻撃に使われた「OSコマンドインジェクション」とは？](https://japan.cnet.com/article/35081677/)
 - [J-WAVE、コマンドインジェクション攻撃による不正アクセス、個人情報64万件が流出した恐れ](https://internet.watch.impress.co.jp/docs/news/754885.html)
+
+---
 
 #### どのような対策を講じるべきか
 
@@ -141,7 +164,11 @@ system(“rm $file”);
 - [CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')](https://cwe.mitre.org/data/definitions/77.html)
 - [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)
 
+---
+
 ### SQLインジェクション
+
+---
 
 #### どういった脆弱性なのか
 
@@ -197,6 +224,8 @@ DELETE FROM items;
 
 これで攻撃者は `items` テーブルを削除することが可能となる。
 
+---
+
 #### どういった被害が発生しているのか
 
 SQLインジェクションによって様々な被害が発生している。
@@ -212,6 +241,8 @@ SQLインジェクションによって様々な被害が発生している。
 - Ubuntuのフォーラムサイト
   - フォーラムサイトが悪用され、200万人の情報が流出した
   - フォーラムのデータベースサーバに特定のSQLを挿入されてしまい、全てのテーブルが読み込まれるという状況であった。
+
+---
 
 #### どのような対策を講じるべきか
 
@@ -306,14 +337,150 @@ switch(PARAM):
 - [被害は7700万人分の個人情報。悪名高き攻撃「SQLインジェクション」への対策方法とは？](https://style.potepan.com/articles/11125.html)
 - [SQLインジェクションとは？被害事例と対策方法5つ！](https://wpmake.jp/contents/security/sql-injection/#SQL-3)
 
+---
+
 ### CSRF
 
+---
 
 #### どういった脆弱性なのか
 
+**クロスサイトリクエストフォージェリ（CSRF）** は、脆弱性のWebアプリケーションに対して認証済みのエンドユーザをだまして、サーバ上でユーザが意図していない操作を実行するためのリクエストを送信する攻撃である。
+
+通常のユーザであればお金の送金やパスワードの変更などを実行させることができ、管理者カウントに対して攻撃が成功してしまうと、Webアプリケーション全体を危険にさらす
+可能性がある。
+
+以下にいくつか具体的な攻撃手法を解説していく。
+
+なお基本的な考え方は、まず攻撃者は悪意のあるURLやスクリプトを構築し、被害者に対して社内メールを偽装するなどして、ソーシャルエンジニアリング攻撃を仕掛けて悪意のある攻撃を実行させるというものである。
+
+--- 
+
+**GET** リクエストを使用する攻撃パターンを考える。
+
+例えば銀行の送金を行う操作が、GET リクエストのパラメータを指定してする形式で設計されている場合を考える。
+
+以下は `BOB` というユーザが100という量の金額を支払うというものである。
+
+```
+GET http://bank.com/transfer.do?acct=BOB&amount=100 HTTP/1.1
+```
+
+攻撃者はまず以下のような悪意のあるURLを構築する。
+
+```
+GET http://bank.com/transfer.do?acct=Evil&amount=100000 HTTP/1.1
+```
+
+あとはソーシャルエンジニアリング攻撃を使用して、被害者にこのURLを踏ませてしまえばいい。
+
+こうすることで攻撃者は、不審なメールのリンクや、`<a>` タグや `<img>` タグなどのリンク先に設定することで、情報セキュリティに疎いユーザを標的に意図しない操作を実現することが可能となってしまう。
+
+---
+
+**POST** リクエストを使用する攻撃パターンを考える。
+
+GET リクエストの場合との違いは被害者が意図しない操作をしてしまう際の流れである。
+
+では今度は以下のような POST リクエストを使用して銀行のアカウントに送金を行う場合を考えてみる。
+
+```
+POST http://bank.com/transfer.do HTTP/1.1
+
+acct=BOB&amount=100
+```
+
+攻撃者は今度は `<form>` タグなどを使用して攻撃に必要な情報を被害者が入力するように誘導する。
+
+```
+<form action="http://bank.com/transfer.do" method="POST">
+
+<input type="hidden" name="acct" value="MARIA"/>
+<input type="hidden" name="amount" value="100000"/>
+<input type="submit" value="View my pictures"/>
+
+</form>
+```
+
+あとは被害者がこのフォームのボタンをクリックするか、あるいは以下のように自動的に送信してしまえば、ユーザが意図しない操作をサーバ上で実現できてしまう。
+
+```js
+<body onload="document.forms[0].submit()">
+
+<form...
+```
+
+---
+
 #### どういった被害が発生しているのか
 
+CSRF では情報漏洩やSNSの乗っ取り、自身のお金で買い物を勝手にされてしまうなど、多くの被害が考えられる。
+
+以下が実際に発生した被害事例である。
+
+- 「ぼくはまちちゃん」騒動
+  - 発生時期は2005年4月中旬
+  - 被害サイトはSNSサイトの1つである mixi
+  - 投稿者が意図しないまま、「ぼくはまちちゃん！ こんにちはこんにちは!!」という定型文が書き込まれる事例が発生した
+  - この投稿には他のユーザを同様の罠におびき寄せる細工があったため、同じメッセージが mixi に溢れかえることとなってしまった。
+- 横浜市小学校襲撃予告事件
+  - 発生時期は2012年初夏から秋にかけて
+  - 横浜市のウェブサイトの意見投稿コーナーに、特定の小学校への無差別殺人予告が投稿される
+  - 攻撃者はCSRFを用いて、無関係の人物から意図しない投稿を実行させていた
+  - 被害者は神奈川県警により逮捕・起訴され保護観察処分の扱いとなってしまった
+  - そのあと、神奈川県警は誤認逮捕を認めて謝罪した
+
+---
+
 #### どのような対策を講じるべきか
+
+まずは簡単にCSRFに対する防護策を簡易的にまとめる。
+
+- Webアプリケーションフレームワークを使用している場合は、CSRFに対する防護機能が組み込まれていないのか確かめる
+  - 組み込まれていない場合は **CSRFトークン** の使用を考慮する
+- セッションCookieを使用する場合は必ず `SameSite` 属性を使用する
+- 以下の中から最低1つの緩和策を採用する
+  - カスタムリクエストヘッダの使用
+  - Originの検証
+  - Cookieの2回送信
+- ユーザの操作を強制する仕組みを導入する
+  - Re-Authentication
+  - One-Time Token
+  - CAPTCHA
+- XSSに対する防護策も実行する
+- GETリクエストで状態変化が発生するようなAPI設計をしない
+
+今回はCSRF対策として有名なトークンを使用した防護策を紹介する。
+
+---
+
+CSRFトークンは、サーバ側がユーザセッションやリクエストごとに生成するものである。
+
+リクエストごとにトークンを発行するほうがより安全ではあるが、ユーザビリティが低下してしまう可能性がある。例えばあるページから前のページに「戻る」場合、遷移先の前のページではすでにトークンの有効期限は切れてしまっているため、サーバ側は本来ならユーザを認証されていないユーザ、つまり偽陽性の判定を行ってしまう可能性がある。
+
+CSRFトークンは、以下のような性質を持っているべきである。
+
+- ユーザごとに一意であること
+- 機密な状態であること
+- 予測できない値であること
+
+注意点としてはCSRFトークンはCookieとして持たせてはダメで、必ずHTML内の隠しフィールド値やHTTPヘッダとして、フォーム送信やAJAXリクエストの際に付与する点である。
+
+例えば以下のようなフォームであり、Twitterのログインフォームにも `authenticity_token` という名称で各フィールド値として保存されている。
+
+```html
+<form action="/transfer.do" method="post">
+<input type="hidden" name="CSRFToken" value="OWY4NmQwODE4ODRjN2Q2NTlhMmZlYWEwYzU1YWQwMTVhM2JmNGYxYjJiMGI4MjJjZDE1ZDZMGYwMGEwOA==">
+[...]
+</form>
+```
+
+#### 参考資料
+
+- [[OWASP] Cross Site Request Forgery (CSRF)](https://owasp.org/www-community/attacks/csrf)
+- [[OWASP] Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+- [ソーシャルエンジニアリング攻撃とは？](https://www.cloudflare.com/ja-jp/learning/security/threats/social-engineering-attack/)
+- [[Wikipedia] クロスサイトリクエストフォージェリ](https://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AD%E3%82%B9%E3%82%B5%E3%82%A4%E3%83%88%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%83%95%E3%82%A9%E3%83%BC%E3%82%B8%E3%82%A7%E3%83%AA#%E6%A8%AA%E6%B5%9C%E5%B8%82%E5%B0%8F%E5%AD%A6%E6%A0%A1%E8%A5%B2%E6%92%83%E4%BA%88%E5%91%8A%E4%BA%8B%E4%BB%B6)
 
 ## 課題2 クイズ
 
