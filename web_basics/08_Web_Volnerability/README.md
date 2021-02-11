@@ -477,7 +477,9 @@ CSRFトークンは、以下のような性質を持っているべきである�
 
 ## 課題2 クイズ
 
+今回は [Damn Volnerable Web Application](https://dvwa.co.uk/) に関するクイズを出しています。
 
+内容は [quiz](./quiz/README.md) を参照してください。
 
 ## 課題3 DVWAで実演する
 
