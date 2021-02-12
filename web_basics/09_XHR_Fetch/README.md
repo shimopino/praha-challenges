@@ -1,3 +1,25 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [XMLHttpRequestについて理解する](#xmlhttprequest%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E7%90%86%E8%A7%A3%E3%81%99%E3%82%8B)
+  - [課題1](#%E8%AA%B2%E9%A1%8C1)
+    - [質問](#%E8%B3%AA%E5%95%8F)
+    - [回答](#%E5%9B%9E%E7%AD%94)
+      - [XMLHttpRequestとは何か?](#xmlhttprequest%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
+      - [XMLHttpRequestをどのように使用するのか?](#xmlhttprequest%E3%82%92%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E3%81%AE%E3%81%8B)
+    - [質問](#%E8%B3%AA%E5%95%8F-1)
+    - [回答](#%E5%9B%9E%E7%AD%94-1)
+    - [質問](#%E8%B3%AA%E5%95%8F-2)
+    - [回答](#%E5%9B%9E%E7%AD%94-2)
+    - [質問](#%E8%B3%AA%E5%95%8F-3)
+    - [回答](#%E5%9B%9E%E7%AD%94-3)
+  - [追加調査内容](#%E8%BF%BD%E5%8A%A0%E8%AA%BF%E6%9F%BB%E5%86%85%E5%AE%B9)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # XMLHttpRequestについて理解する
 
 ## 課題1
