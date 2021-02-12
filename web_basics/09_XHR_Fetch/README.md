@@ -1,26 +1,7 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<details>
-<summary>Table of Contents</summary>
-
-- [XMLHttpRequestについて理解する](#xmlhttprequest%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E7%90%86%E8%A7%A3%E3%81%99%E3%82%8B)
-  - [課題1](#%E8%AA%B2%E9%A1%8C1)
-    - [質問](#%E8%B3%AA%E5%95%8F)
-    - [回答](#%E5%9B%9E%E7%AD%94)
-      - [XMLHttpRequestとは何か?](#xmlhttprequest%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-      - [XMLHttpRequestをどのように使用するのか?](#xmlhttprequest%E3%82%92%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E3%81%AE%E3%81%8B)
-    - [質問](#%E8%B3%AA%E5%95%8F-1)
-    - [回答](#%E5%9B%9E%E7%AD%94-1)
-    - [質問](#%E8%B3%AA%E5%95%8F-2)
-    - [回答](#%E5%9B%9E%E7%AD%94-2)
-    - [質問](#%E8%B3%AA%E5%95%8F-3)
-    - [回答](#%E5%9B%9E%E7%AD%94-3)
-  - [追加調査内容](#%E8%BF%BD%E5%8A%A0%E8%AA%BF%E6%9F%BB%E5%86%85%E5%AE%B9)
-
-</details>
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # XMLHttpRequestについて理解する
+
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 ## 課題1
 
@@ -40,14 +21,15 @@
 
 `XMLHttpRequest` を使用する目的は主に以下の3点になっている。
 
-- 既存の古いバージョンのスクリプトに対応させ耐場合
-- 古いブラウザへの対応や、`polyfills` を使いたくない場合
+- 既存の古いバージョンのスクリプトに対応させたい場合
+- 古いブラウザへの対応や、[`polyfills`](https://remysharp.com/2010/10/08/what-is-a-polyfill) を使いたくない場合
 - `fetch` がまだ対応していない、ファイルアップロードの進捗状況の制御などを利用したい場合
 
 参考資料
 
 - [XMLHttpRequestの仕様](https://xhr.spec.whatwg.org/)
 - [[MDN] XMLHttpRequest](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest)
+- [[javascript.info] XMLHttpRequest](https://javascript.info/xmlhttprequest)
 
 ---
 
@@ -70,7 +52,7 @@
     * 
     * @param {string} method - 使用するHTTPリクエストを指定する
     * @param {string} URL - 通信先となるリソースのURLを指定する
-    * @param {boolean} async - リクエストを非同期的に実行するか同期的に実行するか決める。デフォルトはtrue
+    * @param {boolean} async - リクエストを非同期的に実行するか同期的に実行するか決める
     * @param {string} user - Basic認証を行う際のユーザ名
     * @param {string} password - Basic認証を行う際のパスワード
     */
@@ -82,7 +64,8 @@
     ```js
     /*
     * https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/send
-    * 非同期通信の場合には、このメソッドはリクエストの送信自体を行うと終了し、レスポンス自体はイベント発火によって取得する
+    * 非同期通信の場合には、このメソッドはリクエストの送信が成功する終了する
+    * レスポンスはメソッドではなく、イベント発火によって取得する
     * 
     * @param body - XHRのリクエストで送信される本文データ
     */
@@ -170,15 +153,51 @@
 
 ### 質問
 
-> ブラウザのアドレスバーを使用したページ遷移との違いは何ですか
+> ブラウザのアドレスバーを使用したHTTPリクエストとの違いは何ですか
 
 ### 回答
+
+ブラウザのアドレスバーを使用したHTTPリクエストとの違いは、ページ遷移の有無である。
+
+ブラウザのアドレスバーにURLを打ち込みHTTPリクエストを送信した場合、送信先のサーバ（あるいはキャッシュ）から返ってくるHTMLの文書をブラウザのページに表示する。
+
+`XMLHttpRequest` や `fetch` では非同期的にHTTPリクエストを送信することで、ページ遷移させることなく必要なデータをサーバから取得することができる。
 
 ### 質問
 
 > Cookieの送信はどのように実行すればいいでしょうか
 
 ### 回答
+
+`XMLHttpRequest` オブジェクトの `withCredentials` プロパティを使用して、[Cookies](https://developer.mozilla.org/ja/docs/Web/HTTP/Cookies) や [Authorization](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Authorization) ヘッダ、TLSでのクライアント証明などの機密情報を使った、アクセス制御を行うリクエストを送信することも可能である。
+
+このプロパティをデフォルト値である `false` に設定していると、Cross-Origin なリクエストを送信する際に Cookie などの認証情報は無視されてしまう。
+
+具体的には以下のように使用する。
+
+```js
+// XMLHttpRequestオブジェクトの生成
+const xhr = new XMLHttpRequest();
+
+// 認証情報を使用する
+xhr.wothCredentials = true;
+
+// XMLHttpRequestの設定を行う
+xhr.open("POST", "/api/v1/user");
+
+// 送信する
+xhr.send(JSON.stringfy({
+    name: "keisuke",
+    email: "shimokawa@example.com"
+}))
+```
+
+これでHTTPリクエストを送信する際に、送信先のドメインに紐づいている Cookie 情報を送信することが可能となる。
+
+参考資料
+
+- [XMLHttpRequestの仕様](https://xhr.spec.whatwg.org/#the-withcredentials-attribute)
+- [[MDN] XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials)
 
 ### 質問
 
