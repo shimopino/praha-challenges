@@ -23,11 +23,7 @@
 
 ## 課題1
 
-### 質問
-
-> XMLHttpRequestとは何でしょうか
-
-### 回答
+### 質問: XMLHttpRequestとは何でしょうか
 
 #### XMLHttpRequestとは何か?
 
@@ -169,11 +165,151 @@
 - [[MDN] XMLHttpRequest の使用](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#monitoring_progress)
 - [[MDB] XMLHttpRequest のイベント](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest#events)
 
-### 質問
+---
 
-> ブラウザのアドレスバーを使用したHTTPリクエストとの違いは何ですか
+#### 実際にリクエストを送信してみる
 
-### 回答
+[xhr](./xhr) フォルダにて、`https://api.github.com` で公開されているAPIから、てアカウントに関する情報を `XMLHttpRequest` を使用して取得を行っている。
+
+具体的なコードは以下になる。
+
+```js
+// ボタン要素をまずは作成する
+const btn = document.createElement("button");
+btn.textContent = "Button";
+
+// ボタン要素に対してクリックイベントを登録する
+btn.addEventListener("click", () => {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://api.github.com/users/KeisukeShimokawa");
+  xhr.addEventListener("load", () => {
+    // レスポンスを受け取った場合は全て "load" イベントが発火する
+    // サーバからのレスポンスに応じて処理を行いたい場合は、以下のように
+    // ステータスコードから判定するようにする
+    if (xhr.status != 200) {
+      console.log(`error ${xhr.status}: ${xhr.statusText}`);
+    } else {
+      console.log(`${xhr.status} (got ${xhr.response.length} bytes)`);
+      console.log(xhr.response)
+      console.log(xhr.getResponseHeader("Content-Type"));
+      console.log(xhr.getAllResponseHeaders());
+    }
+  })
+  xhr.addEventListener("error", () => {
+    alert("request failed");
+  })
+  xhr.send();
+})
+
+document.body.appendChild(btn);
+```
+
+上記コードでは、`XMLHttpRequest` に登録されているいくつかのプロパティを使用している。
+代表的なものを以下にまとめておく。
+
+- [`status`](https://developer.mozilla.org/ja/docs/Web/API/XMLHTTPRequest/status)
+  - 読み取り専用
+  - レスポンスでの数値でのHTTPステータスコードを返す
+  - リクエストが完了する前や送信がエラーになった場合、ブラウザはステータスとして0を返す
+- [`statusText`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/statusText)
+  - 読み取り専用
+  - HTTPサーバから返されるレスポンスのステータスメッセージを返す
+  - 例えば `"OK"` や `"Not Found"` などが格納されている
+  - リクエストの [`readyState`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState) が `UNSENT` や `OPENED` の場合には、空文字が返される
+  - サーバがステータスメッセージを明示していない場合は、デフォルト値の `"OK"` が返される
+- [`responseType`](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/responseType)
+  - 列挙型の文字列値であり、レスポンスに含まれているデータ型を示している
+  - 空文字の場合にはデフォルト値である `text` が含まれている
+  - 列挙型自体は [`XMLHttpRequestResponseType`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestResponseType) で定義されている
+- [`response`](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/response)
+  - `responseType` に従うレスポンスのボディを返す
+  - `open` を使った初期化後や `send` を使ったリクエストの送信前に、`responseType` の値を設定することで、特定の形式でデータを提供するようにリクエストすることが可能である
+
+プロパティ以外にも、`XMLHttpRequest` には便利なメソッドが提供されている。
+
+- [`getResponseHeader()`](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/getResponseHeader)
+  - 指定した名称のレスポンスヘッダーの値を返す
+  - 以下のように指定することでヘッダ値を取得することができる
+
+    ```js
+    const contentType = xhr.getResponseHeader("content-type");
+    ```
+
+- [`getAllResponseHeaders()`](https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/getAllResponseHeaders)
+  - 全てのレスポンスヘッダーを `CRLF` で区切った文字列として返す
+  - なおヘッダ名は最新の仕様書にあるように全て小文字で返す
+  - 以下のようにヘッダを取得して正規表現で分割することも可能である
+
+    ```js
+    // ヘッダ文字列をすべて取得
+    const headers = xhr.getAllResponseHeaders();
+
+    // ヘッダ文字列を個別のヘッダの配列に変換
+    const arr = headers.trim().split(/[\r\n]+/);
+
+    // ヘッダ名と値のマッピングを生成する
+    const headerMap = {};
+    arr.forEach((line) => {
+      const parts = line.split(": ");
+      const header = parts.shift();
+      const value = parts.join(": ");
+      headerMap[header] = value;
+    })
+
+    // getResponseHeader()と同じような指定方法が可能となる
+    const contentType = headerMap["content-type"]
+    ```
+
+#### GithubのAPIに関して
+
+Github の API は Restful であり、論理的に分割されたリソースをHTTPメソッドで操作することができる。
+
+上記の例では、ユーザというリソースに対して GET リクエストを送信しており、CRUD 操作でいうところの読み込み（READ）を行っている。
+
+また Github API からレスポンスヘッダを見てみると、特有のヘッダが存在していることに気づく。
+
+```bash
+cache-control: public, max-age=60, s-maxage=60
+...
+x-github-media-type: github.v3; format=json
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 53
+x-ratelimit-reset: 1613194842
+x-ratelimit-used: 7
+```
+
+これらのヘッダーの意味は以下になる。
+
+- `x-github-media-type`
+  - 使用するデータの形式を指定する
+- `x-ratelimit-limit`
+  - 1時間で使用可能なリクエスト数
+- `x-ratelimit-remaining`
+  - 現在の制限内で発行できるリクエストの残数
+- `x-ratelimit-reset`
+  - [UTC epoch seconds](http://en.wikipedia.org/wiki/Unix_time) で指定される現在の制限がリセットされる時間
+  - 以下のように確認できる
+
+    ```js
+    new Date(<x-ratelimit-reset> * 1000)
+
+    // Sat Feb 13 2021 14:40:42 GMT+0900 (日本標準時)
+    new Date(1613194842 * 1000)
+    ```
+
+- `x-ratelimit-used`
+  - すでに発行したリクエストの数
+
+使用するユーザにとって非常にわかりやすい命名である。
+
+参考資料
+
+- [Github の API仕様書](http://developer.github.com/v3/gists/#list-gists)
+- [Github のメディアタイプ](https://docs.github.com/ja/rest/overview/media-types)
+- [Rate Limiting](https://docs.github.com/en/enterprise-server@3.0/rest/overview/resources-in-the-rest-api#rate-limiting)
+- [翻訳: WebAPI 設計のベストプラクティス](https://qiita.com/mserizawa/items/b833e407d89abd21ee72#%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E5%88%B6%E9%99%90%E6%83%85%E5%A0%B1%E3%81%AF%E3%83%AC%E3%82%B9%E3%83%9D%E3%83%B3%E3%82%B9%E3%83%98%E3%83%83%E3%83%80%E3%81%AB%E5%85%A5%E3%82%8C%E3%82%88%E3%81%86)
+
+### 質問: ブラウザのアドレスバーを使用したHTTPリクエストとの違いは何ですか
 
 ブラウザのアドレスバーを使用したHTTPリクエストとの違いは、ページ遷移の有無である。
 
@@ -181,9 +317,7 @@
 
 `XMLHttpRequest` や `fetch` では非同期的にHTTPリクエストを送信することで、ページ遷移させることなく必要なデータをサーバから取得することができる。
 
-### 質問
-
-> Cookieの送信はどのように実行すればいいでしょうか
+### 質問: Cookieの送信はどのように実行すればいいでしょうか
 
 ### 回答
 
@@ -217,13 +351,21 @@ xhr.send(JSON.stringfy({
 - [XMLHttpRequestの仕様](https://xhr.spec.whatwg.org/#the-withcredentials-attribute)
 - [[MDN] XMLHttpRequest.withCredentials](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/withCredentials)
 
-### 質問
+### 質問: CORSにはどのような対処を行えばいいでしょうか
 
 > HTTPリクエストを送信した際に「No 'Access-Control-Allow-Origin' header is present on the requested resource」というエラーが発生した。
-> どのような対処を行えばいいでしょうか
-
-### 回答
-
-
 
 ## 追加調査内容
+
+### Fetch APIとは何か
+
+`fetch` とは、JavaScript の [`Promise`](https://jsprimer.net/basic/async/) を活用した非同期通信のための API であり、`XMLHttpRequest` よりも強力で柔軟な操作が可能である。
+
+
+参考資料
+
+- [JavaScript Primer](https://jsprimer.net/)
+- [JavaScript Promiseの本](https://azu.github.io/promises-book/)
+
+### 
+
