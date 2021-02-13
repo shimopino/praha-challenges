@@ -261,6 +261,8 @@ document.body.appendChild(btn);
     const contentType = headerMap["content-type"]
     ```
 
+後はこれらを活用して処理を記述していけばいい。
+
 #### GithubのAPIに関して
 
 Github の API は Restful であり、論理的に分割されたリソースをHTTPメソッドで操作することができる。
@@ -305,6 +307,7 @@ x-ratelimit-used: 7
 
 参考資料
 
+- [Github API Guide](https://docs.github.com/ja/rest/guides)
 - [Github の API仕様書](http://developer.github.com/v3/gists/#list-gists)
 - [Github のメディアタイプ](https://docs.github.com/ja/rest/overview/media-types)
 - [Rate Limiting](https://docs.github.com/en/enterprise-server@3.0/rest/overview/resources-in-the-rest-api#rate-limiting)
@@ -319,8 +322,6 @@ x-ratelimit-used: 7
 `XMLHttpRequest` や `fetch` では非同期的にHTTPリクエストを送信することで、ページ遷移させることなく必要なデータをサーバから取得することができる。
 
 ### 質問: Cookieの送信はどのように実行すればいいでしょうか
-
-### 回答
 
 `XMLHttpRequest` オブジェクトの `withCredentials` プロパティを使用して、[Cookies](https://developer.mozilla.org/ja/docs/Web/HTTP/Cookies) や [Authorization](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Authorization) ヘッダ、TLSでのクライアント証明などの機密情報を使った、アクセス制御を行うリクエストを送信することも可能である。
 
@@ -356,17 +357,328 @@ xhr.send(JSON.stringfy({
 
 > HTTPリクエストを送信した際に「No 'Access-Control-Allow-Origin' header is present on the requested resource」というエラーが発生した。
 
+ブラウザバーに URL を打ち込んでページ遷移を行う、いわゆる top-level navigation とは異なり、`fetch` や `XMLHttpRequest` などのJavaScriptを通じたHTTPリクエストを発行する場合、ブラウザの [**Same-Origin Policy**](https://developer.mozilla.org/ja/docs/Web/Security/Same-origin_policy) によって、異なるオリジンに対するリクエストは、サーバからのレスポンスを受け取ったとしてもブラウザがそのレスポンスを拒否してしまう。
+
+もしも異なるオリジンに対してHTTPリクエストを使用してレスポンスを取得したい場合は [**Cross-Origin Resource Sharing**](https://developer.mozilla.org/ja/docs/Web/HTTP/CORS) を使用して、リクエストを発行しているクライアントのオリジンをサーバ側で許可する必要がある。
+
+例えば `https://foo.example` から `XMLHttpRequest` を使用して以下のようなHTTPリクエストを発行する場合を考える。
+
+```js
+const URL = "https://bar.example"
+const xhr = new XMLHttpRequest();
+xhr.open("GET", URL);
+xhr.addEventListener("load", somehandler);
+xhr.send();
+```
+
+このときサーバは、レスポンスヘッダに `Access-Control-Allow-origin` を設定して、HTTPリクエストの送信元を指定しなければ、レスポンスを受け取ったとしてもサーバ側はレスポンスを破棄してしまう。
+
+`express` を使用する場合は以下のように設定する。
+
+```js
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+  // ↓でリクエスト送信元のオリジンを指定してCORSを実行する
+  res.header("Access-Control-Allow-origin", "https://foo.example")
+  res.json({
+    message: "this response can avoid browser's Same-Origin Policy!"
+  })
+})
+```
+
+上記のようにサーバ側で特定のHTTPヘッダを付与することで、CORSが可能となる。
+
+より詳細な内容を知りたい場合は、[課題6の調査資料](../06_CORS) を参照する。
+
 ## 追加調査内容
 
-### Fetch APIとは何か
+### 質問: Fetch APIとは何でしょうか
 
-`fetch` とは、JavaScript の [`Promise`](https://jsprimer.net/basic/async/) を活用した非同期通信のための API であり、`XMLHttpRequest` よりも強力で柔軟な操作が可能である。
+#### Fetch APIとは何か?
 
+[`fetch`](https://developer.mozilla.org/ja/docs/Web/API/Fetch_API) とは、JavaScript の [`Promise`](https://jsprimer.net/basic/async/) を活用した非同期通信のための API であり、`XMLHttpRequest` よりも強力で柔軟な操作が可能である。
 
 参考資料
 
 - [JavaScript Primer](https://jsprimer.net/)
 - [JavaScript Promiseの本](https://azu.github.io/promises-book/)
 
-### 
+#### Fetch APIをどのように使用するのか?
 
+`fetch` は、`Promise` の構文を使用することでシンプルに非同期処理のチェーンを記述することができる。
+
+例えば JSON 形式のデータを取得する場合には以下のように記述できる。
+
+```js
+fetch("https://example.com/users.json")
+  .then(response => {
+    console.log(response.status);
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => {
+    console.error(error);
+  })
+```
+
+`fetch` ではリクエストのレスポンスを表している `Response` オブジェクトで `resolve` されて後続の `.then` メソッドのチェーンが実行されていく。
+
+また途中で `reject` された場合には `.catch` メソッドが呼び出される。
+
+#### 実際にリクエストを送信してみる
+
+`XMLHttpRequest` を使った場合と同じように `https://api.github.com` に対してリクエストを送信してユーザ情報を取得してみる。
+
+```js
+btn.addEventListener("click", () => {
+  fetch("https://api.github.com/users/KeisukeShimokawa")
+    .then((response) => {
+      // HTTPステータスコードが200番台なら `true` を返す
+      if (!response.ok) {
+        console.error(response);
+      } else {
+        console.log(`${response.status} (got ${respose.headers.get("content-length")} bytes)`)
+        return response.json();
+      }
+    }).then(data => {
+      console.log(data)
+    }).catch(error => {
+      console.error(error);
+    })
+})
+```
+
+処理の内容自体は `XMLHttpRequest` と似たような感じで記述することができる。
+
+上記の例で注意する必要がある点は `response.headers.get("content-length")` である。Cross-Origin なリクエストを送信している場合、ブラウザの `Network` タブから確認できるヘッダを、JavaScript からも読み取ることができるとは限らない。
+
+JavaScript から読み取ることができるようにするためには、サーバ側が以下のようなヘッダを付与している必要がある。
+
+```bash
+Access-Control-Expose-Headers: Content-Length
+```
+
+ヘッダ以外にも [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) で確認できる内容は数多く存在する。
+以下ではその中から代表的なものを紹介する。
+
+- [`ok`](https://developer.mozilla.org/en-US/docs/Web/API/Response/ok)
+  - 読み取り専用
+  - レスポンスのステータスが200番台（200 - 299）の場合に `true` を返す
+- [`status`](https://developer.mozilla.org/en-US/docs/Web/API/Response/status)
+  - 読み取り専用
+  - 数値形式の HTTP ステータスコードを返す
+- [`statusText`](https://developer.mozilla.org/en-US/docs/Web/API/Response/statusText)
+  - 読み取り専用
+  - HTTP ステータスコードに応じたメッセージを返す
+  - 例えばステータスコードが 200 の場合に `"OK"` を返す
+  - デフォルトでは空文字である
+  - HTTP/2 でもステータスメッセージを持っていないため空文字になる
+- [`type`](https://developer.mozilla.org/en-US/docs/Web/API/Response/type)
+  - 読み取り専用
+  - レスポンスの Type を返す
+  - 例えば以下の値が格納されている
+    - `basic`
+      - 通常であり、同一オリジンのレスポンスに対して付与される
+    - `cors`
+      - 異なるオリジンからのレスポンスに対して付与される
+    - `error`
+      - ネットワークエラーに対して付与される
+      - レスポンスのステータスは0になり、ヘッダは空で変更できないものになる
+    - `opaque`
+      - 異なるオリジンへの `no-cors` 設定を行ったときのレスポンスに対して付与される
+    - `opaqueredirect`
+      - リクエストで `redirect: "manual"` 設定が指定されたときに付与される 
+- [`url`](https://developer.mozilla.org/en-US/docs/Web/API/Response/url)
+  - 読み取り専用
+  - レスポンスを返してきたサーバの URL が格納されている
+
+これまでに見てきたように `fetch` は `XNLHttpRequest` と比較して、より柔軟な処理を可読性を高く保ったまま記述することができる。
+
+参考資料
+
+- [Introduction to fetch()](https://developers.google.com/web/updates/2015/03/introduction-to-fetch#response_types)
+- [[MDN] サーバからのデータ取得](https://developer.mozilla.org/ja/docs/Learn/JavaScript/Client-side_web_APIs/Fetching_data)
+- [Working with the Fetch API](https://developers.google.com/web/ilt/pwa/working-with-the-fetch-api)
+- [How to get the content-length of the response from a request with fetch()](https://stackoverflow.com/questions/48266678/how-to-get-the-content-length-of-the-response-from-a-request-with-fetch)
+
+#### async & await を使ってシンプルに記述する
+
+上記の処理を ES2017で導入された `async/await` で記述する。
+
+```js
+// コールバック関数を `async` で指定する
+btn.addEventListener("click", async () => {
+  let data;
+
+  try {
+    const response = await fetch("https://api.github.com/users/KeisukeShimokawa")
+    if (!response.ok) {
+      console.error(response);
+    } else {
+      console.log(`${response.status} (got ${respose.headers.get("content-length")} bytes)`)
+      data = await response.json();
+    }
+  } catch(error) {
+    console.error(error);
+  }
+
+  console.log(data);
+})
+```
+
+参考資料
+
+- [[JavaScript Promise の本] Async Function](https://azu.github.io/promises-book/#chapter5-async-function)
+
+#### Fetch APIの初期化をより詳しく見てみる
+
+次に `fetch` でリクエストに対して適用できる設定を見ていく。
+
+```js
+fetch("https://api.github.com/users/KeisukeShimokawa", {
+
+  /*
+  * 使用するHTTPメソッドを指定する
+  * 
+  * GET, POST, DELETE, などなど
+  */
+  method: "GET",
+
+  /*
+  * 使用するHTTPヘッダを指定する
+  * 
+  * 一部の名称は禁止されているため注意
+  * https://developer.mozilla.org/ja/docs/Glossary/Forbidden_header_name
+  */
+  headers: {
+    "Content-Type": "application/json"
+  },
+
+  /*
+  * リクエストに追加する本文を指定する
+  * 
+  * Blob, BufferSource, FormData, URLSearchParams, USVString, ReadableStream, etc
+  */
+  body: undefined,
+
+  /*
+  * リクエストのリファラーを指定する
+  * 
+  * 同じオリジンのURL、"about:client"、空文字のいづれかを指定する
+  */
+  referer: "about:client",
+
+  /*
+  * リクエストで使用するリファラーポリシーを指定する
+  * https://w3c.github.io/webappsec-referrer-policy/#referrer-policies
+  * 
+  * no-referrer, no-referrer-when-downgrade, same-origin, 
+  * origin, strict-origin, origin-when-cross-origin,
+  * strict-origin-when-cross-origin, unsafe-url
+  */
+  referrerPolicy: "no-referrer-when-downgrade",
+
+  /*
+  * リクエストで使用したいモードを指定する
+  * 
+  * cors:        デフォルト値であり Cross-Origin リクエストを許可する
+  * no-cors:     安全な Cross-Origin リクエストのみを許可する
+  * same-origin: Cross-Origin リクエストを許可しない
+  */
+  mode: "cors",
+
+  /*
+  * リクエストに使用したい認証情報
+  * デフォルトでは Cookie は送信されないため注意
+  * 
+  * omit:        同一・異なるオリジンの両方で認証情報を決して送信しない
+  * inclide      常に認証情報を送信する
+  * same-origin: デフォルト値であり、同一オリジンに対してのみ認証情報を送信する
+  */  
+  credentials: "same-origin",
+
+  /*
+  * リクエストで使用したいキャッシュモードを指定する
+  * https://developer.mozilla.org/ja/docs/Web/API/Request/cache
+  * 
+  * reload:         通常はHTTPキャッシュを参照せず、許可があるときにみ使用する
+  * default:        標準的なHTTPキャッシュのルールとヘッダに従う
+  * no-cache:       HTTPキャッシュが存在すると条件付きリクエストを送信する
+  * no-store:       HTTPキャッシュを無視する
+  * force-cache:    必ずHTTPキャッシュを参照し、なければリクエストを送信する
+  * only-if-cached: HTTPキャッシュからのみレスポンスを返す
+  */
+  cache: "default",
+
+  /*
+  * 使用するリダイレクトモードを指定する
+  * 
+  * follow: 自動でリダイレクトに従う。デフォルトの挙動
+  * error:  リダイレクトの際にエラーを伴って中止する
+  * manual: 手動でリダイレクトを処理する
+  */
+  redirect: "follow",
+
+  /*
+  * リソースに subresource integrity 値を含めることができる
+  * https://developer.mozilla.org/ja/docs/Web/Security/Subresource_Integrity
+  */
+  integrity: "",
+
+  /*
+  * 長生きするリクエストを許可する
+  * 
+  */
+  keepalive: false,
+
+  /*
+  * AbortSignal オブジェクトのインスタンス
+  * https://developer.mozilla.org/ja/docs/Web/API/AbortSignal
+  * 
+  * AbortController経由で `fetch` リクエストと通信したり、中止できたりする
+  */
+  signal: undefined,
+})
+```
+
+参考資料
+
+- [[MDN] WindowOrWorkerGlobalScope.fetch()](https://developer.mozilla.org/ja/docs/Web/API/WindowOrWorkerGlobalScope/fetch)
+
+### 質問: fetch で画像を送信することはできるのか
+
+[`Blob`](https://developer.mozilla.org/ja/docs/Web/API/Blob) オブジェクトを使用することで、画像を送信することが可能である。
+
+```html
+<canvas id="canvasElem" width="100" height="80" style="border:1px solid"></canvas>
+
+<input type="button" value="Submit" onclick="submit()">
+
+<script>
+  canvasElem.onmousemove = (event) => {
+    const ctx = canvasElem.getContext("2d");
+    ctx.lineTo(event.clientX, event.clientY);
+    ctx.stroke();
+  };
+
+  const submit = async (event) => {
+    const blob = await new Promise(resolve => canvasElem.toBlob(resolve, "image/png"));
+    const response = await fetch("/article/fetch/post/image", {
+      method: "POST",
+      body: blob
+    });
+    const data = await response.json();
+    console.log(data);
+  }
+
+</script>
+```
+
+参考資料
+
+- [[MDN] Canvas API](https://developer.mozilla.org/ja/docs/Web/API/Canvas_API)
+- [Syntax for async arrow function](https://stackoverflow.com/questions/42964102/syntax-for-async-arrow-function)
+- [[javascript.info] Fetch](https://javascript.info/fetch)
+- [[javascript.info] FormData](https://javascript.info/formdata)
