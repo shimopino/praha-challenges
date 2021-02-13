@@ -6,17 +6,18 @@
 <summary>Table of Contents</summary>
 
 - [課題1](#%E8%AA%B2%E9%A1%8C1)
-  - [質問](#%E8%B3%AA%E5%95%8F)
-  - [回答](#%E5%9B%9E%E7%AD%94)
+  - [質問: XMLHttpRequestとは何でしょうか](#%E8%B3%AA%E5%95%8F-xmlhttprequest%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%A7%E3%81%97%E3%82%87%E3%81%86%E3%81%8B)
     - [XMLHttpRequestとは何か?](#xmlhttprequest%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
     - [XMLHttpRequestをどのように使用するのか?](#xmlhttprequest%E3%82%92%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E3%81%AE%E3%81%8B)
-  - [質問](#%E8%B3%AA%E5%95%8F-1)
-  - [回答](#%E5%9B%9E%E7%AD%94-1)
-  - [質問](#%E8%B3%AA%E5%95%8F-2)
-  - [回答](#%E5%9B%9E%E7%AD%94-2)
-  - [質問](#%E8%B3%AA%E5%95%8F-3)
-  - [回答](#%E5%9B%9E%E7%AD%94-3)
+    - [実際にリクエストを送信してみる](#%E5%AE%9F%E9%9A%9B%E3%81%AB%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%82%92%E9%80%81%E4%BF%A1%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B)
+    - [GithubのAPIに関して](#github%E3%81%AEapi%E3%81%AB%E9%96%A2%E3%81%97%E3%81%A6)
+  - [質問: ブラウザのアドレスバーを使用したHTTPリクエストとの違いは何ですか](#%E8%B3%AA%E5%95%8F-%E3%83%96%E3%83%A9%E3%82%A6%E3%82%B6%E3%81%AE%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E3%83%90%E3%83%BC%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%9Fhttp%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%A8%E3%81%AE%E9%81%95%E3%81%84%E3%81%AF%E4%BD%95%E3%81%A7%E3%81%99%E3%81%8B)
+  - [質問: Cookieの送信はどのように実行すればいいでしょうか](#%E8%B3%AA%E5%95%8F-cookie%E3%81%AE%E9%80%81%E4%BF%A1%E3%81%AF%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84%E3%81%A7%E3%81%97%E3%82%87%E3%81%86%E3%81%8B)
+  - [回答](#%E5%9B%9E%E7%AD%94)
+  - [質問: CORSにはどのような対処を行えばいいでしょうか](#%E8%B3%AA%E5%95%8F-cors%E3%81%AB%E3%81%AF%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AA%E5%AF%BE%E5%87%A6%E3%82%92%E8%A1%8C%E3%81%88%E3%81%B0%E3%81%84%E3%81%84%E3%81%A7%E3%81%97%E3%82%87%E3%81%86%E3%81%8B)
 - [追加調査内容](#%E8%BF%BD%E5%8A%A0%E8%AA%BF%E6%9F%BB%E5%86%85%E5%AE%B9)
+  - [Fetch APIとは何か](#fetch-api%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
+  - [](#)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
