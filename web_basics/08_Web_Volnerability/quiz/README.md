@@ -200,6 +200,26 @@ generateSessionToken();
 <summary>回答例</summary>
 <div>
 
+該当するソースコードは以下になる。
+
+```php
+// Check Anti-CSRF token
+checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
+```
+
+これは今までの脆弱性対策でも使用していた通り、CSRFトークンをサーバで検証している。
+
+以下のようにサーバが発行したユーザトークンと、CSRFトークンが一致しているかどうかを検証しており、一致していない場合は引数で与えられたURLにリダイレクトするようになっている。
+
+```php
+// Token functions --
+function checkToken( $user_token, $session_token, $returnURL ) {  # Validate the given (CSRF) token
+	if( $user_token !== $session_token || !isset( $session_token ) ) {
+		dvwaMessagePush( 'CSRF token is incorrect' );
+		dvwaRedirect( $returnURL );
+	}
+}
+```
 
 </div>
 </details>
