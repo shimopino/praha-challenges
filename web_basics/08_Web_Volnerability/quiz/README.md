@@ -51,7 +51,7 @@ generateSessionToken();
 対策としては以下の2つを実施していることがわかる。
 
 - ユーザ入力値のエスケープ処理
-  - PHPの `htmlspecialchars()` を使って特殊文字をエスケープしている
+  - PHPの [`htmlspecialchars()`](https://www.php.net/manual/ja/function.htmlspecialchars.php) を使って特殊文字をエスケープしている
 - CSRFトークンの埋め込み
   - リクエストを処理するごとにCSRFトークンを生成している
   - 生成したトークンは `<input type="hidden">` に埋め込んでいる
@@ -80,6 +80,60 @@ generateSessionToken();
 <summary>回答例</summary>
 <div>
 
+該当するソースコードは以下になる。
+
+```php
+<?php
+
+if( isset( $_POST[ 'Submit' ]  ) ) {
+	// Check Anti-CSRF token
+	checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
+
+	// Get input
+	$target = $_REQUEST[ 'ip' ];
+	$target = stripslashes( $target );
+
+	// Split the IP into 4 octects
+	$octet = explode( ".", $target );
+
+	// Check IF each octet is an integer
+	if( ( is_numeric( $octet[0] ) ) && ( is_numeric( $octet[1] ) ) && ( is_numeric( $octet[2] ) ) && ( is_numeric( $octet[3] ) ) && ( sizeof( $octet ) == 4 ) ) {
+		// If all 4 octets are int's put the IP back together.
+		$target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3];
+
+		// Determine OS and execute the ping command.
+		if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+			// Windows
+			$cmd = shell_exec( 'ping  ' . $target );
+		}
+		else {
+			// *nix
+			$cmd = shell_exec( 'ping  -c 4 ' . $target );
+		}
+
+		// Feedback for the end user
+		$html .= "<pre>{$cmd}</pre>";
+	}
+	else {
+		// Ops. Let the user name theres a mistake
+		$html .= '<pre>ERROR: You have entered an invalid IP.</pre>';
+	}
+}
+
+// Generate Anti-CSRF token
+generateSessionToken();
+
+?>
+```
+
+対策としては以下の2つを実施していることがわかる。
+
+- CSRFトークンの埋め込み
+  - リクエストを処理するごとにCSRFトークンを生成している
+- `ping` コマンドに合わせたIPアドレス特有の入力値検証処理の実行
+  - IPアドレスは `.` 区切りの数値で与えられる
+  - ユーザ入力値を [`explode()`](https://www.php.net/manual/ja/function.explode.php) を使用して `.` で分割する
+  - 分割された各値を [`is-numeric`](https://www.php.net/manual/ja/function.is-numeric.php) を使用して数値であることを検証する
 
 </div>
 </details>
