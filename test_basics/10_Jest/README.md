@@ -26,13 +26,13 @@
 
 TypeScriptとNode.jsを使ったアプリに対して単体テストを行う内容で非常にわかりやすかったです。
 
-上記コースを進めながら以下のサイトを辞書的に使ってました。
+上記コースを進めながら指定されていた以下のサイトを辞書的に使ってました。
 
-https://jestjs.io/docs/ja/getting-started
-https://jestjs.io/docs/ja/using-matchers
-https://jestjs.io/docs/ja/asynchronous
-https://jestjs.io/docs/ja/setup-teardown
-https://jestjs.io/docs/ja/mock-functions
+- https://jestjs.io/docs/ja/getting-started
+- https://jestjs.io/docs/ja/using-matchers
+- https://jestjs.io/docs/ja/asynchronous
+- https://jestjs.io/docs/ja/setup-teardown
+- https://jestjs.io/docs/ja/mock-functions
 
 ## 課題2
 
@@ -103,9 +103,49 @@ Jestで単体テストを書こう
       ✓ デフォルト引数のコンストラクタ (1 ms)
       ✓ 取得した名前の長さが指定した最大値よりも短い場合はそのまま返す
       ✓ 取得した名前の長さが指定した最大値よりも長い場合に例外送出 (1 ms)
+
+--------------|---------|----------|---------|---------|-------------------
+File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------|---------|----------|---------|---------|-------------------
+All files     |   95.45 |      100 |     100 |   95.24 |                   
+ functions.ts |   95.45 |      100 |     100 |   95.24 | 30                
+--------------|---------|----------|---------|---------|-------------------
+```
+
+注意点としては、`asyncSumOfArraySometimesZero` 関数に関しても例外が送出されなくなってしまい、コードカバレッジが100%にならないので、以下のように変更する必要がある点である。
+
+```js
+export const asyncSumOfArraySometimesZero = (
+  numbers: number[],
+  database: DatabaseMock = new DatabaseMock(),
+): Promise<number> => {
+  return new Promise((resolve): void => {
+    // try {
+    //   database.save(numbers);
+    //   resolve(sumOfArray(numbers));
+    // } catch (error) {
+    //   resolve(0);
+    // }
+    database.save(numbers);
+    resolve(sumOfArray(numbers));
+  });
+};
 ```
 
 ### 質問6: 質問5に対応する単体テストを実装してみましょう
+
+単体テストの実装では、以下のように空配列を渡した場合の返り値を検証すればいい。
+
+```js
+test('空の配列を渡すと0が返ってくる', () => {
+  // Arrange
+  const expected = 0;
+  // Act
+  const actual = sumOfArray([]);
+  // Assert
+  expect(actual).toBe(expected);
+});
+```
 
 ## 課題4
 
