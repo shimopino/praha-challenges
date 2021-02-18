@@ -748,7 +748,7 @@ fetch(url)
 
 - [[javascript.info] URL Objects](https://javascript.info/url)
 
-#### URLをどのようにエンコーディングするのでしょうか
+#### 質問: URLをどのようにエンコーディングするのでしょうか
 
 URLをエンコーディングしたい場合には、大きく以下の2つの方法が存在している。
 
@@ -783,7 +783,7 @@ RFCでURLに含めてはいけない文字が、UTF-8に従ってエンコーデ
 
 - [[javascript.info] URL Objects](https://javascript.info/url)
 
-### ファイルのアップロード機能を実装してみましょう
+### 質問: ファイルのアップロード機能を実装してみましょう
 
 JavaScript.info の [Resumable file upload](https://javascript.info/resume-upload) で提供されているファイルアップロードの再開機能を express で実装しなおしてみる。
 
