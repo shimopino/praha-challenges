@@ -795,4 +795,4 @@ JavaScript.info の [Resumable file upload](https://javascript.info/resume-uploa
 
 つまり最初にファイルのアップロードを開始した後で、サーバにファイルの受信状況を確認し、そのあとで指定されたバイトからファイルをアップロードすることができる。
 
-[file-upload=progress](./file-upload=progress) フォルダで実装している。
+[file-upload-progress](./file-upload-progress) フォルダで実装している。
