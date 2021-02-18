@@ -781,3 +781,14 @@ RFCでURLに含めてはいけない文字が、UTF-8に従ってエンコーデ
 
 ### ファイルのアップロード機能を実装してみましょう
 
+JavaScript.info の [Resumable file upload](https://javascript.info/resume-upload) で提供されているファイルアップロードの再開機能を express で実装しなおしてみる。
+
+`xhr.upload.onprogress` で提供されている機能は、あくまでもファイルアップロードの進捗確認を行うだけであり、途中で中断されたファイルアップロードを再開するようなことは不可能である。
+
+元の記事では以下のような考え方のもと、該当する機能を実装している。
+
+![](./assets/file-upload.png)
+
+つまり最初にファイルのアップロードを開始した後で、サーバにファイルの受信状況を確認し、そのあとで指定されたバイトからファイルをアップロードすることができる。
+
+[file-upload=progress](./file-upload=progress) フォルダで実装している。
