@@ -686,3 +686,98 @@ fetch("https://api.github.com/users/KeisukeShimokawa", {
 - [Syntax for async arrow function](https://stackoverflow.com/questions/42964102/syntax-for-async-arrow-function)
 - [[javascript.info] Fetch](https://javascript.info/fetch)
 - [[javascript.info] FormData](https://javascript.info/formdata)
+
+### URLを安全に設定するにはどうすればいいのか
+
+#### URLオブジェクトとは何でしょうか
+
+`fetch` や `XMLHttpRequest` を使用する場合、URLを文字列で指定することができるが、文字列の代わりに JavaScript の組み込み関数として提供されている `URL` オブジェクトを使用することができる。
+
+このオブジェクトの API は以下のようになっている。
+
+```js
+/*
+* @param {string} url  : フルパスか相対パスを指定する
+* @param {string} base : 相対パスの場合はOriginを指定する
+*/
+new URL(url, [base]);
+```
+
+具体的には以下のように使い分けることができる。
+
+```js
+// URLをフルパスで指定する場合
+const url1 = new URL("https://api.github.com/users/KeisukeShimokawa");
+
+// 相対パスとbaseを指定する場合
+const url2 = new URL("/users/KeisukeShimokawa", "https://api.github.com");
+```
+
+この URL オブジェクトには様々なプロパティが存在している。
+
+```js
+const url = new URL("https://api.github.com/users/KeisukeShimokawa?name=keisuke#sample");
+
+console.log(url.hash);      // #sample
+console.log(url.host);      // api.github.com
+console.log(url.hostname);  // api.github.com
+console.log(url.origin);    // https://api.github.com
+console.log(url.password);  // 
+console.log(url.pathname);  // /users/KeisukeShimokawa
+console.log(url.port);      // 
+console.log(url.protocol);  // https:
+console.log(url.href);      // https://api.github.com/users/KeisukeShimokawa?name_keisuke#sample
+console.log(url.search);    // ?name=keisuke
+console.log(url.username);  // 
+```
+
+上記のうちパスワードやユーザ名はHTTP認証を指定した際に登録される。
+
+この URL オブジェクトを文字列の代わりに `fetch` の引数に指定することができる。
+
+```js
+const url = new URL("https://api.github.com/users/KeisukeShimokawa");
+fetch(url)
+```
+
+参考資料
+
+- [[javascript.info] URL Objects](https://javascript.info/url)
+
+#### URLをどのようにエンコーディングするのでしょうか
+
+URLをエンコーディングしたい場合には、大きく以下の2つの方法が存在している。
+
+- `URL` オブジェクトを使用する
+  - [RFC3986](https://tools.ietf.org/html/rfc3986) に準拠するエンコーディングを実行する
+  - IPv6 などを正しくエンコーディングすることが可能である
+- `encode*` 関数を使用する
+  - [RFC2396](https://tools.ietf.org/html/rfc2396) に準拠するエンコーディングを実行する
+
+  ```js
+  // URL全体をエンコード/デコードする
+  encodeURI
+  decodeURI
+
+  // 検索文字列やハッシュ以下の値をエンコード/デコードする
+  encodeURIComponent
+  decodeURIComponent
+  ```
+
+例えば検索文字列などは、空白や特殊文字を含んでいる可能性があるため、以下のようにエンコーディングしてから、URLに結合させる。
+
+```js
+const query = encodeURIComponent("music");
+const value = encodeURIComponent("Rock&Roll");
+const url = `https://google.com/search?${query}=${value}`;
+console.log(url); // https://google.com/search?q=Rock%26Roll
+```
+
+RFCでURLに含めてはいけない文字が、UTF-8に従ってエンコーディングされていることがわかる。
+
+参考資料
+
+- [[javascript.info] URL Objects](https://javascript.info/url)
+
+### ファイルのアップロード機能を実装してみましょう
+
