@@ -50,6 +50,179 @@ https://github.com/KeisukeShimokawa/praha-challenge-templates/tree/feature/task1
 
 ### 質問2: 依存性の注入とは何か
 
+[[Martin Fowler] Inversion of Control Containers and the Dependency Injection pattern](https://www.martinfowler.com/articles/injection.html) の記事をもとに「依存性の注入」を説明する。
+
+#### 単純に実装した場合の問題点
+
+以下のような特定の監督が制作した映画の一覧を取得するクラスを構造を考える。
+
+```java
+class MovieLister {
+  public Movie[] moviesDirectedBy(String director) {
+    List allMovies = finder.findAll();
+    for (Iterator it = allMovies.iterator(); it.hasNext();) {
+      Movie movie = (Movie) it.next();
+      if (!movie.getDirector().equals(director)) it.remove();
+    }
+    return (Movie[]) allMovies.toArray(new Movie[allMovies.size()]);
+  }
+}
+```
+
+`moviesDirectedBy` メソッド内部で使用している `finder` オブジェクトのインスタンスは、`MovieLister` から映画のリストをどのように保存するのかを隠蔽しており、それぞれの処理を独立させることができる。
+
+そこで以下のように映画のリストのみが定義されたインターフェースを実装する形で、具象クラスを取り扱うことを考える。
+
+```java
+public interface MovieFinder {
+  List findAll();
+}
+```
+
+上記のインターフェースを実装した具象クラスを使うことで、`MovieLister` クラスは 異なる実装の `finder` クラスを使用することができるようになる。
+
+```java
+class MovieLister {
+	private MovieFinder finder;
+	public MovieLister() {
+		finder = new ColonDelimitedMovieFinder("movies1.txt");
+	}
+}
+```
+
+ではこの `MovieLister` をほかの開発者が使用する場合を考えてみると、以下のような問題点があげられる。
+
+- ファイル名が違うかもしれない
+- SQLやXMLファイルなど映画のリストを保存するフォーマットが異なるかもしれない
+
+現在の実装では、上記のような問題をうまく解決することができない。
+
+これは `MovieLister` が以下のようにインターフェースと具象クラスの両方と依存関係を有しており、異なる実装の `finder` を使用したい場合にはそもそもの `MovieLister` のソースを変更しなければならなくなるためである。
+
+![図1](https://kakutani.com/trans/fowler/naive.gif)
+
+理想的には `MovieLister` が `MovieFinder` インターフェースの具象クラスならばなんでも受け入れることができれば、開発者は自身が実装したい内容の `finder` クラスを利用することができる。
+
+#### Dependancy Injection
+
+**依存性の注入** とは上記の課題を解決するための実装パターンである。
+
+つまり `MovieLister` が `MovieFinder` インターフェースの具象クラスならばなんでも受け入れることができるようにしておき、ほかの開発者は外部から自身が利用したい具象クラスを **注入 (inject)** することで、`MovieLister` が具象クラスに依存しないようにするパターンである。
+
+実際には以下のように、特定のインターフェース `MovieFinder` と開発者が利用したい具象クラス `MovieFinderImpl` を紐づける設定ファイルのような役割を有する `Assembler` を使用して、該当クラスに指定した具象クラスを注入する。
+
+![](https://kakutani.com/trans/fowler/injector.gif)
+
+以下では依存性の注入を行うための2つの方法を紹介する。
+
+- コンストラクタ・インジェクション
+- セッター・インジェクション
+
+#### コンストラクタ・インジェクション
+
+最初は特定の具象クラスのインスタンスを、対象のクラスのコンストラクタに注入する方法である。
+
+```java
+class MovieLister {
+  public MovieLister(MovieFinder finder) {
+    this.finder = finder;
+  }
+}
+```
+
+上記のパターンを使用することで、`MovieLister` は インターフェース `MovieFinder` を実装している具象クラスならば何でも使用することができるようになる。
+
+`MovieFinder` の具象クラスも以下のように実装する。
+
+```java
+class ColonMovieFinder {
+  public ColonMovieFinder(String filename) {
+    this.filename = filename;
+  }
+}
+```
+
+あとはインターフェースと利用したい具象クラスを紐づけるための設定を実施する。
+開発者はこの設定を変更することで、自由に具象クラスを選択することができるようになる。
+
+```java
+private MutablePicoContainer configureContainer() {
+  MutablePicoContainer pico = new DefaultPicoContainer();
+  Parameter[] finderParams =  {new ConstantParameter("movies1.txt")};
+  pico.registerComponentImplementation(MovieFinder.class, ColonMovieFinder.class, finderParams);
+  pico.registerComponentImplementation(MovieLister.class);
+  return pico;
+}
+```
+
+あとは `registerComponentImplementation` メソッドに使用したい具象クラスを指定すればいいだけである。
+
+この軽量コンテナを利用する場合には以下のように指定する。
+
+```java
+public void testWithPico() {
+  MutablePicoContainer pico = configureContainer();
+  MovieLister lister = (MovieLister) pico.getComponentInstance(MovieLister.class);
+  Movie[] movies = lister.moviesDirectedBy("Sergio Leone");
+  assertEquals("Once Upon a Time in the West", movies[0].getTitle());
+}
+```
+
+これがコンストラクタ・インジェクションであり、今回の課題の実装でもこのパターンを採用している。
+
+#### セッター・インジェクション
+
+2つ目は特定の具象クラスのインスタンスを、対象のクラスのセッターから注入する方法である。
+
+```java
+class MovieLister {
+    private MovieFinder finder;
+    public void setFinder(MovieFinder finder) {
+    this.finder = finder;
+    }
+}
+```
+
+上記のパターンを使用することで、`MovieLister` は インターフェース `MovieFinder` を実装している具象クラスならば何でも使用することができるようになる。
+
+`MovieFinder` の具象クラスも以下のように実装する。
+
+```java
+class ColonMovieFinder {
+  public ColonMovieFinder(String filename) {
+    this.filename = filename;
+  }
+}
+```
+
+セッター・インジェクションのパターンを採用している `Spring` では、以下のような設定ファイルを記述することで、対象のクラスに特定の具象クラスを注入することができるようになる。
+
+```xml
+<beans>
+  <bean id="MovieLister" class="spring.MovieLister">
+    <property name="finder">
+      <ref local="MovieFinder"/>
+    </property>
+  </bean>
+  <bean id="MovieFinder" class="spring.ColonMovieFinder">
+    <property name="filename">
+      <value>movies1.txt</value>
+    </property>
+  </bean>
+</beans>
+```
+
+あとは以下のように使用すればいい。
+
+```java
+public void testWithSpring() throws Exception {
+  ApplicationContext ctx = new FileSystemXmlApplicationContext("spring.xml");
+  MovieLister lister = (MovieLister) ctx.getBean("MovieLister");
+  Movie[] movies = lister.moviesDirectedBy("Sergio Leone");
+  assertEquals("Once Upon a Time in the West", movies[0].getTitle());
+}
+```
+
 ### 質問3: 依存性の注入によるモジュール同士の結合度の強さはどのように変化したのか
 
 ### 質問4: 単体テストで外部サービスとの通信が発生する場合のデメリットは何か
@@ -96,13 +269,13 @@ Jestで単体テストを書こう
     ✓ [-2, 2]を渡すと0が返ってくる
     ✓ [0.2, 0.1]を渡すと0.3が返ってくる (1 ms)
   asyncSumOfArraySometimesZero
-      ✓ デフォルト引数のコンストラクタ
-      ✓ DI: [1, 1]を渡せば2が返ってくる (1 ms)
-      ✓ DI: []を渡せば0が返ってくる (1 ms)
+    ✓ デフォルト引数のコンストラクタ
+    ✓ DI: [1, 1]を渡せば2が返ってくる (1 ms)
+    ✓ DI: []を渡せば0が返ってくる (1 ms)
   getFirstNameThrowIfLong
-      ✓ デフォルト引数のコンストラクタ (1 ms)
-      ✓ 取得した名前の長さが指定した最大値よりも短い場合はそのまま返す
-      ✓ 取得した名前の長さが指定した最大値よりも長い場合に例外送出 (1 ms)
+    ✓ デフォルト引数のコンストラクタ (1 ms)
+    ✓ 取得した名前の長さが指定した最大値よりも短い場合はそのまま返す
+    ✓ 取得した名前の長さが指定した最大値よりも長い場合に例外送出 (1 ms)
 
 --------------|---------|----------|---------|---------|-------------------
 File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
