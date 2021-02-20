@@ -59,7 +59,7 @@ $ yarn add express debug winston express-winston cors nedb shortid argon2
 $ yarn add -D jest
 
 # TypeScript 関係のモジュールをインストールする
-$ yarn add -D typescript @types/express @types/debug @types/cors @types/shortid @types/jest ts-jest
+$ yarn add -D typescript @types/express @types/debug @types/cors @types/nedb @types/shortid @types/jest ts-jest
 
 # NodeJS のデバッグ用モジュールをインストールする
 $ yarn add -D source-map-support

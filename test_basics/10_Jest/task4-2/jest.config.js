@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/test'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
@@ -9,5 +9,5 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   verbose: true,
   collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/src/app/**/*.ts'],
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
 };
