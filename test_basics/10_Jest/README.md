@@ -354,7 +354,12 @@ test('空の配列を渡すと0が返ってくる', () => {
 
 ## 課題4
 
- 
+- [クイズ1](./task4-1)
+  - 正規表現を使った文字列をパースする関数の単体テストを実装する
+  - 具体的な実装内容は OSS の [Crowi の関数](https://github.com/crowi/crowi/blob/master/lib/service/query.ts) である。
+- [クイズ2](./task4-2)
+  - Rest APIに関する単体テストを実装する
+  - 基本的なMVC構成であり、NoSQL型のデータベースも使用している
 
 ## 参考資料
 
