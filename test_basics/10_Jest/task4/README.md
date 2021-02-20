@@ -5,6 +5,12 @@
 
 ## #1 クイズ
 
+[src/query.ts] には、OSS の CMS ツールである [Crowi](https://github.com/crowi/crowi) 内で使用されている関数が定義されており、使用例として `ElasticSearch` に投入する前の処理として採用されています。
+
+ではこのモジュール内で定義されている `parseQuery` 関数に対する単体テストを実装してみましょう。
+
+コードのカバレッジが 100％になるような単体テストにしてみましょう。
+
 ## 環境設定
 
 今回は Google が提供している [gts](https://github.com/google/gts) を使ってみました。
