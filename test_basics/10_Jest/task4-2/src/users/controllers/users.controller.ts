@@ -4,6 +4,7 @@ import argon2 from 'argon2';
 import debug from 'debug';
 
 const log: debug.IDebugger = debug('app:users-controller');
+
 class UsersController {
   private static instance: UsersController;
 

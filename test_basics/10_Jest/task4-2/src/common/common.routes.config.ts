@@ -33,6 +33,8 @@ export abstract class CommonRoutesConfig {
   /**
    * 具体的なHTTPメソッドを設定するメソッド
    * 対象クラスのコンストラクタが呼び出されると同時に登録する
+   *
+   * https://expressjs.com/en/4x/api.html#app.route
    */
   abstract configureRoutes(): express.Application;
 }

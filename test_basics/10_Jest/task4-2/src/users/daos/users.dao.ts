@@ -1,4 +1,5 @@
 import { UserDto } from '../dto/user.model';
+import DataStore from 'nedb';
 import shortid from 'shortid';
 import debug from 'debug';
 
@@ -11,10 +12,12 @@ const log: debug.IDebugger = debug('app:in-memory-dao');
  */
 class UsersDao {
   private static instance: UsersDao;
-  users: Array<UserDto> = [];
+  private nedb: DataStore;
 
-  constructor() {
+  constructor(nedb = new DataStore('databases/users.db')) {
     log('Created new instance of UsersDao');
+    this.nedb = nedb;
+    this.nedb.loadDatabase();
   }
 
   static getInstance(): UsersDao {
@@ -24,67 +27,120 @@ class UsersDao {
     return UsersDao.instance;
   }
 
-  async addUser(user: UserDto) {
-    user.id = shortid.generate();
-    this.users.push(user);
-    return user.id;
+  async addUser(user: UserDto): Promise<string> {
+    return new Promise((resolve, reject) => {
+      user.id = shortid.generate();
+      this.nedb.insert(user, (err: Error | null, docs: UserDto) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(docs.id);
+        }
+      });
+    });
   }
 
-  async getUsers() {
-    return this.users;
+  async getUsers(): Promise<UserDto[]> {
+    return new Promise((resolve, reject) => {
+      this.nedb.find({}, (err: Error | null, docs: UserDto[]) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(docs);
+        }
+      });
+    });
   }
 
-  async getUserById(userId: string) {
-    return this.users.find((user: { id: string }) => user.id === userId);
+  async getUserById(userId: string): Promise<UserDto> {
+    return new Promise((resolve, reject) => {
+      this.nedb.find({ id: userId }, (err: Error | null, docs: UserDto[]) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(docs[0]);
+        }
+      });
+    });
   }
 
-  async putUserById(user: UserDto) {
-    const objIndex = this.users.findIndex(
-      (obj: { id: string }) => obj.id === user.id,
-    );
-    this.users.splice(objIndex, 1, user);
-    return `${user.id} updated via put`;
+  async putUserById(user: UserDto): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.nedb.update(
+        { id: user.id },
+        user,
+        {},
+        (err: Error | null, numberOfUpdate: number, upsert: boolean) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(`${user.id} updated via put`);
+          }
+        },
+      );
+    });
   }
 
-  async patchUserById(user: UserDto) {
-    const objIndex = this.users.findIndex(
-      (obj: { id: string }) => obj.id === user.id,
-    );
-    let currentUser = this.users[objIndex];
-    const allowedPatchFields = [
-      'password',
-      'firstName',
-      'lastName',
-      'permissionLevel',
-    ];
-    for (let field of allowedPatchFields) {
-      if (field in user) {
-        // @ts-ignore
-        currentUser[field] = user[field];
-      }
-    }
-    this.users.splice(objIndex, 1, currentUser);
-    return `${user.id} patched`;
+  async patchUserById(user: UserDto): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.nedb.find({ id: user.id }, (err: Error | null, docs: UserDto) => {
+        if (err) {
+          reject(err);
+        } else {
+          const allowedPatchFields = [
+            'password',
+            'firstName',
+            'lastName',
+            'permissionLevel',
+          ];
+          for (let field of allowedPatchFields) {
+            if (field in user) {
+              // @ts-ignore
+              docs[field] = user[field];
+            }
+          }
+          this.nedb.update(
+            { id: user.id },
+            user,
+            {},
+            (err: Error | null, numberOfUpdate: number, upsert: boolean) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(`${user.id} patched`);
+              }
+            },
+          );
+        }
+      });
+    });
   }
 
-  async removeUserById(userId: string) {
-    const objIndex = this.users.findIndex(
-      (obj: { id: string }) => obj.id === userId,
-    );
-    this.users.splice(objIndex, 1);
-    return `${userId} removed`;
+  async removeUserById(userId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.nedb.remove({ id: userId }, {}, (err: Error | null, n: number) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(`${userId} removed`);
+        }
+      });
+    });
   }
 
-  async getUserByEmail(email: string) {
-    const objIndex = this.users.findIndex(
-      (obj: { email: string }) => obj.email === email,
-    );
-    let currentUser = this.users[objIndex];
-    if (currentUser) {
-      return currentUser;
-    } else {
-      return null;
-    }
+  async getUserByEmail(email: string): Promise<UserDto | null> {
+    return new Promise((resolve, reject) => {
+      this.nedb.find({ email: email }, (err: Error | null, docs: UserDto[]) => {
+        if (err) {
+          reject(err);
+        } else {
+          if (docs.length !== 0) {
+            resolve(docs[0]);
+          }
+          resolve(null);
+        }
+      });
+    });
   }
 }
 
