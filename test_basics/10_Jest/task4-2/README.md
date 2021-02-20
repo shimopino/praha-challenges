@@ -26,8 +26,8 @@
 
 ## #2 クイズ
 
-[src/users/daos/users.dao.ts] にはユーザのリソースに関するCRUD処理が実装されており、データベースのモジュールとしては [nedb](https://github.com/louischatriot/nedb/) を使用してローカルの特定のファイルに実行結果を保存するようにしています。
+[src/users/daos/users.dao.ts](src/users/daos/users.dao.ts) にはユーザのリソースに関するCRUD処理が実装されており、データベースのモジュールとしては [nedb](https://github.com/louischatriot/nedb/) を使用してローカルの特定のファイルに実行結果を保存するようにしています。
 
-では [test/users/daos/users.dao.test.ts] にCRUD処理の中から1つのメソッドを選択して単体テストを実装してみましょう。
+では [test/users/daos/users.dao.test.ts](test/users/daos/users.dao.test.ts) にCRUD処理の中から1つのメソッドを選択して単体テストを実装してみましょう。
 
 コードカバレッジが100％になることを目指しましょう。
