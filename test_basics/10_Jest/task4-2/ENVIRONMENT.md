@@ -1,7 +1,22 @@
 # 環境構築手順
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [1. VSCode の Remote Development を使用して Docker 環境を整える](#1-vscode-%E3%81%AE-remote-development-%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%A6-docker-%E7%92%B0%E5%A2%83%E3%82%92%E6%95%B4%E3%81%88%E3%82%8B)
+- [2. 必要なモジュールをインストールする](#2-%E5%BF%85%E8%A6%81%E3%81%AA%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B)
+- [3. .eslintrc.json](#3-eslintrcjson)
+- [4. .prettierrc.json](#4-prettierrcjson)
+- [5. .vscode/settings.json](#5-vscodesettingsjson)
+- [6. .vscode/launch.json](#6-vscodelaunchjson)
+- [7. tsconfig.json](#7-tsconfigjson)
+- [8. package.json](#8-packagejson)
+- [9. jest.config.js](#9-jestconfigjs)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 1. VSCode の Remote Development を使用して Docker 環境を整える
 
