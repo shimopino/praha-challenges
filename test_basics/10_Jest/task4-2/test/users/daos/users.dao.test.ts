@@ -1,4 +1,4 @@
-import UsersDao from '../../src/users/daos/users.dao';
+import UsersDao from '../../../src/users/daos/users.dao';
 
 describe('users.dao test suite', () => {
   describe('constructor', () => {
