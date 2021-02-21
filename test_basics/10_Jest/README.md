@@ -525,6 +525,176 @@ Jest では下記の図の中の **Test Double の観点** で API を提供し�
 
 Stub ではテスト対象への間接入力値を外部メソッドに設定することである。
 
+つまり以下の関数の中で `nameApiService.getFirstName()` の関節入力値を設定することと同じである。
+
+```js
+export const getFirstNameThrowIfLongWithoutDependancies = async (
+  maxNameLength: number,
+): Promise<string> => {
+  const nameApiSerivce = new NameApiService();
+  const firstName = await nameApiSerivce.getFirstName();
+
+  if (firstName.length > maxNameLength) {
+    throw new Error('first_name too long');
+  }
+  return firstName;
+};
+```
+
+単体テストを実装するにあたっていくつかの戦略が存在している。
+
+- 戦略1
+  - Jest の `spyOn` や `mock` を使用して、外部メソッドを呼び出した際に実行される処理の中身をモック化する
+- 戦略2
+  - 依存性の注入を行って、外部から依存しているメソッドをモック化する
+
+### 戦略1
+
+戦略1の場合、元のテスト対象のコードを変更することはない。
+
+```js
+export const getFirstNameThrowIfLongWithoutDependancies = async (
+  maxNameLength: number,
+): Promise<string> => {
+  const nameApiSerivce = new NameApiService();
+  const firstName = await nameApiSerivce.getFirstName();
+
+  if (firstName.length > maxNameLength) {
+    throw new Error('first_name too long');
+  }
+  return firstName;
+};
+```
+
+上記の関数が依存している `NameApiService` クラスの `getFirstName` メソッドの関節入力値を、テスト実装から行うようにする。
+
+これは Jest の `spyOn` と `mock` を使用することで実現できる。
+
+#### spyOn
+
+以下のようにテスト対象の `getFirstNameThrowIfLong` メソッドを実行した際に呼び出される外部メソッドの `getFirstName` をモック化させている。
+
+```js
+import * as functions from '../functions';
+import { NameApiService } from '../nameApiService';
+
+describe('Stubの使い方を学ぶ', (): void => {
+  let spy: jest.SpyInstance;
+
+  beforeEach((): void => {
+    spy = jest.spyOn(NameApiService.prototype, 'getFirstName');
+  });
+
+  afterEach((): void => {
+    spy.mockRestore();
+  });
+
+  test('getFirstNameThrowIfLong', async (): Promise<void> => {
+    // Arrange
+    const expected = '1234';
+    const maxNameLength = 5;
+    spy.mockResolvedValueOnce(expected);
+    // Act
+    const actual = await functions.getFirstNameThrowIfLongWithoutDependancies(
+      maxNameLength,
+    );
+    // Assert
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(actual).toBe(expected);
+  });
+});
+```
+
+- [`jest.spyOn`](https://jestjs.io/docs/en/jest-object#jestspyonobject-methodname)
+  - デフォルトではスパイさせたメソッドが呼び出される
+  - `mock`と異なり、後から元の実装に戻すことも可能
+
+#### mock
+
+依存するモジュール自体をモック化させる方法も存在している。
+
+```js
+import * as functions from '../functions.stub';
+import { NameApiService } from '../nameApiService';
+
+jest.mock('../nameApiService');
+
+describe('Stubの使い方を学ぶ', (): void => {
+  const nameApiServiceMock = NameApiService as jest.MockedClass<
+    typeof NameApiService
+  >;
+
+  afterEach((): void => {
+    nameApiServiceMock.mockClear();
+  });
+
+  test('getFirstNameThrowIfLong', async (): Promise<void> => {
+    // Arrange
+    const expected = '1234';
+    const maxNameLength = 5;
+    nameApiServiceMock.prototype.getFirstName.mockResolvedValueOnce(expected);
+    // Act
+    const actual = await functions.getFirstNameThrowIfLongWithoutDependancies(
+      maxNameLength,
+    );
+    // Assert
+    expect(nameApiServiceMock).toHaveBeenCalledTimes(1);
+    expect(actual).toBe(expected);
+  });
+});
+```
+
+### 戦略2
+
+依存性の注入を行うことで、テスト対象が依存している外部メソッドを、テスト対象の内部ではなく外部から指定できるように関数やクラスを設計することである。
+
+つまり以下のように関数呼び出し時に、依存しているオブジェクトを注入することである。
+
+```js
+export const getFirstNameThrowIfLongWithDependancies = async (
+  maxNameLength: number,
+  // 依存性の注入
+  nameApiSerivce: NameApiService = new NameApiService(),
+): Promise<string> => {
+  const firstName = await nameApiSerivce.getFirstName();
+
+  if (firstName.length > maxNameLength) {
+    throw new Error('first_name too long');
+  }
+  return firstName;
+};
+```
+
+これで後はモック化させた依存クラスをテストコードから、テスト対象メソッドに対して注入すればいい。
+
+```js
+describe('DIを使用するバージョン', (): void => {
+  // 注入するクラスをモック化させておく
+  const nameApiServiceMock = NameApiService as jest.MockedClass<
+    typeof NameApiService
+  >;
+
+  afterEach((): void => {
+    nameApiServiceMock.mockClear();
+  });
+
+  test('正常ケース', async (): Promise<void> => {
+    // Arrange
+    const expected = '1234';
+    const maxNameLength = 5;
+    // 外部メソッドの実装とその返り値を設定しテスト対象メソッドに注入する
+    nameApiServiceMock.prototype.getFirstName.mockResolvedValueOnce(expected);
+    // Act
+    const actual = await functions.getFirstNameThrowIfLongWithDependancies(
+      maxNameLength,
+      nameApiServiceMock.prototype,
+    );
+    // Assert
+    expect(actual).toBe(expected);
+  });
+})
+```
+
 ### Jest で Spy を実装する
 
 Spy ではテスト対象から外部メソッドへの間接出力値を記録しておく必要がある。
