@@ -529,7 +529,7 @@ Jest では下記の図の中の **Test Double の観点** で API を提供し�
 
 Stub ではテスト対象への間接入力値を外部メソッドに設定することである。
 
-つまり以下の関数の中で `nameApiService.getFirstName()` の関節入力値を設定することと同じである。
+これは以下の関数の中で `nameApiService.getFirstName()` の間接入力値を設定することと同じである。
 
 ```js
 export const getFirstNameThrowIfLongWithoutDependancies = async (
@@ -570,7 +570,7 @@ export const getFirstNameThrowIfLongWithoutDependancies = async (
 };
 ```
 
-上記の関数が依存している `NameApiService` クラスの `getFirstName` メソッドの関節入力値を、テスト実装から行うようにする。
+上記の関数が依存している `NameApiService` クラスの `getFirstName` メソッドの間接入力値を、テスト実装から行うようにする。
 
 これは Jest の `spyOn` と `mock` を使用することで実現できる。
 
@@ -702,3 +702,157 @@ describe('DIを使用するバージョン', (): void => {
 ### Jest で Spy を実装する
 
 Spy ではテスト対象から外部メソッドへの間接出力値を記録しておく必要がある。
+
+これは以下の関数の中で `database.save(numbers)` に対する間接出力値を設定することと同じである。
+
+```js
+export const asyncSumOfArraySometimesZeroWithoutDependancies = (
+  numbers: number[],
+): Promise<number> => {
+  return new Promise((resolve): void => {
+    try {
+      const database = new DatabaseMock();
+      database.save(numbers);
+      resolve(sumOfArray(numbers));
+    } catch (error) {
+      resolve(0);
+    }
+  });
+};
+```
+
+単体テストを実装するにあたっていくつかの戦略が存在している。
+
+- 戦略1
+  - Jest の `spyOn` や `mock` を使用して、外部メソッドを呼び出した際に実行される処理の中身をモック化する
+- 戦略2
+  - 依存性の注入を行って、外部から依存しているメソッドをモック化する
+
+### 戦略1
+
+Test Spy の場合、テスト対象から外部メソッドに対する間接出力値を検証する必要があるが、`spyOn` でも `mock` でも入出力値は保持しているので実装可能である。
+
+#### spyOn
+
+`spyOn` を使用する場合にはテスト対象から呼び出す外部メソッドの実装は、正常終了か異常終了かの違いさえわかっていればいい。
+
+```js
+describe('Diを使用しないバージョン', (): void => {
+  let spy: jest.SpyInstance;
+
+  beforeEach((): void => {
+    spy = jest.spyOn(DatabaseMock.prototype, 'save');
+  });
+
+  afterEach((): void => {
+    // spyして記録した入出力情報をクリアする
+    spy.mockClear();
+  });
+
+  test('正常ケース', async (): Promise<void> => {
+    // Arrange
+    const expected = 2;
+    const testData = [1, 1];
+    spy.mockImplementation((): void => {});
+    // Act
+    const actual = await functions.asyncSumOfArraySometimesZeroWithoutDependancies(
+      testData,
+    );
+    // Assert
+    expect(spy.mock.calls[0][0]).toEqual(testData);
+    expect(actual).toBe(expected);
+  });
+});
+```
+
+正常ケースの場合は以上のようにテスト用の実装を追加し、そのあとで Test Spy を呼び出した際の引数を検証すればいい。
+
+異常ケースの場合には以下のように例外を送出るような実装を追加する。
+
+なお送出する例外の種類によって処理が分岐する場合は、網羅できるように全パターンの例外送出を試すべきである。
+
+```js
+test('異常ケース', async (): Promise<void> => {
+  // Arrange
+  const expected = 0;
+  const testData = [1, 1];
+  // 例外を送出する実装
+  spy.mockImplementationOnce((): void => {
+    throw new Error('fail!');
+  });
+  // Act
+  const actual = await functions.asyncSumOfArraySometimesZeroWithoutDependancies(
+    testData,
+  );
+  // Assert
+  expect(spy.mock.calls[0][0]).toEqual(testData);
+  expect(actual).toBe(expected);
+});
+```
+
+#### mock
+
+`mock` を使用する場合もほとんど実装の形式に変化はない。
+
+```js
+describe('Diを使用しないバージョン', (): void => {
+  const databaseMockMock = DatabaseMock as jest.MockedClass<
+    typeof DatabaseMock
+  >;
+
+  beforeEach((): void => {
+    databaseMockMock.mockClear();
+  });
+
+  test('正常ケース', async (): Promise<void> => {
+    // Arrange
+    const expected = 2;
+    const testData = [1, 1];
+    databaseMockMock.prototype.save.mockImplementationOnce((): void => {});
+    // Act
+    const actual = await functions.asyncSumOfArraySometimesZeroWithoutDependancies(
+      testData,
+    );
+    // Assert
+    expect(databaseMockMock.prototype.save.mock.calls[0][0]).toEqual(
+      testData,
+    );
+    expect(actual).toBe(expected);
+  });
+});
+```
+
+### 戦略2
+
+依存性の注入の場合には、以下のように実装できる。
+
+それほど大きく形式が変化しているわけではない。
+
+```js
+describe('Diを使用するバージョン', (): void => {
+  const databaseMockMock = DatabaseMock as jest.MockedClass<
+    typeof DatabaseMock
+  >;
+
+  beforeEach((): void => {
+    databaseMockMock.mockClear();
+  });
+
+  test('正常ケース', async (): Promise<void> => {
+    // Arrange
+    const expected = 2;
+    const testData = [1, 1];
+    databaseMockMock.prototype.save.mockImplementationOnce((): void => {});
+    // Act
+    const actual = await functions.asyncSumOfArraySometimesZeroWithDependancies(
+      testData,
+      databaseMockMock.prototype,
+    );
+    // Assert
+    expect(databaseMockMock.prototype.save.mock.calls[0][0]).toEqual(
+      testData,
+    );
+    expect(actual).toBe(expected);
+  });
+});
+```
