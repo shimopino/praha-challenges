@@ -352,6 +352,11 @@ test('空の配列を渡すと0が返ってくる', () => {
 });
 ```
 
+### 参考資料
+
+- [Facebook製のJavaScriptテストツール「Jest」の逆引き使用例](https://qiita.com/chimame/items/e97883fd46b67529d59f)
+- [jest で非同期関数をテストするときの注意点](https://qiita.com/rikegami/items/178ed17982b13535ad59)
+
 ## 課題4
 
 - [クイズ1](./task4-1)
@@ -361,6 +366,139 @@ test('空の配列を渡すと0が返ってくる', () => {
   - Rest APIに関する単体テストを実装する
   - 基本的なMVC構成であり、NoSQL型のデータベースも使用している
 
-## 参考資料
+## 追加調査資料
 
-- [Facebook製のJavaScriptテストツール「Jest」の逆引き使用例](https://qiita.com/chimame/items/e97883fd46b67529d59f)
+### 「xUnit Test Pattern」の「Test Double」
+
+テストを実行する際に、テスト対象が特定のコンポーネントに依存している場合、テスト結果が依存先のコンポーネントの実装によって変化してしまい、単体テストを正しく実行することができない。
+
+こうした場合に使用するものが「**Test Double**」である。
+
+今回の課題でいえば、以下のようにテスト対象メソッドである `getFirstNameThrowIfLong` は、外部のモジュールである `NameApiService` クラスに依存してしまっている。
+
+```js
+export const getFirstNameThrowIfLong = async (
+  maxNameLength: number
+): Promise<string> => {
+  const nameApiSerivce = new NameApiService();
+  const firstName = await nameApiSerivce.getFirstName();
+
+  if (firstName.length > maxNameLength) {
+    throw new Error("first_name too long");
+  }
+  return firstName;
+};
+```
+
+そこで依存しているクラス `NameApiService` の代わりとなる「Test Double」を使用することで単体テストの実装が可能となる。
+
+### Test Double Pattern
+
+Test Double の分類は以下のように分類されている。
+
+- Test Stub
+- Test Spy
+- Mock Object
+- Fake Obejct
+- Dummy Object
+
+![](http://xunitpatterns.com/Types%20Of%20Test%20Doubles.gif)
+
+> Sketch Types Of Test Doubles embedded from Types Of Test Doubles.gif
+
+参考資料
+
+- [[xUnit Pattern] Test Double](http://xunitpatterns.com/Test%20Double.html)
+
+### 間接入力と間接出力
+
+Test Double の分類は、テスト対象に対する間接入力と間接出力の違いによって分類されている。
+
+まずは **間接入力 (Indirect Input)** である。
+
+間接入力では、テスト対象から外部メソッドを呼び出し、その返り値を使用しているような実装になる。なお間接入力には、テスト対象が依存するメソッドなどからの例外送出も含まれている。
+
+今回の課題でいえば、`getFirstNameThrowIfLong` は、外部のメソッドを呼び出しており、その返り値が `nameApiService.getFirstName` からテスト対象へ入力される形式となっており、間接入力のパターンだと判断できる。
+
+```js
+export const getFirstNameThrowIfLong = async (
+  maxNameLength: number
+): Promise<string> => {
+  const nameApiSerivce = new NameApiService();
+  const firstName = await nameApiSerivce.getFirstName();
+
+  if (firstName.length > maxNameLength) {
+    throw new Error("first_name too long");
+  }
+  return firstName;
+};
+```
+
+次は **間接出力 (Indirect Output)** である。
+
+間接出力では、テスト対象内で使用している変数を、外部のメソッドなどに出力しているような実装になる。なお間接出力には、外部メソッドが実行されたかどうかや、複数のメソッドが順番通り呼び出されているのかどうかも含まれている。
+
+今回の課題でいえば、`asyncSumOfArraySometimesZero` は、外部のメソッド `database.save` に対して `numbers` という変数を出力している形になるため、間接出力のパターンだと判断できる。
+
+```js
+export const asyncSumOfArraySometimesZero = (
+  numbers: number[]
+): Promise<number> => {
+  return new Promise((resolve): void => {
+    try {
+      const database = new DatabaseMock();
+      database.save(numbers);
+      resolve(sumOfArray(numbers));
+    } catch (error) {
+      resolve(0);
+    }
+  });
+};
+```
+
+以下ではざっくりと Test Stub、Test Spy、Mock Objectについて説明する。
+
+### Test Stub
+
+**Test Stub** とは、テスト対象に任意の間接入力が出力されるように、事前に間接入力値を設定できるような Test Double になる。
+
+!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221310.png]
+
+> [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
+
+今回の課題でいえば、以下のテスト対象である `getFirstNameThrowIfLong` に対して、テスト実行時に `nameApiSerivce.getFirstName()` の間接入力値を任意に設定できるようなオブジェクトが Test Stub に該当する。
+
+```js
+export const getFirstNameThrowIfLong = async (
+  maxNameLength: number
+): Promise<string> => {
+  const nameApiSerivce = new NameApiService();
+  const firstName = await nameApiSerivce.getFirstName();
+
+  if (firstName.length > maxNameLength) {
+    throw new Error("first_name too long");
+  }
+  return firstName;
+};
+```
+
+### TestSpy
+
+**Test Spy** とは、テスト対象が依存先メソッドに間接出力した値を記録しておき、テストコードから参照可能にする Test Double になる。
+
+!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221311.png]
+
+> [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
+
+### Mock Object
+
+**Mock Object** とは、以下の用途で使用される Test Double になる。
+
+- テスト対象の間接出力値を期待結果として有する
+- テスト実行時に、実際のテスト対象の間接出力値を取得する
+- Mock Object 内で期待結果とテスト結果を比較検証する
+- テストコードは、Mock Object から検証の成功・失敗の判定を受け取る
+
+!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221312.png]
+
+> [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
