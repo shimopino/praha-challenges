@@ -482,7 +482,7 @@ export const asyncSumOfArraySometimesZero = (
 
 **Test Stub** とは、テスト対象に任意の間接入力が出力されるように、事前に間接入力値を設定できるような Test Double になる。
 
-!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221310.png]
+![](http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221310.png)
 
 > [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
 
@@ -506,7 +506,7 @@ export const getFirstNameThrowIfLong = async (
 
 **Test Spy** とは、テスト対象が依存先メソッドに間接出力した値を記録しておき、テストコードから参照可能にする Test Double になる。
 
-!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221311.png]
+![](http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221311.png)
 
 > [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
 
@@ -519,7 +519,7 @@ export const getFirstNameThrowIfLong = async (
 - Mock Object 内で期待結果とテスト結果を比較検証する
 - テストコードは、Mock Object から検証の成功・失敗の判定を受け取る
 
-!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221312.png]
+![](http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221312.png)
 
 > [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
 
