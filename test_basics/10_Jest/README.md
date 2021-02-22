@@ -377,6 +377,8 @@ test('空の配列を渡すと0が返ってくる', () => {
 
 ### 「xUnit Test Pattern」の「Test Double」
 
+[xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789) の記事をもとに、Test Double の理解を深めていく。
+
 テストを実行する際に、テスト対象が特定のコンポーネントに依存している場合、テスト結果が依存先のコンポーネントの実装によって変化してしまい、単体テストを正しく実行することができない。
 
 こうした場合に使用するものが「**Test Double**」である。
@@ -489,7 +491,7 @@ export const getFirstNameThrowIfLong = async (
 };
 ```
 
-### TestSpy
+### Test Spy
 
 **Test Spy** とは、テスト対象が依存先メソッドに間接出力した値を記録しておき、テストコードから参照可能にする Test Double になる。
 
@@ -509,3 +511,17 @@ export const getFirstNameThrowIfLong = async (
 !()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221312.png]
 
 > [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
+
+### Jestが対応しているTest Double
+
+Jest では下記の図の中の **Test Double の観点** で API を提供しており、厳密に Test Stub や Mock Object に該当する機能を提供しているわけではないため、使用の際には注意が必要である。
+
+![](http://xunitpatterns.com/Types%20Of%20Test%20Doubles.gif)
+
+### Jest で Stub を実装する
+
+Stub ではテスト対象への間接入力値を外部メソッドに設定することである。
+
+### Jest で Spy を実装する
+
+Spy ではテスト対象から外部メソッドへの間接出力値を記録しておく必要がある。
