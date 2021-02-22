@@ -18,8 +18,15 @@
   - [質問4: 単体テストで外部サービスとの通信が発生する場合のデメリットは何か](#%E8%B3%AA%E5%95%8F4-%E5%8D%98%E4%BD%93%E3%83%86%E3%82%B9%E3%83%88%E3%81%A7%E5%A4%96%E9%83%A8%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%81%A8%E3%81%AE%E9%80%9A%E4%BF%A1%E3%81%8C%E7%99%BA%E7%94%9F%E3%81%99%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%AE%E3%83%87%E3%83%A1%E3%83%AA%E3%83%83%E3%83%88%E3%81%AF%E4%BD%95%E3%81%8B)
   - [質問5: sumOfArrayを空配配列時に例外ではなく0を返すように修正してみましょう](#%E8%B3%AA%E5%95%8F5-sumofarray%E3%82%92%E7%A9%BA%E9%85%8D%E9%85%8D%E5%88%97%E6%99%82%E3%81%AB%E4%BE%8B%E5%A4%96%E3%81%A7%E3%81%AF%E3%81%AA%E3%81%8F0%E3%82%92%E8%BF%94%E3%81%99%E3%82%88%E3%81%86%E3%81%AB%E4%BF%AE%E6%AD%A3%E3%81%97%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%82%87%E3%81%86)
   - [質問6: 質問5に対応する単体テストを実装してみましょう](#%E8%B3%AA%E5%95%8F6-%E8%B3%AA%E5%95%8F5%E3%81%AB%E5%AF%BE%E5%BF%9C%E3%81%99%E3%82%8B%E5%8D%98%E4%BD%93%E3%83%86%E3%82%B9%E3%83%88%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%82%87%E3%81%86)
+  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 - [課題4](#%E8%AA%B2%E9%A1%8C4)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [追加調査資料](#%E8%BF%BD%E5%8A%A0%E8%AA%BF%E6%9F%BB%E8%B3%87%E6%96%99)
+  - [「xUnit Test Pattern」の「Test Double」](#xunit-test-pattern%E3%81%AEtest-double)
+  - [Test Double Pattern](#test-double-pattern)
+  - [間接入力と間接出力](#%E9%96%93%E6%8E%A5%E5%85%A5%E5%8A%9B%E3%81%A8%E9%96%93%E6%8E%A5%E5%87%BA%E5%8A%9B)
+  - [Test Stub](#test-stub)
+  - [TestSpy](#testspy)
+  - [Mock Object](#mock-object)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
