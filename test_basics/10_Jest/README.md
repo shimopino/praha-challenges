@@ -29,6 +29,10 @@
   - [Mock Object](#mock-object)
   - [Jestが対応しているTest Double](#jest%E3%81%8C%E5%AF%BE%E5%BF%9C%E3%81%97%E3%81%A6%E3%81%84%E3%82%8Btest-double)
   - [Jest で Stub を実装する](#jest-%E3%81%A7-stub-%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
+  - [戦略1](#%E6%88%A6%E7%95%A51)
+    - [spyOn](#spyon)
+    - [mock](#mock)
+  - [戦略2](#%E6%88%A6%E7%95%A52)
   - [Jest で Spy を実装する](#jest-%E3%81%A7-spy-%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
 
 </details>
