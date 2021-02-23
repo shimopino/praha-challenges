@@ -25,8 +25,11 @@
   - [Test Double Pattern](#test-double-pattern)
   - [間接入力と間接出力](#%E9%96%93%E6%8E%A5%E5%85%A5%E5%8A%9B%E3%81%A8%E9%96%93%E6%8E%A5%E5%87%BA%E5%8A%9B)
   - [Test Stub](#test-stub)
-  - [TestSpy](#testspy)
+  - [Test Spy](#test-spy)
   - [Mock Object](#mock-object)
+  - [Jestが対応しているTest Double](#jest%E3%81%8C%E5%AF%BE%E5%BF%9C%E3%81%97%E3%81%A6%E3%81%84%E3%82%8Btest-double)
+  - [Jest で Stub を実装する](#jest-%E3%81%A7-stub-%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
+  - [Jest で Spy を実装する](#jest-%E3%81%A7-spy-%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
