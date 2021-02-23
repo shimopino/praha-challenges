@@ -519,7 +519,7 @@ export const getFirstNameThrowIfLong = async (
 - Mock Object 内で期待結果とテスト結果を比較検証する
 - テストコードは、Mock Object から検証の成功・失敗の判定を受け取る
 
-!()[http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221312.png]
+![](http://cdn-ak.f.st-hatena.com/images/fotolife/g/goyoki/20120301/20120301221312.png)
 
 > [xUnit Test PatternsのTest Doubleパターン(Mock、Stub、Fake、Dummy等の定義)](https://goyoki.hatenablog.com/entry/20120301/1330608789)
 
