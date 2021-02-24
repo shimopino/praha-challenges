@@ -4,14 +4,17 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "webpack serve --env development --open"
+    "dev": "webpack serve --env development --open",
+    "lint": "eslint .",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "typescript": "^4.2.2"
+    "typescript": "^4.1.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",
@@ -19,8 +22,13 @@
     "@babel/preset-env": "^7.13.8",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@storybook/addon-actions": "^6.1.20",
+    "@storybook/addon-essentials": "^6.1.20",
+    "@storybook/addon-links": "^6.1.20",
+    "@storybook/react": "^6.1.20",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
+    "babel-loader": "^8.2.2",
     "css-loader": "^5.1.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.1.0",
