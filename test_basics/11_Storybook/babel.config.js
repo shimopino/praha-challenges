@@ -2,15 +2,15 @@ module.exports = (api) => {
   api.cache(true);
 
   return {
-    preset: [
+    presets: [
       [
-        "@babel/preset-env",
+        '@babel/preset-env',
         {
-          targets: "> 0.25%, not dead",
+          targets: '> 0.25%, not dead',
         },
       ],
-      "@babel/preset-react",
-      "@babel/preset-typescript",
+      '@babel/preset-react',
+      '@babel/preset-typescript',
     ],
   };
 };
