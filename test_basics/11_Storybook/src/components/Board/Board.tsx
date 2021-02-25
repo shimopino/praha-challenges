@@ -1,6 +1,6 @@
 import React from 'react';
 import { Square } from '../Square/Square';
-import { SquareValue } from '../../types';
+import { SquareValue } from '../../types/tictactoe';
 import './Board.css';
 
 export interface Props {

@@ -1,4 +1,4 @@
-import { SquareValue } from './types';
+import { SquareValue } from '../types/tictactoe';
 
 export const calculateWinner = (squares: SquareValue[]): SquareValue => {
   const lines = [
