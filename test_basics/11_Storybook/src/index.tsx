@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from './App';
+import { Page } from './container/Page';
 import './index.css';
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+ReactDOM.render(<Page />, document.querySelector('#root'));
