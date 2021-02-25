@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "webpack serve --env development --open",
     "lint": "eslint .",
+    "fmt": "prettier --write src/**/*.{ts,tsx}",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
