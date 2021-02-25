@@ -1,9 +1,10 @@
-import React from "react"
+import React from 'react';
+import { Game } from './components/Game/Game';
 
 export const App: React.FC = () => {
-    return (
-        <>
-            <h1>Hello World!</h1>
-        </>
-    )
-}
+  return (
+    <>
+      <Game />
+    </>
+  );
+};
