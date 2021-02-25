@@ -42,12 +42,14 @@ dist;
 
 ### #4 React + TypeScript をインストールする
 
+TypeScript に関しては `@typescript/eslint` がサポートしているバージョンが `3.2.1` から `4.2.0` までなので注意する。
+
 ```bash
 # React
 yarn add react react-dom
 
 # TypeScript
-yarn add typescript
+yarn add typescript@4.1.5
 
 # Reactの型情報
 yarn add @types/react @types/react-dom
@@ -99,13 +101,13 @@ module.exports = (api) => {
   return {
     preset: [
       [
-        "@babel/preset-env",
+        '@babel/preset-env',
         {
-          targets: "> 0.25%, not dead",
+          targets: '> 0.25%, not dead',
         },
       ],
-      "@babel/preset-react",
-      "@babel/preset-typescript",
+      '@babel/preset-react',
+      '@babel/preset-typescript',
     ],
   };
 };
@@ -277,8 +279,32 @@ yarn add -D eslint @typescript-eslint/{parser,eslint-plugin}
 yarn add -D eslint-plugin-react
 ```
 
+- [eslint-plugin-react](https://www.npmjs.com/package/eslint-plugin-react)
+
 ```bash
 yarn add -D prettier eslint-config-prettier
 ```
 
 - [https://github.com/prettier/prettier](https://github.com/prettier/prettier)
+- [ESLint, Prettier, VS Code, npm scripts の設定: 2021 春](https://zenn.dev/teppeis/articles/2021-02-eslint-prettier-vscode)
+
+### #11 Storybook の設定を行う
+
+```bash
+# npxを使用するが、自動的にyarn.lockを検知する
+npx -p @storybook/cli sb init
+```
+
+これで `package.json` の `scripts` に以下のコマンドが自動的に挿入されているはずである。
+
+```js
+"script": {
+  "storybook": "start-storybook -p 6006",
+  "build-storybook": "build-storybook"
+}
+```
+
+- [https://github.com/storybookjs/storybook](https://github.com/storybookjs/storybook)
+- [@storybook/cli][https://www.npmjs.com/package/@storybook/cli]
+
+### #12 Git pre Commit 設定を追加する
