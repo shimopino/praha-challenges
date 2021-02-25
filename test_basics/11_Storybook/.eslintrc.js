@@ -9,7 +9,6 @@ module.exports = {
   },
   env: {
     node: true,
-    'jest/global': true,
   },
   settings: {
     react: {
