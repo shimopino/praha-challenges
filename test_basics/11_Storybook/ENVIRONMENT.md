@@ -326,4 +326,20 @@ npx -p @storybook/cli sb init
 - [https://github.com/storybookjs/storybook](https://github.com/storybookjs/storybook)
 - [@storybook/cli][https://www.npmjs.com/package/@storybook/cli]
 
-### #12 Git pre Commit 設定を追加する
+### #12 Jest を追加する
+
+```bash
+# jest用のパッケージをインストール
+yarn add -D jest ts-jest @types/jest
+
+# jest用のESLintを設定
+yarn add -D eslint-plugin-jest
+
+# node関連のパッケージをインストール
+# yarn add -D @types/node
+```
+
+なお公式サイトで指摘されているように、Babel での TypeScript はただのトランスパイルになってしまい、Jest での型検査が実行されないので `ts-jest` を使用しています。
+
+- [Jest Getting Started](https://jestjs.io/docs/ja/getting-started)
+- [https://github.com/kulshekhar/ts-jest](https://github.com/kulshekhar/ts-jest)

@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'jest'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -9,6 +9,7 @@ module.exports = {
   },
   env: {
     node: true,
+    'jest/global': true,
   },
   settings: {
     react: {
@@ -19,6 +20,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:jest/recommended',
     'prettier',
   ],
 };
