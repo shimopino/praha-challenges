@@ -17,7 +17,7 @@
   - [&#035;9 tsconfig.json を追加する](#9-tsconfigjson-%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
   - [&#035;10 Linter & Formatter 系のインストール](#10-linter--formatter-%E7%B3%BB%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)
   - [&#035;11 Storybook の設定を行う](#11-storybook-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%A1%8C%E3%81%86)
-  - [&#035;12 Git pre Commit 設定を追加する](#12-git-pre-commit-%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [&#035;12 Jest を追加する](#12-jest-%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
