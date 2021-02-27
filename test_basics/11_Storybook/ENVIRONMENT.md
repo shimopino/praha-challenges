@@ -1,7 +1,24 @@
 # 環境構築手順
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [概要](#%E6%A6%82%E8%A6%81)
+  - [&#035;1 プロジェクトの初期化](#1-%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AE%E5%88%9D%E6%9C%9F%E5%8C%96)
+  - [&#035;2 .gitignore の設定](#2-gitignore-%E3%81%AE%E8%A8%AD%E5%AE%9A)
+  - [&#035;3 React で構築する JS を読み込み HTML の作成](#3-react-%E3%81%A7%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B-js-%E3%82%92%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF-html-%E3%81%AE%E4%BD%9C%E6%88%90)
+  - [&#035;4 React + TypeScript をインストールする](#4-react--typescript-%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B)
+  - [&#035;5 Babel をインストールする](#5-babel-%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B)
+  - [&#035;6 Babel の設定ファイルを追加](#6-babel-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%92%E8%BF%BD%E5%8A%A0)
+  - [&#035;7 Webpack のインストール](#7-webpack-%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)
+  - [&#035;8 webpack の設定を追加する](#8-webpack-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [&#035;9 tsconfig.json を追加する](#9-tsconfigjson-%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+  - [&#035;10 Linter & Formatter 系のインストール](#10-linter--formatter-%E7%B3%BB%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 概要
 
