@@ -8,7 +8,7 @@ export interface Props {
   onClick(i: number): void;
 }
 
-export const Board: React.FC<Props> = ({ squares, onClick }: Props) => {
+export const Board = ({ squares, onClick }: Props): JSX.Element => {
   return (
     <>
       {[0, 1, 2].map((rowIndex) => {

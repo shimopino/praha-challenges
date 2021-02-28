@@ -7,7 +7,7 @@ export interface Props {
   onClick(): void;
 }
 
-export const Square: React.FC<Props> = ({ value, onClick }: Props) => {
+export const Square = ({ value, onClick }: Props): JSX.Element => {
   return (
     <button className="square" onClick={onClick}>
       {value}
