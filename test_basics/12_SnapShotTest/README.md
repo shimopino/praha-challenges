@@ -25,4 +25,24 @@
 
 ## 課題2
 
+公式 [Snapshot testing with Storybook](https://storybook.js.org/docs/react/workflows/snapshot-testing) に倣ってスナップショットテストを追加する。
+
 ## 課題3
+
+### #1 クイズ
+
+<details>
+<summary>回答例</summary>
+</details>
+
+### #2 クイズ
+
+<details>
+<summary>回答例</summary>
+</details>
+
+### #3 クイズ
+
+<details>
+<summary>回答例</summary>
+</details>
