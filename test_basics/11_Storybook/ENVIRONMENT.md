@@ -343,3 +343,14 @@ yarn add -D eslint-plugin-jest
 
 - [Jest Getting Started](https://jestjs.io/docs/ja/getting-started)
 - [https://github.com/kulshekhar/ts-jest](https://github.com/kulshekhar/ts-jest)
+
+### #13 Pre-Commit 処理を追加する
+
+```bash
+# husky: git hooksの設定をpackage.jsonで可能にする
+# lint-staged: ステージングのファイルに特定コマンドを実行
+yarn add -D husky lint-staged
+```
+
+- [Pre-commit Hook](https://prettier.io/docs/en/precommit.html)
+- [VSCode + TypeScript + ESLint + Prettier + Husky + lint-staged (+ JavaScript Standard Style) でコードを防衛@2019 秋（2019/12/30 更新）](https://qiita.com/ishiyama0530/items/c013475c563322965e2a)
