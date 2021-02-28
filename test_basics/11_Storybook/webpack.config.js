@@ -29,8 +29,8 @@ module.exports = {
         test: /\.tsx?$/,
         // TypeScriptを以下でコンパイル
         use: 'ts-loader',
-        // 以下のフォルダは除外
-        exclude: /node_modules/,
+        // 以下のファイルは除外
+        exclude: [/node_modules/, /\.stories.tsx?$/],
       },
       {
         test: /\.css$/,
