@@ -1,7 +1,14 @@
 # 環境構築手順
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [ESLint](#eslint)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## ESLint
 
