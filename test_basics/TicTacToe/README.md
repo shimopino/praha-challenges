@@ -1,4 +1,4 @@
-# 課題
+# Getting Started with Create React App
 
 <!-- START doctoc -->
 <!-- END doctoc -->
