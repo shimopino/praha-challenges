@@ -20,15 +20,111 @@
 
 ## 課題1
 
+なお課題で提示されていた問い以外にも回答している。
+
 ### Q: スナップショットテストとは何でしょうか
+
+- UIが予期せず変更されていないか確かめることが可能なテストである
+  - 正しい状態のUIをスナップショットとして保存する
+  - ソースに変更を加えた際に新たなスナップショットを保存し、正しい状態と差異があるとテストが失敗する
+
+`Jest` を使用して居る場合には、以下のように `React` コンポーネントをシリアライズしてテスト用のレンダラーを利用してスナップショットを作成する。
+
+```js
+import React from "react";
+import renderer from "react-test-renderer";
+import Link from "../Link.react";
+
+it('renders correctly', () => {
+  const tree = renderer
+    .create(<Link page="http://www.facebook.com">Facebook</Link>)
+    .toJSON();
+  expect(tree).toMatchSnapshot();
+});
+```
+
+これで以下のようなレンダリングされたHTMLがスナップショットとして保存される。
+
+```js
+exports[`renders correctly 1`] = `
+<a
+  className="normal"
+  href="http://www.facebook.com"
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  Facebook
+</a>
+`;
+```
+
+これでコードに変更が加えられた際には、新たにスナップショットを作成し比較を行うことで変更が加えられたことを検知することが可能である。
+
+例えば以下のような出力結果が得られるはずである。
+
+![](https://jestjs.io/img/content/failedSnapshotTest.png)
+
+もしも新たに得られたスナップショットを正しい状態として保存したい場合は以下のようにテストを実行すればいい。
+
+```bash
+jest --updateSnapshot
+```
+
+参考情報
+
+- [[Jest] SnapShot Testing](https://jestjs.io/docs/ja/snapshot-testing)
+- [フロントのテスト戦略！の知見が集まるところ](https://zenn.dev/seya/scraps/6f930e359d6a7c)
+- [React テスト応用、テストに悩む人へ](https://zenn.dev/tkdn/books/react-testing-patterns)
+- [フロントエンド（React Testing Library）で TDD（テスト駆動開発）をする](https://zenn.dev/higa/articles/34439dc279c55dd2ab95)
+- [スナップショットテスト実戦投入 / Practical Snapshot Testing](https://speakerdeck.com/imaizume/practical-snapshot-testing)
+- [[Kent C. Dodds] The Testing Garden of Kent C. Dodds](https://kentcdodds.com/testing/)
+- [[Kent C. Dodds] Effective Snapshot Testing](https://kentcdodds.com/blog/effective-snapshot-testing?source=userActivityShare-7aad912c550f-1516512013)
 
 ### Q: スナップショットテストで防止できる不具合とは何か
 
+スナップショットテストを採用することで以下の課題を解決することができる。
+
+- コンポーネントをレンダリングされた際に出力されるHTMLに、意図しない変更が加えられていないかどうか確認できる
+- CLIツールがコマンドラインに出力するメッセージが正しいかどうか確認できる
+- CSS-in-JS で正しくスタイルが設定されているか確認できる
+
 ### Q: スナップショットテストで防止できない不具合とは何か
+
+- テストの実行タイミングに依存する機能
+  - 現在時刻などを使用する機能では、テストタイミングで出力結果が異なってしまう
+  - 時刻を取得するための　Test Double を導入すれば解決可能である
+- 防止できない不具合というわけではないが、防止が難しくなるのはスナップショットが巨大になる機能
+  - 数百行のスナップショットが生成される場合、その差異を黙示することは難しい
+- 外部パッケージに依存している機能
+  - 例えば最近流行りの機械学習のAPIを使用する機能を開発した場合、学習モデルの更新状況によっては同じクエリを送信しても結果が変動する可能性がある。
+  - こういう場合は適した Mock Object を作る必要がある
+
+### Q: なぜ Jest でスナップショットテストが導入されたのでしょうか
+
+スナップショットテストでのE2Eテストで以下を解決するために導入された。
+
+- テストの実行の簡易化
+  - UI の確認のためにブラウザを立ち上げたり、モバイル端末向けにビルドする必要がない
+- 試行錯誤の速度向上
+  - 他のE2Eフレームワークと異なり、実行速度が速く試行錯誤の回転数を向上できる
+- デバッグ
+  - 生成されるスナップショットを確認すれば、生成結果のデバッグが簡単にできる
+
+参考情報
+
+- [[Jest] Why snapshot testing?](https://jestjs.io/blog/2016/07/27/jest-14.html#why-snapshot-testing)
+
+### Q: スナップショットテストを実施する上での注意点は何か
+
+- スナップショットファイルは、正しい期待値であることを確認してからリモートにプッシュしましょう
 
 ## 課題2
 
 公式 [Snapshot testing with Storybook](https://storybook.js.org/docs/react/workflows/snapshot-testing) に倣ってスナップショットテストを追加する。
+
+参考情報
+
+- [@storybook/addon-storyshots](https://www.npmjs.com/package/@storybook/addon-storyshots)
 
 ## 課題3
 
