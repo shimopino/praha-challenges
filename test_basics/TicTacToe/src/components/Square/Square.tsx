@@ -7,10 +7,8 @@ export interface Props {
   onClick(): void;
 }
 
-export const Square = ({ value, onClick }: Props): JSX.Element => {
-  return (
-    <button className="square" onClick={onClick}>
-      {value}
-    </button>
-  );
-};
+export const Square = ({ value, onClick }: Props): JSX.Element => (
+  <button type="button" className="square" onClick={onClick}>
+    {value}
+  </button>
+);

@@ -8,33 +8,21 @@ export interface Props {
   onClick(i: number): void;
 }
 
-export const Board = ({ squares, onClick }: Props): JSX.Element => {
-  const SquareRender = (index: number) => {
-    return (
-      <Square
-        value={squares[index]}
-        onClick={() => onClick(index)}
-        key={index}
-      />
-    );
-  };
-  return (
-    <>
-      <div className="board-row">
-        {SquareRender(0)}
-        {SquareRender(1)}
-        {SquareRender(2)}
+export const Board = ({ squares, onClick }: Props): JSX.Element => (
+  <>
+    {[0, 1, 2].map((rowIndex) => (
+      <div className="board-row" key={rowIndex}>
+        {[0, 1, 2].map((colIndex) => {
+          const index = 3 * rowIndex + colIndex;
+          return (
+            <Square
+              value={squares[index]}
+              onClick={() => onClick(index)}
+              key={index}
+            />
+          );
+        })}
       </div>
-      <div className="board-row">
-        {SquareRender(3)}
-        {SquareRender(4)}
-        {SquareRender(5)}
-      </div>
-      <div className="board-row">
-        {SquareRender(6)}
-        {SquareRender(7)}
-        {SquareRender(8)}
-      </div>
-    </>
-  );
-};
+    ))}
+  </>
+);

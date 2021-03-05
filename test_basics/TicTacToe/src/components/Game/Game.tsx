@@ -18,10 +18,12 @@ export const Game = ({
   jumpTo,
 }: Props): JSX.Element => {
   const moves = history.map((step, move) => {
-    const desc = move ? 'Go to move #' + move : 'Go to game start';
+    const desc = move ? `Go to move #${move}` : 'Go to game start';
     return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
+      <li>
+        <button type="button" onClick={() => jumpTo(move)}>
+          {desc}
+        </button>
       </li>
     );
   });

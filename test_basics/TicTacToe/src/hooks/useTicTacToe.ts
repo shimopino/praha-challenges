@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { BoardValue } from '../types/tictactoe';
-import { calculateWinner } from '../util/calculateWinner';
+import calculateWinner from '../util/calculateWinner';
 
-export const useTicTacToe = (): [
+const useTicTacToe = (): [
   string,
   BoardValue,
   BoardValue[],
@@ -28,7 +28,7 @@ export const useTicTacToe = (): [
     setHistory(
       newHistory.concat([
         {
-          squares: squares,
+          squares,
         },
       ]),
     );
@@ -46,10 +46,12 @@ export const useTicTacToe = (): [
 
   let status;
   if (winner) {
-    status = 'Winner: ' + winner;
+    status = `Winner: ${winner}`;
   } else {
-    status = 'Next Player: ' + (xIsNext ? 'X' : 'O');
+    status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
   }
 
   return [status, current, history, handleClick, jumpTo];
 };
+
+export default useTicTacToe;
