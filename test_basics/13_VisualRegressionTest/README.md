@@ -1,7 +1,22 @@
 # 課題13「ビジュアルリグレッションテストを書こう」
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [課題1](#%E8%AA%B2%E9%A1%8C1)
+  - [StoryShots + Puppeteer を導入する](#storyshots--puppeteer-%E3%82%92%E5%B0%8E%E5%85%A5%E3%81%99%E3%82%8B)
+  - [Squareの中身を変更して差分を検知しよう](#square%E3%81%AE%E4%B8%AD%E8%BA%AB%E3%82%92%E5%A4%89%E6%9B%B4%E3%81%97%E3%81%A6%E5%B7%AE%E5%88%86%E3%82%92%E6%A4%9C%E7%9F%A5%E3%81%97%E3%82%88%E3%81%86)
+  - [Boardの数を変更して差分を検知しよう](#board%E3%81%AE%E6%95%B0%E3%82%92%E5%A4%89%E6%9B%B4%E3%81%97%E3%81%A6%E5%B7%AE%E5%88%86%E3%82%92%E6%A4%9C%E7%9F%A5%E3%81%97%E3%82%88%E3%81%86)
+- [課題2](#%E8%AA%B2%E9%A1%8C2)
+- [課題3](#%E8%AA%B2%E9%A1%8C3)
+  - [&#035;1 クイズ](#1-%E3%82%AF%E3%82%A4%E3%82%BA)
+  - [&#035;2 クイズ](#2-%E3%82%AF%E3%82%A4%E3%82%BA)
+  - [&#035;3 クイズ](#3-%E3%82%AF%E3%82%A4%E3%82%BA)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 課題1
 
