@@ -127,23 +127,27 @@ jest --updateSnapshot
 参考情報
 
 - [@storybook/addon-storyshots](https://www.npmjs.com/package/@storybook/addon-storyshots)
+- [[ESLint] Breaking: change default ignore pattern (eslint/rfcs#51) #12888](https://github.com/eslint/eslint/pull/12888)
 
 ## 課題3
 
 ### #1 クイズ
 
+Storyshotsで各stroeisが配置されている場所にスナップショットを配置するにはどういった設定を行えばいいでしょうか。
+
 <details>
 <summary>回答例</summary>
+
+[multiSnapshotWithOptions(options)](https://github.com/storybookjs/storybook/tree/master/addons/storyshots/storyshots-core#multisnapshotwithoptionsoptions)
+
 </details>
 
 ### #2 クイズ
 
-<details>
-<summary>回答例</summary>
-</details>
-
-### #3 クイズ
+では実際に自身のプロジェクトでstoriesを配置している場所にそれぞれのスナップショットを出力してみましょう。
 
 <details>
 <summary>回答例</summary>
+
+
 </details>
