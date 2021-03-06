@@ -123,6 +123,66 @@ jest --updateSnapshot
 
 公式 [Snapshot testing with Storybook](https://storybook.js.org/docs/react/workflows/snapshot-testing) に倣ってスナップショットテストを追加する。
 
+### Q: 生成されるスナップショットファイルの中身はどのようなものか
+
+生成されたファイルは [Storyshots.test.ts.snap](https://github.com/KeisukeShimokawa/praha-challenges/blob/feature/task12-issue-55/test_basics/TicTacToe/src/__snapshots__/Storyshots.test.ts.snap) である。
+
+このファイルは以下のようになっており、Storybookを使用して記述した `stories` ごとにスナップショットファイルが作成されていることがわかる。
+
+```js
+exports[`Storyshots Board All O 1`] = `
+Array [
+  <div
+    className="board-row"
+  >
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      O
+    </button>
+    ...
+`
+```
+
+これで単純にコンポーネントのテストだけではなく、いくつかのユースケースに応じたスナップショットテストを実行することができる。
+
+### Q: Squareコンポーネントに描画する文字を変更した場合どうなるのか
+
+スナップショットテストは失敗する。
+
+この際に以下のように画面上にテスト実行前後の差異が検出されている。
+
+![](./assets/Square-Snapshot.png)
+
+### Q: 新しい状態を正しい期待値として登録してみましょう
+
+テストを実行する際に以下のコマンドを実行する。
+
+```bash
+yarn test --updateSnapshot
+```
+
+これで以下のようにスナップショットファイルが更新されていることがわかる。
+
+```js
+exports[`Storyshots Board All O 1`] = `
+Array [
+  <div
+    className="board-row"
+  >
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      丁
+    </button>
+    ...
+`
+```
+
 参考情報
 
 - [@storybook/addon-storyshots](https://www.npmjs.com/package/@storybook/addon-storyshots)
