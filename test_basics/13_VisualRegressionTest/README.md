@@ -124,6 +124,11 @@ yarn test --updateSnapshot
 
 WindowsとMacOSでは、ビルドされたスナップショットファイルの結果が異なってしまう可能性が存在している。
 
+こうした場合に、環境環境でWindowsを使用している場合にはWindowsでビルドされたスナップショットファイルと比較し、MacOSの場合にはMacOSでビルドされたスナップショットファイルと比較するにはどうすればいいでしょうか。
+
 <details>
-<summary></summary>
+<summary>回答例</summary>
+
+- [ビジュアルリグレッションテストを導入してみた](https://note.com/pocke_techblog/n/n6947c0bb4df1)
+
 </details>
