@@ -12,7 +12,7 @@ export const Board = ({ squares, onClick }: Props): JSX.Element => (
   <>
     {[0, 1, 2].map((rowIndex) => (
       <div className="board-row" key={rowIndex}>
-        {[0, 1, 2].map((colIndex) => {
+        {[0, 1, 2, 3].map((colIndex) => {
           const index = 3 * rowIndex + colIndex;
           return (
             <Square
