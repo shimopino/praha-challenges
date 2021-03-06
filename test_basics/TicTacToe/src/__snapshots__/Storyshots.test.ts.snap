@@ -10,46 +10,21 @@ Array [
       onClick={[Function]}
       type="button"
     >
-      O
+      丁
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      O
+      丁
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      O
-    </button>
-  </div>,
-  <div
-    className="board-row"
-  >
-    <button
-      className="square"
-      onClick={[Function]}
-      type="button"
-    >
-      O
-    </button>
-    <button
-      className="square"
-      onClick={[Function]}
-      type="button"
-    >
-      O
-    </button>
-    <button
-      className="square"
-      onClick={[Function]}
-      type="button"
-    >
-      O
+      丁
     </button>
   </div>,
   <div
@@ -60,21 +35,46 @@ Array [
       onClick={[Function]}
       type="button"
     >
-      O
+      丁
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      O
+      丁
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      O
+      丁
+    </button>
+  </div>,
+  <div
+    className="board-row"
+  >
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      丁
+    </button>
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      丁
+    </button>
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      丁
     </button>
   </div>,
 ]
@@ -170,46 +170,21 @@ Array [
       onClick={[Function]}
       type="button"
     >
-      X
+      半
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      X
+      半
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      X
-    </button>
-  </div>,
-  <div
-    className="board-row"
-  >
-    <button
-      className="square"
-      onClick={[Function]}
-      type="button"
-    >
-      X
-    </button>
-    <button
-      className="square"
-      onClick={[Function]}
-      type="button"
-    >
-      X
-    </button>
-    <button
-      className="square"
-      onClick={[Function]}
-      type="button"
-    >
-      X
+      半
     </button>
   </div>,
   <div
@@ -220,21 +195,46 @@ Array [
       onClick={[Function]}
       type="button"
     >
-      X
+      半
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      X
+      半
     </button>
     <button
       className="square"
       onClick={[Function]}
       type="button"
     >
-      X
+      半
+    </button>
+  </div>,
+  <div
+    className="board-row"
+  >
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      半
+    </button>
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      半
+    </button>
+    <button
+      className="square"
+      onClick={[Function]}
+      type="button"
+    >
+      半
     </button>
   </div>,
 ]
@@ -402,46 +402,21 @@ exports[`Storyshots Game Tuen No 8 Winner O 1`] = `
         onClick={[Function]}
         type="button"
       >
-        X
+        半
       </button>
       <button
         className="square"
         onClick={[Function]}
         type="button"
       >
-        O
+        丁
       </button>
       <button
         className="square"
         onClick={[Function]}
         type="button"
       >
-        X
-      </button>
-    </div>
-    <div
-      className="board-row"
-    >
-      <button
-        className="square"
-        onClick={[Function]}
-        type="button"
-      >
-        O
-      </button>
-      <button
-        className="square"
-        onClick={[Function]}
-        type="button"
-      >
-        O
-      </button>
-      <button
-        className="square"
-        onClick={[Function]}
-        type="button"
-      >
-        O
+        半
       </button>
     </div>
     <div
@@ -452,14 +427,39 @@ exports[`Storyshots Game Tuen No 8 Winner O 1`] = `
         onClick={[Function]}
         type="button"
       >
-        X
+        丁
       </button>
       <button
         className="square"
         onClick={[Function]}
         type="button"
       >
-        X
+        丁
+      </button>
+      <button
+        className="square"
+        onClick={[Function]}
+        type="button"
+      >
+        丁
+      </button>
+    </div>
+    <div
+      className="board-row"
+    >
+      <button
+        className="square"
+        onClick={[Function]}
+        type="button"
+      >
+        半
+      </button>
+      <button
+        className="square"
+        onClick={[Function]}
+        type="button"
+      >
+        半
       </button>
       <button
         className="square"
@@ -567,7 +567,7 @@ exports[`Storyshots Game Turn No 1 1`] = `
         onClick={[Function]}
         type="button"
       >
-        X
+        半
       </button>
       <button
         className="square"
@@ -662,7 +662,7 @@ exports[`Storyshots Game Turn No 2 1`] = `
         onClick={[Function]}
         type="button"
       >
-        X
+        半
       </button>
       <button
         className="square"
@@ -688,7 +688,7 @@ exports[`Storyshots Game Turn No 2 1`] = `
         onClick={[Function]}
         type="button"
       >
-        O
+        丁
       </button>
       <button
         className="square"
@@ -767,21 +767,21 @@ exports[`Storyshots Game Turn No 5 1`] = `
         onClick={[Function]}
         type="button"
       >
-        X
+        半
       </button>
       <button
         className="square"
         onClick={[Function]}
         type="button"
       >
-        O
+        丁
       </button>
       <button
         className="square"
         onClick={[Function]}
         type="button"
       >
-        X
+        半
       </button>
     </div>
     <div
@@ -797,7 +797,7 @@ exports[`Storyshots Game Turn No 5 1`] = `
         onClick={[Function]}
         type="button"
       >
-        O
+        丁
       </button>
       <button
         className="square"
@@ -818,7 +818,7 @@ exports[`Storyshots Game Turn No 5 1`] = `
         onClick={[Function]}
         type="button"
       >
-        X
+        半
       </button>
       <button
         className="square"
@@ -901,7 +901,7 @@ exports[`Storyshots Square O 1`] = `
   onClick={[Function]}
   type="button"
 >
-  O
+  丁
 </button>
 `;
 
@@ -911,6 +911,6 @@ exports[`Storyshots Square X 1`] = `
   onClick={[Function]}
   type="button"
 >
-  X
+  半
 </button>
 `;
