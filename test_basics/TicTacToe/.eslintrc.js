@@ -21,7 +21,7 @@ module.exports = {
     'import/no-extraneous-dependencies': [
       'error',
       {
-        devDependencies: ['.storybook/**', '**/*.stories.tsx'],
+        devDependencies: ['.storybook/**', '**/*.stories.tsx', '**/*.test.ts'],
       },
     ],
   },

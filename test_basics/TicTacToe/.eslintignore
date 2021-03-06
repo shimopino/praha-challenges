@@ -2,4 +2,3 @@ node_modules
 dist
 coverage
 .eslintrc.js
-jest.storybook.config.js
