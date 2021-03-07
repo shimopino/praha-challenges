@@ -119,6 +119,18 @@ Storybook では `Args` を使用してコンポーネントに引数を渡す�
 
 <details>
 <summary>回答例</summary>
+
+- パターン1
+  - コンポーネントで定義されている Props は各 Stories で必ず設定する必要がある。
+  - 冗長的になってしまう可能性あり
+- パターン2
+  - コンポーネントに対してデフォルトの Props を設定することができる
+  - 検証ポイントではない部分はデフォルト引数で記載したほうが、Stories で検証したいコードを限定させることが可能
+
+参考情報
+
+- [How to write stories](https://storybook.js.org/docs/react/writing-stories/introduction#how-to-write-stories)
+
 </details>
 
 ### #3 クイズ
