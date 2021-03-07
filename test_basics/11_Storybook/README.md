@@ -146,4 +146,40 @@ Storybook で UI がレスポンシブ対応になっているかどうか確認
 
 <details>
 <summary>回答例</summary>
+
+- Storybookのツールバーにある [Viewport](https://storybook.js.org/docs/react/essentials/viewport) を選択し、確認したい状態のサイト設定を行うことができる
+- [@storybook/addon-viewport](https://www.npmjs.com/package/@storybook/addon-viewport) を使用することで、 `.storybook/preview.js` に特定のViewportにカスタマイズすることができる
+
+```js
+// .storybook/preview.js
+
+import { MINIMAL_VIEWPORTS} from '@storybook/addon-viewport';
+
+const customViewports = {
+  kindleFire2: {
+    name: 'Kindle Fire 2',
+    styles: {
+      width: '600px',
+      height: '963px',
+    },
+  },
+  kindleFireHD: {
+    name: 'Kindle Fire HD',
+    styles: {
+      width: '533px',
+      height: '801px',
+    },
+  },
+};
+
+export const parameters = {
+  viewport: {
+    viewports: {
+       ...MINIMAL_VIEWPORTS,
+      ...customViewports,
+    },
+  },
+};
+```
+
 </details>
