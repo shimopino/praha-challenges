@@ -5,13 +5,12 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 4 クイズ](#課題-4-クイズ)
-  - [#1 クイズ](#1-クイズ)
-  - [環境設定](#環境設定)
-    - [package.json](#packagejson)
-    - [.prettierrc.json](#prettierrcjson)
-    - [.eslintrc.json](#eslintrcjson)
-    - [tsconfig-google.json](#tsconfig-googlejson)
+- [&#035;1 クイズ](#1-%E3%82%AF%E3%82%A4%E3%82%BA)
+- [環境設定](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A)
+  - [package.json](#packagejson)
+  - [.prettierrc.json](#prettierrcjson)
+  - [.eslintrc.json](#eslintrcjson)
+  - [tsconfig-google.json](#tsconfig-googlejson)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
