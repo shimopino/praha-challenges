@@ -61,15 +61,21 @@ initStoryshots({ suite: 'Image storyshots', test: imageSnapshot() });
 
 ### Squareの中身を変更して差分を検知しよう
 
+まずは何も変更を加えていない状態でのテストの実行結果を確認する。
+
+当然すべてのStoryでテストが成功していることがわかる。
+
+この時点でスナップショットの画像ファイルが生成されているはずである。
+
+![](assets/initialImageSnapShot.png)
+
 ここで `Square` コンポーネントに表示する ○× の文字色を赤色に変更する。
 
 これは単純に `Square.css` に `color: red;` を追加しただけである。
 
-![](assets/change-color.png)
-
 この結果アプリを起動すると以下のような画面表示になっている。
 
-![](assets/initialImageSnapShot.png)
+![](assets/change-color.png)
 
 ここで再度スナップショットテストを実行すると、以下のように文字を実際に表示している `stories` でテストが失敗、つまり変更点を検出できていることがわかる。
 
@@ -115,7 +121,7 @@ yarn test --updateSnapshot
 その際に比較する画像の差分が全体で2％以下の場合はテストを通過するように設定するのはどうすればいいでしょうか。
 
 <details>
-<summary>回答例</summary>
+<summary>ヒント</summary>
 
 - [storyshots-image.runner.js](https://github.com/storybookjs/storybook/blob/03321305b4b336cd4fd9936006b614f262daea7b/examples/official-storybook/storyshots-puppeteer/storyshots-image.runner.js#L19)
 - [Specifying options to jest-image-snapshots](https://github.com/storybookjs/storybook/tree/master/addons/storyshots/storyshots-puppeteer#specifying-options-to-jest-image-snapshots)
@@ -129,7 +135,7 @@ yarn test --updateSnapshot
 その際にスクリーンショットを保存する前後に処理をはさみたい場合はどのような設定を追加すればいいでしょうか
 
 <details>
-<summary>回答例</summary>
+<summary>ヒント</summary>
 
 - [Specifying options to jest-image-snapshots](https://github.com/storybookjs/storybook/tree/master/addons/storyshots/storyshots-puppeteer#specifying-options-to-jest-image-snapshots)
 
@@ -142,7 +148,7 @@ WindowsとMacOSでは、ビルドされたスナップショットファイル�
 こうした場合に、環境環境でWindowsを使用している場合にはWindowsでビルドされたスナップショットファイルと比較し、MacOSの場合にはMacOSでビルドされたスナップショットファイルと比較するにはどうすればいいでしょうか。
 
 <details>
-<summary>回答例</summary>
+<summary>ヒント</summary>
 
 - [ビジュアルリグレッションテストを導入してみた](https://note.com/pocke_techblog/n/n6947c0bb4df1)
 
