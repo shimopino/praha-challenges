@@ -1,7 +1,14 @@
 # TDD の練習
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [TODO リスト](#todo-%E3%83%AA%E3%82%B9%E3%83%88)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## TODO リスト
 
