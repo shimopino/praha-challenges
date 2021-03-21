@@ -1,7 +1,18 @@
+import * as functions from 'script';
+
 // 掛け算
 describe('TDDの練習', () => {
   describe('multiply', () => {
-    it.todo('引数に3と2を渡して6が返る');
+    it('引数に3と2を渡して6が返る', () => {
+      // Arrange
+      const arg1 = 3;
+      const arg2 = 2;
+      const expected = 6;
+      // Act
+      const actual = functions.multiply(arg1, arg2);
+      // Assert
+      expect(actual).toBe(expected);
+    });
     it.todo('引数を30個まで受け取れるようにする');
     it.todo('引数を30個まで受け取ってその掛け算を返す');
     it.todo('引数を31個まで受け取ってエラーが発生する');
