@@ -92,19 +92,28 @@ describe('TDDの練習', () => {
         30,
         31,
       ];
-      const expectedErrorMessage = '引数の数は30個以内にしてください';
+      const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
       // Act & Assert
       expect(() => {
         functions.multiply(...args);
       }).toThrow(new Error(expectedErrorMessage));
     });
-    it('引数を渡さなかった場合にエラーが発生する', () => {
+    it('引数が空配列の場合にエラーが発生する', () => {
       // Arrange
       const args: number[] = [];
+      const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
       // Act & Assert
-      expect(() => functions.multiply(...args)).toThrow(
-        new Error('引数の数は1個以上30個以内にしてください'),
+      expect(() => functions.multiply()).toThrow(
+        new Error(expectedErrorMessage),
       );
+    });
+    it('引数を渡さなかった場合にエラーが発生する', () => {
+      // Arrage
+      const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
+      // Act & Assert
+      expect(() => {
+        functions.multiply();
+      }).toThrow(new Error(expectedErrorMessage));
     });
     it.todo('引数が数字以外の場合にエラーが発生する');
     it.todo('計算結果が1000を超える場合に「big big number」を表示する');
