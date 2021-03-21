@@ -154,5 +154,14 @@ describe('TDDの練習', () => {
         functions.multiply(...args);
       }).toThrow(new Error(expectedErrorMessage));
     });
+    it('計算結果が1000のときはそのまま1000が返される', () => {
+      // Arrange
+      const args: number[] = [1, 5, 10, 20];
+      const expected = 1000;
+      // Act
+      const actual = functions.multiply(...args);
+      // Assert
+      expect(actual).toBe(expected);
+    });
   });
 });
