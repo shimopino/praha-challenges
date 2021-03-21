@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/app/Launcher.ts",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "tsc": "tsc",
+    "tsc:watch": "tsc --watch",
+    "lint": "eslint --ext .js,.ts src"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.21",
     "@types/node": "^14.14.35",
