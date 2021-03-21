@@ -1,0 +1,19 @@
+{
+    "rest-client.environmentVariables": {
+        "$shared": {
+            "version": "v1",
+            "email": "hoge@xxx.com"
+        },
+        "dev": {
+            "host": "dev.hoge.jp",
+            "version": "v2"
+        },
+        "stg": {
+            "host": "stg.hoge.jp",
+        },
+        "prod": {
+            "host": "prod.hoge.jp",
+        }
+    },
+    "rest-client.rememberCookiesForSubsequentRequests": true
+}
