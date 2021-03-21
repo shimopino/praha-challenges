@@ -1,0 +1,19 @@
+@startuml
+
+hide footbox
+
+Client -> Browser: 対象リソースへのリクエスト
+Browser -> Server: If-None-Match: "bfc13a64729c4290ef5b2c2730249c88ca92d82d"
+Server -> Server: 対象リソースのハッシュ値と比較
+
+alt ハッシュ値が同じ\n (キャッシュとサーバのリソースの中身が変化していない場合)
+    Browser <- Server: 304
+    Client <- Browser: キャッシュを返す
+end
+
+alt ハッシュ値が異なる\n (キャッシュとサーバのリソースの中身が変化している場合)
+Browser <- Server: 200
+Client <- Browser: レスポンスを返す
+end
+
+@enduml
