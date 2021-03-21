@@ -149,7 +149,6 @@ describe('TDDの練習', () => {
         28,
         29,
         30,
-        31,
       ];
       const expectedErrorMessage = 'big big number';
       // Act & Assert
