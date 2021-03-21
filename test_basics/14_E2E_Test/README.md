@@ -17,6 +17,8 @@
 
 ## 課題1
 
+課題は [こちら](https://github.com/KeisukeShimokawa/react-tutorial-typescript) に実装しています。
+
 ### Q: 交互にマスを選択して片方のプレイヤーが勝利した状態を再現してみましょう
 
 ### Q: 引き分けの時は「Draw!」と表示してみましょう
@@ -25,8 +27,35 @@
 
 ## 課題2
 
-E2Eテストのメリットとデメリットは以下になる。
+Kent.C DoddsさんやMartin Fowlerさんが単体テストや結合テストに関して、テストピラミッドという考え方を提供している。
+
+![](https://martinfowler.com/articles/practical-test-pyramid/testPyramid.png)
+
+> Figure.2 The Test Pyramid
+
+こういた考えをまとめると以下のように分類できそうである。
+
+|                    | 単体テスト | 結合テスト | E2E | 
+| ------------------ | ---------- | ---------- | --- | 
+| 実行速度           | O          | ▲         | X   | 
+| 実サービスへの近さ | X          | ▲         | O   | 
+| 修正コスト         | O          | ▲         | X   | 
 
 ## 課題3
 
+今回の課題ではコンポーネントに対してカスタム属性を `data-e2e` という名称で設定している。
 
+ではなぜこのようにカスタム属性を設定する必要があったのでしょうか。ボタンクラスを一律で取得するような処理ではダメだったのでしょうか。ß
+
+<details>
+<summary>回答例</summary>
+
+- [Selecting Element](https://docs.cypress.io/guides/references/best-practices.html#Selecting-Elements)
+
+</details>
+
+## 参考資料
+
+- [フロントのテスト戦略！の知見が集まるところ](https://zenn.dev/seya/scraps/6f930e359d6a7c)
+- [The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)
+- [Learn the smart, efficient way to test any JavaScript application.](https://testingjavascript.com/)
