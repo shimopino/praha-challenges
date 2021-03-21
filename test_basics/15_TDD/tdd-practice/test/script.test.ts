@@ -92,10 +92,11 @@ describe('TDDの練習', () => {
         30,
         31,
       ];
+      const expectedErrorMessage = '引数の数は30個以内にしてください';
       // Act & Assert
-      expect(functions.multiply(...args)).toThrow(
-        new Error('引数の数は30個以内にしてください'),
-      );
+      expect(() => {
+        functions.multiply(...args);
+      }).toThrow(new Error(expectedErrorMessage));
     });
     it.todo('引数を渡さなかった場合にエラーが発生する');
     it.todo('引数が数字以外の場合にエラーが発生する');
