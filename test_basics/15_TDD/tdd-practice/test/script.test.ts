@@ -103,7 +103,7 @@ describe('TDDの練習', () => {
       const args: number[] = [];
       const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
       // Act & Assert
-      expect(() => functions.multiply()).toThrow(
+      expect(() => functions.multiply(...args)).toThrow(
         new Error(expectedErrorMessage),
       );
     });
@@ -115,7 +115,7 @@ describe('TDDの練習', () => {
         functions.multiply();
       }).toThrow(new Error(expectedErrorMessage));
     });
-    it.todo('引数が数字以外の場合にエラーが発生する');
+    it.skip('引数が数字以外の場合にエラーが発生する。ただしTypeScriptなので無視する', () => {});
     it.todo('計算結果が1000を超える場合に「big big number」を表示する');
   });
 });
