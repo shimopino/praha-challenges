@@ -1,0 +1,27 @@
+@startuml
+
+hide footbox
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+note over Browser: http://localhost:8080
+
+Browser -> Server: top-level navigation
+Server --> Browser: OK
+Browser -> Server: Fetch API
+Server --> Browser: OK
+
+note over Server: http://localhost:8080
+
+====
+
+note over Browser: http://localhost:8090
+
+Browser -> Server: top-level navigation
+Server --> Browser: OK
+Browser -> Server: Fetch API
+Server -[#red]-> Browser: NO
+
+note over Server: http://localhost:8080
+
+@enduml
