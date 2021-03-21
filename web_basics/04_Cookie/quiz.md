@@ -101,3 +101,24 @@ Cookieに変わる機能として提案されている`Sec-HTTP-State`とは何�
 ## クイズ #3
 
 Googleが提唱しているCookieの代替となる`Privacy Sandbox`とは何でしょうか。
+
+<details>
+<summary>回答例</summary>
+
+- 背景
+  - サードパーティクッキーは、Web上でユーザに対して最適な広告を表示したりするために使用されている
+  - しかし、近年の個人情報保護への関心の高まりにより、その使用を各社で廃止するような取り組みが進められている。
+- Privacy Sandbox
+  - クッキーを削除することでプライバシーを保護することは可能ではあるが、広告の収入は減少してしまう
+  - Googleはこの課題を解決するために、サードパーティクッキーの代替案となる「**Privacy Sandbox**」を提案している
+  - 個人が特定されないようにユーザー情報を収集し、広告主がユーザーに対して広告を提供できる情報を提供する
+  - 2年以外に廃止されるサードパーティクッキーに合わせて提案されている
+
+参考資料
+
+- [Building a more private web](https://www.blog.google/products/chrome/building-a-more-private-web/)
+- [【解説】「サードパーティークッキーとマーケティングの 現在とこれから」クッキーの基本を理解して、未来を読み解く](https://media.kaizenplatform.com/n/n13f0904db164)
+- [Privacy Sandboxはなにを語るのか](https://tech.plaid.co.jp/what-does-the-privacy-sandbox-tell-us/)
+
+</details>
+
