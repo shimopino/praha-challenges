@@ -19,6 +19,20 @@
 <details>
 <summary>回答例</summary>
 
+- `User-Agent` ヘッダ
+  - リクエスト元となる個人を表すコンピュータのプログラムのこと
+  - Chrome や Firefox、iOS などを表している
+
+しかし、実際の `User-Agent` の値を見てみると、かなり余分な情報が入っていたり、異なる情報がまぎれてしまっていたりしている。
+
+そこで Chrome は `User-Agent` ヘッダを廃止して、代替として `User-Agent Client Hints` を使用するようになるらしい。
+
+> This document proposes a mechanism which might allow user agents to be a bit more aggressive about removing entropy from the User-Agent string generally by giving servers that really need some specific details about the client the ability to opt-into receiving them.
+
+より正確な `User-Agent` に関する情報を、サーバ側からの要請に従って提供する、いわばオプトインな方式に変更する形式である。
+
+- [UA-Client Hints](https://wicg.github.io/ua-client-hints/)
+
 </details>
 
 ## #2 クイズ
@@ -56,6 +70,17 @@
 
 <details>
 <summary>回答例</summary>
+
+> 6. キャッシュはサーバに対して `style.css` のリクエストを送信する
+> 7. サーバはリクエストされた対象リソースに、新しく以下のヘッダを付与してレスポンスを送信する
+    ```bash
+    Cache-Control: must-revalidate, max-age=600
+    ```
+
+- 6分後のリクエストで、`syle.css` にのみ新しく `max-age=600` というキャッシュの期限を与えたことで、`page.html`、`script.js` と `style.css` でキャッシュの有効期限にズレが発生してしまっている。
+- そのため、例えばこの6分後のリクエストから更に6分ほど経った時点（つまり一番最初のリクエストから12分経過）で、再度リクエストを行った場合、`page.html` と `script.js` は、キャッシュの有効期限が既に切れているため、オリジンサーバへ最新情報を取得しにいくが、`style.css` は、キャッシュの有効期限が切れていないため、キャッシュに保存しているデータを取得することになる。
+- もし、新しく取得された`page.html` と `script.js` が、キャッシュ済みの `style.css` に対応していない変更を行っていた場合、ブラウザで開発者の想定外の挙動が発生する可能性がある。
+- また、`style.css` をオリジンサーバから取得した段階で、キャッシュに存在している `page.html` と `script.js` のバージョンとずれてしまうため、CSSを反映させた段階で崩れてしまう可能性がある
 
 </details>
 
