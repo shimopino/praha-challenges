@@ -200,6 +200,18 @@ Storyshotsで各stroeisが配置されている場所にスナップショット
 <details>
 <summary>回答例</summary>
 
+`initSnapshots` に対して、`multiSnapshotWithOptions` の設定を追加すればいい。
+
+```js
+import initStoryshots, {
+  multiSnapshotWithOptions,
+} from '@storybook/addon-storyshots';
+
+initStoryshots({
+  test: multiSnapshotWithOptions(),
+});
+```
+
 [multiSnapshotWithOptions(options)](https://github.com/storybookjs/storybook/tree/master/addons/storyshots/storyshots-core#multisnapshotwithoptionsoptions)
 
 </details>
