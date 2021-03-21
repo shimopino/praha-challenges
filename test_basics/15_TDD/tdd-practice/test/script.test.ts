@@ -116,6 +116,46 @@ describe('TDDの練習', () => {
       }).toThrow(new Error(expectedErrorMessage));
     });
     it.skip('引数が数字以外の場合にエラーが発生する。ただしTypeScriptなので無視する', () => {});
-    it.todo('計算結果が1000を超える場合に「big big number」を表示する');
+    it('計算結果が1000を超える場合に「big big number」を表示する', () => {
+      // Arrange
+      const args: number[] = [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+      ];
+      const expectedErrorMessage = 'big big number';
+      // Act & Assert
+      expect(() => {
+        functions.multiply(...args);
+      }).toThrow(new Error(expectedErrorMessage));
+    });
   });
 });

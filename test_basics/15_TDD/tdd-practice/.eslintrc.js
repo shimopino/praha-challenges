@@ -11,4 +11,7 @@ module.exports = {
     'plugin:jest/recommended',
     'prettier',
   ],
+  rule: {
+    'jest/no-disable-tests': 'ignore',
+  },
 };
