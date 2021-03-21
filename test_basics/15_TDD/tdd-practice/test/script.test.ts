@@ -47,15 +47,13 @@ describe('TDDの練習', () => {
         29,
         30,
       ];
-      const expected = args.reduce(
-        (previousValue: number, currentValue: number): number => {
-          return previousValue * currentValue;
-        },
-      );
+      const mockMultiply = jest.fn() as jest.MockedFunction<
+        typeof functions.multiply
+      >;
       // Act
-      const actual = functions.multiply(...args);
+      const actual = mockMultiply(...args);
       // Assert
-      expect(actual).toBe(expected);
+      expect(mockMultiply).toBeCalledWith(...args);
     });
     it('引数を31個まで受け取ってエラーが発生する', () => {
       // Arrange
