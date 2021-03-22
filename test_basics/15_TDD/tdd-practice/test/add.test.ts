@@ -12,7 +12,16 @@ describe('掛け算を行う add メソッドのTDD', () => {
     expect(actual).toBe(expected);
   });
 
-  it.todo('引数を30個まで受け取り、その合計値を返す');
+  it.todo('引数を30個まで受け取る', () => {
+    // Arrage
+    const args: number[] = [...Array(30).keys()];
+    const mockAdd = jest.fn() as jest.MockedFunction<typeof functions.add>;
+    // Act
+    const actual = mockAdd(...args);
+    // Assert
+    expect(mockAdd).toHaveBeenCalledWith(...args);
+  });
+
   it.todo('引数を31個まで受け取った場合にエラーが発生する');
   it.todo('引数を渡さなかった場合にエラーが発生する');
   it.todo('引数が数字以外の場合にエラーが発生する');
