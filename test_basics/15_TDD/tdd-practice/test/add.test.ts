@@ -12,7 +12,7 @@ describe('掛け算を行う add メソッドのTDD', () => {
     expect(actual).toBe(expected);
   });
 
-  it.todo('引数を30個まで受け取る', () => {
+  it('引数を30個まで受け取る', () => {
     // Arrage
     const args: number[] = [...Array(30).keys()];
     const mockAdd = jest.fn() as jest.MockedFunction<typeof functions.add>;

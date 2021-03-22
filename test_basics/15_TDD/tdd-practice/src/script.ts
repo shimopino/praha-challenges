@@ -21,6 +21,8 @@ export const multiply = (...args: number[]): number => {
   return result;
 };
 
-export const add = (arg1: number, arg2: number): number => {
-  return arg1 + arg2;
+export const add = (...args: number[]): number => {
+  return args.reduce((previous: number, current: number) => {
+    return previous + current;
+  });
 };
