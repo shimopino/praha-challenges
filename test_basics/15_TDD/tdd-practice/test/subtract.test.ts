@@ -25,7 +25,16 @@ describe('引き算を行う subtract メソッドのTDD', () => {
     expect(mockSubtract).toHaveBeenCalledWith(...args);
   });
 
-  it.todo('引数を31個まで受け取りエラーが発生する');
+  it('引数を31個まで受け取りエラーが発生する', () => {
+    // Arrange
+    const args: number[] = [...Array(31).keys()];
+    // Act
+    // Assert
+    expect(() => functions.subtract(...args)).toThrow(
+      new Error(ErrorMessage.ARG_RANGE),
+    );
+  });
+
   it.todo('引数を渡さなかった場合にエラーが発生する');
   it.todo('引数が数字以外の場合にエラーが発生する');
   it.todo('計算結果がマイナスの場合に「negative number」を表示する');
