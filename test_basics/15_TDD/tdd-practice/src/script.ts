@@ -22,6 +22,10 @@ export const multiply = (...args: number[]): number => {
 };
 
 export const add = (...args: number[]): number => {
+  if (args.length < MIN_ARGS_LENGTH || args.length > MAX_ARGS_LENGTH) {
+    throw new Error('引数の数は1個以上30個以内にしてください');
+  }
+
   return args.reduce((previous: number, current: number) => {
     return previous + current;
   });
