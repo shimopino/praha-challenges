@@ -33,6 +33,8 @@ export const add = (...args: number[]): number => {
   return result;
 };
 
-export const subtract = (arg1: number, arg2: number): number => {
-  return arg1 - arg2;
+export const subtract = (...args: number[]): number => {
+  return args.reduce((previous: number, current: number) => {
+    return previous - current;
+  });
 };
