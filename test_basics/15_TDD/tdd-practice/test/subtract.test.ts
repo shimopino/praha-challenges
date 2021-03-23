@@ -42,8 +42,16 @@ describe('引き算を行う subtract メソッドのTDD', () => {
     );
   });
 
-  it.todo('引数が数字以外の場合にエラーが発生する');
-  it.todo('計算結果がマイナスの場合に「negative number」を表示する');
+  it.skip('引数が数字以外の場合にエラーが発生する', () => {});
+
+  it('計算結果がマイナスの場合に「negative number」を表示する', () => {
+    // Arrange
+    const args = [5, 10];
+    // Assert
+    expect(() => functions.subtract(...args)).toThrow(
+      new Error(ErrorMessage.NEGATIVE),
+    );
+  });
   it.todo('計算結果が0の場合にそのまま結果を返す');
   it.todo('計算結果が1の場合にそのまま結果を返す');
 });
