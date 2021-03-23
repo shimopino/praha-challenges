@@ -42,11 +42,10 @@ describe('掛け算を行う add メソッドのTDD', () => {
   it('計算結果が1001以上の場合に「too big」が返される', () => {
     // Arrage
     const args = [1, 1001];
-    const expectedErrorMessage = 'too big';
     // Act
     // Assert
     expect(() => functions.add(...args)).toThrow(
-      new Error(expectedErrorMessage),
+      new Error(ErrorMessage.TOO_BIG),
     );
   });
 

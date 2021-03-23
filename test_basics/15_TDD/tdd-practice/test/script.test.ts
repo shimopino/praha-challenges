@@ -1,4 +1,5 @@
 import * as functions from '../src/script';
+import { ErrorMessage } from '../src/enums';
 
 // 掛け算
 describe('TDDの練習', () => {
@@ -29,30 +30,27 @@ describe('TDDの練習', () => {
     it('引数を31個まで受け取ってエラーが発生する', () => {
       // Arrange
       const args: number[] = [...Array(31).keys()];
-      const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
       // Act & Assert
       expect(() => {
         functions.multiply(...args);
-      }).toThrow(new Error(expectedErrorMessage));
+      }).toThrow(new Error(ErrorMessage.ARG_RANGE));
     });
 
     it('引数が空配列の場合にエラーが発生する', () => {
       // Arrange
       const args: number[] = [];
-      const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
       // Act & Assert
       expect(() => functions.multiply(...args)).toThrow(
-        new Error(expectedErrorMessage),
+        new Error(ErrorMessage.ARG_RANGE),
       );
     });
 
     it('引数を渡さなかった場合にエラーが発生する', () => {
       // Arrage
-      const expectedErrorMessage = '引数の数は1個以上30個以内にしてください';
       // Act & Assert
       expect(() => {
         functions.multiply();
-      }).toThrow(new Error(expectedErrorMessage));
+      }).toThrow(new Error(ErrorMessage.ARG_RANGE));
     });
 
     it.skip('引数が数字以外の場合にエラーが発生する。ただしTypeScriptなので無視する', () => {});
@@ -60,11 +58,10 @@ describe('TDDの練習', () => {
     it('計算結果が1000を超える場合に「big big number」を表示する', () => {
       // Arrange
       const args: number[] = [1, 1001];
-      const expectedErrorMessage = 'big big number';
       // Act & Assert
       expect(() => {
         functions.multiply(...args);
-      }).toThrow(new Error(expectedErrorMessage));
+      }).toThrow(new Error(ErrorMessage.TOO_TOO_BIG));
     });
 
     it('計算結果が1000のときはそのまま1000が返される', () => {
