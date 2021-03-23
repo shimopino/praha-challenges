@@ -37,8 +37,17 @@ describe('掛け算を行う add メソッドのTDD', () => {
     expect(() => functions.add()).toThrow(new Error(ErrorMessage.ARG_RANGE));
   });
 
-  it.skip('引数が数字以外の場合にエラーが発生する');
+  it.skip('引数が数字以外の場合にエラーが発生する', () => {});
 
-  it.todo('計算結果が1001以上の場合に「too big」が返される');
+  it('計算結果が1001以上の場合に「too big」が返される', () => {
+    // Arrage
+    const args = [1, 1001];
+    const expectedErrorMessage = 'too big';
+    // Act
+    // Assert
+    expect(() => functions.add(...args)).toThrow(
+      new Error(expectedErrorMessage),
+    );
+  });
   it.todo('計算結果が1000のときは1000がそのまま返される');
 });
