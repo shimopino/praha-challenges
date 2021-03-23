@@ -1,12 +1,9 @@
-const MIN_ARGS_LENGTH = 1;
-const MAX_ARGS_LENGTH = 30;
+import { validateArgRange } from './validate';
 
 export const multiply = (...args: number[]): number => {
-  const MAX_RESULT = 1000;
+  validateArgRange(args);
 
-  if (args.length < MIN_ARGS_LENGTH || args.length > MAX_ARGS_LENGTH) {
-    throw new Error('引数の数は1個以上30個以内にしてください');
-  }
+  const MAX_RESULT = 1000;
 
   const result = args.reduce(
     (previousValue: number, currentValue: number): number => {
@@ -22,9 +19,7 @@ export const multiply = (...args: number[]): number => {
 };
 
 export const add = (...args: number[]): number => {
-  if (args.length < MIN_ARGS_LENGTH || args.length > MAX_ARGS_LENGTH) {
-    throw new Error('引数の数は1個以上30個以内にしてください');
-  }
+  validateArgRange(args);
 
   return args.reduce((previous: number, current: number) => {
     return previous + current;
