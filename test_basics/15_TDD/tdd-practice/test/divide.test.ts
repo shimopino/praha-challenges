@@ -2,7 +2,17 @@ import * as functions from '../src/script';
 import {} from '../src/enums';
 
 describe('割り算を行う divide メソッドのTDD', () => {
-  it.todo('引数に4と2を渡して2が返る');
+  it('引数に4と2を渡して2が返る', () => {
+    // Arrange
+    const arg1 = 4;
+    const arg2 = 2;
+    const expected = 2;
+    // Act
+    const actual = functions.divide(arg1, arg2);
+    // Assert
+    expect(actual).toBe(expected);
+  });
+
   it.todo('引数に5と2を渡して1.5が返る（有限小数）');
   it.todo('引数に1と3を渡して0.333が返る（無限小数）');
   it.todo('引数を30個まで受け取ることができる');
