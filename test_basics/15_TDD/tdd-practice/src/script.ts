@@ -6,11 +6,9 @@ export const multiply = (...args: number[]): number => {
 
   const MAX_RESULT = 1000;
 
-  const result = args.reduce(
-    (previousValue: number, currentValue: number): number => {
-      return previousValue * currentValue;
-    },
-  );
+  const result = args.reduce((previous: number, current: number): number => {
+    return previous * current;
+  });
 
   if (result > MAX_RESULT) {
     throw new Error(ErrorMessage.TOO_TOO_BIG);
