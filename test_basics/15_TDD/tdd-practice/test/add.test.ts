@@ -49,5 +49,6 @@ describe('掛け算を行う add メソッドのTDD', () => {
       new Error(expectedErrorMessage),
     );
   });
+
   it.todo('計算結果が1000のときは1000がそのまま返される');
 });
