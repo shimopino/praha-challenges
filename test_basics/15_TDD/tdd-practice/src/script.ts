@@ -34,3 +34,7 @@ export const add = (...args: number[]): number => {
 
   return result;
 };
+
+export const subtract = (arg1: number, arg2: number): number => {
+  return arg1 - arg2;
+};
