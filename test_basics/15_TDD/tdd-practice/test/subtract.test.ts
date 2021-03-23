@@ -52,6 +52,24 @@ describe('引き算を行う subtract メソッドのTDD', () => {
       new Error(ErrorMessage.NEGATIVE),
     );
   });
-  it.todo('計算結果が0の場合にそのまま結果を返す');
-  it.todo('計算結果が1の場合にそのまま結果を返す');
+
+  it('計算結果が0の場合にそのまま結果を返す', () => {
+    // Arrange
+    const args = [2, 2];
+    const expected = 0;
+    // Act
+    const actual = functions.subtract(...args);
+    // Assert
+    expect(actual).toBe(expected);
+  });
+
+  it('計算結果が1の場合にそのまま結果を返す', () => {
+    // Arrange
+    const args = [3, 2];
+    const expected = 1;
+    // Act
+    const actual = functions.subtract(...args);
+    // Assert
+    expect(actual).toBe(expected);
+  });
 });
