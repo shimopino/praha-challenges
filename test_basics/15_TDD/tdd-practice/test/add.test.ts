@@ -22,7 +22,15 @@ describe('掛け算を行う add メソッドのTDD', () => {
     expect(mockAdd).toHaveBeenCalledWith(...args);
   });
 
-  it.todo('引数を31個まで受け取った場合にエラーが発生する');
+  it('引数を31個まで受け取った場合にエラーが発生する', () => {
+    // Arrange
+    const args: number[] = [...Array(31).keys()];
+    // Act & Assert
+    expect(() => functions.add(...args)).toThrow(
+      new Error('引数の数は1個以上30個以内にしてください'),
+    );
+  });
+
   it.todo('引数を渡さなかった場合にエラーが発生する');
   it.todo('引数が数字以外の場合にエラーが発生する');
   it.todo('計算結果が1001以上の場合に「too big」が返される');
