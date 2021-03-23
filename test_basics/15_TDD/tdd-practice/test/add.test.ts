@@ -49,5 +49,13 @@ describe('掛け算を行う add メソッドのTDD', () => {
     );
   });
 
-  it.todo('計算結果が1000のときは1000がそのまま返される');
+  it('計算結果が1000のときは1000がそのまま返される', () => {
+    // Arrange
+    const args = [200, 300, 500];
+    const expected = 1000;
+    // Act
+    const actual = functions.add(...args);
+    // Assert
+    expect(actual).toBe(expected);
+  });
 });
