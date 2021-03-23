@@ -36,7 +36,13 @@ export const add = (...args: number[]): number => {
 export const subtract = (...args: number[]): number => {
   validateArgRange(args);
 
-  return args.reduce((previous: number, current: number) => {
+  const result = args.reduce((previous: number, current: number) => {
     return previous - current;
   });
+
+  if (result < 0) {
+    throw new Error(ErrorMessage.NEGATIVE);
+  }
+
+  return result;
 };
