@@ -35,7 +35,13 @@ describe('引き算を行う subtract メソッドのTDD', () => {
     );
   });
 
-  it.todo('引数を渡さなかった場合にエラーが発生する');
+  it('引数を渡さなかった場合にエラーが発生する', () => {
+    // Assert
+    expect(() => functions.subtract()).toThrow(
+      new Error(ErrorMessage.ARG_RANGE),
+    );
+  });
+
   it.todo('引数が数字以外の場合にエラーが発生する');
   it.todo('計算結果がマイナスの場合に「negative number」を表示する');
   it.todo('計算結果が0の場合にそのまま結果を返す');
