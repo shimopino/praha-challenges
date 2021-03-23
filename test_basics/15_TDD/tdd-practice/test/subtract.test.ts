@@ -13,7 +13,18 @@ describe('引き算を行う subtract メソッドのTDD', () => {
     expect(actual).toBe(expected);
   });
 
-  it.todo('引数を30個まで受け取ることができる');
+  it('引数を30個まで受け取ることができる', () => {
+    // Arrange
+    const args: number[] = [...Array(30).keys()];
+    const mockSubtract = jest.fn() as jest.MockedFunction<
+      typeof functions.subtract
+    >;
+    // Act
+    const actual = mockSubtract(...args);
+    // Assert
+    expect(mockSubtract).toHaveBeenCalledWith(...args);
+  });
+
   it.todo('引数を31個まで受け取りエラーが発生する');
   it.todo('引数を渡さなかった場合にエラーが発生する');
   it.todo('引数が数字以外の場合にエラーが発生する');
