@@ -54,6 +54,10 @@ describe('割り算を行う divide メソッドのTDD', () => {
     expect(() => functions.divide(...args)).toThrow(ErrorMessage.ARG_RANGE);
   });
 
-  it.todo('引数を渡さなかった場合にエラーが発生する');
+  it('引数を渡さなかった場合にエラーが発生する', () => {
+    // Act & Assert
+    expect(() => functions.divide()).toThrow(ErrorMessage.ARG_RANGE);
+  });
+
   it.todo('引数が数字以外の場合にエラーが発生する');
 });
