@@ -24,7 +24,17 @@ describe('割り算を行う divide メソッドのTDD', () => {
     expect(actual).toBe(expected);
   });
 
-  it.todo('引数に1と3を渡して0.333が返る（無限小数）');
+  it('引数に1と3を渡して0.333が返る（無限小数）', () => {
+    // Arrange
+    const arg1 = 1;
+    const arg2 = 3;
+    const expected = 0.333;
+    // Act
+    const actual = functions.divide(arg1, arg2);
+    // Assert
+    expect(actual).toBe(expected);
+  });
+
   it.todo('引数を30個まで受け取ることができる');
   it.todo('引数を31個まで受け取った場合にエラーが発生する');
   it.todo('引数を渡さなかった場合にエラーが発生する');
