@@ -47,7 +47,10 @@ export const subtract = (...args: number[]): number => {
   return result;
 };
 
-export const divide = (arg1: number, arg2: number): number => {
-  const result = parseFloat((arg1 / arg2).toFixed(3));
-  return result;
+export const divide = (...args: number[]): number => {
+  const result = args.reduce((previous: number, current: number) => {
+    return previous / current;
+  });
+  const roundResult = parseFloat(result.toFixed(3));
+  return roundResult;
 };
