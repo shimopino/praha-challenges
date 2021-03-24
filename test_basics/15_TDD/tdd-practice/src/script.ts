@@ -48,6 +48,8 @@ export const subtract = (...args: number[]): number => {
 };
 
 export const divide = (...args: number[]): number => {
+  validateArgRange(args);
+
   const result = args.reduce((previous: number, current: number) => {
     return previous / current;
   });
