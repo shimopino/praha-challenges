@@ -1,5 +1,5 @@
 import * as functions from '../src/script';
-import {} from '../src/enums';
+import { ErrorMessage } from '../src/enums';
 
 describe('割り算を行う divide メソッドのTDD', () => {
   it('引数に4と2を渡して2が返る', () => {
@@ -47,7 +47,13 @@ describe('割り算を行う divide メソッドのTDD', () => {
     expect(mockDivide).toHaveBeenCalledWith(...args);
   });
 
-  it.todo('引数を31個まで受け取った場合にエラーが発生する');
+  it('引数を31個まで受け取った場合にエラーが発生する', () => {
+    // Arrange
+    const args: number[] = [...Array(31).keys()];
+    // Act & Assert
+    expect(() => functions.divide(...args)).toThrow(ErrorMessage.ARG_RANGE);
+  });
+
   it.todo('引数を渡さなかった場合にエラーが発生する');
   it.todo('引数が数字以外の場合にエラーが発生する');
 });
