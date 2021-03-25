@@ -60,5 +60,104 @@ HAVING COUNT(shipperId) = (
 ### 問題4
 
 ```sql
-
+SELECT  ROUND(SUM(OD.quantity * P.price)) AS SALES
+       ,C.Country
+FROM orderdetails OD
+INNER JOIN products P ON P.productID = OD.productID
+INNER JOIN orders O ON O.orderID = OD.orderID
+INNER JOIN customers C ON C.customerID = O.customerID
+GROUP BY  C.Country
+ORDER BY sales desc
 ```
+
+### 問題5
+
+```sql
+SELECT ROUND(SUM(OD.quantity * P.price)) AS SALES
+	  ,strftime('%Y', DATE(OrderDate)) AS OrderYear
+      ,C.Country
+FROM orderdetails OD
+INNER JOIN products P ON P.productID = OD.productID
+INNER JOIN orders O ON O.orderID = OD.orderID
+INNER JOIN customers C ON C.customerID = O.customerID
+GROUP BY C.Country, strftime('%Y', DATE(OrderDate))
+```
+
+### 問題6
+
+```sql
+-- 「Junior」列の追加
+ALTER TABLE employees
+ADD junior boolean
+
+-- 「Junior」列を条件付で更新する
+UPDATE employees
+SET junior = 
+CASE WHEN BirthDate > DATE('1961-01-01')
+THEN
+    True
+ELSE
+    False
+END
+
+-- 「Junior」列が更新されたことを確認する
+SELECT * FROM employees
+```
+
+### 問題7
+
+```sql
+-- 長期の関係のお客さんのフラグ列を追加
+ALTER TABLE Shippers
+ADD long_relation boolean
+
+-- 70回以上取引のあるShipperのフラグを追加
+update shippers
+set long_relation = 
+CASE WHEN ShipperID IN (
+    select ShipperID from orders
+    group by shipperID
+    having count(*) >= 70
+)
+THEN
+    True
+ELSE
+    False
+END
+```
+
+### 問題8
+
+```sql
+SELECT O.orderID
+      ,O.EmployeeID
+      ,MAX(O.OrderDate) AS MaxOrderDate
+FROM orders O
+INNER JOIN employees E ON E.employeeID = O.employeeID
+GROUP BY O.EmployeeID
+```
+
+### 問題9
+
+```sql
+-- 特定の顧客名をNULLで更新
+UPDATE customers
+SET customerName = NULL
+WHERE customerID = 1 
+
+-- 顧客名がNULLではないレコードを抽出
+SELECT CustomerID, CustomerName
+FROM Customers
+WHERE CustomerName IS NOT NULL
+
+-- 顧客名がNULLのレコードを抽出
+SELECT CustomerID, CustomerName
+FROM Customers
+WHERE CustomerName IS NULL
+```
+
+### 問題10
+
+## 課題2
+
+
