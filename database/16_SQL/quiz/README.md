@@ -40,11 +40,11 @@ FROM orders
 これは `CategoryID` と `Quantity` を使用して計算することで求めることが可能です。
 
 <details>
-<summary>回答例</回答例>
+<summary>回答例</summary>
 
 ```sql
 SELECT  CategoryID
-       ,SUM(Quantity)
+       ,SUM(Quantity) QuantityPerCategory
 FROM orderdetails OD
 JOIN products P ON P.productID = OD.ProductID
 GROUP BY CategoryID
