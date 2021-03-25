@@ -160,4 +160,14 @@ WHERE CustomerName IS NULL
 
 ## 課題2
 
+| 名称                                  | 概要                                                                                                | コマンド例                                                           | 
+| ------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | 
+| DDL<br>(Data Definition Language)     | DBスキーマを定義するためのSQLコマンド<br><br>DB内のテーブルなどのオブジェクトを操作することができる | ・CREATE<br>・DROP<br>・ALTER<br>・TRUNCATE<br>・COMMENT<br>・RENAME | 
+| DML<br>(Data Manipulation Language)   | DB内に存在しているデータを操作するためのSQLコマンド<br>                                             | ・INSERT<br>・UPDATE<br>・DELETE                                     | 
+| DCL<br>(Data Control Language)        | DBシステムの権限やロールなどを管理するためのコマンド                                                | ・GRANT<br>・REVOKE                                                  | 
+| TCL<br>(Transaction Control Language) | DB内のトランザクションを管理するためのコマンド                                                      | ・COMMIT<br>・ROLLBACK<br>・SAVEPOINT<br>・SET TRANSACTION           | 
 
+![](https://media.geeksforgeeks.org/wp-content/cdn-uploads/20190826175059/Types-of-SQL-Commands-1024x884.jpg)
+
+> GeeksForGeeks
+> https://www.geeksforgeeks.org/sql-ddl-dql-dml-dcl-tcl-commands/
