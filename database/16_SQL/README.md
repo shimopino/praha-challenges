@@ -174,6 +174,12 @@ FROM Customers
 WHERE CustomerName IS NULL
 ```
 
+> なぜNULLのレコードを「SELECT * FROM Customers WHERE CustomerName = NULL;」で取得することができないのか
+
+SQLでは真偽値を **3値論理** として扱っており、true/false/unknown の3種類を有している。
+
+`WHERE` 句を使用してレコードを絞り込んだ場合、評価が `true` になるレコードが抽出される。しかし、`NULL` ではどのような比較演算子を使用したとして評価結果が `unknown` になってしまうため、`IS NULL` を使用する必要がある。
+
 ### 問題10
 
 ```sql
@@ -206,8 +212,6 @@ JOIN employees E ON E.employeeID = O.employeeID
   - GROUP BYで集約させたテーブルに対して、グループ自体に対する条件指定を追加する
 
 実行速度を考えた場合は「WHERE」句を使用する。
-
-
 
 ### 問題2
 
