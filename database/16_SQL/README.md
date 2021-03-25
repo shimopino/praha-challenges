@@ -158,7 +158,40 @@ WHERE CustomerName IS NULL
 
 ### 問題10
 
+```sql
+-- 該当のレコードを削除
+DELETE FROM employees
+WHERE EmployeeID = '1' 
+
+-- EmployeesテーブルのNULLも表示する
+SELECT  O.EmployeeID AS OrderEmployeeID 
+       ,E.EmployeeID AS EmployeeID
+FROM orders O
+LEFT JOIN employees E ON E.employeeID = O.employeeID
+
+-- 等価結合で互いに一致するものだけを表示する
+SELECT  O.EmployeeID AS OrderEmployeeID 
+       ,E.EmployeeID AS EmployeeID
+FROM orders O
+JOIN employees E ON E.employeeID = O.employeeID
+```
+
 ## 課題2
+
+### 問題1
+
+それぞれのSQLコマンドの役割を考える。
+
+- WHERE
+  - GROUP BYで集約させたテーブルに対して、1つ1つの行に対する条件指定を追加する
+- HAVING
+  - GROUP BYで集約させたテーブルに対して、グループ自体に対する条件指定を追加する
+
+実行速度を考えた場合は「WHERE」句を使用する。
+
+
+
+### 問題2
 
 | 名称                                  | 概要                                                                                                | コマンド例                                                           | 
 | ------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | 
@@ -166,6 +199,8 @@ WHERE CustomerName IS NULL
 | DML<br>(Data Manipulation Language)   | DB内に存在しているデータを操作するためのSQLコマンド<br>                                             | ・INSERT<br>・UPDATE<br>・DELETE                                     | 
 | DCL<br>(Data Control Language)        | DBシステムの権限やロールなどを管理するためのコマンド                                                | ・GRANT<br>・REVOKE                                                  | 
 | TCL<br>(Transaction Control Language) | DB内のトランザクションを管理するためのコマンド                                                      | ・COMMIT<br>・ROLLBACK<br>・SAVEPOINT<br>・SET TRANSACTION           | 
+
+以下の図がわかりやすかった。
 
 ![](https://media.geeksforgeeks.org/wp-content/cdn-uploads/20190826175059/Types-of-SQL-Commands-1024x884.jpg)
 
