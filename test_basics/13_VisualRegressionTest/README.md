@@ -159,6 +159,48 @@ it('should fail if there is more than a 1% difference (ssim)', () => {
 <details>
 <summary>ヒント</summary>
 
+`beforeScreenShot` と `afterScreenShot` を使用すればいい。
+
+```js
+import initStoryshots from '@storybook/addon-storyshots';
+import { imageSnapshot } from '@storybook/addon-storyshots-puppeteer';
+
+// ImageSnapShotに設定する値を決める
+const getMatchOptions = ({ context: { kind, story }, url }) => {
+  return {
+    failureThreshold: 0.2,
+    failureThresholdType: 'percent',
+  };
+};
+
+// 以下のオプションでPageインスタンスとコンテキスト情報を引数にもつ関数を設定する
+const beforeScreenshot = (page, { context: { kind, story }, url }) => {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      resolve();
+    }, 600)
+  );
+};
+const afterScreenshot = ({ image, context }) => {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      resolve();
+    }, 600)
+  );
+};
+
+// 後は作成したコールバック関数をImageSnapShotの引数に設定しておく
+initStoryshots({
+  suite: 'Image storyshots',
+  test: imageSnapshot({
+    storybookUrl: 'http://localhost:6006',
+    getMatchOptions,
+    beforeScreenshot,
+    afterScreenshot,
+  }),
+});
+```
+
 - [Specifying options to jest-image-snapshots](https://github.com/storybookjs/storybook/tree/master/addons/storyshots/storyshots-puppeteer#specifying-options-to-jest-image-snapshots)
 
 </details>
