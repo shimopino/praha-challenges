@@ -75,9 +75,31 @@ cy.visit('/', {
 <details>
 <summary>回答例</summary>
 
+HTMLタグに設定する `class` や `id` は、あくまでも構造化させたHTMLに対してCSSやJavaScriptで制御するために使用されている。
 
+そのためCypressでこれらの要素を使用している場合、テスト以外の要因（デザイン変更など）で変更される可能性がありテストが安定しないため、Cypressでは `data-*` のように専用の属性を付与することがBest Practiceとして提案されている。
 
 - [Selecting Element](https://docs.cypress.io/guides/references/best-practices.html#Selecting-Elements)
+
+公式サイトで提供されている [Real World App (RWA)](https://github.com/cypress-io/cypress-realworld-app/blob/develop/cypress/support/commands.ts) ではこのBest Practiceに従った自作コマンドを作成する手順が紹介されている。
+
+この場合、以下のように自作コマンドを作成してカスタム属性をあらかじめ定義する。
+
+```js
+Cypress.Commands.add("getBySel", (selector, ...args) => {
+  return cy.get(`[data-test=${selector}]`, ...args);
+});
+```
+
+このコマンドを使用すれば、いちいちカスタム属性の名称を指定することなく、属性名のみを指定すればいいだけになる。
+
+```js
+// "[data-test=signin-username]"と同じ
+cy.getBySel("signin-username").type(username);
+
+// "[data-test=signin-password]"と同じ
+cy.getBySel("signin-password").type(password);
+```
 
 </details>
 
