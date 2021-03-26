@@ -1,0 +1,10 @@
+@startuml
+
+hide footbox
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+client -> server: GET /index.html HTTP/1.1 \n Host: bar.example.com \n Accept: XXXX \n ~~~ \n **Origin: foo.example.com**
+
+server -> client: HTTP/1.1 200 OK \n Date: XXXX \n Content-Type: text/html \n ~~~ \n **Access-Control-Allow-Origin: foo.example.com**
+@enduml

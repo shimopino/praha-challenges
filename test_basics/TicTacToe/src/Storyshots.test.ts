@@ -1,4 +1,7 @@
-import initStoryshots from '@storybook/addon-storyshots';
-import { imageSnapshot } from '@storybook/addon-storyshots-puppeteer';
+import initStoryshots, {
+  multiSnapshotWithOptions,
+} from '@storybook/addon-storyshots';
 
-initStoryshots({ suite: 'Puppeteer storyshots', test: imageSnapshot() });
+initStoryshots({
+  test: multiSnapshotWithOptions(),
+});
