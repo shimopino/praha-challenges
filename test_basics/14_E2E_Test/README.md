@@ -42,6 +42,30 @@ Kent.C DoddsさんやMartin Fowlerさんが単体テストや結合テストに�
 | 実サービスへの近さ | X          | ▲         | O   | 
 | 修正コスト         | O          | ▲         | X   | 
 
+なお `Cypress` でも外部通信が発生するような処理をスタブで置き換えることが可能である。
+
+```js
+it('directly stubs window.fetch to test loading indicator', () => {
+// stub the "fetch(/favorite-fruits)" call from the app
+cy.visit('/', {
+    onBeforeLoad (win) {
+    cy.stub(win, 'fetch').withArgs('/favorite-fruits')
+    .resolves(
+        // use Bluebird promise bundled with Cypress
+        // to resolve after 2000ms
+        Cypress.Promise.resolve({
+        ok: true,
+        json: () => ['Pineapple 🍍'],
+        }).delay(2000)
+    )
+    },
+})
+```
+
+参考資料
+
+- [Stubbing window.fetch](https://github.com/cypress-io/cypress-example-recipes/tree/master/examples/stubbing-spying__window-fetch)
+
 ## 課題3
 
 今回の課題ではコンポーネントに対してカスタム属性を `data-e2e` という名称で設定している。
@@ -50,6 +74,8 @@ Kent.C DoddsさんやMartin Fowlerさんが単体テストや結合テストに�
 
 <details>
 <summary>回答例</summary>
+
+
 
 - [Selecting Element](https://docs.cypress.io/guides/references/best-practices.html#Selecting-Elements)
 
