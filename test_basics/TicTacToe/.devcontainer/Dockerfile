@@ -1,16 +1,21 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.162.0/containers/javascript-node/.devcontainer/base.Dockerfile
+FROM node:14-slim
 
-# [Choice] Node.js version: 14, 12, 10
-ARG VARIANT="14-buster"
-FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
+USER root
+RUN apt-get update \
+    && apt-get install -y wget gnupg git \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+      --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# RUN npm i puppeteer \
+#     # Add user so we don't need --no-sandbox.
+#     # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
+#     && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+#     && mkdir -p /home/pptruser/Downloads \
+#     && chown -R pptruser:pptruser /home/pptruser \
+#     && chown -R pptruser:pptruser /node_modules
 
-# [Optional] Uncomment if you want to install an additional version of node using nvm
-# ARG EXTRA_NODE_VERSION=10
-# RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
-
-# [Optional] Uncomment if you want to install more global node modules
-# RUN su node -c "npm install -g <your-package-list-here>"
+USER node
