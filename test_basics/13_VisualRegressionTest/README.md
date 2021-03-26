@@ -212,7 +212,24 @@ WindowsとMacOSでは、ビルドされたスナップショットファイル�
 こうした場合に、環境環境でWindowsを使用している場合にはWindowsでビルドされたスナップショットファイルと比較し、MacOSの場合にはMacOSでビルドされたスナップショットファイルと比較するにはどうすればいいでしょうか。
 
 <details>
-<summary>ヒント</summary>
+<summary>回答例</summary>
+
+`window` オブジェクトの `navigator` を使用すれば、ブラウザなどのユーザーエージェント情報を知ることができる。
+
+```js
+const ua = window.navigator.userAgent.toLowerCase()
+```
+
+あとは得られた文字列に対して Windows や Mac の情報が含まれているのか確認すればいい。
+
+```js
+const isWindows = ua.includes('win64')
+const isMac = ua.includes('darwin')
+```
+
+ただし `UserAgent` 自体の情報はMDN Web Docsで言及されているように、使用は推奨されていない。
+
+Googleは代替として [`UA Client Hints`](https://wicg.github.io/ua-client-hints/) が提案されている。
 
 - [ビジュアルリグレッションテストを導入してみた](https://note.com/pocke_techblog/n/n6947c0bb4df1)
 
