@@ -117,6 +117,28 @@ yarn test --updateSnapshot
 <details>
 <summary>回答例</summary>
 
+以下のオプションを指定すれば差分の閾値を設定することができる。
+
+```js
+failureThreshold: 0.02,
+failureThresholdType: 'percent'
+```
+
+現状のデフォルト設定では、ピクセル値のずれを計算してパーセントの計算を行っている。
+
+なお公式では比較方法（`comparisonMethod`）に `ssim` を0.01に設定することが推奨されている。
+
+```js
+it('should fail if there is more than a 1% difference (ssim)', () => {
+  ...
+  expect(image).toMatchImageSnapshot({
+    comparisonMethod: 'ssim',
+    failureThreshold: 0.01,
+    failureThresholdType: 'percent'
+  });
+});
+```
+
 - [storyshots-image.runner.js](https://github.com/storybookjs/storybook/blob/03321305b4b336cd4fd9936006b614f262daea7b/examples/official-storybook/storyshots-puppeteer/storyshots-image.runner.js#L19)
 - [Specifying options to jest-image-snapshots](https://github.com/storybookjs/storybook/tree/master/addons/storyshots/storyshots-puppeteer#specifying-options-to-jest-image-snapshots)
 
