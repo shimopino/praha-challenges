@@ -1,0 +1,19 @@
+@startuml
+
+hide footbox
+
+Client -> Browser: 対象リソースへのリクエスト
+Browser -> Server: If-Modified-Since: Wed, 21 Oct 2015 07:28:00 GMT
+Server -> Server: 対象リソースの更新日時を比較
+
+alt リクエストで指定された時刻 >= サーバのリソースの更新日時\n (サーバのリソースが更新されていない)
+    Browser <- Server: 304
+    Client <- Browser: キャッシュを返す
+end
+
+alt リクエストで指定された時刻 < サーバのリソースの更新日時\n (サーバのリソースのほうが新しい)
+Browser <- Server: 200
+Client <- Browser: レスポンスを返す
+end
+
+@enduml

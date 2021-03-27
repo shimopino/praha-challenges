@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Simple Request</h1>
+    <form id="simple">
+      username: <input type="text" name="username" />
+      <input type="submit" />
+    </form>
+
+    <hr>
+
+    <h2>w Preflight Request</h2>
+    <form id="preflight">
+      username: <input type="text" name="username" />
+      <input type="submit" />
+    </form>
+
+    <script>
+      // Simple Request
+      const simpleReqForm = document.querySelector("#simple");
+      simpleReqForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const response = await fetch("http://localhost:8080", {
+          method: "POST",
+          body: new FormData(simpleReqForm)
+        });
+        const result = await response.json();
+        console.log(result);
+      })
+    </script>
+
+    <script>
+      // Preflight
+      const preflightReqForm = document.querySelector("#preflight");
+      preflightReqForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const response = await fetch("http://localhost:8080", {
+          method: "POST",
+          headers: {
+            "X-API-KEY": "jhdsfshfjdsfhkjsaf;ds"
+          },
+          body: new FormData(simpleReqForm)
+        });
+        const result = await response.json();
+        console.log(result);
+      })
+    </script>
+  </body>
+</html>

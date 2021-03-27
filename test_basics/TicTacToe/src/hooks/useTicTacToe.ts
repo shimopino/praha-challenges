@@ -24,7 +24,8 @@ const useTicTacToe = (): [
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
-    squares[i] = xIsNext ? 'X' : 'O';
+    // squares[i] = xIsNext ? 'X' : 'O';
+    squares[i] = xIsNext ? '半' : '丁';
     setHistory(
       newHistory.concat([
         {
