@@ -43,10 +43,13 @@ const useTicTacToe = (): [
 
   const current = history[stepNumber];
   const winner = calculateWinner(current.squares);
+  const isDraw = current.squares.every((square) => square != null);
 
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
+  } else if (isDraw) {
+    status = 'Draw!';
   } else {
     status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
   }
