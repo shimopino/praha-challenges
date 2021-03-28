@@ -69,6 +69,14 @@ docker run -d \
 > mysql -u root -pcollege
 ```
 
+なお使用しているMySQLのバージョンは以下のように `5.7.24` になっている。
+
+```bash
+> mysql -V
+>>
+mysql  Ver 14.14 Distrib 5.7.24, for Linux (x86_64) using  EditLine wrapper
+```
+
 初期状態では以下のデータベースが作成されている。
 
 ```bash
@@ -132,6 +140,10 @@ mysql> desc employees
 ```
 
 ### performance_schema の使い方
+
+参考資料
+
+- [[MySQL 5.6 リファレンスマニュアル] 第 22 章 MySQL パフォーマンススキーマ](https://dev.mysql.com/doc/refman/5.6/ja/performance-schema.html)
 
 ### EXPLAIN の使い方
 
