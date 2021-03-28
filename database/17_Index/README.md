@@ -21,7 +21,7 @@
 
 参考資料
 
-- [[MySQL] 5.4.5 The Slow Query Log]https://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html
+- [[MySQL] 5.4.5 The Slow Query Log](https://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html)
 
 ### カーディナリティとは何か
 
@@ -121,6 +121,15 @@ mysql> desc employees
 +------------+---------------+------+-----+---------+-------+
 ```
 
+### performance_schema の使い方
+
+### EXPLAIN の使い方
+
+### SELECTクエリ その1
+
+### SELECTクエリ その2
+
+### SELECTクエリ その3
 
 ## 課題3
 
