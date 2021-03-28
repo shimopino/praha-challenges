@@ -15,7 +15,112 @@
 
 ## 課題1
 
+### インデックスとは何か
+
+### 「Slow Query Log」とは何か
+
+参考資料
+
+- [[MySQL] 5.4.5 The Slow Query Log]https://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html
+
+### カーディナリティとは何か
+
+参考資料
+
+- [[MySQL] Glossary](https://dev.mysql.com/doc/refman/5.7/en/glossary.html)
+  - cardinality
+
+### カバリングインデックスとは何か
+
+- [[Use the Index Luke] Covering Index](https://use-the-index-luke.com/ja/sql/clustering/index-only-scan-covering-index)
+
 ## 課題2
+
+### MySQL Docker Imageの使い方
+
+練習用に [https://hub.docker.com/r/genschsa/mysql-employees](https://hub.docker.com/r/genschsa/mysql-employees) を使用する。
+
+まずはDockerコンテナを起動する。
+
+```bash
+# Volumeはルートディレクトリ直下に変更
+docker run -d \
+  --rm \
+  --name mysql-employees \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD=college \
+  -v /data:/var/lib/mysql \
+  genschsa/mysql-employees
+```
+
+あとはコンテナ内にアクセスして以下のコマンドを実行すれば、MySQLにアクセスすることが可能となる。
+
+```bash
+> mysql -u root -pcollege
+```
+
+初期状態では以下のデータベースが作成されている。
+
+```bash
+mysql> SHOW DATABASES;
+>>
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| employees          |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+```
+
+演習で使用する `employees` データベースには、以下のテーブルが初期状態で作成されている。
+
+```bash
+mysql> USE employees;
+>>
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+
+
+mysql> show tables;
+>>
++----------------------+
+| Tables_in_employees  |
++----------------------+
+| current_dept_emp     |
+| departments          |
+| dept_emp             |
+| dept_emp_latest_date |
+| dept_manager         |
+| employees            |
+| salaries             |
+| titles               |
+| v_full_departments   |
+| v_full_employees     |
++----------------------+
+```
+
+演習で使用する `employees` テーブルの定義は以下のようになっている。
+
+```bash
+mysql> desc employees
+>>
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| emp_no     | int(11)       | NO   | PRI | NULL    |       |
+| birth_date | date          | NO   |     | NULL    |       |
+| first_name | varchar(14)   | NO   |     | NULL    |       |
+| last_name  | varchar(16)   | NO   |     | NULL    |       |
+| gender     | enum('M','F') | NO   |     | NULL    |       |
+| hire_date  | date          | NO   |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
+```
+
 
 ## 課題3
 
