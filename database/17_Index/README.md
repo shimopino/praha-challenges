@@ -141,9 +141,93 @@ mysql> desc employees
 
 ### performance_schema の使い方
 
+まずは `performance_schema` が初期化されているのか確認する。
+
+```bash
+mysql> SHOW VARIABLES LIKE 'performance_schema';
+>>
++--------------------+-------+
+| Variable_name      | Value |
++--------------------+-------+
+| performance_schema | ON    |
++--------------------+-------+
+```
+
+では次に対象のスキーマがストレージエンジンとして使用できるかどうかを確認する。
+
+```bash
+mysql> SELECT * FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE='PERFORMANCE_SCHEMA'\G
+>>
+*************************** 1. row ***************************
+      ENGINE: PERFORMANCE_SCHEMA
+     SUPPORT: YES
+     COMMENT: Performance Schema
+TRANSACTIONS: NO
+          XA: NO
+  SAVEPOINTS: NO
+```
+
+以下では具体的な計測方法をまとめていく
+
+#### Step1
+
+まずは収集するイベントを、クエリを実行しているユーザーにのみに限定する。
+
+以下を見るとわかるようにデフォルト設定では、`setup_actors` にて全てのフォアグラウンドスレッドの監視とイベントの収集ができるようになっている。
+
+なお以下の結果のうち、`%` は全てのHostやUser、全ての権限などを意味している。（参考資料は[コチラ](https://dev.mysql.com/doc/refman/5.7/en/performance-schema-setup-actors-table.html)）
+
+```bash
+mysql> SELECT * FROM performance_schema.setup_actors;
+>>
++------+------+------+---------+---------+
+| HOST | USER | ROLE | ENABLED | HISTORY |
++------+------+------+---------+---------+
+| %    | %    | %    | YES     | YES     |
++------+------+------+---------+---------+
+```
+
+この状態からユーザーが実行したクエリに対してのみ、監視とイベントの収集を行うように変更する必要がある。
+
+```bash
+# 全てのフォアグラウンドスレッドに対する処理を無効化
+mysql> UPDATE performance_schema.setup_actors
+       SET ENABLED = 'NO', HISTORY = 'NO'
+       WHERE HOST = '%' AND USER = '%';
+
+# クエリを実行するユーザーに対してのみ監視とイベントの収集を有効化
+mysql> INSERT INTO performance_schema.setup_actors
+       (HOST, USER, ROLE, ENABLED, HISTORY)
+       VALUES('localhost','test_user','%','YES','YES');
+```
+
+これで以下のように監視とイベントの収集を行う設定を変更することができている。
+
+```bash
+mysql> SELECT * FROM performance_schema.setup_actors;
+>>
++-----------+-----------+------+---------+---------+
+| HOST      | USER      | ROLE | ENABLED | HISTORY |
++-----------+-----------+------+---------+---------+
+| %         | %         | %    | NO      | NO      |
+| localhost | test_user | %    | YES     | YES     |
++-----------+-----------+------+---------+---------+
+```
+
+#### Step2
+
+#### Step3
+
+#### Step4
+
 参考資料
 
-- [[MySQL 5.6 リファレンスマニュアル] 第 22 章 MySQL パフォーマンススキーマ](https://dev.mysql.com/doc/refman/5.6/ja/performance-schema.html)
+- MySQL 5.7 Reference Manual
+  - [Chapter 25 MySQL Performance Schema](https://dev.mysql.com/doc/refman/5.7/en/performance-schema.html)
+  - [25.19.1 Query Profiling Using Performance Schema](https://dev.mysql.com/doc/refman/5.7/en/performance-schema-query-profiling.html)
+- [[Gihyo.jp] MySQLをチューニング，そしてスケールアップ／スケールアウトへ](https://gihyo.jp/dev/serial/01/MySQL-tuning-scale)
+- [[Gihyo.jp] MySQL道普請便り](https://gihyo.jp/dev/serial/01/mysql-road-construction-news)
+- [[Gihyo.jp] ゲームを題材に学ぶ 内部構造から理解するMySQL](https://gihyo.jp/dev/serial/01/game_mysql)
 
 ### EXPLAIN の使い方
 
