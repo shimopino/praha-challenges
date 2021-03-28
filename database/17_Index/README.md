@@ -189,6 +189,20 @@ mysql> SELECT * FROM performance_schema.setup_actors;
 
 この状態からユーザーが実行したクエリに対してのみ、監視とイベントの収集を行うように変更する必要がある。
 
+そこでまずはMySQLにアクセスしているユーザー名とホスト名（`<user>@<host>`）を確認する。（参考資料は[コチラ](https://dev.mysql.com/doc/refman/5.7/en/information-functions.html#function_current-user)）
+
+```bash
+mysql> select CURRENT_USER();
+>>
++----------------+
+| CURRENT_USER() |
++----------------+
+| root@localhost |
++----------------+
+```
+
+あとは、以下のようにユーザー名を指定したうえで監視とイベントの収集を有効化しておく。
+
 ```bash
 # 全てのフォアグラウンドスレッドに対する処理を無効化
 mysql> UPDATE performance_schema.setup_actors
@@ -198,7 +212,7 @@ mysql> UPDATE performance_schema.setup_actors
 # クエリを実行するユーザーに対してのみ監視とイベントの収集を有効化
 mysql> INSERT INTO performance_schema.setup_actors
        (HOST, USER, ROLE, ENABLED, HISTORY)
-       VALUES('localhost','test_user','%','YES','YES');
+       VALUES('localhost','root','%','YES','YES');
 ```
 
 これで以下のように監視とイベントの収集を行う設定を変更することができている。
@@ -206,30 +220,144 @@ mysql> INSERT INTO performance_schema.setup_actors
 ```bash
 mysql> SELECT * FROM performance_schema.setup_actors;
 >>
-+-----------+-----------+------+---------+---------+
-| HOST      | USER      | ROLE | ENABLED | HISTORY |
-+-----------+-----------+------+---------+---------+
-| %         | %         | %    | NO      | NO      |
-| localhost | test_user | %    | YES     | YES     |
-+-----------+-----------+------+---------+---------+
++-----------+------+------+---------+---------+
+| HOST      | USER | ROLE | ENABLED | HISTORY |
++-----------+------+------+---------+---------+
+| %         | %    | %    | NO      | NO      |
+| localhost | root | %    | YES     | YES     |
++-----------+------+------+---------+---------+
 ```
 
 #### Step2
 
+次に `setup_instruments` テーブルの設定を変更する。
+
+このテーブルは、MySQLサーバのソースコード内で処理時間や待機時間を収集するための設定を管理している。
+
+```bash
+mysql> UPDATE performance_schema.setup_instruments
+       SET ENABLED = 'YES', TIMED = 'YES'
+       WHERE NAME LIKE '%statement/%';
+
+mysql> UPDATE performance_schema.setup_instruments
+       SET ENABLED = 'YES', TIMED = 'YES'
+       WHERE NAME LIKE '%stage/%';
+```
+
+これでSQLを実行した際にどのようなコマンドに対して計測を行うのか設定することができる。
+
 #### Step3
 
+次に `setup_consumers` テーブルの設定を変更する。
+
+このテーブルには監視やイベントの収集を実施する際に、履歴を含んだり、実行したクエリに対してのみだったりと、どの程度の情報を取得するのか設定することができる。
+
+今の環境でのデフォルト値は以下のようになっている。
+
+```bash
+mysql> select * from performance_schema.setup_consumers WHERE NAME LIKE '%events_statements_%';
++--------------------------------+---------+
+| NAME                           | ENABLED |
++--------------------------------+---------+
+| events_statements_current      | YES     |
+| events_statements_history      | YES     |
+| events_statements_history_long | NO      |
++--------------------------------+---------+
+
+mysql> select * from performance_schema.setup_consumers WHERE NAME LIKE '%events_stages_%';
++----------------------------+---------+
+| NAME                       | ENABLED |
++----------------------------+---------+
+| events_stages_current      | NO      |
+| events_stages_history      | NO      |
+| events_stages_history_long | NO      |
++----------------------------+---------+
+```
+
+以上の設定を有効化しておく。
+
+```bash
+mysql> UPDATE performance_schema.setup_consumers
+       SET ENABLED = 'YES'
+       WHERE NAME LIKE '%events_statements_%';
+
+mysql> UPDATE performance_schema.setup_consumers
+       SET ENABLED = 'YES'
+       WHERE NAME LIKE '%events_stages_%';
+```
+
 #### Step4
+
+ここまででユーザーが実行したクエリに対する計測は可能になっているため、後は実際にクエリを発行すればいい。
+
+```bash
+mysql> SELECT * FROM employees.employees WHERE emp_no = 10001;
+>>
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+```
+
+#### Step5
+
+次に実行したクエリに紐づいているイベントIDを取得するため、[`events_statements_history_long`](https://dev.mysql.com/doc/refman/5.7/en/performance-schema-events-statements-history-long-table.html) から該当するSQLクエリのレコードを取得する。
+
+```bash
++----------+----------+--------------------------------------------------------+
+| EVENT_ID | Duration | SQL_TEXT                                               |
++----------+----------+--------------------------------------------------------+
+|       32 | 0.000222 | SELECT * FROM employees.employees WHERE emp_no = 10001 |
++----------+----------+--------------------------------------------------------+
+```
+
+#### Step6
+
+最後に [`events_stages_history_long`](https://dev.mysql.com/doc/refman/5.7/en/performance-schema-events-stages-history-long-table.html) から取得したイベントIDに該当するログを確認する。
+
+```bash
+mysql> SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Duration
+       FROM performance_schema.events_stages_history_long WHERE NESTING_EVENT_ID=32;
+>>
++--------------------------------+----------+
+| Stage                          | Duration |
++--------------------------------+----------+
+| stage/sql/starting             | 0.000052 |
+| stage/sql/checking permissions | 0.000002 |
+| stage/sql/Opening tables       | 0.000046 |
+| stage/sql/init                 | 0.000013 |
+| stage/sql/System lock          | 0.000002 |
+| stage/sql/optimizing           | 0.000004 |
+| stage/sql/statistics           | 0.000061 |
+| stage/sql/preparing            | 0.000003 |
+| stage/sql/executing            | 0.000000 |
+| stage/sql/Sending data         | 0.000006 |
+| stage/sql/end                  | 0.000000 |
+| stage/sql/query end            | 0.000002 |
+| stage/sql/closing tables       | 0.000002 |
+| stage/sql/freeing items        | 0.000021 |
+| stage/sql/cleaning up          | 0.000000 |
++--------------------------------+----------+
+```
 
 参考資料
 
 - MySQL 5.7 Reference Manual
   - [Chapter 25 MySQL Performance Schema](https://dev.mysql.com/doc/refman/5.7/en/performance-schema.html)
   - [25.19.1 Query Profiling Using Performance Schema](https://dev.mysql.com/doc/refman/5.7/en/performance-schema-query-profiling.html)
+- [MySQL 5.7入門（チューニング基礎編）](https://downloads.mysql.com/presentations/20151208_02_MySQL_Tuning_for_Beginners.pdf)
 - [[Gihyo.jp] MySQLをチューニング，そしてスケールアップ／スケールアウトへ](https://gihyo.jp/dev/serial/01/MySQL-tuning-scale)
 - [[Gihyo.jp] MySQL道普請便り](https://gihyo.jp/dev/serial/01/mysql-road-construction-news)
 - [[Gihyo.jp] ゲームを題材に学ぶ 内部構造から理解するMySQL](https://gihyo.jp/dev/serial/01/game_mysql)
+- [[Think It] MySQLマイスターに学べ！ 即効クエリチューニング 記事一覧](https://thinkit.co.jp/series/5588)
 
 ### EXPLAIN の使い方
+
+参考資料
+
+- MySQL 5.7 Reference Manual
+  - [8.8 Understanding the Query Execution Plan](https://dev.mysql.com/doc/refman/5.7/en/execution-plan-information.html)
 
 ### SELECTクエリ その1
 
