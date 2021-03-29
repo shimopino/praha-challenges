@@ -23,3 +23,11 @@
 ## [#4 Cookieを理解する](./04_Cookie)
 
 ## [#5 サードパーティクッキーを理解する](./05_Third_Party_Cookie)
+
+## [#6 CORSを理解する](./06_CORS)
+
+## [#7 キャッシュを理解する](./07_Cache)
+
+## [#8 Webの脆弱性を理解する](./08_Web_Volnerability)
+
+## [#9 XMLHttpRequestを理解する](./09_XHR_Fetch)
