@@ -16,18 +16,50 @@
 
 ## [#1 よく使うHTTPヘッダを理解する](01_HTTP_header)
 
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/blob/main/web_basics/01_HTTP_header/quiz.md)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/issues/1)
+
 ## [#2 curlとpostmanに慣れる](02_curl_postman)
+
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/blob/main/web_basics/02_curl_postman/quiz.md)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/16)
 
 ## [#3 リクエストをパースするWebサーバを作ってみる](03_Simple_WebServer)
 
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/27)
+
 ## [#4 Cookieを理解する](./04_Cookie)
+
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/blob/main/web_basics/04_Cookie/quiz.md)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/29)
 
 ## [#5 サードパーティクッキーを理解する](./05_Third_Party_Cookie)
 
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/34)
+
 ## [#6 CORSを理解する](./06_CORS)
+
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/tree/main/web_basics/06_CORS/quiz)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/42)
 
 ## [#7 キャッシュを理解する](./07_Cache)
 
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/tree/main/web_basics/07_Cache/quiz)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/46)
+
 ## [#8 Webの脆弱性を理解する](./08_Web_Volnerability)
 
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/tree/main/web_basics/08_Web_Volnerability/quiz)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/49)
+
 ## [#9 XMLHttpRequestを理解する](./09_XHR_Fetch)
+
+[クイズ](https://github.com/KeisukeShimokawa/praha-challenges/tree/main/web_basics/08_Web_Volnerability/quiz)
+
+[レビュー](https://github.com/KeisukeShimokawa/praha-challenges/pull/52)
