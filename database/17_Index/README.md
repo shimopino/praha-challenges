@@ -358,10 +358,27 @@ mysql> SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Durat
 
 ### EXPLAIN の使い方
 
+先ほど時間計測したSQLクエリに対して、実行計画を確認するために `EXPLAIN` を付けて再実行する。
+
+```bash
+mysql> EXPLAIN SELECT * FROM employees.employees WHERE emp_no = 10001;
+>>
+--------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table     | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+-----------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | employees | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+-----------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+```
+
+インデックスの効果を検証するために確認すべき項目は **type** であり、これはテーブルのデータに対してどのようにアクセスしたのかを示している。
+
+
+
 参考資料
 
 - MySQL 5.7 Reference Manual
   - [8.8 Understanding the Query Execution Plan](https://dev.mysql.com/doc/refman/5.7/en/execution-plan-information.html)
+- [[USE THE INDEX LUKE] 実行計画 -MySQL-](https://use-the-index-luke.com/ja/sql/explain-plan/mysql)
 
 ### SELECTクエリ その1
 
