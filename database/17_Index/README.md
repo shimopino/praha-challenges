@@ -5,26 +5,27 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題1](#%E8%AA%B2%E9%A1%8C1)
-  - [インデックスとは何か](#%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [「Slow Query Log」とは何か](#slow-query-log%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [カーディナリティとは何か](#%E3%82%AB%E3%83%BC%E3%83%87%E3%82%A3%E3%83%8A%E3%83%AA%E3%83%86%E3%82%A3%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [カバリングインデックスとは何か](#%E3%82%AB%E3%83%90%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-- [課題2](#%E8%AA%B2%E9%A1%8C2)
-  - [MySQL Docker Imageの使い方](#mysql-docker-image%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
-  - [performance_schema の使い方](#performance_schema-%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
-    - [Step1](#step1)
-    - [Step2](#step2)
-    - [Step3](#step3)
-    - [Step4](#step4)
-    - [Step5](#step5)
-    - [Step6](#step6)
-  - [EXPLAIN の使い方](#explain-%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
-  - [SELECTクエリ その1](#select%E3%82%AF%E3%82%A8%E3%83%AA-%E3%81%9D%E3%81%AE1)
-  - [SELECTクエリ その2](#select%E3%82%AF%E3%82%A8%E3%83%AA-%E3%81%9D%E3%81%AE2)
-  - [SELECTクエリ その3](#select%E3%82%AF%E3%82%A8%E3%83%AA-%E3%81%9D%E3%81%AE3)
-- [課題3](#%E8%AA%B2%E9%A1%8C3)
-- [課題4](#%E8%AA%B2%E9%A1%8C4)
+- [課題17「インデックスを理解する」](#課題17インデックスを理解する)
+  - [課題1](#課題1)
+    - [インデックスとは何か](#インデックスとは何か)
+    - [「Slow Query Log」とは何か](#slow-query-logとは何か)
+    - [カーディナリティとは何か](#カーディナリティとは何か)
+    - [カバリングインデックスとは何か](#カバリングインデックスとは何か)
+  - [課題2](#課題2)
+    - [MySQL Docker Imageの使い方](#mysql-docker-imageの使い方)
+    - [performance_schema の使い方](#performance_schema-の使い方)
+      - [Step1](#step1)
+      - [Step2](#step2)
+      - [Step3](#step3)
+      - [Step4](#step4)
+      - [Step5](#step5)
+      - [Step6](#step6)
+    - [EXPLAIN の使い方](#explain-の使い方)
+    - [SELECTクエリ その1](#selectクエリ-その1)
+    - [SELECTクエリ その2](#selectクエリ-その2)
+    - [SELECTクエリ その3](#selectクエリ-その3)
+  - [課題3](#課題3)
+  - [課題4](#課題4)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -40,6 +41,36 @@
 - [8.3 Optimization and Indexes](https://dev.mysql.com/doc/refman/5.7/en/optimization-indexes.html)
 
 ### 「Slow Query Log」とは何か
+
+**スロークエリログ (Slow query log)** とは、SQLの実行時間が指定した時間よりも長い場合にそのログを出力することで、パフォーマンスに影響を与えるSQLを発見する際に役立つログである。
+
+今回の演習で使用しているMySQLのバージョン5.7.4では、デフォルトではスロークエリログは出力せず、スロークエリの時間条件は10秒になっている。
+
+```bash
+# スロークエリの出力設定は OFF である
+mysql> show variables like 'slow%';
++---------------------+--------------------------------------+
+| Variable_name       | Value                                |
++---------------------+--------------------------------------+
+| slow_launch_time    | 2                                    |
+| slow_query_log      | OFF                                  |
+| slow_query_log_file | /var/lib/mysql/36cf2f84e306-slow.log |
++---------------------+--------------------------------------+
+
+# スロークエリの条件は10秒である
+mysql> show variables like 'long%';
++-----------------+-----------+
+| Variable_name   | Value     |
++-----------------+-----------+
+| long_query_time | 10.000000 |
++-----------------+-----------+
+```
+
+> 「ちゃんとslow query logを調べた？」と聞かれました。なぜ調べる必要があるのでしょうか？
+
+SELECT文で使用している全ての列に対してインデックスを作成したとしても、そのインデックスが適切に使用されるかどうかは実際に実行されないとわからない。
+
+例えばSELECT文を発行した際に、インデックスを使用せずに **テーブルフルスキャン** が実行されていることもある。そのためスロークエリログを出力して、意図せずSQLの実行速度が低下してしまわないか確認しておく必要がある。
 
 参考資料
 
