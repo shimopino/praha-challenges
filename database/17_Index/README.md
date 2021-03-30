@@ -17,6 +17,8 @@
     - [Step2](#step2)
     - [Step3](#step3)
     - [Step4](#step4)
+    - [Step5](#step5)
+    - [Step6](#step6)
   - [EXPLAIN の使い方](#explain-%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
   - [SELECTクエリ その1](#select%E3%82%AF%E3%82%A8%E3%83%AA-%E3%81%9D%E3%81%AE1)
   - [SELECTクエリ その2](#select%E3%82%AF%E3%82%A8%E3%83%AA-%E3%81%9D%E3%81%AE2)
