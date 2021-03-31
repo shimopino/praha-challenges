@@ -59,6 +59,7 @@
 参考資料
 
 - [8.3 Optimization and Indexes](https://dev.mysql.com/doc/refman/5.7/en/optimization-indexes.html)
+- [MySQLでインデックスを貼る時に読みたいページまとめ(初心者向け）](https://qiita.com/C058/items/1c9c57f634ebf54d99bb)
 
 ### 「Slow Query Log」とは何か
 
@@ -159,6 +160,7 @@ WHERE hire_date = '1985-06-20';
 
 - [[Use the Index Luke] Covering Index](https://use-the-index-luke.com/ja/sql/clustering/index-only-scan-covering-index)
 - [[Stackoverflow] What is a Covered Index?](https://stackoverflow.com/questions/62137/what-is-a-covered-index)
+- [【MySQL】Covering Index で処理が高速化するのを確認する](https://www.softel.co.jp/blogs/tech/archives/5139)
 
 ## 課題2
 
@@ -484,7 +486,14 @@ mysql> EXPLAIN SELECT * FROM employees.employees WHERE emp_no = 10001;
 
 インデックスの効果を検証するために確認すべき項目は **type** であり、これはテーブルのデータに対してどのようにアクセスしたのかを示している。
 
+以下に主要な type をまとめているが、詳細は参考資料の [[USE THE INDEX LUKE] 実行計画 -MySQL-](https://use-the-index-luke.com/ja/sql/explain-plan/mysql) でまとめられている。
 
+| type  | 概要                                                                                                                         | 
+| ----- | ---------------------------------------------------------------------------------------------------------------------------- | 
+| const | インデックスを走査して、1行のみの該当レコードを見つける<br><br>必要に応じて行IDを参照して、テーブルからデータを取り出す      | 
+| ref   | インデックスを走査して、一致するリーフノードをすべて検索する<br><br>必要に応じて行IDを参照して、テーブルからデータを取り出す | 
+| index | インデックスの全行を順番に沿って読み込む<br>（INDEX FULL SCANに似ている）                                                    | 
+| ALL   | テーブルの全行・全列を読み込む<br>（TABLE FULL SCAN）                                                                        | 
 
 参考資料
 
