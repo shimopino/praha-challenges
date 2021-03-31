@@ -126,7 +126,39 @@ slow_query_log_file = /tmp/mysql-slow.sql
 
 ### カバリングインデックスとは何か
 
+**カバリングインデックス（Covering Index）** とは、SELECT句を使用して特定の列を抽出する際に、インデックスが作成されている列のみを指定することで、実際のテーブルにアクセスすることなく、インデックスに保存されているデータを抽出することでSQLの実行速度を向上させる方法である。
+
+例えば以下の `employees` テーブルに対して、インデックスが主キー以外にも、`first_name` と `last_name` と `hire_date` にインデックスが作成されているとする。
+
+```bash
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| emp_no     | int(11)       | NO   | PRI | NULL    |       |
+| birth_date | date          | NO   |     | NULL    |       |
+| first_name | varchar(14)   | NO   |     | NULL    |       |
+| last_name  | varchar(16)   | NO   |     | NULL    |       |
+| gender     | enum('M','F') | NO   |     | NULL    |       |
+| hire_date  | date          | NO   |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
+```
+
+このときに以下のSQLクエリを発行した場合、テーブルにアクセスすることなくインデックスからしかデータを抽出しないため、実行速度は高速である。
+
+```sql
+SELECT first_name, last_name
+FROM employees
+WHERE hire_date = '1985-06-20';
+```
+
+![](covering-index.png)
+
+カバリングインデックスを使用する際の注意点としては、インデックス自体のサイズが肥大化してしまう点や、データ量が少ない場合には高速化が見込めない点である。
+
+参考資料
+
 - [[Use the Index Luke] Covering Index](https://use-the-index-luke.com/ja/sql/clustering/index-only-scan-covering-index)
+- [[Stackoverflow] What is a Covered Index?](https://stackoverflow.com/questions/62137/what-is-a-covered-index)
 
 ## 課題2
 
