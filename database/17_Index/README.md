@@ -77,6 +77,8 @@
 - [[Qiita] MySQLでインデックスを貼る時に読みたいページまとめ(初心者向け）](https://qiita.com/C058/items/1c9c57f634ebf54d99bb)
 - [[MySQL Tutorial] MySQL Index](https://www.mysqltutorial.org/mysql-index/)
 
+---
+
 ### 「Slow Query Log」とは何か
 
 **スロークエリログ (Slow query log)** とは、SQLの実行時間が指定した時間よりも長い場合にそのログを出力することで、パフォーマンスに影響を与えるSQLを発見する際に役立つログである。
@@ -122,6 +124,8 @@ slow_query_log_file = /tmp/mysql-slow.sql
 
 - [[MySQL] 5.4.5 The Slow Query Log](https://dev.mysql.com/doc/refman/5.7/en/slow-query-log.html)
 
+---
+
 ### カーディナリティとは何か
 
 インデック`スを作成する列を決定する際に重要な情報が **カーディナリティ** であり、対象の列に存在するデータがどの程度の **種類の多さ** を有しているのかをあらわしている。
@@ -140,6 +144,8 @@ slow_query_log_file = /tmp/mysql-slow.sql
 
 - [[MySQL] Glossary](https://dev.mysql.com/doc/refman/5.7/en/glossary.html)
   - cardinality
+
+---
 
 ### カバリングインデックスとは何か
 
@@ -177,6 +183,8 @@ WHERE hire_date = '1985-06-20';
 - [[Use the Index Luke] Covering Index](https://use-the-index-luke.com/ja/sql/clustering/index-only-scan-covering-index)
 - [[Stackoverflow] What is a Covered Index?](https://stackoverflow.com/questions/62137/what-is-a-covered-index)
 - [【MySQL】Covering Index で処理が高速化するのを確認する](https://www.softel.co.jp/blogs/tech/archives/5139)
+
+---
 
 ## 課題2
 
@@ -273,6 +281,8 @@ mysql> desc employees
 +------------+---------------+------+-----+---------+-------+
 ```
 
+---
+
 ### performance_schema の使い方
 
 まずは `performance_schema` が初期化されているのか確認する。
@@ -302,6 +312,8 @@ TRANSACTIONS: NO
 ```
 
 以下では具体的な計測方法をまとめていく
+
+---
 
 #### Step1
 
@@ -362,6 +374,8 @@ mysql> SELECT * FROM performance_schema.setup_actors;
 +-----------+------+------+---------+---------+
 ```
 
+---
+
 #### Step2
 
 次に `setup_instruments` テーブルの設定を変更する。
@@ -379,6 +393,8 @@ mysql> UPDATE performance_schema.setup_instruments
 ```
 
 これでSQLを実行した際にどのようなコマンドに対して計測を行うのか設定することができる。
+
+---
 
 #### Step3
 
@@ -420,6 +436,8 @@ mysql> UPDATE performance_schema.setup_consumers
        WHERE NAME LIKE '%events_stages_%';
 ```
 
+---
+
 #### Step4
 
 ここまででユーザーが実行したクエリに対する計測は可能になっているため、後は実際にクエリを発行すればいい。
@@ -433,6 +451,8 @@ mysql> SELECT * FROM employees.employees WHERE emp_no = 10001;
 |  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
 +--------+------------+------------+-----------+--------+------------+
 ```
+
+---
 
 #### Step5
 
@@ -449,6 +469,8 @@ mysql> SELECT EVENT_ID, TRUNCATE(TIMER_WAIT/1000000000000,6) as Duration, SQL_TE
 |       32 | 0.000222 | SELECT * FROM employees.employees WHERE emp_no = 10001 |
 +----------+----------+--------------------------------------------------------+
 ```
+
+---
 
 #### Step6
 
@@ -513,6 +535,8 @@ mysql> SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Durat
 - [[Gihyo.jp] ゲームを題材に学ぶ 内部構造から理解するMySQL](https://gihyo.jp/dev/serial/01/game_mysql)
 - [[Think It] MySQLマイスターに学べ！ 即効クエリチューニング 記事一覧](https://thinkit.co.jp/series/5588)
 
+---
+
 ### EXPLAIN の使い方
 
 先ほど時間計測したSQLクエリに対して、実行計画を確認するために `EXPLAIN` を付けて再実行する。
@@ -543,6 +567,8 @@ mysql> EXPLAIN SELECT * FROM employees.employees WHERE emp_no = 10001;
 - MySQL 5.7 Reference Manual
   - [8.8 Understanding the Query Execution Plan](https://dev.mysql.com/doc/refman/5.7/en/execution-plan-information.html)
 - [[USE THE INDEX LUKE] 実行計画 -MySQL-](https://use-the-index-luke.com/ja/sql/explain-plan/mysql)
+
+---
 
 ### SELECTクエリ その1
 
@@ -667,6 +693,8 @@ mysql> SHOW INDEXES FROM employees;
 ```
 
 `Sending Data` の処理で 0.000029 秒の時間を要していることがわかり、インデックスをしていようしていた場合よりも遥に高速に処理されていることがわかる。
+
+---
 
 ### SELECTクエリ その2
 
@@ -809,6 +837,8 @@ WHERE hire_date = '1990-01-01';
 
 > なぜインデックスを強制しない場合には、テーブルフルアクセスをしていたのか
 
+---
+
 ### SELECTクエリ その3
 
 次にインデックスを作成した列をもとにグルーピングを行った際に、処理が高速化するかどうか確認する。
@@ -915,6 +945,8 @@ GROUP BY hire_date;
 
 > MySQLでは `GROUP BY col1, col2, ...` と指定した場合、暗黙的に `ORDER BY col1, col2, ...` のようにソート処理が実行されることに注意する。
 
+---
+
 ### SELECTクエリ その4
 
 `WHERE` 句での検索条件に関数を使用した場合にインデックスにより高速化が実行されるのか確認する。
@@ -1002,6 +1034,8 @@ WHERE MONTH(hire_date) = '12';
 ```
 
 `Sending Data` の処理で 0.034253 秒の時間を要していることがわかり、インデックスを使用しているにもかかわらず、処理が高速化されていないことがわかる。
+
+---
 
 ### SELECTクエリ その5
 
@@ -1178,6 +1212,8 @@ ON YP1.HIRE_YEAR = YP2.HIRE_YEAR - 1;
 
 先ほどと比較して、多少は処理時間が短くなっていることがわかる。
 
+---
+
 ## 課題3
 
 今回は比較のためにインデックスを新たに4つ作成する。
@@ -1207,6 +1243,8 @@ CREATE INDEX hire_date_idx ON employees (hire_date);
 | employees |          1 | hire_date_idx  |            1 | hire_date   | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
 +-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
 ```
+
+---
 
 ### INSERT
 
@@ -1264,6 +1302,8 @@ VALUES (500000, '2020-03-31', 'Keisuke', 'Shimokawa', 'M', '2021-03-31');
 
 今回のINSERT処理では、インデックスが存在しているほうが処理が早くなっている。
 
+---
+
 ### DELETE
 
 ```sql
@@ -1317,6 +1357,8 @@ WHERE emp_no = 500000;
 
 今回のDELETE処理では、インデックスを使用している場合とそうでない場合とで、処理時間に差は出ていない。
 
+---
+
 ### 補足情報
 
 通常 `INSERT` 文をインデックスが存在するテーブルに実行すると、インデックスが存在しない場合と比較して処理時間が余分にかかってしまう。
@@ -1327,7 +1369,3 @@ WHERE emp_no = 500000;
 
 `UPDATE` 文に関しては、更新する対象の列にインデックスが張られている場合に性能に影響を与えてしまう。そのため、更新対象の列は必要最低限の数に絞り込むことが有効である。
 （ただし、ORMツールによっては自動的に全列が更新されてしまうため、ツールの挙動を把握しておくことが重要である。）
-
-## 課題4 クイズ
-
-[クイズ](./quiz.md)
