@@ -14,7 +14,7 @@
 
 ## #1 クイズ
 
-雇用日（`hire_date`）毎に、雇用した男性の人数と女性の人数を表示させてみましょう。
+雇用日（`hire_date`）毎に、雇用した男性の人数と女性の人数とその比率を表示させてみましょう。
 
 また高速のためにインデックスを使用してみましょう。
 
@@ -25,6 +25,8 @@
 SELECT hire_date
       ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS COUNT_MAN
       ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) AS COUNT_FEMALE
+      ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) / COUNT(*) AS RATE_MAN
+      ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) / COUNT(*) AS RATE_FEMALE
 FROM employees
 GROUP BY hire_date;
 ```
@@ -54,9 +56,7 @@ WHERE FLOOR(DATEDIFF(hire_date, birth_date)/365) = 30;
 
 </details>
 
-
-
-## 任意クイズ（インデックスに関係ない問題）
+## 任意クイズ1（インデックスに関係ない問題）
 
 `employees` テーブルに存在する従業員IDを意味する `emp_no` は、最小値が10001、最大値が499999であるため、単純に考えると従業員は全部で489998人存在しているはずだが、実際には300024件しか存在していない。
 
