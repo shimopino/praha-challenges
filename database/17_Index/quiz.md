@@ -7,7 +7,7 @@
 
 - [&#035;1 クイズ](#1-%E3%82%AF%E3%82%A4%E3%82%BA)
 - [&#035;2 クイズ](#2-%E3%82%AF%E3%82%A4%E3%82%BA)
-- [任意クイズ（インデックスに関係ない問題）](#%E4%BB%BB%E6%84%8F%E3%82%AF%E3%82%A4%E3%82%BA%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E9%96%A2%E4%BF%82%E3%81%AA%E3%81%84%E5%95%8F%E9%A1%8C)
+- [任意クイズ1（インデックスに関係ない問題）](#%E4%BB%BB%E6%84%8F%E3%82%AF%E3%82%A4%E3%82%BA1%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AB%E9%96%A2%E4%BF%82%E3%81%AA%E3%81%84%E5%95%8F%E9%A1%8C)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

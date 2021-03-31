@@ -45,7 +45,6 @@
     - [インデックスなし](#%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AA%E3%81%97-6)
     - [インデックスあり](#%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%82%E3%82%8A-6)
   - [補足情報](#%E8%A3%9C%E8%B6%B3%E6%83%85%E5%A0%B1)
-- [課題4 クイズ](#%E8%AA%B2%E9%A1%8C4-%E3%82%AF%E3%82%A4%E3%82%BA)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
