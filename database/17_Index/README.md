@@ -1165,22 +1165,152 @@ ON YP1.HIRE_YEAR = YP2.HIRE_YEAR - 1;
 
 ## 課題3
 
+今回は比較のためにインデックスを新たに4つ作成する。
+
+- `birth_date`
+- `first_name`
+- `last_name`
+- `hire_date`
+
+```sql
+CREATE INDEX birth_date_idx ON employees (birth_date);
+CREATE INDEX first_name_idx ON employees (first_name);
+CREATE INDEX last_name_idx ON employees (last_name);
+CREATE INDEX hire_date_idx ON employees (hire_date);
+```
+
+作成したインデックスを確認する。
+
+```bash
++-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table     | Non_unique | Key_name       | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| employees |          0 | PRIMARY        |            1 | emp_no      | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
+| employees |          1 | birth_date_idx |            1 | birth_date  | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
+| employees |          1 | first_name_idx |            1 | first_name  | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
+| employees |          1 | last_name_idx  |            1 | last_name   | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
+| employees |          1 | hire_date_idx  |            1 | hire_date   | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
++-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+```
+
 ### INSERT
+
+以下のクエリを使用してデータを挿入する。
+
+```sql
+INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
+VALUES (500000, '2020-03-31', 'Keisuke', 'Shimokawa', 'M', '2021-03-31');
+```
 
 #### インデックスなし
 
+インデックスを使用していない場合、クエリの実行で時間がかかっており `0.006877` 秒を要している。
+
+```bash
++--------------------------------+----------+
+| Stage                          | Duration |
++--------------------------------+----------+
+| stage/sql/starting             | 0.000065 |
+| stage/sql/checking permissions | 0.000003 |
+| stage/sql/Opening tables       | 0.000012 |
+| stage/sql/init                 | 0.000011 |
+| stage/sql/System lock          | 0.000003 |
+| stage/sql/update               | 0.000073 |
+| stage/sql/end                  | 0.000001 |
+| stage/sql/query end            | 0.006877 |
+| stage/sql/closing tables       | 0.000007 |
+| stage/sql/freeing items        | 0.000027 |
+| stage/sql/cleaning up          | 0.000000 |
++--------------------------------+----------+
+```
+
+
 #### インデックスあり
+
+インデックスを使用している場合、クエリの実行で時間は先ほどよりも短時間であり `0.003370` 秒を要している。
+
+```bash
++--------------------------------+----------+
+| Stage                          | Duration |
++--------------------------------+----------+
+| stage/sql/starting             | 0.000056 |
+| stage/sql/checking permissions | 0.000003 |
+| stage/sql/Opening tables       | 0.000011 |
+| stage/sql/init                 | 0.000009 |
+| stage/sql/System lock          | 0.000002 |
+| stage/sql/update               | 0.000401 |
+| stage/sql/end                  | 0.000001 |
+| stage/sql/query end            | 0.003370 |
+| stage/sql/closing tables       | 0.000007 |
+| stage/sql/freeing items        | 0.000028 |
+| stage/sql/cleaning up          | 0.000000 |
++--------------------------------+----------+
+```
+
+今回のINSERT処理では、インデックスが存在しているほうが処理が早くなっている。
 
 ### DELETE
 
+```sql
+DELETE FROM employees
+WHERE emp_no = 500000;
+```
+
 #### インデックスなし
+
+インデックスを使用していない場合、クエリの実行で時間がかかっており `0.003229` 秒を要している。
+
+```bash
++--------------------------------+----------+
+| Stage                          | Duration |
++--------------------------------+----------+
+| stage/sql/starting             | 0.000055 |
+| stage/sql/checking permissions | 0.000004 |
+| stage/sql/Opening tables       | 0.000015 |
+| stage/sql/init                 | 0.000013 |
+| stage/sql/System lock          | 0.000023 |
+| stage/sql/updating             | 0.000061 |
+| stage/sql/end                  | 0.000002 |
+| stage/sql/query end            | 0.003229 |
+| stage/sql/closing tables       | 0.000006 |
+| stage/sql/freeing items        | 0.000029 |
+| stage/sql/cleaning up          | 0.000000 |
++--------------------------------+----------+
+```
 
 #### インデックスあり
 
-### UPDATE
+インデックスを使用している場合、クエリの実行で時間は先ほどよりも短時間であり `0.003555` 秒を要している。
 
-#### インデックスなし
+```bash
++--------------------------------+----------+
+| Stage                          | Duration |
++--------------------------------+----------+
+| stage/sql/starting             | 0.000051 |
+| stage/sql/checking permissions | 0.000003 |
+| stage/sql/Opening tables       | 0.000012 |
+| stage/sql/init                 | 0.000011 |
+| stage/sql/System lock          | 0.000021 |
+| stage/sql/updating             | 0.000066 |
+| stage/sql/end                  | 0.000002 |
+| stage/sql/query end            | 0.003555 |
+| stage/sql/closing tables       | 0.000005 |
+| stage/sql/freeing items        | 0.000026 |
+| stage/sql/cleaning up          | 0.000000 |
++--------------------------------+----------+
+```
 
-#### インデックスあり
+今回のDELETE処理では、インデックスを使用している場合とそうでない場合とで、処理時間に差は出ていない。
+
+### 補足情報
+
+通常 `INSERT` 文をインデックスが存在するテーブルに実行すると、インデックスが存在しない場合と比較して処理時間が余分にかかってしまう。
+
+今回では `INSERT` 文で追加する `birth_date` や `first_name` などのデータも新たに各インデックスの値に追加される。追加する際にも、データの順序と `B-tree` の木構造のバランスを保つために、通常のテーブルへの `INSERT` と比較して非常に重い処理になってしまう。
+
+`DELETE` 文に関しても考え方は同じであり、指定したエントリを削除した後で、木構造のバランスを保つための処理などが重くなってしまう。ただし、 `WHERE` でのレコードの指定にはインデックスの恩恵を受けることができる点には注意が必要である。
+
+`UPDATE` 文に関しては、更新する対象の列にインデックスが張られている場合に性能に影響を与えてしまう。そのため、更新対象の列は必要最低限の数に絞り込むことが有効である。
+（ただし、ORMツールによっては自動的に全列が更新されてしまうため、ツールの挙動を把握しておくことが重要である。）
 
 ## 課題4 クイズ
