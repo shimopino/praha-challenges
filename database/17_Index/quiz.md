@@ -72,15 +72,24 @@ WHERE FLOOR(DATEDIFF(hire_date, birth_date)/365) = 30;
 MySQL8.0以降だと問題ないけど、演習で使用している5.7のバージョンだと機能しないので、ほかの回答を探す必要がありそう。
 
 ```sql
-SELECT SUM(next_emp_no - base_emp_np)
-FROM (
+WITH 
+SLICED_EMPNO AS (
     SELECT emp_no AS base_emp_no
-          ,emp_no OVER (
-              ORDER BY emp_no
-              ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING
-          ) AS next_emp_no
+        ,MIN(emp_no) OVER (
+            ORDER BY emp_no
+            ROWS BETWEEN 1 FOLLOWING AND 1 FOLLOWING
+        ) AS next_emp_no
     FROM employees
-);
+)
+, DIFF_EMPNO AS (
+    SELECT base_emp_no
+        ,next_emp_no
+        ,next_emp_no - base_emp_no AS DIFF
+    FROM SLICED_EMPNO
+)
+SELECT 
+    SUM(CASE WHEN DIFF != 1 AND DIFF IS NOT NULL THEN DIFF ELSE 0 END)
+FROM DIFF_EMPNO;
 ```
 
 </details>
