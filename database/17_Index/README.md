@@ -579,121 +579,63 @@ FROM employees
 WHERE hire_date = '1990-01-01';
 ```
 
-#### インデックスなし
+実行結果として **65行** 抽出される。
 
-まずは実行したクエリの実行計画を確認する。
+なお以下に今回使用するインデックス主要項目の設定値を載せている。
 
-```sql
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | employees | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   29 |    10.00 | Using where |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-```
+| 項目         | 値            | 説明                                                                                                                                      | 
+| ------------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | 
+| Non_unique   | 1             | インデックスに重複を含むことができるかどうか<br><br>できない場合は`0`、できる場合は`1`<br><br>主キーのインデックスなどは `0` になっている | 
+| Key_name     | hire_date_idx | インデックスの名称<br><br>主キーの場合は常に `PRIMARY`                                                                                    | 
+| Seq_in_index | 1             | インデックス内のカラムのシーケンス番号<br><br>1から始める                                                                                 | 
+| Colume_name  | hire_date     | 対象のカラム名                                                                                                                            | 
+| Collation    | A             | インデックス内のソート方法<br><br>`A` で昇順、`NULL` でソートされていないことを表している                                                 | 
+| Cardinality  | 4931          | インデックス内の一意の値の数の推定値<br><br>整数で格納されている統計情報をもとにカウントされるため常に正しいとは限らない                  | 
+| Sub_part     | NULL          | 部分的にしかインデックス設定されていないかどうか<br><br>`NULL` なのでカラム全体がインデックス設定されている                               | 
+| Index_Type   | BTREE         | 平衡木（`Balanced Tree`）を使用するインデックス<br><br>他には `FULLTEXT`、`HASH`、`RTREE` などがある                                      | 
 
-結果を見るとアクセスタイプが `ALL` になっているため、テーブルフルアクセスが発生していることがわかる。
+#### 比較結果
 
-次に `performance_schema` を使用して対象のSQLクエリの実行速度を見てみた。
+まずはインデックスありなしでの実行計画を確認する。
 
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000060 |
-| stage/sql/checking permissions | 0.000002 |
-| stage/sql/Opening tables       | 0.000025 |
-| stage/sql/init                 | 0.000015 |
-| stage/sql/System lock          | 0.000003 |
-| stage/sql/optimizing           | 0.000005 |
-| stage/sql/statistics           | 0.000008 |
-| stage/sql/preparing            | 0.000007 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.044031 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/closing tables       | 0.000005 |
-| stage/sql/freeing items        | 0.000030 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
+| 比較項目      | インデックスなし | インデックスあり | 比較結果                                                                                                                                                                      | 
+| ------------- | ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
+| type          | ALL              | ref              | `ALL` はフルテーブルスキャンでアクセス<br><br>`ref` は constではないインデックス（PKインデックスでもUniqueインデックスでもない）を使用して、等価検索（where k = v）でアクセス | 
+| possible_keys | NULL             | hire_date_idx    | Optimizerが利用可能だと判断したインデックスが表示されている                                                                                                                   | 
+| key           | NULL             | hire_date_idx    | Optimizerが実際に使用したインデックスが表示されている                                                                                                                         | 
+| key_len       | NULL             | 3                | MySQLでは `Date` 型は3バイトのリトルエンディアンなので、Dateの値を使用している                                                                                                | 
+| ref           | NULL             | const            | 検索条件のkeyと比較しているvalueの種類<br><br>今回は日付を定数として指定している                                                                                              | 
+| rows          | 298980           | 65               | テーブルからfetchされる行数の見積もり                                                                                                                                         | 
+| filtered      | 10.00            | 100.00           | テーブル条件によってフィルタリングされる行数の割合の見積もり                                                                                                                  | 
+| Extra         | Using where      | Using index      | インデックスのみを参照してデータを抽出している                                                                                                                                | 
 
-`Sending Data` の処理で 0.044031 秒の時間を要していることがわかる。
-
-#### インデックス作成
-
-まずは `hire_date` に対してインデックスを作成する。
-
-```sql
-mysql> CREATE INDEX hire_date_idx ON employees (hire_date);
-
--- 以下でもOK
--- 割り当てられている権限に応じて使い分ける
-mysql> ALTER TABLE employees ADD INDEX hire_date_idx (hire_date);
-```
-
-インデックスが作成されたかどうかを確認する。
-
-```sql
-mysql> SHOW INDEXES FROM employees;
->>
-+-----------+------------+---------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| Table     | Non_unique | Key_name      | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
-+-----------+------------+---------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| employees |          0 | PRIMARY       |            1 | emp_no      | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
-| employees |          1 | hire_date_idx |            1 | hire_date   | A         |          29 |     NULL | NULL   |      | BTREE      |         |               |
-+-----------+------------+---------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-```
-
-結果からは作成されたインデックス `hire_date_idx` は、`Non_unique` が1であるころから列に含まれるデータに重複が存在していることがわかる。
-
-参考資料
-
-- [[MySQL 5.7 Reference] 13.7.5.22 SHOW INDEX STATEMENT](https://dev.mysql.com/doc/refman/5.7/en/show-index.html)
-- [[MySQL Tutorial] SHOW INDEX](https://www.mysqltutorial.org/mysql-index/mysql-show-indexes/)
-
-#### インデックスあり
-
-では同じクエリを発行して実行計画を確認する。
+次に `performance_schema` を使用して実行時間を計測する。
 
 ```bash
-+----+-------------+-----------+------------+------+---------------+---------------+---------+-------+------+----------+-------------+
-| id | select_type | table     | partitions | type | possible_keys | key           | key_len | ref   | rows | filtered | Extra       |
-+----+-------------+-----------+------------+------+---------------+---------------+---------+-------+------+----------+-------------+
-|  1 | SIMPLE      | employees | NULL       | ref  | hire_date_idx | hire_date_idx | 3       | const |   65 |   100.00 | Using index |
-+----+-------------+-----------+------------+------+---------------+---------------+---------+-------+------+----------+-------------+
++------------------------------------------------+----------+----------+
+| Stage                                          | w/o index| w/ index |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0001 |   0.0001 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0001 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000 |   0.0001 |
+| stage/sql/preparing                            |   0.0000 |   0.0000 |
+| stage/sql/executing                            |   0.0323 |   0.0000 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
 
-実行計画を見てみると、`Extra` 列に `Using Index` とある通り、テーブルへのアクセスを行っておらず、必要なデータを全てインデックスから取得していることがわかる。
-
-またアクセスタイプには `ref` とある通り、インデックスから検索条件に一致するすべてのエントリのリーフノードを走査していることがわかる。
-
-次に `performance_schema` を使用して対象のSQLクエリの実行速度を見てみた。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000052 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000011 |
-| stage/sql/init                 | 0.000013 |
-| stage/sql/System lock          | 0.000003 |
-| stage/sql/optimizing           | 0.000006 |
-| stage/sql/statistics           | 0.000036 |
-| stage/sql/preparing            | 0.000005 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.000029 |
-| stage/sql/end                  | 0.000000 |
-| stage/sql/query end            | 0.000003 |
-| stage/sql/closing tables       | 0.000002 |
-| stage/sql/freeing items        | 0.000025 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-`Sending Data` の処理で 0.000029 秒の時間を要していることがわかり、インデックスをしていようしていた場合よりも遥に高速に処理されていることがわかる。
-
----
+実行計画やイベント情報を見てみても、インデックスを使用してクエリが高速化されていることがわかる。
 
 ### SELECTクエリ その2
 
