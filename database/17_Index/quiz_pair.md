@@ -43,6 +43,7 @@ WHERE hire_date >= '2000-01-01';
 
 実際にイベント情報から実行時間を見ても、高速化されていることがわかる。
 
+```bash
 +------------------------------------------------+----------+----------+
 | Stage                                          | Duration | Duration |
 +------------------------------------------------+----------+----------+
@@ -66,33 +67,7 @@ WHERE hire_date >= '2000-01-01';
 +------------------------------------------------+----------+----------+
 |                                                |   0.0371 |   0.0000 |
 +------------------------------------------------+----------+----------+
-
-
-
-
-
-
-+------------------------------------------------+----------+  
-| Stage                                          | Duration |  
-+------------------------------------------------+----------+  
-| stage/sql/starting                             |   0.0000 |  
-| stage/sql/Executing hook on transaction begin. |   0.0000 |  
-| stage/sql/starting                             |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |
-| stage/sql/init                                 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |
-| stage/sql/executing                            |   0.0000 |
-| stage/sql/end                                  |   0.0000 |
-| stage/sql/query end                            |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |
-+------------------------------------------------+----------+
+```
 
 ## クイズ2
 
@@ -113,27 +88,21 @@ LIMIT 1;
 
 ```sql
 CREATE INDEX birth_date_idx ON employees (birth_date);
-CREATE INDEX last_name_idx ON employees (last_name)
+CREATE INDEX last_name_idx ON employees (last_name);
 ```
 
-*************************** 1. row ***************************
-           id: 1
-  select_type: SIMPLE
-        table: employees
-   partitions: NULL
-         type: ALL
-possible_keys: NULL
-          key: NULL
-      key_len: NULL
-          ref: NULL
-         rows: 298980
-     filtered: 33.33
-        Extra: Using where; Using temporary; Using filesort
+実行結果を比較すると大きく異なるのは `Extra` の部分である。
 
+これはクイズ1のインデックスコンディションプッシュダウンを使用しているためである。
 
-0.0475
+- インデックスなし
+  - `Using where; Using temporary; Using filesort`
+- インデックスあり
+  - `Using index condition; Using temporary; Using filesort`
 
+実際にイベント情報から実行時間を見ても、高速化されていることがわかる。
 
+```bash
 +------------------------------------------------+----------+----------+
 | Stage                                          | Duration | Duration |
 +------------------------------------------------+----------+----------+
@@ -159,34 +128,7 @@ possible_keys: NULL
 +------------------------------------------------+----------+----------+
 |                                                |   0.0475 |   0.0047 |
 +------------------------------------------------+----------+----------+
-
-
-
-
-
-+------------------------------------------------+----------+
-| Stage                                          | Duration |
-+------------------------------------------------+----------+
-| stage/sql/starting                             |   0.0001 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |
-| stage/sql/starting                             |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |
-| stage/sql/init                                 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |
-| stage/sql/Creating tmp table                   |   0.0000 |
-| stage/sql/executing                            |   0.0044 |
-| stage/sql/end                                  |   0.0000 |
-| stage/sql/query end                            |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |
-| stage/sql/removing tmp table                   |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |
-+------------------------------------------------+----------+
+```
 
 ## クイズ3
 
