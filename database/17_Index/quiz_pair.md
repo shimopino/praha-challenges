@@ -132,63 +132,54 @@ CREATE INDEX last_name_idx ON employees (last_name);
 
 ## クイズ3
 
+> ファーストネームが「Ann」で始まる社員数を求めるクエリと、それを高速化するようなインデックスを作成してください。
+
+クエリ
+
 ```sql
 SELECT COUNT(*)
 FROM employees
 WHERE first_name LIKE 'Ann%';
 ```
 
-```sql
-CREATE INDEX first_name_idx ON employees (first_name);
+今回は上記のクエリを使用しているが、念のため `COUNT(*)` だけではなく、`COUNT(first_name)` の場合の処理結果も比較しておく。
+
+まずは実行計画の比較を行う。
+
+- インデックスなし
+  - フルテーブルスキャン
+- インデックスあり、かつ `COUNT(*)`
+  - インデックスの範囲検索
+- インデックスあり、かつ `COUNT(first_name)`
+  - インデックスの範囲指定
+
+インデックスにより高速化されていることがわかる。
+また `COUNT(first_name)` での違いはほとんどない。
+
+```bash
++------------------------------------------------+----------+----------+----------+
+| Stage                                          | Duration | Duration | Duration |
++------------------------------------------------+----------+----------+----------+
+| stage/sql/starting                             |   0.0000 |   0.0001 |   0.0001 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000 |   0.0001 |   0.0000 |
+| stage/sql/preparing                            |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/executing                            |   0.0394 |   0.0001 |   0.0002 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+----------+
+| total                                          |   0.0397 |   0.0006 |   0.0006 |
++------------------------------------------------+----------+----------+----------+
 ```
 
-0.0405
-
-+------------------------------------------------+----------+----------+
-| Stage                                          | Duration | Duration |
-+------------------------------------------------+----------+----------+
-| stage/sql/starting                             |   0.0001 |   0.0000 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
-| stage/sql/starting                             |   0.0000 |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
-| stage/sql/init                                 |   0.0000 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |   0.0000 |
-| stage/sql/executing                            |   0.0402 |   0.0001 |
-| stage/sql/end                                  |   0.0000 |   0.0000 |
-| stage/sql/query end                            |   0.0000 |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
-+------------------------------------------------+----------+----------+
-|                                                |   0.0405 |   0.0003 |
-+------------------------------------------------+----------+----------+
-
-
-0.0003
-
-+------------------------------------------------+----------+
-| Stage                                          | Duration |
-+------------------------------------------------+----------+
-| stage/sql/starting                             |   0.0000 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |
-| stage/sql/starting                             |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |
-| stage/sql/init                                 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |
-| stage/sql/executing                            |   0.0001 |
-| stage/sql/end                                  |   0.0000 |
-| stage/sql/query end                            |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |
-+------------------------------------------------+----------+
+今回は前方一致のクエリだったのでインデックスが有効であったが、後方一致のクエリの場合にはインデックスは使用されない点に注意する必要がある。
