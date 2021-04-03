@@ -291,6 +291,26 @@ mysql> SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Durat
 
 </details>
 
+### Q11: クエリを実行する際に強制的にインデックスを使用するにはどうすればいいでしょうか
+
+<details>
+<summary>回答例</summary>
+
+#### インデックスを強制した場合
+
+`FORCE INDEX (<index>)` 構文を使用すればインデックスを強制的に使用することができる。
+
+```sql
+SELECT hire_date, first_name, last_name
+FROM employees
+FORCE INDEX (hire_date_idx)
+WHERE hire_date = '1990-01-01';
+```
+
+この時に実行計画を確認すれば、クエリがインデックスを利用していることがわかるはずである。
+
+</details>
+
 ## 参考資料
 
 - [[MySQL 8.0 Reference] 8.13 Measuring Performance (Benchmarking)](https://dev.mysql.com/doc/refman/8.0/en/optimize-benchmarking.html)
