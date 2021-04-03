@@ -44,29 +44,29 @@ WHERE hire_date >= '2000-01-01';
 実際にイベント情報から実行時間を見ても、高速化されていることがわかる。
 
 ```bash
-+------------------------------------------------+----------+----------+
-| Stage                                          | Duration | Duration |
-+------------------------------------------------+----------+----------+
-| stage/sql/starting                             |   0.0001 |   0.0000 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
-| stage/sql/starting                             |   0.0000 |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
-| stage/sql/init                                 |   0.0000 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |   0.0000 |
-| stage/sql/executing                            |   0.0368 |   0.0000 |
-| stage/sql/end                                  |   0.0000 |   0.0000 |
-| stage/sql/query end                            |   0.0000 |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
-+------------------------------------------------+----------+----------+
-|                                                |   0.0371 |   0.0000 |
-+------------------------------------------------+----------+----------+
++------------------------------------------------+-----------+----------+
+| Stage                                          | w/o index | w/ index |
++------------------------------------------------+-----------+----------+
+| stage/sql/starting                             |    0.0001 |   0.0000 |
+| stage/sql/Executing hook on transaction begin. |    0.0000 |   0.0000 |
+| stage/sql/starting                             |    0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |    0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |    0.0000 |   0.0000 |
+| stage/sql/init                                 |    0.0000 |   0.0000 |
+| stage/sql/System lock                          |    0.0000 |   0.0000 |
+| stage/sql/optimizing                           |    0.0000 |   0.0000 |
+| stage/sql/statistics                           |    0.0000 |   0.0000 |
+| stage/sql/preparing                            |    0.0000 |   0.0000 |
+| stage/sql/executing                            |    0.0368 |   0.0000 |
+| stage/sql/end                                  |    0.0000 |   0.0000 |
+| stage/sql/query end                            |    0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |    0.0000 |   0.0000 |
+| stage/sql/closing tables                       |    0.0000 |   0.0000 |
+| stage/sql/freeing items                        |    0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |    0.0000 |   0.0000 |
++------------------------------------------------+-----------+----------+
+|                                                |    0.0371 |   0.0000 |
++------------------------------------------------+-----------+----------+
 ```
 
 ## クイズ2
@@ -84,13 +84,6 @@ ORDER BY LAST_NAME_COUNT DESC
 LIMIT 1;
 ```
 
-高速化のためのインデックス
-
-```sql
-CREATE INDEX birth_date_idx ON employees (birth_date);
-CREATE INDEX last_name_idx ON employees (last_name);
-```
-
 実行結果を比較すると大きく異なるのは `Extra` の部分である。
 
 これはクイズ1のインデックスコンディションプッシュダウンを使用しているためである。
@@ -103,31 +96,31 @@ CREATE INDEX last_name_idx ON employees (last_name);
 実際にイベント情報から実行時間を見ても、高速化されていることがわかる。
 
 ```bash
-+------------------------------------------------+----------+----------+
-| Stage                                          | Duration | Duration |
-+------------------------------------------------+----------+----------+
-| stage/sql/starting                             |   0.0000 |   0.0001 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
-| stage/sql/starting                             |   0.0000 |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
-| stage/sql/init                                 |   0.0000 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |   0.0000 |
-| stage/sql/Creating tmp table                   |   0.0000 |   0.0000 |
-| stage/sql/executing                            |   0.0473 |   0.0044 |
-| stage/sql/end                                  |   0.0000 |   0.0000 |
-| stage/sql/query end                            |   0.0000 |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
-| stage/sql/removing tmp table                   |   0.0000 |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
-+------------------------------------------------+----------+----------+
-|                                                |   0.0475 |   0.0047 |
-+------------------------------------------------+----------+----------+
++------------------------------------------------+-----------+----------+
+| Stage                                          | w/o index | w/ index |
++------------------------------------------------+-----------+----------+
+| stage/sql/starting                             |    0.0000 |   0.0001 |
+| stage/sql/Executing hook on transaction begin. |    0.0000 |   0.0000 |
+| stage/sql/starting                             |    0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |    0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |    0.0000 |   0.0000 |
+| stage/sql/init                                 |    0.0000 |   0.0000 |
+| stage/sql/System lock                          |    0.0000 |   0.0000 |
+| stage/sql/optimizing                           |    0.0000 |   0.0000 |
+| stage/sql/statistics                           |    0.0000 |   0.0000 |
+| stage/sql/preparing                            |    0.0000 |   0.0000 |
+| stage/sql/Creating tmp table                   |    0.0000 |   0.0000 |
+| stage/sql/executing                            |    0.0473 |   0.0044 |
+| stage/sql/end                                  |    0.0000 |   0.0000 |
+| stage/sql/query end                            |    0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |    0.0000 |   0.0000 |
+| stage/sql/removing tmp table                   |    0.0000 |   0.0000 |
+| stage/sql/closing tables                       |    0.0000 |   0.0000 |
+| stage/sql/freeing items                        |    0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |    0.0000 |   0.0000 |
++------------------------------------------------+-----------+----------+
+|                                                |    0.0475 |   0.0047 |
++------------------------------------------------+-----------+----------+
 ```
 
 ## クイズ3
@@ -157,29 +150,29 @@ WHERE first_name LIKE 'Ann%';
 また `COUNT(first_name)` での違いはほとんどない。
 
 ```bash
-+------------------------------------------------+----------+----------+----------+
-| Stage                                          | Duration | Duration | Duration |
-+------------------------------------------------+----------+----------+----------+
-| stage/sql/starting                             |   0.0000 |   0.0001 |   0.0001 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/starting                             |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/init                                 |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |   0.0001 |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/executing                            |   0.0394 |   0.0001 |   0.0002 |
-| stage/sql/end                                  |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/query end                            |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |   0.0000 |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |   0.0000 |   0.0000 |
-+------------------------------------------------+----------+----------+----------+
-| total                                          |   0.0397 |   0.0006 |   0.0006 |
-+------------------------------------------------+----------+----------+----------+
++------------------------------------------------+-----------+----------+-------------------+
+| Stage                                          | w/o index | COUNT(*) | COUNT(first_name) |
++------------------------------------------------+-----------+----------+-------------------+
+| stage/sql/starting                             |    0.0000 |   0.0001 |            0.0001 |
+| stage/sql/Executing hook on transaction begin. |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/starting                             |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/checking permissions                 |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/Opening tables                       |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/init                                 |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/System lock                          |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/optimizing                           |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/statistics                           |    0.0000 |   0.0001 |            0.0000 |
+| stage/sql/preparing                            |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/executing                            |    0.0394 |   0.0001 |            0.0002 |
+| stage/sql/end                                  |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/query end                            |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/waiting for handler commit           |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/closing tables                       |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/freeing items                        |    0.0000 |   0.0000 |            0.0000 |
+| stage/sql/cleaning up                          |    0.0000 |   0.0000 |            0.0000 |
++------------------------------------------------+-----------+----------+-------------------+
+| total                                          |    0.0397 |   0.0006 |            0.0006 |
++------------------------------------------------+-----------+----------+-------------------+
 ```
 
 今回は前方一致のクエリだったのでインデックスが有効であったが、後方一致のクエリの場合にはインデックスは使用されない点に注意する必要がある。
