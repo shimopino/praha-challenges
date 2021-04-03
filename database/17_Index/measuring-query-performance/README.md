@@ -74,6 +74,215 @@ Benchmark
 
 </details>
 
+### Q3: performance_schema に存在する setup_actors の用途は何でしょうか
+
+<details>
+<summary>回答例</summary>
+
+ホストやユーザー、アカウントの情報を使って収集するクエリの対象を絞り込むことで、履歴テーブルからデータを収集する際のオーバーヘッドやデータ量を削減するために使用される。
+
+参考資料
+
+- [27.12.2.1 The setup_actors Table](https://dev.mysql.com/doc/refman/8.0/en/performance-schema-setup-actors-table.html)
+
+</details>
+
+### Q4: performance_schema に存在する setup_actors の各カラムの意味は何でしょうか
+
+以下のクエリを発行した際に得られる結果を解釈してください。
+
+```bash
+mysql> SELECT * FROM performance_schema.setup_actors;
++------+------+------+---------+---------+
+| HOST | USER | ROLE | ENABLED | HISTORY |
++------+------+------+---------+---------+
+| %    | %    | %    | YES     | YES     |
++------+------+------+---------+---------+
+```
+
+<details>
+<summary>回答例</summary>
+
+- 全てのホストの、全てのユーザーから、統計情報と、イベントのログを収集する
+
+| カラム名 | 説明                                                                                       | 
+| -------- | ------------------------------------------------------------------------------------------ | 
+| HOST     | ホスト名<br><br>リテラルを指定するか、`%`ですべてのホストを指定する                        | 
+| USER     | ホスト名<br><br>リテラルを指定するか、`%`ですべてのホストを指定する                        | 
+| ROLE     | 使用されていない                                                                           | 
+| ENABLED  | フォアグラウンドスレッドでの統計情報を収集するかどうか<br><br>`YES` 、あるいは `NO` で指定 | 
+| HISTORY  | フォアグラウンドスレッドでのイベントを収集するかどうか<br><br>`YES` 、あるいは `NO` で指定 | 
+
+参考資料
+
+- [27.12.2.1 The setup_actors Table](https://dev.mysql.com/doc/refman/8.0/en/performance-schema-setup-actors-table.html)
+
+</details>
+
+### 5: MySQLで現在接続しているユーザー名とホスト名を確認するにはどうすればいいでしょうか
+
+<details>
+<summary>回答例</summary>
+
+`CURRENT_USER()`関数を使用する。
+
+```bash
+mysql> SELECT current_user();
++----------------+
+| current_user() |
++----------------+
+| root@localhost |
++----------------+
+```
+
+</details>
+
+### Q6: performance_schema に存在する setup_actors に、現在接続しているユーザーとホストからイベント情報を収集する設定に変更してみましょう
+
+- ユーザー名は `root`
+- ホスト名は `localhost`
+
+<details>
+<summary>回答例</summary>
+
+デフォルトで `setup_actors` には全てのホストとユーザーに関するイベントを収集する設定になっているので、制限を加えるようにレコードを変更する。
+
+```bash
+# まずは全てのホストとユーザーに関する設定をOFFにする
+mysql> UPDATE performance_schema.setup_actors
+    ->        SET ENABLED = 'NO', HISTORY = 'NO'
+    ->        WHERE HOST = '%' AND USER = '%';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+# 次に指定のユーザーとホストのみ設定をONする
+mysql> INSERT INTO performance_schema.setup_actors
+    ->        (HOST,USER,ROLE,ENABLED,HISTORY)
+    ->        VALUES('localhost','root','%','YES','YES');
+Query OK, 1 row affected (0.01 sec)
+```
+
+これで以下の状態になっていればOKである。
+
+```bash
+mysql> SELECT * FROM performance_schema.setup_actors;
++-----------+------+------+---------+---------+
+| HOST      | USER | ROLE | ENABLED | HISTORY |
++-----------+------+------+---------+---------+
+| %         | %    | %    | NO      | NO      |
+| localhost | root | %    | YES     | YES     |
++-----------+------+------+---------+---------+
+```
+
+</details>
+
+### Q7: クエリの実行速度を計測する際に、performance_schema に存在する setup_instruments にどのような設定を追加すればいいでしょうか
+
+<details>
+<summary>回答例</summary>
+
+`setup_instruments` テーブルには、MySQLサーバのソースコード内に設定されている処理時間や待機時間を収集するための `instruments` という設定をONにする。
+
+```bash
+mysql> UPDATE performance_schema.setup_instruments
+       SET ENABLED = 'YES', TIMED = 'YES'
+       WHERE NAME LIKE '%statement/%';
+
+mysql> UPDATE performance_schema.setup_instruments
+       SET ENABLED = 'YES', TIMED = 'YES'
+       WHERE NAME LIKE '%stage/%';
+```
+
+</details>
+
+### Q8: クエリの実行速度を計測する際に、performance_schema に存在する setup_consumers にどのような設定を追加すればいいでしょうか
+
+<details>
+<summary>回答例</summary>
+
+`setup_consumers` テーブルには、`performance_schema` が計測した統計情報を記録するのか設定することができる。
+
+- `events_statement_%`
+  - 前回設定した `statement` 単位での統計情報を記録する
+  - `SQL_TEXT` とイベントIDとを紐づけるために使用する
+- `events_stages_%`
+  - クエリをプロファイルするための情報を記録する
+
+```bash
+mysql> UPDATE performance_schema.setup_consumers
+       SET ENABLED = 'YES'
+       WHERE NAME LIKE '%events_statements_%';
+
+mysql> UPDATE performance_schema.setup_consumers
+       SET ENABLED = 'YES'
+       WHERE NAME LIKE '%events_stages_%';
+```
+
+</details>
+
+### Q9: 発行したクエリに紐づいている履歴情報のクエリIDを調べるためにはどうすればいいでしょうか
+
+調査対象のクエリは以下になります。
+
+```bash
+mysql> SELECT * FROM employees.employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+```
+
+<details>
+<summary>回答例</summary>
+
+`events_statements_history_long` テーブルには過去に発行したクエリの情報が格納されている。
+
+```bash
+mysql> SELECT EVENT_ID, TRUNCATE(TIMER_WAIT/1000000000000,6) as Duration, SQL_TEXT
+       FROM performance_schema.events_statements_history_long WHERE SQL_TEXT like '%10001%';
++----------+----------+--------------------------------------------------------+
+| event_id | duration | sql_text                                               |
++----------+----------+--------------------------------------------------------+
+|       31 | 0.028310 | SELECT * FROM employees.employees WHERE emp_no = 10001 |
++----------+----------+--------------------------------------------------------+
+```
+
+</details>
+
+### Q10: 発行したクエリのクエリIDから実行時間を取得するにはどうすればいいでしょうか
+
+<details>
+<summary>回答例</summary>
+
+`events_stages_history_long` テーブルには、各Stageとその実行時間が計測されている。
+
+```bash
+mysql> SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Duration
+       FROM performance_schema.events_stages_history_long WHERE NESTING_EVENT_ID=31;
++--------------------------------+----------+
+| Stage                          | Duration |
++--------------------------------+----------+
+| stage/sql/starting             | 0.000080 |
+| stage/sql/checking permissions | 0.000005 |
+| stage/sql/Opening tables       | 0.027759 |
+| stage/sql/init                 | 0.000052 |
+| stage/sql/System lock          | 0.000009 |
+| stage/sql/optimizing           | 0.000006 |
+| stage/sql/statistics           | 0.000082 |
+| stage/sql/preparing            | 0.000008 |
+| stage/sql/executing            | 0.000000 |
+| stage/sql/Sending data         | 0.000017 |
+| stage/sql/end                  | 0.000001 |
+| stage/sql/query end            | 0.000004 |
+| stage/sql/closing tables       | 0.000006 |
+| stage/sql/freeing items        | 0.000272 |
+| stage/sql/cleaning up          | 0.000001 |
++--------------------------------+----------+
+```
+
+</details>
+
 ## 参考資料
 
 - [[MySQL 8.0 Reference] 8.13 Measuring Performance (Benchmarking)](https://dev.mysql.com/doc/refman/8.0/en/optimize-benchmarking.html)
