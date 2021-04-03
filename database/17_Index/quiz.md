@@ -16,10 +16,14 @@
 
 雇用日（`hire_date`）毎に、雇用した男性の人数と女性の人数とその比率を表示させてみましょう。
 
-また高速のためにインデックスを使用してみましょう。
+また `hire_date` にインデックスを作成した場合にクエリは高速化されるでしょうか。
 
 <details>
 <summary>回答例</summary>
+
+以下のクエリを実行すると、雇用日ごとの男女の割合がわかる。
+
+結果としては **5435行** 選択される。
 
 ```sql
 SELECT hire_date
@@ -28,11 +32,41 @@ SELECT hire_date
       ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) / COUNT(*) AS RATE_MAN
       ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) / COUNT(*) AS RATE_FEMALE
 FROM employees
-GROUP BY hire_date;
+GROUP BY hire_date
+ORDER BY hire_date;
+```
+
+実行計画を見たところ、インデックスが存在しない場合はフルテーブルスキャンを実行しており、インデックスが存在している場合はフルインデックススキャンを実行していた。
+
+実行時間を見てみると、インデックスが存在しているほうが余計に時間がかかっていることがわかる。
+
+```bash
++------------------------------------------------+-----------+----------+
+| Stage                                          | w/o index | w/ index |
++------------------------------------------------+-----------+----------+
+| stage/sql/starting                             |   0.0001  |   0.0001 |
+| stage/sql/Executing hook on transaction begin. |   0.0000  |   0.0000 |
+| stage/sql/starting                             |   0.0000  |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000  |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000  |   0.0000 |
+| stage/sql/init                                 |   0.0000  |   0.0000 |
+| stage/sql/System lock                          |   0.0000  |   0.0000 |
+| stage/sql/optimizing                           |   0.0000  |   0.0000 |
+| stage/sql/statistics                           |   0.0000  |   0.0000 |
+| stage/sql/preparing                            |   0.0000  |   0.0000 |
+| stage/sql/Creating tmp table                   |   0.0000  |   ------ |
+| stage/sql/executing                            |   0.2752  |   0.3925 |
+| stage/sql/end                                  |   0.0000  |   0.0000 |
+| stage/sql/query end                            |   0.0000  |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000  |   0.0000 |
+| stage/sql/removing tmp table                   |   0.0000  |   ------ |
+| stage/sql/closing tables                       |   0.0000  |   0.0000 |
+| stage/sql/freeing items                        |   0.0000  |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000  |   0.0000 |
++------------------------------------------------+-----------+----------+
 ```
 
 </details>
-
 
 ## #2 クイズ
 
@@ -43,15 +77,58 @@ GROUP BY hire_date;
 - `first_name`
 - `last_name`
 
-また高速化のためにインデックスを利用できるのか考えてみましょう。
+またインデックスを作成した場合にクエリは高速化されるでしょうか。
 
 <details>
 <summary>回答例</summary>
+
+以下のクエリを実行すれば30歳にときに雇われた従業員を抽出できる。
+
+結果としては **20849行** 抽出される。
 
 ```sql
 SELECT hire_date, birth_date, first_name, last_name
 FROM employees
 WHERE FLOOR(DATEDIFF(hire_date, birth_date)/365) = 30;
+```
+
+インデックスを導入して高速化できるかというと、実験結果からはできないと考えられる。
+
+実行計画を確認すると以下の全パターンでフルテーブルスキャンが発生している。
+
+- インデックスなし
+  - フルテーブルスキャン
+- `hire_date`インデックスのみ
+  - フルテーブルスキャン
+- `birth_date`インデックスのみ
+  - フルテーブルスキャン
+- `hire_date`と`birth_date`の両方のインデックス
+  - フルテーブルスキャン
+
+イベント情報を見てみても実行時間に差が発生していないことがわかる。
+
+```bash
++------------------------------------------------+-----------+-----------+------------+----------+
+| Stage                                          | w/o index | hire_date | birth_date |     both |
++------------------------------------------------+-----------+-----------+------------+----------+
+| stage/sql/starting                             |   0.0002  |   0.0001  |     0.0001 |   0.0001 |
+| stage/sql/Executing hook on transaction begin. |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0001  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/preparing                            |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/executing                            |   0.0941  |   0.0964  |     0.0962 |   0.0999 |
+| stage/sql/end                                  |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000  |   0.0000  |     0.0000 |   0.0000 |
++------------------------------------------------+-----------+-----------+------------+----------+
 ```
 
 </details>
