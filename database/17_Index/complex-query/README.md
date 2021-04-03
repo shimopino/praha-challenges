@@ -1,7 +1,16 @@
 # 複雑なクエリでの性能比較
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [調査対象クエリ](#%E8%AA%BF%E6%9F%BB%E5%AF%BE%E8%B1%A1%E3%82%AF%E3%82%A8%E3%83%AA)
+- [比較結果](#%E6%AF%94%E8%BC%83%E7%B5%90%E6%9E%9C)
+- [クエリコストを比較する](#%E3%82%AF%E3%82%A8%E3%83%AA%E3%82%B3%E3%82%B9%E3%83%88%E3%82%92%E6%AF%94%E8%BC%83%E3%81%99%E3%82%8B)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 調査対象クエリ
 

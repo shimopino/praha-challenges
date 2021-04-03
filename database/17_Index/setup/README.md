@@ -1,7 +1,15 @@
 # MySQL8.0での演習の準備
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [MySQL5.7の環境を用意する](#mysql57%E3%81%AE%E7%92%B0%E5%A2%83%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B)
+- [MySQL8.0の環境を用意する](#mysql80%E3%81%AE%E7%92%B0%E5%A2%83%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## MySQL5.7の環境を用意する
 
