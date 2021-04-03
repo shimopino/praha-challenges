@@ -1,7 +1,17 @@
 # クエリの性能計測
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [FAQ](#faq)
+  - [Q1: SQL関数の実行時間を計測するにはどうすればいいでしょうか](#q1-sql%E9%96%A2%E6%95%B0%E3%81%AE%E5%AE%9F%E8%A1%8C%E6%99%82%E9%96%93%E3%82%92%E8%A8%88%E6%B8%AC%E3%81%99%E3%82%8B%E3%81%AB%E3%81%AF%E3%81%A9%E3%81%86%E3%81%99%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84%E3%81%A7%E3%81%97%E3%82%87%E3%81%86%E3%81%8B)
+  - [Q2: MySQL公式でサポートしている負荷エミュレーションツールの mysqlslap はどのように使えるでしょうか](#q2-mysql%E5%85%AC%E5%BC%8F%E3%81%A7%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E8%B2%A0%E8%8D%B7%E3%82%A8%E3%83%9F%E3%83%A5%E3%83%AC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%84%E3%83%BC%E3%83%AB%E3%81%AE-mysqlslap-%E3%81%AF%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AB%E4%BD%BF%E3%81%88%E3%82%8B%E3%81%A7%E3%81%97%E3%82%87%E3%81%86%E3%81%8B)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## FAQ
 
