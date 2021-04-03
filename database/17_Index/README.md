@@ -185,101 +185,6 @@ WHERE hire_date = '1985-06-20';
 
 ## 課題2
 
-### MySQL Docker Imageの使い方
-
-練習用に [https://hub.docker.com/r/genschsa/mysql-employees](https://hub.docker.com/r/genschsa/mysql-employees) を使用する。
-
-まずはDockerコンテナを起動する。
-
-```bash
-# Volumeはルートディレクトリ直下に変更
-docker run -d \
-  --rm \
-  --name mysql-employees \
-  -p 3306:3306 \
-  -e MYSQL_ROOT_PASSWORD=college \
-  -v /data:/var/lib/mysql \
-  genschsa/mysql-employees
-```
-
-あとはコンテナ内にアクセスして以下のコマンドを実行すれば、MySQLにアクセスすることが可能となる。
-
-```bash
-> mysql -u root -pcollege
-```
-
-なお使用しているMySQLのバージョンは以下のように `5.7.24` になっている。
-
-```bash
-> mysql -V
->>
-mysql  Ver 14.14 Distrib 5.7.24, for Linux (x86_64) using  EditLine wrapper
-```
-
-初期状態では以下のデータベースが作成されている。
-
-```bash
-mysql> SHOW DATABASES;
->>
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| employees          |
-| mysql              |
-| performance_schema |
-| sys                |
-+--------------------+
-```
-
-演習で使用する `employees` データベースには、以下のテーブルが初期状態で作成されている。
-
-```bash
-mysql> USE employees;
->>
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
-
-Database changed
-
-
-mysql> show tables;
->>
-+----------------------+
-| Tables_in_employees  |
-+----------------------+
-| current_dept_emp     |
-| departments          |
-| dept_emp             |
-| dept_emp_latest_date |
-| dept_manager         |
-| employees            |
-| salaries             |
-| titles               |
-| v_full_departments   |
-| v_full_employees     |
-+----------------------+
-```
-
-演習で使用する `employees` テーブルの定義は以下のようになっている。
-
-```bash
-mysql> desc employees
->>
-+------------+---------------+------+-----+---------+-------+
-| Field      | Type          | Null | Key | Default | Extra |
-+------------+---------------+------+-----+---------+-------+
-| emp_no     | int(11)       | NO   | PRI | NULL    |       |
-| birth_date | date          | NO   |     | NULL    |       |
-| first_name | varchar(14)   | NO   |     | NULL    |       |
-| last_name  | varchar(16)   | NO   |     | NULL    |       |
-| gender     | enum('M','F') | NO   |     | NULL    |       |
-| hire_date  | date          | NO   |     | NULL    |       |
-+------------+---------------+------+-----+---------+-------+
-```
-
----
-
 ### performance_schema の使い方
 
 まずは `performance_schema` が初期化されているのか確認する。
@@ -645,138 +550,35 @@ FROM employees
 WHERE hire_date = '1990-01-01';
 ```
 
-#### インデックスなし
+#### 比較結果
 
-インデックスを使用しない場合の実行計画を確認してみる。
+実行計画自体は先ほどと変わらない。
 
-```bash
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | employees | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   29 |    10.00 | Using where |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-```
-
-次の前回と同様に処理時間を確認する。
+イベント情報を確認すると確かに高速化されていることがわかる。
 
 ```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000063 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000015 |
-| stage/sql/init                 | 0.000016 |
-| stage/sql/System lock          | 0.000004 |
-| stage/sql/optimizing           | 0.000005 |
-| stage/sql/statistics           | 0.000009 |
-| stage/sql/preparing            | 0.000006 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.049090 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/closing tables       | 0.000005 |
-| stage/sql/freeing items        | 0.000035 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
++------------------------------------------------+----------+----------+
+| Stage                                          | w/o index| w/ index |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0001 |   0.0003 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000 |   0.0002 |
+| stage/sql/preparing                            |   0.0000 |   0.0000 |
+| stage/sql/executing                            |   0.0470 |   0.0002 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0001 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
-
-`Sending Data` の処理で 0.049090 秒の時間を要していることがわかる。
-
-これは最初のクエリと同程度の時間がかかっていることがわかる。
-
-#### インデックスあり
-
-インデックスを作成した後に同じクエリを発行した際の実行計画を確認する。
-
-```bash
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | employees | NULL       | ALL  | hire_date_idx | NULL | NULL    | NULL |   29 |   100.00 | Using where |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-```
-
-今回はインデックスを作成しているにもかかわらず、テーブルフルアクセスを行っていることがわかる。
-
-なお `possible_keys` 自体には今回作成したインデックスを認識しているため、optimizerはテーブルのアクセスに利用可能なインデックスだと認識していることがわかる。
-
-次に実行時間を確認してみる。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000057 |
-| stage/sql/checking permissions | 0.000002 |
-| stage/sql/Opening tables       | 0.000011 |
-| stage/sql/init                 | 0.000017 |
-| stage/sql/System lock          | 0.000003 |
-| stage/sql/optimizing           | 0.000004 |
-| stage/sql/statistics           | 0.000039 |
-| stage/sql/preparing            | 0.000006 |
-| stage/sql/executing            | 0.000001 |
-| stage/sql/Sending data         | 0.046805 |
-| stage/sql/end                  | 0.000002 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/closing tables       | 0.000053 |
-| stage/sql/freeing items        | 0.000054 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-`Sending Data` の処理で 0.049090 秒の時間を要しており、インデックスを作成していない場合と同程度の処理時間がかかっていることがわかる。
-
-#### インデックスを強制した場合
-
-クエリに対して以下のようにインデックスの使用を強制することができる。
-
-```sql
-SELECT hire_date, first_name, last_name
-FROM employees
-FORCE INDEX (hire_date_idx)
-WHERE hire_date = '1990-01-01';
-```
-
-実行計画を確認するとアクセスタイプが `ref` となっており、インデックスに対して該当するレコードを走査していることがわかる。
-
-```bash
-+----+-------------+-----------+------------+------+---------------+---------------+---------+-------+------+----------+-------+
-| id | select_type | table     | partitions | type | possible_keys | key           | key_len | ref   | rows | filtered | Extra |
-+----+-------------+-----------+------------+------+---------------+---------------+---------+-------+------+----------+-------+
-|  1 | SIMPLE      | employees | NULL       | ref  | hire_date_idx | hire_date_idx | 3       | const |   65 |   100.00 | NULL  |
-+----+-------------+-----------+------------+------+---------------+---------------+---------+-------+------+----------+-------+
-```
-
-次に処理時間を計測する。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000073 |
-| stage/sql/checking permissions | 0.000005 |
-| stage/sql/Opening tables       | 0.000011 |
-| stage/sql/init                 | 0.000013 |
-| stage/sql/System lock          | 0.000003 |
-| stage/sql/optimizing           | 0.000003 |
-| stage/sql/statistics           | 0.000038 |
-| stage/sql/preparing            | 0.000005 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.000157 |
-| stage/sql/end                  | 0.000000 |
-| stage/sql/query end            | 0.000003 |
-| stage/sql/closing tables       | 0.000002 |
-| stage/sql/freeing items        | 0.000037 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-`Sending Data` の処理で 0.000157 秒の時間を要しており、インデックスを使用することで高速化していることがわかる。
-
-> なぜインデックスを強制しない場合には、テーブルフルアクセスをしていたのか
-
----
 
 ### SELECTクエリ その3
 
@@ -789,102 +591,62 @@ WHERE hire_date > '1990-01-01'
 GROUP BY hire_date;
 ```
 
-#### インデックスなし
+処理結果として **3636行** 抽出される。
 
-まずは実行計画を確認する。
+#### 比較結果
 
-```bash
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+----------------------------------------------+
-| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra                                        |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+----------------------------------------------+
-|  1 | SIMPLE      | employees | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   29 |    33.33 | Using where; Using temporary; Using filesort |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+----------------------------------------------+
-```
+以下に実行計画の中から特徴的なものを抽出した。
 
-こちらは想定通りテーブルフルアクセスが実行されていることがわかる。
+| 比較項目 | インデックスなし             | インデックスあり                      | 比較結果                                         | 
+| -------- | ---------------------------- | ------------------------------------- | ------------------------------------------------ | 
+| type     | ALL                          | range                                 | インデックスに対して範囲検索を実行している       | 
+| ref      | NULL                         | NULL                                  |                                                  | 
+| rows     | 298980                       | 2466                                  | 範囲指定なので等価比較よりも推定値が増大している | 
+| filtered | 33.33                        | 100.00                                |                                                  | 
+| Extra    | Using where; Using temporary | Using where; Using index for group-by | 詳細は以下                                       | 
 
-また `Using temporary` とある通り、MySQLがクエリを実行するために検索条件で抽出したデータをグルーピングするために一時テーブルに保存していることがわかる。これは一般的には `GROUP BY` や `ORDER BY` を使用した場合によく見られる。
+- `Using where; Using temporary`
+  - クエリを実行するとフルテーブルスキャンが実行される
+  - 検索条件によってフェッチした行をフィルタリングする
+  - `GROUP BY`を解決するために、結果を保持する一時テーブルを作成する
+- `Using where; Using index for group-by`
+  - インデックスのみを使用してデータにアクセスする
+  - 検索条件によって対象の値をフィルタリングする
+  - `GROUP BY`を実行するためにインデックスを効率的に使用する
 
-また `Using filesort` とある通り、ソートされた順序でレコードを取得するための処理を行っていることがわかる。アクセスタイプ（今回はテーブルフルアクセス）に従って全ての行を調べ、 `WHERE` にマッチするすべてのレコードのソートきーちレコードへのポイントを格納する。
 
-前回は等価演算子（`=`）を使用していたためソート処理は発生しなかったが、今回は比較演算子（`>`）を使用した範囲指定であるため、ソート処理が発生している。
-
-次に処理時間を確認する。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000095 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000010 |
-| stage/sql/init                 | 0.000018 |
-| stage/sql/System lock          | 0.000003 |
-| stage/sql/optimizing           | 0.000003 |
-| stage/sql/statistics           | 0.000007 |
-| stage/sql/preparing            | 0.000005 |
-| stage/sql/Creating tmp table   | 0.000012 |
-| stage/sql/Sorting result       | 0.000000 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.066909 |
-| stage/sql/Creating sort index  | 0.000661 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/removing tmp table   | 0.000003 |
-| stage/sql/closing tables       | 0.000004 |
-| stage/sql/freeing items        | 0.000008 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-`Sending Data` の処理で 0.066909 秒の時間を要していることがわかる。
-
-#### インデックスあり
-
-インデックスを作成した状態で同じクエリを発行して実行計画を確認する。
+イベント情報を確認すると確かに高速化されていることがわかる。
 
 ```bash
-+----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
-| id | select_type | table     | partitions | type  | possible_keys | key           | key_len | ref  | rows | filtered | Extra                    |
-+----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
-|  1 | SIMPLE      | employees | NULL       | range | hire_date_idx | hire_date_idx | 3       | NULL |   14 |   100.00 | Using where; Using index |
-+----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
++------------------------------------------------+----------+----------+
+| Stage                                          | Duration | Duration |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0002 |   0.0002 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000 |   0.0001 |
+| stage/sql/preparing                            |   0.0000 |   0.0000 |
+| stage/sql/Creating tmp table                   |   0.0000 |   ------ |
+| stage/sql/executing                            |   0.0593 |   0.0049 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000 |   ------ |
+| stage/sql/removing tmp table                   |   0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
 
-実行計画を見てみると、`Extra` 列に `Using Index` とある通り、テーブルへのアクセスを行っておらず、必要なデータを全てインデックスから取得していることがわかる。
+計測時間以外にも特徴的な部分としては、インデックスを使用している場合には一時テーブルが作成されていないことである。
 
-インデックス（`B+-tree`）を作成した段階で `hire_date` は昇順に並び替えられているため、範囲指定で抽出した場合であっても、ソート処理は実行されていないことがわかる。
-
-次に処理時間を確認する。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000056 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000012 |
-| stage/sql/init                 | 0.000016 |
-| stage/sql/System lock          | 0.000004 |
-| stage/sql/optimizing           | 0.000003 |
-| stage/sql/statistics           | 0.000052 |
-| stage/sql/preparing            | 0.000007 |
-| stage/sql/Sorting result       | 0.000001 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.020966 |
-| stage/sql/end                  | 0.000002 |
-| stage/sql/query end            | 0.000008 |
-| stage/sql/closing tables       | 0.000003 |
-| stage/sql/freeing items        | 0.000021 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-`Sending Data` の処理で 0.020966 秒の時間を要していることがわかり、先ほどよりも高速化していることがわかる。
-
-> MySQLでは `GROUP BY col1, col2, ...` と指定した場合、暗黙的に `ORDER BY col1, col2, ...` のようにソート処理が実行されることに注意する。
-
----
+> なおMySQLでは `GROUP BY col1, col2, ...` と指定した場合、暗黙的に `ORDER BY col1, col2, ...` のようにソート処理が実行されることに注意する。
+> 今回はインデックスを作成している `hire_date` を指定しているため、昇順で並び方が実行済みである。
 
 ### SELECTクエリ その4
 
@@ -896,262 +658,52 @@ FROM employees
 WHERE MONTH(hire_date) = '12';
 ```
 
-#### インデックスなし
+実行結果としては **24509行** 抽出される。
 
-実行計画を確認すると相変わらずテーブルフルアクセスが実行されていることがわかる。
+#### 比較結果
 
-```bash
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-|  1 | SIMPLE      | employees | NULL       | ALL  | NULL          | NULL | NULL    | NULL |   29 |   100.00 | Using where |
-+----+-------------+-----------+------------+------+---------------+------+---------+------+------+----------+-------------+
-```
+まずは実行計画から特徴的な項目を比較してみる。
 
-次に処理時間を確認する。
+| 比較項目      | インデックスなし | インデックスあり         | 比較結果                                                                 | 
+| ------------- | ---------------- | ------------------------ | ------------------------------------------------------------------------ | 
+| type          | ALL              | index                    | インデックス全体をスキャンする **フルインデックススキャン** でアクセス   | 
+| possible_keys | NULL             | NULL                     | Optimizerが使用可能と判断したインデックスは存在しない                    | 
+| key           | NULL             | hire_date_idx            | Optimizerは実際にはインデックスを使用している                            | 
+| rows          | 298980           | 298980                   | インデックスなしと変わらない                                             | 
+| filtered      | 100.00           | 100.00                   | インデックスなしと変わらない                                             | 
+| Extra         | Using where      | Using where; Using index | インデックスをもとにレコードのポイントを取得し、各レコードを抽出している | 
 
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000060 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000013 |
-| stage/sql/init                 | 0.000015 |
-| stage/sql/System lock          | 0.000004 |
-| stage/sql/optimizing           | 0.000004 |
-| stage/sql/statistics           | 0.000009 |
-| stage/sql/preparing            | 0.000005 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.036517 |
-| stage/sql/end                  | 0.000002 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/closing tables       | 0.000005 |
-| stage/sql/freeing items        | 0.000022 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
+ここからわかることは、検索条件にインデックスを作成したカラムに対して **関数を適用した値を使用している** 場合、**フルインデックススキャン** が発生しており、実際にテーブルから抽出したレコード数の推定値はフルテーブルスキャンの場合と変わらないということである。
 
-`Sending Data` の処理で 0.036517 秒の時間を要していることがわかる。
-
-#### インデックスあり
-
-実行計画を確認してみるとインデックスを使用していることがわかる。
+イベント情報を見てみても実行時間に大差はない（むしろ遅い）。
 
 ```bash
-+----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
-| id | select_type | table     | partitions | type  | possible_keys | key           | key_len | ref  | rows | filtered | Extra                    |
-+----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
-|  1 | SIMPLE      | employees | NULL       | index | NULL          | hire_date_idx | 3       | NULL |   29 |   100.00 | Using where; Using index |
-+----+-------------+-----------+------------+-------+---------------+---------------+---------+------+------+----------+--------------------------+
++------------------------------------------------+----------+----------+
+| Stage                                          | w/o index| w/ index |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0000 |   0.0003 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000 |   0.0000 |
+| stage/sql/preparing                            |   0.0000 |   0.0000 |
+| stage/sql/executing                            |   0.0327 |   0.0332 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
 
-これはSQLServerよMySQLの特徴的な挙動であり、OracleやPostgreSQLでは関数をインデックスを張っている列に使用すると、インデックスは使用されないため注意する必要がある。
+注意する必要があるのは、フルインデックススキャンのほうがフルテーブルスキャンよりも遅い可能性があるという点である。
 
-次に処理時間を確認する。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000065 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000012 |
-| stage/sql/init                 | 0.000016 |
-| stage/sql/System lock          | 0.000004 |
-| stage/sql/optimizing           | 0.000004 |
-| stage/sql/statistics           | 0.000008 |
-| stage/sql/preparing            | 0.000005 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.034253 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/closing tables       | 0.000005 |
-| stage/sql/freeing items        | 0.000021 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-`Sending Data` の処理で 0.034253 秒の時間を要していることがわかり、インデックスを使用しているにもかかわらず、処理が高速化されていないことがわかる。
-
----
-
-### SELECTクエリ その5
-
-複雑なクエリを発行する。
-
-```sql
-SELECT YP1.HIRE_YEAR AS BASE_YEAR
-      ,YP2.HIRE_YEAR AS NEXT_YEAR
-      ,YP1.NEW_EMPLOYEES AS BASE_EMPLOYEES
-      ,YP2.NEW_EMPLOYEES AS NEXT_EMPLOYEES
-      ,YP2.NEW_EMPLOYEES / YP1.NEW_EMPLOYEES AS GROWTH_RATE
-FROM (
-    SELECT YEAR(hire_date) AS HIRE_YEAR
-          ,COUNT(hire_date) AS NEW_EMPLOYEES 
-    FROM employees
-    GROUP BY HIRE_YEAR
-) YP1
-INNER JOIN (
-    SELECT YEAR(hire_date) AS HIRE_YEAR
-          ,COUNT(hire_date) AS NEW_EMPLOYEES 
-    FROM employees
-    GROUP BY HIRE_YEAR
-) YP2
-ON YP1.HIRE_YEAR = YP2.HIRE_YEAR - 1;
-```
-
-出力結果は以下のようになる。
-
-```bash
-+-----------+-----------+----------------+----------------+-------------+
-| BASE_YEAR | NEXT_YEAR | BASE_EMPLOYEES | NEXT_EMPLOYEES | GROWTH_RATE |
-+-----------+-----------+----------------+----------------+-------------+
-|      1985 |      1986 |          35316 |          36150 |      1.0236 |
-|      1986 |      1987 |          36150 |          33501 |      0.9267 |
-|      1987 |      1988 |          33501 |          31436 |      0.9384 |
-|      1988 |      1989 |          31436 |          28394 |      0.9032 |
-|      1989 |      1990 |          28394 |          25610 |      0.9020 |
-|      1990 |      1991 |          25610 |          22568 |      0.8812 |
-|      1991 |      1992 |          22568 |          20402 |      0.9040 |
-|      1992 |      1993 |          20402 |          17772 |      0.8711 |
-|      1993 |      1994 |          17772 |          14835 |      0.8347 |
-|      1994 |      1995 |          14835 |          12115 |      0.8166 |
-|      1995 |      1996 |          12115 |           9574 |      0.7903 |
-|      1996 |      1997 |           9574 |           6669 |      0.6966 |
-|      1997 |      1998 |           6669 |           4155 |      0.6230 |
-|      1998 |      1999 |           4155 |           1514 |      0.3644 |
-|      1999 |      2000 |           1514 |             13 |      0.0086 |
-+-----------+-----------+----------------+----------------+-------------+
-```
-
-#### インデックスなし
-
-実行計画を確認してみる。
-
-```bash
-+----+-------------+------------+------------+------+---------------+-------------+---------+------+------+----------+---------------------------------+
-| id | select_type | table      | partitions | type | possible_keys | key         | key_len | ref  | rows | filtered | Extra                           |
-+----+-------------+------------+------------+------+---------------+-------------+---------+------+------+----------+---------------------------------+
-|  1 | PRIMARY     | <derived3> | NULL       | ALL  | NULL          | NULL        | NULL    | NULL |   29 |   100.00 | NULL                            |
-|  1 | PRIMARY     | <derived2> | NULL       | ref  | <auto_key0>   | <auto_key0> | 5       | func |    2 |   100.00 | Using where                     |
-|  3 | DERIVED     | employees  | NULL       | ALL  | NULL          | NULL        | NULL    | NULL |   29 |   100.00 | Using temporary; Using filesort |
-|  2 | DERIVED     | employees  | NULL       | ALL  | NULL          | NULL        | NULL    | NULL |   29 |   100.00 | Using temporary; Using filesort |
-+----+-------------+------------+------------+------+---------------+-------------+---------+------+------+----------+---------------------------------+
-```
-
-次に処理時間を確認する。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000082 |
-| stage/sql/checking permissions | 0.000001 |
-| stage/sql/checking permissions | 0.000002 |
-| stage/sql/Opening tables       | 0.000043 |
-| stage/sql/init                 | 0.000037 |
-| stage/sql/System lock          | 0.000004 |
-| stage/sql/optimizing           | 0.000000 |
-| stage/sql/optimizing           | 0.000000 |
-| stage/sql/statistics           | 0.000006 |
-| stage/sql/preparing            | 0.000005 |
-| stage/sql/Creating tmp table   | 0.000005 |
-| stage/sql/Sorting result       | 0.000001 |
-| stage/sql/optimizing           | 0.000000 |
-| stage/sql/statistics           | 0.000000 |
-| stage/sql/preparing            | 0.000000 |
-| stage/sql/Creating tmp table   | 0.000002 |
-| stage/sql/Sorting result       | 0.000003 |
-| stage/sql/statistics           | 0.000008 |
-| stage/sql/preparing            | 0.000004 |
-| stage/sql/executing            | 0.000005 |
-| stage/sql/Sending data         | 0.000003 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.073530 |
-| stage/sql/Creating sort index  | 0.000026 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.071941 |
-| stage/sql/Creating sort index  | 0.000056 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.000005 |
-| stage/sql/removing tmp table   | 0.000002 |
-| stage/sql/removing tmp table   | 0.000001 |
-| stage/sql/closing tables       | 0.000000 |
-| stage/sql/removing tmp table   | 0.000001 |
-| stage/sql/removing tmp table   | 0.000001 |
-| stage/sql/freeing items        | 0.000037 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-サブクエリも使用していることから今までと比較すると多くの時間を有していることがわかる。
-
-#### インデックスあり
-
-同じく `hire_date` にインデックスを張った状態で同じクエリを発行する。
-
-まずは実行計画を確認してみる。
-
-```bash
-+----+-------------+------------+------------+-------+---------------+---------------+---------+------+------+----------+----------------------------------------------+
-| id | select_type | table      | partitions | type  | possible_keys | key           | key_len | ref  | rows | filtered | Extra                                        |
-+----+-------------+------------+------------+-------+---------------+---------------+---------+------+------+----------+----------------------------------------------+
-|  1 | PRIMARY     | <derived3> | NULL       | ALL   | NULL          | NULL          | NULL    | NULL |   29 |   100.00 | NULL                                         |
-|  1 | PRIMARY     | <derived2> | NULL       | ref   | <auto_key0>   | <auto_key0>   | 5       | func |    2 |   100.00 | Using where                                  |
-|  3 | DERIVED     | employees  | NULL       | index | hire_date_idx | hire_date_idx | 3       | NULL |   29 |   100.00 | Using index; Using temporary; Using filesort |
-|  2 | DERIVED     | employees  | NULL       | index | hire_date_idx | hire_date_idx | 3       | NULL |   29 |   100.00 | Using index; Using temporary; Using filesort |
-+----+-------------+------------+------------+-------+---------------+---------------+---------+------+------+----------+----------------------------------------------+
-```
-
-次に処理時間を確認する。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000094 |
-| stage/sql/checking permissions | 0.000001 |
-| stage/sql/checking permissions | 0.000002 |
-| stage/sql/Opening tables       | 0.000048 |
-| stage/sql/init                 | 0.000039 |
-| stage/sql/System lock          | 0.000004 |
-| stage/sql/optimizing           | 0.000001 |
-| stage/sql/optimizing           | 0.000001 |
-| stage/sql/statistics           | 0.000010 |
-| stage/sql/preparing            | 0.000004 |
-| stage/sql/Creating tmp table   | 0.000006 |
-| stage/sql/Sorting result       | 0.000001 |
-| stage/sql/optimizing           | 0.000000 |
-| stage/sql/statistics           | 0.000001 |
-| stage/sql/preparing            | 0.000000 |
-| stage/sql/Creating tmp table   | 0.000002 |
-| stage/sql/Sorting result       | 0.000003 |
-| stage/sql/statistics           | 0.000009 |
-| stage/sql/preparing            | 0.000004 |
-| stage/sql/executing            | 0.000004 |
-| stage/sql/Sending data         | 0.000004 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.062626 | < 0.073530
-| stage/sql/Creating sort index  | 0.000023 |
-| stage/sql/executing            | 0.000000 |
-| stage/sql/Sending data         | 0.058782 | < 0.071941
-| stage/sql/Creating sort index  | 0.000051 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.000004 |
-| stage/sql/removing tmp table   | 0.000002 |
-| stage/sql/removing tmp table   | 0.000001 |
-| stage/sql/closing tables       | 0.000000 |
-| stage/sql/removing tmp table   | 0.000000 |
-| stage/sql/removing tmp table   | 0.000001 |
-| stage/sql/freeing items        | 0.000032 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-先ほどと比較して、多少は処理時間が短くなっていることがわかる。
-
----
+例えばインデックスで参照する値がインデックスの後方に存在する場合、インデックスを順番にアクセスしていくと目的のキーに到達するまでにかなりの時間を必要としてしまい、シーケンシャルアクセスを実行するフルテーブルスキャンよりも遅くなってしまう可能性がある。
 
 ## 課題3
 
@@ -1166,137 +718,207 @@ ON YP1.HIRE_YEAR = YP2.HIRE_YEAR - 1;
 CREATE INDEX birth_date_idx ON employees (birth_date);
 CREATE INDEX first_name_idx ON employees (first_name);
 CREATE INDEX last_name_idx ON employees (last_name);
+CREATE INDEX gender_idx ON employees (gender);
 CREATE INDEX hire_date_idx ON employees (hire_date);
 ```
 
 作成したインデックスを確認する。
 
 ```bash
-+-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| Table     | Non_unique | Key_name       | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
-+-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-| employees |          0 | PRIMARY        |            1 | emp_no      | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
-| employees |          1 | birth_date_idx |            1 | birth_date  | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
-| employees |          1 | first_name_idx |            1 | first_name  | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
-| employees |          1 | last_name_idx  |            1 | last_name   | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
-| employees |          1 | hire_date_idx  |            1 | hire_date   | A         |          28 |     NULL | NULL   |      | BTREE      |         |               |
-+-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
++-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table     | Non_unique | Key_name       | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| employees |          0 | PRIMARY        |            1 | emp_no      | A         |      298980 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | birth_date_idx |            1 | birth_date  | A         |        4747 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | first_name_idx |            1 | first_name  | A         |        1266 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | last_name_idx  |            1 | last_name   | A         |        1651 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | hire_date_idx  |            1 | hire_date   | A         |        4931 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | gender_idx     |            1 | gender      | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++-----------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+---
 ```
 
----
+しっかりとそれぞれのカラムに応じてカーディナリティが反映されていることがわかる。
+（推測値なので正確ではないが）
 
-### INSERT
+削除する際は以下のクエリを実行する。
+
+```sql
+DROP INDEX birth_date_idx ON employees;
+DROP INDEX first_name_idx ON employees;
+DROP INDEX last_name_idx ON employees;
+DROP INDEX gender_idx ON employees;
+DROP INDEX hire_date_idx ON employees;
+```
+
+### INSERT その1
 
 以下のクエリを使用してデータを挿入する。
 
 ```sql
 INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
-VALUES (500000, '2020-03-31', 'Keisuke', 'Shimokawa', 'M', '2021-03-31');
+VALUES (500000, '1980-01-30', 'Keisuke', 'Shimokawa', 'M', '1995-03-30');
 ```
 
-#### インデックスなし
+#### 比較結果
 
-インデックスを使用していない場合、クエリの実行で時間がかかっており `0.006877` 秒を要している。
+インデックスが存在する場合は、`INSERT`文の処理にさらに時間がかかると考えていたが、想定に反してインデックスありの場合が処理速度が早くなっている。
 
 ```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000065 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000012 |
-| stage/sql/init                 | 0.000011 |
-| stage/sql/System lock          | 0.000003 |
-| stage/sql/update               | 0.000073 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.006877 |
-| stage/sql/closing tables       | 0.000007 |
-| stage/sql/freeing items        | 0.000027 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
++------------------------------------------------+----------+----------+
+| Stage                                          | w/o index| w/ index |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0000 |   0.0002 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/update                               |   0.0001 |   0.0009 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0147 |   0.0075 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
 
+> これは想定と異なる挙動のため、調査が必要である。
 
-#### インデックスあり
+### INSERT その2
 
-インデックスを使用している場合、クエリの実行で時間は先ほどよりも短時間であり `0.003370` 秒を要している。
+1件レコードを挿入する場合は想定と異なる挙動となってしまったため、複数件レコードを挿入する場合の処理結果を比較する。
+
+```sql
+INSERT INTO employees 
+    (emp_no, birth_date, first_name, last_name, gender, hire_date)
+VALUES
+    (500000, '1980-01-01', 'aaaaaaa', 'bbbbbbb', 'M', '1990-03-30'),
+    (500001, '1981-01-01', 'ccccccc', 'ddddddd', 'F', '1991-03-30'),
+    (500002, '1982-01-01', 'hhhhhhh', 'iiiiiii', 'M', '1992-03-30'),
+    (500003, '1983-01-01', 'kkkkkkk', 'jjjjjjj', 'F', '1993-03-30'),
+    (500004, '1984-01-01', 'mmmmmmm', 'nnnnnnn', 'M', '1994-03-30'),
+    (500005, '1985-01-01', 'ooooooo', 'ppppppp', 'F', '1995-03-30'),
+    (500006, '1986-01-01', 'qqqqqqq', 'rrrrrrr', 'M', '1996-03-30'),
+    (500007, '1987-01-01', 'sssssss', 'ttttttt', 'F', '1997-03-30'),
+    (500008, '1988-01-01', 'uuuuuuu', 'wwwwwww', 'M', '1998-03-30'),
+    (500009, '1989-01-01', 'yyyyyyy', 'zzzzzzz', 'F', '1999-03-30');
+```
+
+#### 比較結果
+
+複数件レコードを挿入する場合は、インデックスがある方が余分な時間がかかっていることがわかる。
+
+またインデックスなしの時には発生していなかった処理も増えており、余分なオーバーヘッドが発生していることがわかる。
 
 ```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000056 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000011 |
-| stage/sql/init                 | 0.000009 |
-| stage/sql/System lock          | 0.000002 |
-| stage/sql/update               | 0.000401 |
-| stage/sql/end                  | 0.000001 |
-| stage/sql/query end            | 0.003370 |
-| stage/sql/closing tables       | 0.000007 |
-| stage/sql/freeing items        | 0.000028 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
++------------------------------------------------+----------+----------+
+| Stage                                          | Duration | Duration |+------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0001 |   0.0000 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   ------ |   0.0000 |
+| stage/sql/statistics                           |   ------ |   0.0000 |
+| stage/sql/preparing                            |   ------ |   0.0000 |
+| stage/sql/executing                            |   ------ |   0.0365 |
+| stage/sql/end                                  |   ------ |   0.0000 |
+| stage/sql/query end                            |   ------ |   0.0000 |
+| stage/sql/waiting for handler commit           |   ------ |   0.0000 |
+| stage/sql/closing tables                       |   ------ |   0.0000 |
+| stage/sql/freeing items                        |   ------ |   0.0000 |
+| stage/sql/cleaning up                          |   ------ |   0.0000 |
+| stage/sql/starting                             |   ------ |   0.0002 |
+| stage/sql/Executing hook on transaction begin. |   ------ |   0.0000 |
+| stage/sql/starting                             |   ------ |   0.0000 |
+| stage/sql/checking permissions                 |   ------ |   0.0000 |
+| stage/sql/Opening tables                       |   ------ |   0.0000 |
+| stage/sql/init                                 |   ------ |   0.0000 |
+| stage/sql/System lock                          |   ------ |   0.0000 |
+| stage/sql/update                               |   0.0001 |   0.0038 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0094 |   0.0161 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
 
-今回のINSERT処理では、インデックスが存在しているほうが処理が早くなっている。
+> 1件レコードを挿入する場合にはインデックスが存在していることのオーバーヘッドが無視できる程度だった?
 
----
+### DELETE その1
 
-### DELETE
+レコードを1件削除する場合で比較する。
 
 ```sql
 DELETE FROM employees
 WHERE emp_no = 500000;
 ```
 
-#### インデックスなし
+#### 比較結果
 
-インデックスを使用していない場合、クエリの実行で時間がかかっており `0.003229` 秒を要している。
-
-```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000055 |
-| stage/sql/checking permissions | 0.000004 |
-| stage/sql/Opening tables       | 0.000015 |
-| stage/sql/init                 | 0.000013 |
-| stage/sql/System lock          | 0.000023 |
-| stage/sql/updating             | 0.000061 |
-| stage/sql/end                  | 0.000002 |
-| stage/sql/query end            | 0.003229 |
-| stage/sql/closing tables       | 0.000006 |
-| stage/sql/freeing items        | 0.000029 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
-```
-
-#### インデックスあり
-
-インデックスを使用している場合、クエリの実行で時間は先ほどよりも短時間であり `0.003555` 秒を要している。
+1件削除する場合は、インデックスが存在しているほうが処理が遅くなっていることがわかる。
 
 ```bash
-+--------------------------------+----------+
-| Stage                          | Duration |
-+--------------------------------+----------+
-| stage/sql/starting             | 0.000051 |
-| stage/sql/checking permissions | 0.000003 |
-| stage/sql/Opening tables       | 0.000012 |
-| stage/sql/init                 | 0.000011 |
-| stage/sql/System lock          | 0.000021 |
-| stage/sql/updating             | 0.000066 |
-| stage/sql/end                  | 0.000002 |
-| stage/sql/query end            | 0.003555 |
-| stage/sql/closing tables       | 0.000005 |
-| stage/sql/freeing items        | 0.000026 |
-| stage/sql/cleaning up          | 0.000000 |
-+--------------------------------+----------+
++------------------------------------------------+----------+----------+
+| Stage                                          | Duration | Duration |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0017 |   0.0014 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/updating                             |   0.0001 |   0.0001 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0073 |   0.0143 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
 ```
 
-今回のDELETE処理では、インデックスを使用している場合とそうでない場合とで、処理時間に差は出ていない。
+### DELETE その2
 
----
+複数件レコードを削除する場合も比較する。
+
+```sql
+DELETE FROM employees
+WHERE emp_no BETWEEN 500000 AND 500009;
+```
+
+#### 比較結果
+
+複数件レコードを削除する場合でも、同じくインデックスが存在しているほうが処理が遅くなっていることがわかる。
+
+```bash
++------------------------------------------------+----------+----------+
+| Stage                                          | Duration | Duration |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0001 |   0.0000 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0014 |   0.0013 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/updating                             |   0.0001 |   0.0003 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0142 |   0.0177 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
+```
 
 ### 補足情報
 
