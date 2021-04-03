@@ -25,44 +25,23 @@ FROM employees
 WHERE hire_date >= '2000-01-01';
 ```
 
-mysql> show indexes from employees\G
-*************************** 1. row ***************************
-        Table: employees
-   Non_unique: 0
-     Key_name: PRIMARY
- Seq_in_index: 1
-  Column_name: emp_no
-    Collation: A
-  Cardinality: 298980
-     Sub_part: NULL
-       Packed: NULL
-         Null: 
-   Index_type: BTREE
-      Comment: 
-Index_comment: 
-      Visible: YES
-   Expression: NULL
+実行計画で特徴ある点はインデックスを使用した場合に表示される `Using index condition` である。この表示がされている場合は **インデックスコンディションプッシュダウンの最適化** が実行されている。
 
-高速化のためのインデックス
+では、インデックスコンディションプッシュダウンが使用されている場合と層ではない場合とで、どようにレコードが読み取られてフィルタリングされるのか比較してみる。
 
-```sql
--- まずはインデックスを作成する
-CREATE INDEX hire_date_idx ON employees (hire_date);
-```
+- インデックスコンディションプッシュダウンなし
+  1. インデックスタプル（キーとポインタのペア）を読み込む
+  2. ポインタからレコードを読み取る
+  3. WHERE条件の部分をテストする
+  4. テスト結果に応じて受け入れるか、拒否するか決定する
+- インデックスコンディションプッシュダウンあり
+  1. インデックスタプル（キーとポインタのペア）を読み込む
+  2. インデックスタプルの **キーを使用** して、WHERE条件を **適用できる部分をテスト** する
+  3. 条件を満たしている場合、ポインタからレコードを読み取る
+  4. WHERE条件の残りの部分をテストする
+  5. テスト結果に応じて受け入れるか、拒否するか決定する
 
-*************************** 1. row ***************************
-           id: 1
-  select_type: SIMPLE
-        table: employees
-   partitions: NULL
-         type: ALL
-possible_keys: NULL
-          key: NULL
-      key_len: NULL
-          ref: NULL
-         rows: 298980
-     filtered: 33.33
-        Extra: Using where
+実際にイベント情報から実行時間を見ても、高速化されていることがわかる。
 
 +------------------------------------------------+----------+----------+
 | Stage                                          | Duration | Duration |
@@ -89,55 +68,8 @@ possible_keys: NULL
 +------------------------------------------------+----------+----------+
 
 
-mysql> show indexes from employees\G
-*************************** 1. row ***************************
-        Table: employees
-   Non_unique: 0
-     Key_name: PRIMARY
- Seq_in_index: 1
-  Column_name: emp_no
-    Collation: A
-  Cardinality: 298980
-     Sub_part: NULL
-       Packed: NULL
-         Null: 
-   Index_type: BTREE
-      Comment: 
-Index_comment: 
-      Visible: YES
-   Expression: NULL
-*************************** 2. row ***************************
-        Table: employees
-   Non_unique: 1
-     Key_name: hire_date_idx
- Seq_in_index: 1
-  Column_name: hire_date
-    Collation: A
-  Cardinality: 4747
-     Sub_part: NULL
-       Packed: NULL
-         Null: 
-   Index_type: BTREE
-      Comment: 
-Index_comment: 
-      Visible: YES
-   Expression: NULL
 
 
-
-*************************** 1. row ***************************
-           id: 1
-  select_type: SIMPLE
-        table: employees
-   partitions: NULL
-         type: range
-possible_keys: hire_date_idx
-          key: hire_date_idx
-      key_len: 3
-          ref: NULL
-         rows: 13
-     filtered: 100.00
-        Extra: Using index condition
 
 
 +------------------------------------------------+----------+  
