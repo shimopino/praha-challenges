@@ -60,7 +60,7 @@
 
 これは [B+-tree](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html) で実際のインデックスの挙動を確認することができる。
 
-![](./b-tree.png)
+![](./assets/b-tree.png)
 
 上図からわかるインデックスでは、木構造の末端部分（**リーフノード**）に実際のテーブルレコードへのポインタが格納されている。
 
@@ -171,7 +171,7 @@ FROM employees
 WHERE hire_date = '1985-06-20';
 ```
 
-![](covering-index.png)
+![](./assets/covering-index.png)
 
 カバリングインデックスを使用する際の注意点としては、インデックス自体のサイズが肥大化してしまう点や、データ量が少ない場合には高速化が見込めない点である。
 
