@@ -6,7 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [課題1](#%E8%AA%B2%E9%A1%8C1)
-- [調査結果](#%E8%AA%BF%E6%9F%BB%E7%B5%90%E6%9E%9C)
+- [実際の並び順の確認](#%E5%AE%9F%E9%9A%9B%E3%81%AE%E4%B8%A6%E3%81%B3%E9%A0%86%E3%81%AE%E7%A2%BA%E8%AA%8D)
 - [課題2](#%E8%AA%B2%E9%A1%8C2)
   - [クエリその1](#%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%9D%E3%81%AE1)
   - [クエリその2](#%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%9D%E3%81%AE2)
