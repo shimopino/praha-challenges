@@ -1,7 +1,20 @@
 # 課題18「複合インデックスを理解する」
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [課題1](#%E8%AA%B2%E9%A1%8C1)
+- [調査結果](#%E8%AA%BF%E6%9F%BB%E7%B5%90%E6%9E%9C)
+- [課題2](#%E8%AA%B2%E9%A1%8C2)
+  - [クエリその1](#%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%9D%E3%81%AE1)
+  - [クエリその2](#%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%9D%E3%81%AE2)
+  - [クエリその3](#%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%9D%E3%81%AE3)
+- [課題3](#%E8%AA%B2%E9%A1%8C3)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 課題1
 
