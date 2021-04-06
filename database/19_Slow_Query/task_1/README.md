@@ -35,12 +35,15 @@ mysql> show variables like '%slow%';
 なおその際にはコマンドラインからへ変更する方法と、設定ファイルを変更する方法が存在する。
 
 - コマンドライン
+  - コマンドラインからは `global` をつけることでサーバーを再起動する必要はなくなる
+  - 以下のうち `log_queries_not_using_indexes` を設定しておき、インデックスを使用していないクエリも記録するようにしている
   
-  ```bash
-  mysql> set global slow_query_log=1;
-  mysql> set global long_query_time=0.1;
-  mysql> set global slow_query_log_file ='/var/lib/mysql/slow_query.log';
-  ```
+    ```bash
+    mysql> set global slow_query_log=1;
+    mysql> set global long_query_time=0.1;
+    mysql> set global log_queries_not_using_indexes=1;
+    mysql> set global slow_query_log_file ='/var/lib/mysql/slow_query.log';
+    ```
 
 - 設定ファイル
   - Dockerコンテナを使用している場合は、カスタム設定を `/etc/mysql/conf.d/` 以下のファイルに追加すればいい
@@ -49,6 +52,7 @@ mysql> show variables like '%slow%';
     [mysqld]
     slow_query_log=1
     long_query_time=1
+    log_queries_not_using_indexes=1
     slow_query_log_file=/tmp/mysql/slow_query.log
     ```
 
@@ -84,3 +88,5 @@ mysql> show variables like '%long%';
 | performance_schema_events_waits_history_long_size        | 10000    |
 +----------------------------------------------------------+----------+
 ```
+
+## 
