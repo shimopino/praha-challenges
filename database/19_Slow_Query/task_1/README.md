@@ -127,3 +127,48 @@ WHERE MONTH(hire_date) = '12';
 Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
 Time                 Id Command    Argument
 ```
+
+## 0.1秒以上かかるクエリを実行する
+
+クエリその1（実行時間は `0.8167` 秒）
+
+> 部署ごとに男性従業員と女性従業員の人数を産出する
+
+```sql
+SELECT departments.dept_no
+      ,MIN(dept_name)
+      ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS MAN_COUNT
+      ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) AS FEMALE_COUNT
+FROM employees
+INNER JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
+GROUP BY dept_emp.dept_no;
+```
+
+クエリその2（実行時間は `1.3569` 秒）
+
+> 以下の給料レンジごとに、従業員の人数を算出する
+
+```bash
+# 給料レンジ
+     0 <=         low <=  50000
+ 50000 <       middle <= 100000
+100000 <  middle_high <= 150000
+150000 <         high
+```
+
+クエリは以下になる。
+
+```sql
+SELECT
+    CASE 
+    WHEN salary <= 50000  THEN 'low'
+    WHEN salary <= 100000 THEN 'middle'
+    WHEN salary <= 150000 THEN 'middle_high'
+    ELSE 'high'
+    END AS salary_class
+   ,COUNT(DISTINCT emp_no) AS emp_count
+FROM salaries
+GROUP BY salary_class
+ORDER BY emp_count DESC;
+```
