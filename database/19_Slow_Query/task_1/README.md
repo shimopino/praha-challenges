@@ -188,3 +188,55 @@ INNER JOIN titles ON titles.emp_no = employees.emp_no
 INNER JOIN salaries ON salaries.emp_no = employees.emp_no
 GROUP BY title;
 ```
+
+スロークエリログを確認すると各クエリに関して、実行時間や走査した行数が乗っていることがわかる。
+
+```bash
+> cat /var/lib/mysql/slow_query.log 
+
+/usr/sbin/mysqld, Version: 8.0.23 (MySQL Community Server - GPL). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+# Time: 2021-04-06T16:44:12.098414Z
+# User@Host: root[root] @ localhost []  Id:   129
+# Query_time: 0.781388  Lock_time: 0.000256 Rows_sent: 9  Rows_examined: 663215
+use employees;
+SET timestamp=1617727451;
+SELECT departments.dept_no
+      ,MIN(dept_name)
+      ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS MAN_COUNT
+      ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) AS FEMALE_COUNT
+FROM employees
+INNER JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
+INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
+GROUP BY dept_emp.dept_no;
+# Time: 2021-04-06T16:45:03.899634Z
+# User@Host: root[root] @ localhost []  Id:   129
+# Query_time: 1.622969  Lock_time: 0.000159 Rows_sent: 4  Rows_examined: 5688098
+SET timestamp=1617727502;
+SELECT
+    CASE 
+    WHEN salary <= 50000  THEN 'low'
+    WHEN salary <= 100000 THEN 'middle'
+    WHEN salary <= 150000 THEN 'middle_high'
+    ELSE 'high'
+    END AS salary_class
+   ,COUNT(DISTINCT emp_no) AS emp_count
+FROM salaries
+GROUP BY salary_class
+ORDER BY emp_count DESC;
+# Time: 2021-04-06T16:45:12.816048Z
+# User@Host: root[root] @ localhost []  Id:   129
+# Query_time: 4.409763  Lock_time: 0.000239 Rows_sent: 7  Rows_examined: 5381849
+SET timestamp=1617727508;
+SELECT title
+      ,MIN(salary) AS Minimum
+      ,ROUND(SUM(salary) / COUNT(salary)) AS Mean
+      ,MAX(salary) As Maximum
+FROM employees
+INNER JOIN titles ON titles.emp_no = employees.emp_no
+INNER JOIN salaries ON salaries.emp_no = employees.emp_no
+GROUP BY title;
+```
+
+> performance_schema と異なり初期ロックの時間は計測されておらず、クエリを実行して全てのロックが解放されるまでの時間を計測しているため、解釈に注意にする必要あり。
