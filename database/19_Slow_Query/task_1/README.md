@@ -1,7 +1,14 @@
 # 課題1
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [スロークエリの有効化](#%E3%82%B9%E3%83%AD%E3%83%BC%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%AE%E6%9C%89%E5%8A%B9%E5%8C%96)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## スロークエリの有効化
 
