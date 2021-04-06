@@ -5,8 +5,9 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [mysqldumpslow とは何か](#mysqldumpslow-%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-- [mysqldumpslow で設定可能なオプション](#mysqldumpslow-%E3%81%A7%E8%A8%AD%E5%AE%9A%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3)
+- [課題2](#課題2)
+  - [mysqldumpslow とは何か](#mysqldumpslow-とは何か)
+  - [mysqldumpslow で設定可能なオプション](#mysqldumpslow-で設定可能なオプション)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -73,3 +74,18 @@ Count: 1  Time=0.78s (0s)  Lock=0.00s (0s)  Rows=9.0 (9), root[root]@localhost
     - `r,ar`: 抽出した行数でソート
     - `c`: クエリのカウント数でソート（頻度が高い順）
   - なおデフォルトでは `-s at` であり、クエリの実行時間でソートしている
+
+なお課題1で実行したクエリを記録したスロークエリログを使用する場合、ロック時間が短いため、ロック時間によるソートだと全て `Lock=0.00s (0s)` と表示される。
+
+これらのコマンドはユースケースに応じて以下のように指定することができる。
+
+```bash
+# 最も頻度が高くスロークエリに現れるクエリ
+> mysqldumpslow -s c -t 1 /var/lib/mysql/slow_query.log
+
+# 実行時間が最も長いクエリ
+> mysqldumpslow -s at -t 1 /var/lib/mysql/slow_query.log
+
+# ロック時間が最も長いクエリ
+> mysqldumpslow -s al -t 1 /var/lib/mysql/slow_query.log
+```
