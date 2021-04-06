@@ -37,12 +37,12 @@ mysql> show variables like '%slow%';
 
 - コマンドライン
   - コマンドラインからは `global` をつけることでサーバーを再起動する必要はなくなる
-  - 以下のうち `log_queries_not_using_indexes` を設定しておき、インデックスを使用していないクエリも記録するようにしている
+  - 以下のうち `log_queries_not_using_indexes` を設定することで、インデックスを使用していないクエリも記録できるが、今回は時間計測のみを行う
   
     ```bash
     mysql> set global slow_query_log=1;
     mysql> set global long_query_time=0.1;
-    mysql> set global log_queries_not_using_indexes=1;
+    # mysql> set global log_queries_not_using_indexes=1;
     mysql> set global slow_query_log_file ='/var/lib/mysql/slow_query.log';
     ```
 
@@ -53,7 +53,7 @@ mysql> show variables like '%slow%';
     [mysqld]
     slow_query_log=1
     long_query_time=1
-    log_queries_not_using_indexes=1
+    # log_queries_not_using_indexes=1
     slow_query_log_file=/tmp/mysql/slow_query.log
     ```
 
@@ -90,4 +90,40 @@ mysql> show variables like '%long%';
 +----------------------------------------------------------+----------+
 ```
 
-## 
+## 0.1秒未満のクエリを実行する
+
+過去の課題から0.1秒未満の実行時間であったクエリを実行する。
+
+クエリその1（実行時間は `0.0337` 秒）
+
+```sql
+SELECT hire_date
+FROM employees
+WHERE hire_date = '1990-01-01';
+```
+
+クエリその2（実行時間は `0.0626` 秒）
+
+```sql
+SELECT hire_date 
+FROM employees 
+WHERE hire_date > '1990-01-01'
+GROUP BY hire_date;
+```
+
+クエリその3（実行時間は `0.0432` 秒）
+
+```sql
+SELECT hire_date 
+FROM employees 
+WHERE MONTH(hire_date) = '12';
+```
+
+スロークエリログを確認すると何も出力されていないことがわかる。
+
+```bash
+> cat /var/lib/mysql/slow_query.log 
+/usr/sbin/mysqld, Version: 8.0.23 (MySQL Community Server - GPL). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+```
