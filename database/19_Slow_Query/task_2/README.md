@@ -5,8 +5,9 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [mysqldumpslow とは何か](#mysqldumpslow-%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-- [mysqldumpslow で設定可能なオプション](#mysqldumpslow-%E3%81%A7%E8%A8%AD%E5%AE%9A%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3)
+- [課題2](#課題2)
+  - [mysqldumpslow とは何か](#mysqldumpslow-とは何か)
+  - [mysqldumpslow で設定可能なオプション](#mysqldumpslow-で設定可能なオプション)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -63,6 +64,13 @@ Count: 1  Time=0.78s (0s)  Lock=0.00s (0s)  Rows=9.0 (9), root[root]@localhost
 
 ## mysqldumpslow で設定可能なオプション
 
-ではコマンドを実行する際に指定できるオプションを以下にまとめる。
+ではコマンドを実行する際に指定できる有用なプションを以下にまとめる。
 
-
+- `-s <sort_type>`
+  - 出力結果をどのようにソートさせるのか指定する
+  - 指定可能な値は以下になる
+    - `t,at`: クエリの実行時間、あるいは平均時間でソート
+    - `l,al`: ロック時間、あるいは平均ロック時間でソート
+    - `r,ar`: 抽出した行数でソート
+    - `c`: クエリのカウント数でソート（頻度が高い順）
+  - なおデフォルトでは `-s at` であり、クエリの実行時間でソートしている
