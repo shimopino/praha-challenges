@@ -172,3 +172,18 @@ FROM salaries
 GROUP BY salary_class
 ORDER BY emp_count DESC;
 ```
+
+クエリその3（実行時間は `4.5868` 秒）
+
+> 従業員の役職ごとに給料の最低値、平均値、最高値を算出する
+
+```sql
+SELECT title
+      ,MIN(salary) AS Minimum
+      ,ROUND(SUM(salary) / COUNT(salary)) AS Mean
+      ,MAX(salary) As Maximum
+FROM employees
+INNER JOIN titles ON titles.emp_no = employees.emp_no
+INNER JOIN salaries ON salaries.emp_no = employees.emp_no
+GROUP BY title;
+```
