@@ -7,6 +7,7 @@
 
 - [スロークエリの有効化](#%E3%82%B9%E3%83%AD%E3%83%BC%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%AE%E6%9C%89%E5%8A%B9%E5%8C%96)
 - [0.1秒未満のクエリを実行する](#01%E7%A7%92%E6%9C%AA%E6%BA%80%E3%81%AE%E3%82%AF%E3%82%A8%E3%83%AA%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8B)
+- [0.1秒以上かかるクエリを実行する](#01%E7%A7%92%E4%BB%A5%E4%B8%8A%E3%81%8B%E3%81%8B%E3%82%8B%E3%82%AF%E3%82%A8%E3%83%AA%E3%82%92%E5%AE%9F%E8%A1%8C%E3%81%99%E3%82%8B)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
