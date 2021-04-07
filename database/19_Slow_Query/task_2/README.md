@@ -5,9 +5,8 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題2](#課題2)
-  - [mysqldumpslow とは何か](#mysqldumpslow-とは何か)
-  - [mysqldumpslow で設定可能なオプション](#mysqldumpslow-で設定可能なオプション)
+- [mysqldumpslow とは何か](#mysqldumpslow-%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
+- [mysqldumpslow で設定可能なオプション](#mysqldumpslow-%E3%81%A7%E8%A8%AD%E5%AE%9A%E5%8F%AF%E8%83%BD%E3%81%AA%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
