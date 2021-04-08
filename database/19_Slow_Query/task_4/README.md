@@ -46,14 +46,39 @@ mysql> select @@optimizer_switch\G
 
 ## `WHERE` と `ON` の使い分け
 
+### 実行結果の確認
 
+今回の課題で提示されているクエリの実行計画と実行時間を確認する。
 
-SELECT *
-FROM employees e
-JOIN salaries s ON e.emp_no = s.emp_no
-WHERE gender = "M"
-AND birth_date > "1960-01-01"
+なお下記のクエリでは `JOIN` が指定されているが、これは `INNER JOIN` と同じである。
+（MySQLの `JOIN` のデフォルトは内部結合になっている。）
 
+- クエリ1
+  - `WHERE` を使用してフィルタリングする
+
+    ```sql
+    SELECT *
+    FROM employees e
+    JOIN salaries s ON e.emp_no = s.emp_no
+    WHERE gender = "M"
+    AND birth_date > "1960-01-01"
+    ```
+
+- クエリ2
+  - `ON` を使用してフィルタリングする
+
+    ```sql
+    SELECT *
+    FROM employees e
+    JOIN salaries s ON e.emp_no = s.emp_no 
+    AND gender = "M" 
+    AND birth_date > "1960-01-01"
+    ```
+
+まずは実行計画を確認すると、どちらのクエリでも計画に変化がないことがわかる。
+
+```bash
+# クエリ1
 +----+-------------+-------+------------+------+---------------+---------+---------+--------------------+--------+----------+-------------+
 | id | select_type | table | partitions | type | possible_keys | key     | key_len | ref                | rows   | filtered | Extra       |
 +----+-------------+-------+------------+------+---------------+---------+---------+--------------------+--------+----------+-------------+
@@ -61,68 +86,56 @@ AND birth_date > "1960-01-01"
 |  1 | SIMPLE      | s     | NULL       | ref  | PRIMARY       | PRIMARY | 4       | employees.e.emp_no |      9 |   100.00 | NULL        |
 +----+-------------+-------+------------+------+---------------+---------+---------+--------------------+--------+----------+-------------+
 
-
-SELECT *
-FROM employees e
-JOIN salaries s ON e.emp_no = s.emp_no 
-AND gender = "M" 
-AND birth_date > "1960-01-01"
-
+# クエリ2
 +----+-------------+-------+------------+------+---------------+---------+---------+--------------------+--------+----------+-------------+
 | id | select_type | table | partitions | type | possible_keys | key     | key_len | ref                | rows   | filtered | Extra       |
 +----+-------------+-------+------------+------+---------------+---------+---------+--------------------+--------+----------+-------------+
 |  1 | SIMPLE      | e     | NULL       | ALL  | PRIMARY       | NULL    | NULL    | NULL               | 298990 |    16.66 | Using where |
 |  1 | SIMPLE      | s     | NULL       | ref  | PRIMARY       | PRIMARY | 4       | employees.e.emp_no |      9 |   100.00 | NULL        |
 +----+-------------+-------+------------+------+---------------+---------+---------+--------------------+--------+----------+-------------+
+```
+
+次に実行時間を確認すると、明らかに `ON` を使用してフィルタリングを行ったほうが実行時間が短縮されていることがわかる。
+
+```bash
++------------------------------------------------+----------+----------+
+| Stage                                          |  query 1 |  query 2 |
++------------------------------------------------+----------+----------+
+| stage/sql/starting                             |   0.0001 |   0.0001 |
+| stage/sql/Executing hook on transaction begin. |   0.0000 |   0.0000 |
+| stage/sql/starting                             |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/checking permissions                 |   0.0000 |   0.0000 |
+| stage/sql/Opening tables                       |   0.0000 |   0.0000 |
+| stage/sql/init                                 |   0.0000 |   0.0000 |
+| stage/sql/System lock                          |   0.0000 |   0.0000 |
+| stage/sql/optimizing                           |   0.0000 |   0.0000 |
+| stage/sql/statistics                           |   0.0000 |   0.0000 |
+| stage/sql/preparing                            |   0.0000 |   0.0000 |
+| stage/sql/executing                            |   0.8462 |   0.5713 |
+| stage/sql/end                                  |   0.0000 |   0.0000 |
+| stage/sql/query end                            |   0.0000 |   0.0000 |
+| stage/sql/waiting for handler commit           |   0.0000 |   0.0000 |
+| stage/sql/closing tables                       |   0.0000 |   0.0000 |
+| stage/sql/freeing items                        |   0.0000 |   0.0000 |
+| stage/sql/cleaning up                          |   0.0000 |   0.0000 |
++------------------------------------------------+----------+----------+
+| total                                          |   0.8466 |   0.5717 |
++------------------------------------------------+----------+----------+
+```
+
+### 実行速度が異なる理由
+
+実行順序が影響している。
+
+- `WHERE`
+  - 結合した後の結果セットに対してフィルタリングを行う
+- `ON`
+  -  結合前の右側のテーブルに対してフィルタリングを行う
+
+これはMySQLがサポートしている `Nested Loop Join` が関係している。
 
 
+参考資料
 
-0.8466
-
-+------------------------------------------------+----------+
-| Stage                                          | Duration |
-+------------------------------------------------+----------+
-| stage/sql/starting                             |   0.0001 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |
-| stage/sql/starting                             |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |
-| stage/sql/init                                 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |
-| stage/sql/executing                            |   0.8462 |
-| stage/sql/end                                  |   0.0000 |
-| stage/sql/query end                            |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |
-+------------------------------------------------+----------+
-
-0.5717
-
-+------------------------------------------------+----------+
-| Stage                                          | Duration |
-+------------------------------------------------+----------+
-| stage/sql/starting                             |   0.0001 |
-| stage/sql/Executing hook on transaction begin. |   0.0000 |
-| stage/sql/starting                             |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/checking permissions                 |   0.0000 |
-| stage/sql/Opening tables                       |   0.0000 |
-| stage/sql/init                                 |   0.0000 |
-| stage/sql/System lock                          |   0.0000 |
-| stage/sql/optimizing                           |   0.0000 |
-| stage/sql/statistics                           |   0.0000 |
-| stage/sql/preparing                            |   0.0000 |
-| stage/sql/executing                            |   0.5713 |
-| stage/sql/end                                  |   0.0000 |
-| stage/sql/query end                            |   0.0000 |
-| stage/sql/waiting for handler commit           |   0.0000 |
-| stage/sql/closing tables                       |   0.0000 |
-| stage/sql/freeing items                        |   0.0000 |
-| stage/sql/cleaning up                          |   0.0000 |
-+------------------------------------------------+----------+
+- [実例で学ぶ、JOIN (NLJ) が遅くなる理屈と対処法](https://qiita.com/yuku_t/items/208be188eef17699c7a5)
