@@ -1,7 +1,15 @@
 # 課題1
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [複合インデックスとは何か](#%E8%A4%87%E5%90%88%E3%82%A4%E3%83%B3%E3%83%87%E3%83%83%E3%82%AF%E3%82%B9%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
+- [実際の並び順の確認](#%E5%AE%9F%E9%9A%9B%E3%81%AE%E4%B8%A6%E3%81%B3%E9%A0%86%E3%81%AE%E7%A2%BA%E8%AA%8D)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 複合インデックスとは何か
 
