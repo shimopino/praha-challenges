@@ -135,9 +135,35 @@ mysql> select @@optimizer_switch\G
 - `ON`
   -  結合前の右側のテーブルに対してフィルタリングを行う
 
-これはMySQLがサポートしている `Nested Loop Join` が関係している。
+これはMySQLがサポートしている `Nested Loop Join (NLJ)` が関係している。
 
+例えば以下の3つのテーブルを指定の方法で結合させることを考える。
+
+```bash
+Table   Join Type   
+t1      range       # インデックスを使用した範囲検索
+t2      ref         # インデックスを走査して一致するリーフノードを検索
+t3      ALL         # フルテーブルスキャン
+```
+
+`NJL` ではこの3つのテーブルの結合を次のように実装している。
+
+```bash
+# インデックスでの範囲指定（BETWEEN や 比較演算子での指定）
+for each row in t1 matching range {
+  # インデックスから指定した値に該当するものを走査（Uniqueインデックスではない）
+  for each row in t2 matching reference key {
+    # フルテーブルスキャン
+    for each row in t3 {
+      if row satisfies join conditions, send to client
+    }
+  }
+}
+```
+
+`WHERE` でのフィルタリングを行った場合、全てのインデックスやテーブルのレコードに対して結合処理を行った後でフィルタリングが実行されるが、`ON` でのフィルタリングを行った場合、上記の実装でいえばループの回数そのものを削減することができるため、実行速度が短縮されている結果となる。
 
 参考資料
 
+- [[MySQL 8.0 Reference] 8.2.1.7 Nested-Loop Join Algorithms](https://dev.mysql.com/doc/refman/8.0/en/nested-loop-joins.html)
 - [実例で学ぶ、JOIN (NLJ) が遅くなる理屈と対処法](https://qiita.com/yuku_t/items/208be188eef17699c7a5)
