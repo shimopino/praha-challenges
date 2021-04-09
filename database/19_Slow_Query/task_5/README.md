@@ -14,6 +14,15 @@
 
 ## #1 クイズ
 
+実務ではスロークエリを直接確認するよりも、Percona社が提供している `pt-query-digest` のようなツールを使用してローカルのログファイルを確認したり、クラウド上でアプリを稼働させている場合には `Datadog` を使用してクエリの解析を行ったりすることが多いらしい。
+
+では実際に Percona社が提供している `pt-query-digest` をインストールして、スロークエリログを表示させてみましょう。
+
+参考資料
+
+- [Configuring Percona Repositories with percona-release](https://www.percona.com/doc/percona-repo-config/percona-release.html#debian-and-ubuntu)
+- [Installing Percona Toolkit](https://www.percona.com/doc/percona-toolkit/LATEST/installation.html)
+
 <details>
 <summary>回答例</summary>
 </details>
