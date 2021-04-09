@@ -10,23 +10,12 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 課題1
+## [課題1](./task_1)
 
-スロークエリログを有効化する前に、Dockerコンテナを起動した段階でのデフォルト設定を載せておく。
+## [課題2](./task_2)
 
-デフォルト設定のままではスロークエリログは出力されないようになっている。
+## [課題3](./task_3)
 
-```bash
-mysql> show variables like '%slow%';
-+---------------------------+--------------------------------------+
-| Variable_name             | Value                                |
-+---------------------------+--------------------------------------+
-| log_slow_admin_statements | OFF                                  |
-| log_slow_extra            | OFF                                  |
-| log_slow_slave_statements | OFF                                  |
-| slow_launch_time          | 2                                    |
-| slow_query_log            | OFF                                  |
-| slow_query_log_file       | /var/lib/mysql/f080c363072e-slow.log |
-+---------------------------+--------------------------------------+
-```
+## [課題4](./task_4)
 
+## [クイズ](./task_5)
