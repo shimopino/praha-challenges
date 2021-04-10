@@ -91,6 +91,8 @@ CREATE INDEX hdate_lname_idx ON employees (hire_date, last_name);
 CREATE INDEX lname_hdate_idx ON employees (last_name, hire_date);
 ```
 
+実行計画や実行時間は以下になる。
+
 ||インデックスなし|hdate_lname_idx|lname_hdate_idx|
 |:--:|:--:|:--:|:--:|
 |アクセスタイプ|フルテーブルスキャン|インデックスの範囲検索|インデックスの範囲検索|
@@ -108,4 +110,45 @@ CREATE INDEX lname_hdate_idx ON employees (last_name, hire_date);
 
 <details>
 <summary>回答例</summary>
+
+作成したクエリは以下になる。
+
+```sql
+SELECT COUNT(hire_date)
+FROM employees
+WHERE hire_date BETWEEN '1990-01-01' AND '1991-01-01'
+AND gender = 'M';
+```
+
+実行結果は以下になる。
+
+```bash
++------------------+
+| COUNT(hire_date) |
++------------------+
+|            15448 |
++------------------+
+```
+
+インデックスを作成するうえで、以下のパターンを試す。
+
+```sql
+-- 1
+-- インデックスを使用しない
+-- 2
+CREATE INDEX hdate_gender_idx ON employees (hire_date, gender);
+-- 3
+CREATE INDEX gender_hdate_idx ON employees (gender, hire_date);
+```
+
+実行計画や実行時間は以下になる。
+
+||インデックスなし|hdate_lname_idx|lname_hdate_idx|
+|:--:|:--:|:--:|:--:|
+|アクセスタイプ|フルテーブルスキャン|インデックスの範囲検索|インデックスの範囲検索|
+|fetch行数見積|298990|47086|28410|
+|実行時間|0.0723|0.0076|0.0059|
+
+同じ組み合わせでも実行時間やfetch行数見積もりには変化があるため注意が必要である。
+
 </details>
