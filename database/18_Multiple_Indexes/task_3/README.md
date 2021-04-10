@@ -63,11 +63,42 @@ possible_keys: fname_lname_idx,lname_fname_idx
 
 ## #2 クイズ
 
-> 1980年1月1日以降に雇用された従業員のうち、`last_nane` に大文字と小文字を区別せずに `an` を含んでいる従業員の従業員ID、`last_name`。雇用日を検索してください
+> 1980年1月1日以降に雇用された従業員のうち、`last_nane` に大文字と小文字を区別せずに `an` から始める、従業員の従業員ID、`last_name`。雇用日を検索してください
 > また処理を高速化するために複合インデックスを作成してみましょう
 
 <details>
 <summary>回答例</summary>
+
+作成したクエリは以下になる。
+
+```sql
+SELECT emp_no, last_name, hire_date
+FROM employees
+WHERE last_name LIKE 'an%'
+AND hire_date >= '1980-01-01';
+```
+
+特徴的な点は MySQL では大文字と小文字の区別をつけない点である。
+
+インデックスを作成するうえで、以下のパターンを試す。
+
+```sql
+-- 1
+-- インデックスを使用しない
+-- 2
+CREATE INDEX hdate_lname_idx ON employees (hire_date, last_name);
+-- 3
+CREATE INDEX lname_hdate_idx ON employees (last_name, hire_date);
+```
+
+||インデックスなし|hdate_lname_idx|lname_hdate_idx|
+|:--:|:--:|:--:|:--:|
+|アクセスタイプ|フルテーブルスキャン|インデックスの範囲検索|インデックスの範囲検索|
+|fetch行数見積|298990|149495|2897|
+|実行時間|0.0501|0.0476|0.0015|
+
+インデックスの順番には注意が必要である。
+
 </details>
 
 ## #3 クイズ
