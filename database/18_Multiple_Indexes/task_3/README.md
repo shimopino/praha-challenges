@@ -19,6 +19,46 @@
 
 <details>
 <summary>回答例</summary>
+
+作成したクエリは以下になる。
+
+```sql
+SELECT emp_no, first_name, last_name
+FROM employees
+WHERE first_name = 'Anneke'
+AND last_name = 'Preusig';
+```
+
+高速化のために以下のインデックスを作成する。
+
+```sql
+CREATE INDEX fname_lname_idx ON employees (first_name, last_name);
+CREATE INDEX lname_fname_idx ON employees (last_name, first_name);
+```
+
+このうちクエリを実行すると、`fname_lname_idx` を使用していることがわかる。
+（なお `lname_fname_idx` の場合でもクエリコストは全く同じであった。）
+
+```bash
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: employees
+   partitions: NULL
+         type: ref
+possible_keys: fname_lname_idx,lname_fname_idx
+          key: fname_lname_idx
+      key_len: 124
+          ref: const,const
+         rows: 1
+     filtered: 100.00
+        Extra: Using index
+```
+
+|インデックスなし|fname_lname_idx|lname_fname_idx|
+|:--:|:--:|:--:|
+|0.0497|0.0003|0.0004|
+
 </details>
 
 ## #2 クイズ
