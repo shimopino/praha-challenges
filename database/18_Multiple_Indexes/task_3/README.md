@@ -151,4 +151,6 @@ CREATE INDEX gender_hdate_idx ON employees (gender, hire_date);
 
 同じ組み合わせでも実行時間やfetch行数見積もりには変化があるため注意が必要である。
 
+今回は `gender` を使用して絞り込むことで、第1キーに関する走査は `M` だけで絞り込み、後は第2キーでの範囲指定を行えばいいだけである。
+
 </details>
