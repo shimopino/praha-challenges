@@ -15,6 +15,9 @@
 
 頻度が高いわけではないが、以下のクエリの高速化を目指す。
 
+> 特定の給料レンジの従業員数を出力する。
+> なお従業員の給料が最新（つまり `to_date` が '9999-01-01'）の給料を使用する。
+
 ```sql
 SELECT
     CASE 
@@ -25,6 +28,7 @@ SELECT
     END AS salary_class
    ,COUNT(DISTINCT emp_no) AS emp_count
 FROM salaries
+WHERE to_date = '9999-01-01'
 GROUP BY salary_class
 ORDER BY emp_count DESC;
 ```
@@ -43,21 +47,22 @@ possible_keys: NULL
       key_len: NULL
           ref: NULL
          rows: 2838426
-     filtered: 100.00
-        Extra: Using temporary; Using filesort
+     filtered: 10.00
+        Extra: Using where; Using temporary; Using filesort
 ```
 
 `GROUP BY` や `ORDER BY` などの処理や、`CASE`文での分岐処理に時間がかかっていそうな気もするので、クエリを単純なものから複雑化させていくことでボトルネックとなっている処理を確認する。
 
 | query                          | execution time | 
 | ------------------------------ | -------------- | 
-| SELECT salary<br>FROM salaries | 0.4966         | 
-| + salary_class                 | 0.6055         | 
-| + GROUP BY salary_class        | 0.8619         | 
-| + emp_count                    | 1.0987         | 
-| + ORDER BY emp_count DESC      | 1.4216         | 
+| SELECT salary<br>FROM salaries | 0.4809         | 
+| + WHERE to_date = '9999-01-01' | 0.4469         | 
+| + salary_class                 | 0.4184         | 
+| + GROUP BY salary_class        | 0.5041         | 
+| + emp_count<br>                | 0.5623         | 
+| + ORDER BY emp_count DESC      | 0.5634         | 
 
-`DISTINCT` で従業員の被りが出ないようにしている処理や、`GROUP BY` で一時テーブルを作成している処理に時間がかかっていることがわかる。
+そもそもの最初のテーブル読み込み時間がかかっており、その他の処理はそれほど負荷が高くなっていないことがわかる。
 
 ではクエリで使用している `salary` に対してインデックスを作成することで処理が高速化するのか確認する。
 
@@ -67,7 +72,7 @@ CREATE INDEX salary_idx ON salaries (salary);
 
 なお今回は条件での絞り込みを行っていないため、`salary` に対してインデックスを作成してカバリングインデックスにすることで、直接テーブルから行をフェッチすることなく処理させることでの高速化を狙っている。
 
-実行計画は以下のようになっており、想定通りにインデックスから値を参照していることがわかる（フルインデックススキャン）。
+実行計画は以下のようになっており、今回作成したインデックスは使用されていないことがわかる。
 
 ```bash
 *************************** 1. row ***************************
@@ -75,29 +80,75 @@ CREATE INDEX salary_idx ON salaries (salary);
   select_type: SIMPLE
         table: salaries
    partitions: NULL
-         type: index
+         type: ALL
 possible_keys: salary_idx
-          key: salary_idx
-      key_len: 4
+          key: NULL
+      key_len: NULL
           ref: NULL
          rows: 2838426
-     filtered: 100.00
-        Extra: Using index; Using temporary; Using filesort
+     filtered: 10.00
+        Extra: Using where; Using temporary; Using filesort
 ```
 
-では先ほどと同様に単純なクエリから複雑なクエリにしていくことで、どこでインデックスの効果が発揮されているのか確認する。
-
-| query                          | execution time | 
-| ------------------------------ | -------------- | 
-| SELECT salary<br>FROM salaries | 0.3992         | 
-| + salary_class                 | 0.4501         | 
-| + GROUP BY salary_class        | 0.7781         | 
-| + emp_count                    | 1.7794         | 
-| + ORDER BY emp_count DESC      | 1.7425         | 
-
-インデックスが効果を発揮していないことがわかる。
+なお `FORCE INDEX (salary_idx)` を指定すると `0.6067` 秒かかっており、インデックスを使用していない場合とそれほど実行時間が変化していない。
 
 これはインデックスはあくまでもレコードを絞り込む際に使用すべきものであり、フェッチすべきレコード数が増加してしまうと、シーケンシャルアクセスによるオーバーヘッドが、フルテーブルスキャンでのマルチブロックリードよりも時間がかかってしまうためだと考えられる。
+
+### インデックスによる効果の再検証
+
+今度はフェッチするレコードを絞り込むようなクエリを実行することで、インデックスの効果を再検証する。
+
+> 特定の給料レンジの従業員を出力する。
+> なお対象の従業員は、1989年1月1日から1990年に入社した、男性従業員のみにしてみましょう。
+
+```sql
+SELECT
+    CASE 
+    WHEN salary <= 50000  THEN 'low'
+    WHEN salary <= 100000 THEN 'middle'
+    WHEN salary <= 150000 THEN 'middle_high'
+    ELSE 'high'
+    END AS salary_class
+   ,COUNT(DISTINCT salaries.emp_no) AS emp_count
+FROM salaries
+INNER JOIN employees ON salaries.emp_no = employees.emp_no
+AND employees.hire_date BETWEEN '1989-01-01' AND '1990-01-01'
+AND employees.gender = 'M'
+AND salaries.to_date = '9999-01-01'
+GROUP BY salary_class
+ORDER BY emp_count DESC;
+```
+
+実行結果は以下のようになる。
+
+```bash
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: employees
+   partitions: NULL
+         type: ALL
+possible_keys: PRIMARY
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 298990
+     filtered: 5.56
+        Extra: Using where; Using temporary; Using filesort
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: salaries
+   partitions: NULL
+         type: ref
+possible_keys: PRIMARY,salary_idx
+          key: PRIMARY
+      key_len: 4
+          ref: employees.employees.emp_no
+         rows: 9
+     filtered: 10.00
+        Extra: Using where
+```
 
 ## 実行時間が長いクエリの高速化
 
