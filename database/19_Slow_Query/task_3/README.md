@@ -13,7 +13,91 @@
 
 ## 頻度の高いクエリの高速化
 
+頻度が高いわけではないが、以下のクエリの高速化を目指す。
 
+```sql
+SELECT
+    CASE 
+    WHEN salary <= 50000  THEN 'low'
+    WHEN salary <= 100000 THEN 'middle'
+    WHEN salary <= 150000 THEN 'middle_high'
+    ELSE 'high'
+    END AS salary_class
+   ,COUNT(DISTINCT emp_no) AS emp_count
+FROM salaries
+GROUP BY salary_class
+ORDER BY emp_count DESC;
+```
+
+まずは実行計画を確認する。
+
+```bash
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: salaries
+   partitions: NULL
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 2838426
+     filtered: 100.00
+        Extra: Using temporary; Using filesort
+```
+
+`GROUP BY` や `ORDER BY` などの処理や、`CASE`文での分岐処理に時間がかかっていそうな気もするので、クエリを単純なものから複雑化させていくことでボトルネックとなっている処理を確認する。
+
+| query                          | execution time | 
+| ------------------------------ | -------------- | 
+| SELECT salary<br>FROM salaries | 0.4966         | 
+| + salary_class                 | 0.6055         | 
+| + GROUP BY salary_class        | 0.8619         | 
+| + emp_count                    | 1.0987         | 
+| + ORDER BY emp_count DESC      | 1.4216         | 
+
+`DISTINCT` で従業員の被りが出ないようにしている処理や、`GROUP BY` で一時テーブルを作成している処理に時間がかかっていることがわかる。
+
+ではクエリで使用している `salary` に対してインデックスを作成することで処理が高速化するのか確認する。
+
+```sql
+CREATE INDEX salary_idx ON salaries (salary);
+```
+
+なお今回は条件での絞り込みを行っていないため、`salary` に対してインデックスを作成してカバリングインデックスにすることで、直接テーブルから行をフェッチすることなく処理させることでの高速化を狙っている。
+
+実行計画は以下のようになっており、想定通りにインデックスから値を参照していることがわかる（フルインデックススキャン）。
+
+```bash
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: salaries
+   partitions: NULL
+         type: index
+possible_keys: salary_idx
+          key: salary_idx
+      key_len: 4
+          ref: NULL
+         rows: 2838426
+     filtered: 100.00
+        Extra: Using index; Using temporary; Using filesort
+```
+
+では先ほどと同様に単純なクエリから複雑なクエリにしていくことで、どこでインデックスの効果が発揮されているのか確認する。
+
+| query                          | execution time | 
+| ------------------------------ | -------------- | 
+| SELECT salary<br>FROM salaries | 0.3992         | 
+| + salary_class                 | 0.4501         | 
+| + GROUP BY salary_class        | 0.7781         | 
+| + emp_count                    | 1.7794         | 
+| + ORDER BY emp_count DESC      | 1.7425         | 
+
+インデックスが効果を発揮していないことがわかる。
+
+これはインデックスはあくまでもレコードを絞り込む際に使用すべきものであり、フェッチすべきレコード数が増加してしまうと、シーケンシャルアクセスによるオーバーヘッドが、フルテーブルスキャンでのマルチブロックリードよりも時間がかかってしまうためだと考えられる。
 
 ## 実行時間が長いクエリの高速化
 
