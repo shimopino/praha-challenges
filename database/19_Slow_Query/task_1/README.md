@@ -91,6 +91,12 @@ mysql> show variables like '%long%';
 +----------------------------------------------------------+----------+
 ```
 
+なおスロークエリに出力されたログを初期化したい場合は以下を実行する。
+
+```bash
+$ > /var/lib/mysql/slow_query.log
+```
+
 ## 0.1秒未満のクエリを実行する
 
 過去の課題から0.1秒未満の実行時間であったクエリを実行する。
@@ -146,9 +152,10 @@ INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
 GROUP BY dept_emp.dept_no;
 ```
 
-クエリその2（実行時間は `1.3569` 秒）
+クエリその2（実行時間は `0.6061` 秒）
 
-> 以下の給料レンジごとに、従業員の人数を算出する
+> 以下の給料レンジごとに、従業員の人数を算出する。
+> なお従業員の給料が最新（つまり `to_date` が '9999-01-01'）の給料を使用する。
 
 ```bash
 # 給料レンジ
@@ -170,13 +177,15 @@ SELECT
     END AS salary_class
    ,COUNT(DISTINCT emp_no) AS emp_count
 FROM salaries
+WHERE to_date = '9999-01-01'
 GROUP BY salary_class
 ORDER BY emp_count DESC;
 ```
 
-クエリその3（実行時間は `4.5868` 秒）
+クエリその3（実行時間は `1.4953` 秒）
 
 > 従業員の役職ごとに給料の最低値、平均値、最高値を算出する
+> なお従業員の最新の役職と給料（つまり `to_date` が '9999-01-01'）を使用する。
 
 ```sql
 SELECT title
@@ -186,6 +195,8 @@ SELECT title
 FROM employees
 INNER JOIN titles ON titles.emp_no = employees.emp_no
 INNER JOIN salaries ON salaries.emp_no = employees.emp_no
+AND titles.to_date = '9999-01-01'
+AND salaries.to_date = '9999-01-01'
 GROUP BY title;
 ```
 
@@ -194,14 +205,10 @@ GROUP BY title;
 ```bash
 > cat /var/lib/mysql/slow_query.log 
 
-/usr/sbin/mysqld, Version: 8.0.23 (MySQL Community Server - GPL). started with:
-Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
-Time                 Id Command    Argument
-# Time: 2021-04-06T16:44:12.098414Z
-# User@Host: root[root] @ localhost []  Id:   129
-# Query_time: 0.781388  Lock_time: 0.000256 Rows_sent: 9  Rows_examined: 663215
-use employees;
-SET timestamp=1617727451;
+# Time: 2021-04-14T15:53:01.600552Z
+# User@Host: root[root] @ localhost []  Id:    24
+# Query_time: 0.805318  Lock_time: 0.000274 Rows_sent: 9  Rows_examined: 663215
+SET timestamp=1618415580;
 SELECT departments.dept_no
       ,MIN(dept_name)
       ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS MAN_COUNT
@@ -210,10 +217,10 @@ FROM employees
 INNER JOIN dept_emp ON dept_emp.emp_no = employees.emp_no
 INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
 GROUP BY dept_emp.dept_no;
-# Time: 2021-04-06T16:45:03.899634Z
-# User@Host: root[root] @ localhost []  Id:   129
-# Query_time: 1.622969  Lock_time: 0.000159 Rows_sent: 4  Rows_examined: 5688098
-SET timestamp=1617727502;
+# Time: 2021-04-14T15:58:42.100412Z
+# User@Host: root[root] @ localhost []  Id:    24
+# Query_time: 0.606122  Lock_time: 0.000205 Rows_sent: 4  Rows_examined: 3084175
+SET timestamp=1618415921;
 SELECT
     CASE 
     WHEN salary <= 50000  THEN 'low'
@@ -223,12 +230,13 @@ SELECT
     END AS salary_class
    ,COUNT(DISTINCT emp_no) AS emp_count
 FROM salaries
+WHERE to_date = '9999-01-01'
 GROUP BY salary_class
 ORDER BY emp_count DESC;
-# Time: 2021-04-06T16:45:12.816048Z
-# User@Host: root[root] @ localhost []  Id:   129
-# Query_time: 4.409763  Lock_time: 0.000239 Rows_sent: 7  Rows_examined: 5381849
-SET timestamp=1617727508;
+# Time: 2021-04-14T16:04:50.500480Z
+# User@Host: root[root] @ localhost []  Id:    24
+# Query_time: 1.495217  Lock_time: 0.000264 Rows_sent: 7  Rows_examined: 3208169
+SET timestamp=1618416289;
 SELECT title
       ,MIN(salary) AS Minimum
       ,ROUND(SUM(salary) / COUNT(salary)) AS Mean
@@ -236,6 +244,8 @@ SELECT title
 FROM employees
 INNER JOIN titles ON titles.emp_no = employees.emp_no
 INNER JOIN salaries ON salaries.emp_no = employees.emp_no
+AND titles.to_date = '9999-01-01'
+AND salaries.to_date = '9999-01-01'
 GROUP BY title;
 ```
 
