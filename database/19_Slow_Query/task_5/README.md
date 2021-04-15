@@ -26,6 +26,18 @@
 <details>
 <summary>回答例</summary>
 
+参考資料に載せている通りの手順で導入できる。
+
+```bash
+# Dockerコンテナ上で実行する
+> apt update
+> apt install -y wget gnupg2 lsb-release curl
+> wget https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+> dpkg -i percona-release_latest.generic_all.deb
+> apt update
+> apt install install percona-toolkit
+```
+
 以下のようにスロークエリに記載されているログの統計情報などを理解しやすい形で表示してくれる。
 
 ```bash
@@ -108,12 +120,30 @@ ORDER BY emp_count DESC\G
 
 ## #2 クイズ
 
+生のスロークエリログには以下のような値が出力されている。
+
+```bash
+# Time: 2021-04-14T16:04:50.500480Z
+# User@Host: root[root] @ localhost []  Id:    24
+# Query_time: 1.495217  Lock_time: 0.000264 Rows_sent: 7  Rows_examined: 3208169
+```
+
+この中で `Rows_sent` と `Rows_examined` の違いは何か、またクエリを高速化させる観点ではどの値がどのようになることを気にする必要があるでしょうか。
+
 <details>
 <summary>回答例</summary>
-</details>
+<div>
 
-## #3 クイズ
+- `Rows_sent`
+  - クライアントに対して送り返す行数
+- `Rows_examined`
+  - クライアントに送り返す行を探索するために読み込んだ行数
 
-<details>
-<summary>回答例</summary>
+`Rows_examined` が多い場合は実行速度が遅い場合が多いらしいので注意が必要である。高速化にはインデックスなどを使用できる。
+
+参考資料
+
+- [MySQLのクエリの良し悪しはrows_examinedで判断する](https://blog.kamipo.net/entry/2018/03/22/084126)
+
+</div>
 </details>
