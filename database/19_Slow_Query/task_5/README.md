@@ -7,7 +7,6 @@
 
 - [&#035;1 クイズ](#1-%E3%82%AF%E3%82%A4%E3%82%BA)
 - [&#035;2 クイズ](#2-%E3%82%AF%E3%82%A4%E3%82%BA)
-- [&#035;3 クイズ](#3-%E3%82%AF%E3%82%A4%E3%82%BA)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
