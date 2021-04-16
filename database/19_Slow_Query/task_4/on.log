@@ -1,0 +1,69 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "95634.96"
+    },
+    "nested_loop": [
+      {
+        "table": {
+          "table_name": "e",
+          "access_type": "ALL",
+          "possible_keys": [
+            "PRIMARY"
+          ],
+          "rows_examined_per_scan": 298990,
+          "rows_produced_per_join": 49826,
+          "filtered": "16.66",
+          "cost_info": {
+            "read_cost": "25283.84",
+            "eval_cost": "4982.67",
+            "prefix_cost": "30266.51",
+            "data_read_per_join": "6M"
+          },
+          "used_columns": [
+            "emp_no",
+            "birth_date",
+            "first_name",
+            "last_name",
+            "gender",
+            "hire_date"
+          ],
+          "attached_condition": "((`employees`.`e`.`gender` = 'M') and (`employees`.`e`.`birth_date` > DATE'1960-01-01'))"
+        }
+      },
+      {
+        "table": {
+          "table_name": "s",
+          "access_type": "ref",
+          "possible_keys": [
+            "PRIMARY"
+          ],
+          "key": "PRIMARY",
+          "used_key_parts": [
+            "emp_no"
+          ],
+          "key_length": "4",
+          "ref": [
+            "employees.e.emp_no"
+          ],
+          "rows_examined_per_scan": 9,
+          "rows_produced_per_join": 473430,
+          "filtered": "100.00",
+          "cost_info": {
+            "read_cost": "18025.39",
+            "eval_cost": "47343.06",
+            "prefix_cost": "95634.96",
+            "data_read_per_join": "7M"
+          },
+          "used_columns": [
+            "emp_no",
+            "salary",
+            "from_date",
+            "to_date"
+          ]
+        }
+      }
+    ]
+  }
+}
