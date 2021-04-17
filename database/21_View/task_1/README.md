@@ -116,4 +116,13 @@ COLLATION_CONNECTION: latin1_swedish_ci
 
 ## ビューのメリット
 
+- 必要最低限のカラムのみを表示できる
+- 個人情報や機密情報を含むカラムを表示させないようにできる 
+- 結合や集約を多用している処理を再利用することで、後続の開発者での理解が容易となる
+- 
+
+参考資料
+
+- [第58回　viewの使いどころを考えてみよう](https://gihyo.jp/dev/serial/01/mysql-road-construction-news/0058)
+
 ## Materialzed Viewとは何か
