@@ -1,0 +1,27 @@
+@startuml Good ER r1
+
+hide circle
+
+skinparam linetype ortho
+
+entity "assignee" as assignee {
+  * id: varchar [PK]
+}
+
+entity "assign" as assign {
+    * id: varchar [PK]
+    ---
+    issue_id: varchar [FK]
+    assignee_id: varchar [FK]
+}
+
+entity "issue" as issue {
+  * id: varchar [PK]
+  ---
+  text: varchar
+}
+
+assignee ||--o{ assign
+issue ||--o{ assign
+
+@enduml
