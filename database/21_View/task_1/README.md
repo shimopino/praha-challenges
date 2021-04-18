@@ -125,13 +125,99 @@ COLLATION_CONNECTION: latin1_swedish_ci
 
 ## ビューのメリット
 
-- 必要最低限のカラムのみを表示できる
-- 個人情報や機密情報を含むカラムを表示させないようにできる 
-- 結合や集約を多用している処理を再利用することで、後続の開発者での理解が容易となる
-- 
+### SQLをよりシンプルに書ける
+
+> 部署ごとに男性従業員と女性従業員の人数を算出する。
+
+ビューを使用する前は以下のようなクエリを実行していた。
+
+```sql
+SELECT departments.dept_no
+      ,MIN(dept_name)
+      ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS MAN_COUNT
+      ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) AS FEMALE_COUNT
+FROM employees
+INNER JOIN (
+    SELECT emp_no
+          ,MAX(dept_no) AS dept_no
+          ,MAX(from_date) AS from_date
+          ,MAX(to_date) AS to_date
+     FROM dept_emp
+     GROUP BY emp_no
+) AS dept_emp ON dept_emp.emp_no = employees.emp_no
+INNER JOIN departments ON departments.dept_no = dept_emp.dept_no
+GROUP BY dept_emp.dept_no;
+```
+
+ここでは従業員と部署の紐づけテーブルから `to_date` が最大値であるレコードを抽出した後で、従業員テーブルと部署テーブルを結合しており、一見してはわかりずらいクエリとなってしまっている。
+
+上記のクエリであれば、部署IDに紐づいている従業員のテーブルを事前に用意することができていれば、結合処理などを省くことができ簡略化させることができる。
+
+そこで以下のビューを作成する。
+
+```sql
+CREATE VIEW dept_emp_info AS 
+SELECT departments.dept_no
+      ,departments.dept_name
+      ,dept_emp.emp_no
+      ,gender
+FROM employees
+INNER JOIN (
+    SELECT emp_no
+          ,MAX(dept_no) AS dept_no
+          ,MAX(from_date) AS from_date
+          ,MAX(to_date) AS to_date
+     FROM dept_emp
+     GROUP BY emp_no
+) AS dept_emp ON dept_emp.emp_no = employees.emp_no
+INNER JOIN departments ON departments.dept_no = dept_emp.dept_no;
+```
+
+これでそれぞれの部署に所属している従業員とその性別を結合させたビューを作成することができている。
+
+```bash
+mysql> desc dept_emp_info;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| dept_no   | char(4)       | NO   |     | NULL    |       |
+| dept_name | varchar(40)   | NO   |     | NULL    |       |
+| emp_no    | int           | NO   |     | NULL    |       |
+| gender    | enum('M','F') | NO   |     | NULL    |       |
++-----------+---------------+------+-----+---------+-------+
+```
+
+このビューを使用すれば、部署ごとの男性従業員と女性従業員の人数を算出するクエリは以下のように変更することができる。
+
+
+```sql
+SELECT dept_no
+      ,MAX(dept_name)
+      ,SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS MAN_COUNT
+      ,SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) AS FEMALE_COUNT
+FROM dept_emp_info
+GROUP BY dept_no;
+```
+
+### よりセキュアなクエリを強制する
+
+
+
 
 参考資料
 
 - [第58回　viewの使いどころを考えてみよう](https://gihyo.jp/dev/serial/01/mysql-road-construction-news/0058)
 
 ## Materialzed Viewとは何か
+
+通常のビューでは、
+マテリアライズドビューとは、クエリの結果を実際のテーブルにキャッシュさせ、元のテーブルに変更が加えられるたびに更新する機能である。
+
+また、テーブルとしての実体を有しているため、通常のテーブルに対して適用可能な操作は、マテリアライズドビューにも適用可能であり、インデックスを作成してクエリの実行時間を短縮させることも可能である。
+
+参考資料
+
+- [マテリアライズドビュー](https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%86%E3%83%AA%E3%82%A2%E3%83%A9%E3%82%A4%E3%82%BA%E3%83%89%E3%83%93%E3%83%A5%E3%83%BC)
+- [3分でわかるマテリアライズド・ビュー -使い所と問題点を考える-](https://qiita.com/wanko5296/items/61c3e6ec4561b26beb5c)
+- [3 マテリアライズド・ビューの概要とアーキテクチャ](https://docs.oracle.com/cd/E57425_01/121/REPLN/repmview.htm#BABIIDJC)
+- [38.3. マテリアライズドビュー](https://www.postgresql.jp/document/9.3/html/rules-materializedviews.html)
