@@ -233,14 +233,22 @@ mysql> SELECT * FROM employees_view LIMIT 10;
 
 ## Materialzed Viewとは何か
 
-通常のビューでは、
-マテリアライズドビューとは、クエリの結果を実際のテーブルにキャッシュさせ、元のテーブルに変更が加えられるたびに更新する機能である。
+**マテリアライズドビュー** とは、いわば事前に定義されたSQLの結果をテーブルとして保持しておくことで、参照ごとに再検索することなく、高速に結果を返るための仕組みである。
 
-また、テーブルとしての実体を有しているため、通常のテーブルに対して適用可能な操作は、マテリアライズドビューにも適用可能であり、インデックスを作成してクエリの実行時間を短縮させることも可能である。
+図解はMicrosoftが提供している [Materialized View pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view) が理解しやすかった。
+
+![](https://docs.microsoft.com/en-us/azure/architecture/patterns/_images/materialized-view-pattern-diagram.png)
+
+上記の図が示しているように、DB設計の際に行う非正規化などは、あくまでもデータの保存方法に着目しているため、本当に必要な形式となっていない場合がある。
+
+そこで事前にビューを作成することでアプリに必要なフォーマットでデータを抽出することが可能となる。
 
 参考資料
 
 - [マテリアライズドビュー](https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%86%E3%83%AA%E3%82%A2%E3%83%A9%E3%82%A4%E3%82%BA%E3%83%89%E3%83%93%E3%83%A5%E3%83%BC)
 - [3分でわかるマテリアライズド・ビュー -使い所と問題点を考える-](https://qiita.com/wanko5296/items/61c3e6ec4561b26beb5c)
-- [3 マテリアライズド・ビューの概要とアーキテクチャ](https://docs.oracle.com/cd/E57425_01/121/REPLN/repmview.htm#BABIIDJC)
-- [38.3. マテリアライズドビュー](https://www.postgresql.jp/document/9.3/html/rules-materializedviews.html)
+- [Oracleの機能を使って表の結合を高速化する](https://www.atmarkit.co.jp/ait/articles/0504/21/news105.html)
+- [[Oracle] 3 マテリアライズド・ビューの概要とアーキテクチャ](https://docs.oracle.com/cd/E57425_01/121/REPLN/repmview.htm#BABIIDJC)
+- [[PostgreSQL] 38.3. マテリアライズドビュー](https://www.postgresql.jp/document/9.3/html/rules-materializedviews.html)
+- [[Microsoft] Materialized View pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view)
+- [DBエンジンのトレンド](https://db-engines.com/en/ranking_trend)
