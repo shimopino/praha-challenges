@@ -1,7 +1,16 @@
 # 課題2
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [環境構築](#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+- [GithubのIssue](#github%E3%81%AEissue)
+- [ER図の書き方](#er%E5%9B%B3%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 環境構築
 
