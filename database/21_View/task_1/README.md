@@ -251,4 +251,5 @@ mysql> SELECT * FROM employees_view LIMIT 10;
 - [[Oracle] 3 マテリアライズド・ビューの概要とアーキテクチャ](https://docs.oracle.com/cd/E57425_01/121/REPLN/repmview.htm#BABIIDJC)
 - [[PostgreSQL] 38.3. マテリアライズドビュー](https://www.postgresql.jp/document/9.3/html/rules-materializedviews.html)
 - [[Microsoft] Materialized View pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view)
+- [[BigQuery] マテリアライズド ビューの概要]https://cloud.google.com/bigquery/docs/materialized-views-intro
 - [DBエンジンのトレンド](https://db-engines.com/en/ranking_trend)
