@@ -18,12 +18,14 @@
 
 ```bash
 # javaのインストール
-sudo apt install -y default-jre
-javac --version
+$ sudo apt install -y default-jre
+$ javac --version
+javac 11.0.9.1
 
 # graphvizのインストール
-sudo apt -y install graphviz
-dot -V
+$ sudo apt -y install graphviz
+$ dot -V
+dot - graphviz version 2.43.0 (0)
 ```
 
 ## GithubのIssue
@@ -49,5 +51,15 @@ dot -V
 
 これでもともとは `assignee` が割り当てられていない状況を、カラムの `NULL` で表現していた代わりに、`assign` テーブルに該当する行が存在しないという、行単位での表現に変更することができた。
 
-## ER図の書き方
+なお `issue` に対して `assignee` を1人までしか割り当てることができない場合は以下のように **UNIQUE制約** を設ければいい。
 
+```sql
+ALTER TABLE assign
+ADD CONSTRAINT assign_unique
+UNIQUE (issue_id, assignee_id);
+```
+
+参考資料
+
+- [MySQL UNIQUE Constraint](https://www.mysqltutorial.org/mysql-unique-constraint/)
+- [MySQL CHECK Constraint](https://www.mysqltutorial.org/mysql-check-constraint/)
