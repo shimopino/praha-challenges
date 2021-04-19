@@ -101,3 +101,7 @@ WHERE description <> 'sample';
 参考資料
 
 - [3値論理とNULL](https://codezine.jp/article/detail/532)
+- [MySQL CREATE TABLE](https://www.mysqltutorial.org/mysql-create-table/)
+- [MySQL Primary Key](https://www.mysqltutorial.org/mysql-primary-key/)
+- [MySQL Insert Multiple Rows](https://www.mysqltutorial.org/mysql-insert-multiple-rows/)
+
