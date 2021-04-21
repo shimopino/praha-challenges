@@ -13,10 +13,13 @@
   - [Atomicity (原子性)](#atomicity-%E5%8E%9F%E5%AD%90%E6%80%A7)
   - [Consistency (一貫性)](#consistency-%E4%B8%80%E8%B2%AB%E6%80%A7)
   - [Isolation (独立性)](#isolation-%E7%8B%AC%E7%AB%8B%E6%80%A7)
-  - [Durability (耐久性)](#durability-%E8%80%90%E4%B9%85%E6%80%A7)
-- [ロックの種類](#%E3%83%AD%E3%83%83%E3%82%AF%E3%81%AE%E7%A8%AE%E9%A1%9E)
-  - [共有ロックと占有ロック](#%E5%85%B1%E6%9C%89%E3%83%AD%E3%83%83%E3%82%AF%E3%81%A8%E5%8D%A0%E6%9C%89%E3%83%AD%E3%83%83%E3%82%AF)
+  - [Durability (永続性)](#durability-%E6%B0%B8%E7%B6%9A%E6%80%A7)
+- [Lock Types](#lock-types)
+  - [Shared and Exclusive Locks](#shared-and-exclusive-locks)
   - [Intention Locks](#intention-locks)
+  - [Record Locks](#record-locks)
+  - [Gap Locks](#gap-locks)
+  - [Next-Key Locks](#next-key-locks)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
