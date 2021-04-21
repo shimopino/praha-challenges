@@ -23,11 +23,66 @@
 
 ## デッドロックとは何か
 
-デッドロックとは、2つ以上のトランザクションがお互いが必要としているデータを取得するために、お互いのリソースが解放されるのを待機している状況である。
+**デッドロック**とは、他のトランザクションが必要としているロックを、それぞれが保持したままであるために、お互いのトランザクションが続行できない状態のことを表している。
 
+では実際にデッドロックを発生させてみる。
 
+まずはターミナルからMySQLサーバーにアクセスし、トランザクションを開始させた後で、共有ロックを取得する。
+
+```bash
+A> START TRANSACTION;
+Query OK, 0 rows affected (0.00 sec)
+
+A> SELECT * FROM employees WHERE emp_no = 500001 FOR SHARE;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 500001 | 1981-01-01 | ccccccc    | ddddddd   | F      | 1991-03-30 |
++--------+------------+------------+-----------+--------+------------+
+1 row in set (0.00 sec)
+```
+
+次に異なるセッションでMySQLサーバーにアクセスして、トランザクションを開始した後で、指定のレコードを削除しようとしてみる。
+
+```bash
+B> DELETE FROM employees WHERE emp_no = 500001;
+
+```
+
+この際に処理を実行した段階で、セッションAが共有ロックを取得しているレコードに対して、占有ロックを取得しようとして、セッションAがロックを解放することを待機している状態である。
+
+ではこの状態でセッションAから指定のレコードを削除してみる。
+
+```bash
+A> DELETE FROM employees WHERE emp_no = 500001;
+Query OK, 1 row affected (0.01 sec)
+```
+
+このときセッションAでの処理は正常に終了するが、セッションBではデッドロックが発生したことを示すエラーが発生する。
+
+```bash
+B> DELETE FROM employees WHERE emp_no = 500001;
+ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction
+```
+
+デフォルト設定ではInnoDBは自動的にデッドロックを検知するための機能を有効にしており、デッドロックが検知された場合には、より小さな単位のトランザクションをロールバックさせるようにしている。
+
+そのため自動的にセッションBで作成したトランザクションがロールバックされている。
+
+参考資料
+
+- [15.7.5.1 An InnoDB Deadlock Example](https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlock-example.html)
+- [15.7.5.2 Deadlock Detection](https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlock-detection.html)
+- [15.7.5.3 How to Minimize and Handle Deadlocks](https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlocks-handling.html)
 
 ## ISOLATION LEVELとは何か
+
+
+
+
+参考資料
+
+- [トランザクション分離レベルについてのまとめ](https://qiita.com/song_ss/items/38e514b05e9dabae3bdb)
 
 ## 行レベルロック、テーブルレベルロックの違いとは何か
 
