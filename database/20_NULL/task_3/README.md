@@ -143,6 +143,10 @@ mysql> SELECT * FROM samples;
 SELECT * FROM samples ORDER BY to_date;
 ```
 
+<details>
+<summary>回答例</summary>
+<div>
+
 参考資料
 
 - [B.3.4.3 Problems with NULL Values](https://dev.mysql.com/doc/refman/8.0/en/problems-with-null.html)
