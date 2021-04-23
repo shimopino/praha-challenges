@@ -37,7 +37,8 @@ mysql> desc employees;
 実際に `employees_view` テーブルを作成する。
 
 ```sql
-CREATE VIEW employees_view AS SELECT emp_no, first_name, last_name FROM employees;
+CREATE VIEW employees_view AS
+SELECT emp_no, first_name, last_name FROM employees;
 ```
 
 データベースに存在しているテーブルを確認すると、作成したビューが登録されていることがわかる。
@@ -78,7 +79,8 @@ mysql> SELECT * FROM employees_view LIMIT 5;
 
 ```sql
 -- 定義の変更
-ALTER VIEW employees_view AS SELECT emp_no, birth_date, first_name FROM employees;
+ALTER VIEW employees_view AS
+SELECT emp_no, birth_date, first_name FROM employees;
 
 -- ビューの削除
 DROP VIEW employees_view;
@@ -233,7 +235,7 @@ mysql> SELECT * FROM employees_view LIMIT 10;
 
 ## Materialzed Viewとは何か
 
-**マテリアライズドビュー** とは、いわば事前に定義されたSQLの結果をテーブルとして保持しておくことで、参照ごとに再検索することなく、高速に結果を返るための仕組みである。
+**マテリアライズドビュー** とは、事前に定義されたSQLの結果をテーブルとして保持しておくことで、参照ごとに再検索することなく、高速に結果を返すための仕組みである。
 
 図解はMicrosoftが提供している [Materialized View pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view) が理解しやすかった。
 
@@ -251,5 +253,5 @@ mysql> SELECT * FROM employees_view LIMIT 10;
 - [[Oracle] 3 マテリアライズド・ビューの概要とアーキテクチャ](https://docs.oracle.com/cd/E57425_01/121/REPLN/repmview.htm#BABIIDJC)
 - [[PostgreSQL] 38.3. マテリアライズドビュー](https://www.postgresql.jp/document/9.3/html/rules-materializedviews.html)
 - [[Microsoft] Materialized View pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/materialized-view)
-- [[BigQuery] マテリアライズド ビューの概要]https://cloud.google.com/bigquery/docs/materialized-views-intro
+- [[BigQuery] マテリアライズド ビューの概要](https://cloud.google.com/bigquery/docs/materialized-views-intro)
 - [DBエンジンのトレンド](https://db-engines.com/en/ranking_trend)
