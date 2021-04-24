@@ -79,6 +79,10 @@ Set tags = CONCAT(tags, ',', 'frontend')
 WHERE id = 1;
 ```
 
+参考資料
+
+- [[Stackoverflow] String concatenation in MySQL](https://stackoverflow.com/questions/5975958/string-concatenation-in-mysql)
+
 ### 課題3 タグに対する検証ができない
 
 ここでは以下のような `Tags` テーブルが存在しており、`Products` テーブルの `tags` には、`Tags` テーブルの主キーをコンマ区切りで持たせているような状況を考える。
@@ -139,9 +143,25 @@ WHERE id = 1;
 +----+------------------+----------------------------+
 ```
 
+### 課題5 `tags` カラムの文字列長の可変性
 
+今回は `tags` の定義を `VARCHAR(255)` と設定している。
 
+もしも製品にタグ付けされているタグ名の文字列長が、上記の定義を超えてしまう場合、対象の製品には新しくタグを付与することができなくなってしまう。
 
+```sql
+-- 'back,end' という名称のタグを追加する
+UPDATE Products
+Set tags = <<String vallue of its Length over 255 bytes>>
+WHERE id = 1;
+
+-- 以下のような例外が発生してしまう
+-- ERROR 1406 (22001): Data too long for column 'tags' at row 1
+```
+
+設定した文字列長が将来にわたって保証されるかどうか明らかにすることは難しい。
+
+## 実験環境の後片付け
 
 ```sql
 DROP TABLE Products;
