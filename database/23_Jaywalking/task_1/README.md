@@ -79,6 +79,46 @@ Set tags = tags || ',' || 'frontend'
 WHERE id = 1;
 ```
 
+### 課題3 タグに対する検証ができない
+
+ここでは以下のような `Tags` テーブルが存在しており、`Products` テーブルの `tags` には、`Tags` テーブルの主キーをコンマ区切りで持たせているような状況を考える。
+
+```sql
+CREATE TABLE IF NOT EXISTS Tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255)
+) ENGINE=INNODB;
+
+INSERT INTO Tags (name)
+VALUES
+    ('web'),
+    ('test'),
+    ('database');
+```
+
+つまり以下のようなレコードを有している状況である。
+
+```bash
++----+----------+
+| id | name     |
++----+----------+
+|  1 | web      |
+|  2 | test     |
+|  3 | database |
++----+----------+
+```
+
+現状のテーブル設計では `tags` カラムに対して外部キー制約を付与することができないため、本来では不正な値である `4` などを以下のように追加することができてしまう。
+
+```sql
+UPDATE Products
+Set tags = tags || ',' || '4'
+WHERE id = 1;
+```
+
+このようにちょっとしたミスで容易に整合性が崩れてしまう。
+
+
 
 無効な値を排除できない。
 
