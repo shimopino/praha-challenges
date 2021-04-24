@@ -32,16 +32,44 @@ INSERT INTO Products (text, tags)
 VALUES ('Smaple Product 1', 'web,test,database');
 ```
 
+中身を確認してみると以下のようになっている。
 
-パターンマッチ
+```bash
++----+------------------+-------------------+
+| id | text             | tags              |
++----+------------------+-------------------+
+|  1 | Smaple Product 1 | web,test,database |
++----+------------------+-------------------+
+```
+
+ではこのテーブル設計の場合にどのような課題が発生するのか考える。
+
+### 課題1 特定のタグで検索することが困難
+
+例えばタグが `test` である製品を検索したい場合、単純に以下のようなクエリで検索することはできない。
 
 ```sql
+SELECT * FROM Products WHERE tags = 'test';
+```
+
+以下のように `LIKE` を使用したり、`REGEXP` で正規表現で指定する必要が出てくる。
+
+```sql
+-- LIKE句
+SELECT * FROM Products WHERE tags LIKE '%test%';
+
+-- REGEXP句
+-- \b で単語の境界を表現することができる
 SELECT * FROM Products WHERE tags REGEXP '\\btest\\b';
 ```
 
-Regular Expression Compatibility Considerations
+SQLでは前方一致を含むような検索条件では、インデックスを活用することができないため、上記の設計だと検索速度にも悪影響を及ぼしてしまう。
 
-https://dev.mysql.com/doc/refman/8.0/en/regexp.html#regexp-compatibility
+参考資料
+
+- [Regular Expression Compatibility Considerations](https://dev.mysql.com/doc/refman/8.0/en/regexp.html#regexp-compatibility)
+
+### 課題2 新しいタグの付与が複雑になる
 
 ```sql
 UPDATE Products
