@@ -75,7 +75,7 @@ SQLでは前方一致を含むような検索条件では、インデックス�
 
 ```sql
 UPDATE Products
-Set tags = tags || ',' || 'frontend'
+Set tags = CONCAT(tags, ',', 'frontend')
 WHERE id = 1;
 ```
 
@@ -112,22 +112,38 @@ VALUES
 
 ```sql
 UPDATE Products
-Set tags = tags || ',' || '4'
+Set tags = CONCAT(tags, ',', '4')
 WHERE id = 1;
 ```
 
 このようにちょっとしたミスで容易に整合性が崩れてしまう。
 
+### 課題4 区切り文字に関する制約を考える必要がある。
+
+現在は区切り文字にコンマを使用しているが、もしもタグ名そのものにコンマを含むようなデータが挿入された場合、タグの区切りなのかタグ名の一部なのか判断することが不可能になってしまう。
+
+```sql
+-- 'back,end' という名称のタグを追加する
+UPDATE Products
+Set tags = CONCAT(tags, ',', 'back,end')
+WHERE id = 1;
+```
+
+以下のように区切り文字なのかタグ名なのか判別がつかない。
+
+```bash
++----+------------------+----------------------------+
+| id | text             | tags                       |
++----+------------------+----------------------------+
+|  1 | Smaple Product 1 | web,test,database,back,end |
++----+------------------+----------------------------+
+```
 
 
-無効な値を排除できない。
 
-'web,test,database,frontnend,XXXXXX'
 
-区切り文字に何を選択すればいいのか
-
-カラムの列の指定
 
 ```sql
 DROP TABLE Products;
+DROP TABLE Tags;
 ```
