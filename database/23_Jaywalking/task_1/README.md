@@ -19,6 +19,10 @@
 
 ## Jaywalking
 
+参考資料
+
+- [[SQLアンチパターン] 第1章 Jaywalking](https://www.amazon.co.jp/SQL%E3%82%A2%E3%83%B3%E3%83%81%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3-Bill-Karwin/dp/4873115892/ref=sr_1_1?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&crid=1TIN7S41J6LSE&dchild=1&keywords=sql+%E3%82%A2%E3%83%B3%E3%83%81&qid=1619239029&sprefix=jabra%2Caps%2C327&sr=8-1)
+
 ### 問題設定
 
 以下の状況を考える。
