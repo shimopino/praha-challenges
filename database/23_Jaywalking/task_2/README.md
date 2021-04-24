@@ -117,3 +117,16 @@ DELETE FROM Taggings
 WHERE product_id = 1
 AND tag_id = 4;
 ```
+
+### 課題3 タグに対する検証ができない
+
+`Taggings` テーブルの製品IDとタグIDには外部キー制約を設けているため、存在しない製品やタグを紐づけることができなくなり、処理の整合性を保つことができるようになる。
+
+```sql
+-- 製品ID ('1') に、存在しないタグID ('4') を紐づけてみる
+INSERT INTO Taggings (product_id, tag_id)
+VALUES (1, 4);
+
+-- 外部キー制約による例外が発生する
+-- ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`employees`.`Taggings`, CONSTRAINT `Taggings_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `Tags` (`id`)
+```
