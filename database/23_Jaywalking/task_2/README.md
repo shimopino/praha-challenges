@@ -130,3 +130,29 @@ VALUES (1, 4);
 -- 外部キー制約による例外が発生する
 -- ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`employees`.`Taggings`, CONSTRAINT `Taggings_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `Tags` (`id`)
 ```
+
+### 課題4 区切り文字に関する制約を考える必要がある。
+
+交差テーブルを追加することで、1つのタグの名称は1つのレコードとして管理されているため、コンマ区切りなどの概念は存在しなくなった。
+
+そのため以下のようにコンマを含むタグ名を追加しても、タグIDをもとに関単に識別することが可能である。
+
+```sql
+-- Tagsテーブルにコンマ付きの名称を追加する
+INSERT INTO Tags (tag)
+VALUES ('back,end');
+```
+
+これで以下のようなレコードが挿入され、紐づけにはIDしか使用しないため、コンマが含まれている名称であっても、容易に識別することが可能である。
+
+```bash
++----+----------+
+| id | tag      |
++----+----------+
+|  1 | web      |
+|  2 | test     |
+|  3 | database |
+|  5 | back,end |
++----+----------+
+```
+
