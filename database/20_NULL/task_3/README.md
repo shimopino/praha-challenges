@@ -17,7 +17,7 @@
 
 以下のようなユーザーとツイートのテーブルを持つSNSを考える。
 
-![](../assets/Likes.png)
+![](../assets/quiz1.png)
 
 ユーザーがツイートに対して「いいね」を実行すると、そのユーザーとツイートが紐づく設計である。
 
@@ -30,7 +30,9 @@
 <details>
 <summary>回答例</summary>
 
+ユーザーとツイートというリソースを紐づけるための中間テーブルを導入する。
 
+![](../assets/quiz1_ansewr.png)
 
 </details>
 
@@ -39,7 +41,7 @@
 
 以下のようなテーブル設計を考える。
 
-![](../assets/Likes%20Polymorphic%20Associations.png)
+![](../assets/quiz2.png)
 
 このテーブル設計では以下の仕様を満たすようにしている。
 
@@ -64,7 +66,11 @@
 <details>
 <summary>回答例</summary>
 
-Polymorphic Associations
+これは **Polymorphic Associations** というアンチパターンに該当しています。
+
+このパターンに対する解決策はいくらかあるかとは思いますが、自分の場合は以下のようにリソースごとに中間テーブルを採用する方針にしました。
+
+![](../assets/quiz2_answer.png)
 
 </details>
 
@@ -107,6 +113,36 @@ mysql> SELECT * FROM samples;
 <details>
 <summary>回答例</summary>
 <div>
+
+`COUNT(*)` を使用した場合は `NULL` が含まれていても行数のカウントが実行される。
+
+```bash
+mysql> SELECT description, count(*) FROM samples GROUP BY description;
+
++-------------+----------+
+| description | count(*) |
++-------------+----------+
+| sample      |        2 |
+| praha       |        2 |
+| NULL        |        4 |
+| challenge   |        2 |
++-------------+----------+
+```
+
+`COUNT(description)` のように特定のカラムを指定した場合には、`NULL`が含まれていると対象の行はカウントされない。
+
+```bash
+mysql> SELECT description, count(description) FROM samples GROUP BY description;
+
++-------------+--------------------+
+| description | count(description) |
++-------------+--------------------+
+| sample      |                  2 |
+| praha       |                  2 |
+| NULL        |                  0 |
+| challenge   |                  2 |
++-------------+--------------------+
+```
 
 参考資料
 
