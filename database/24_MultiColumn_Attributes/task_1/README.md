@@ -1,7 +1,17 @@
 # 課題1
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [問題設定](#%E5%95%8F%E9%A1%8C%E8%A8%AD%E5%AE%9A)
+  - [課題1 タグ名での検索が冗長になる](#%E8%AA%B2%E9%A1%8C1-%E3%82%BF%E3%82%B0%E5%90%8D%E3%81%A7%E3%81%AE%E6%A4%9C%E7%B4%A2%E3%81%8C%E5%86%97%E9%95%B7%E3%81%AB%E3%81%AA%E3%82%8B)
+  - [課題2 整合性の担保が難しい](#%E8%AA%B2%E9%A1%8C2-%E6%95%B4%E5%90%88%E6%80%A7%E3%81%AE%E6%8B%85%E4%BF%9D%E3%81%8C%E9%9B%A3%E3%81%97%E3%81%84)
+  - [課題3 タグを追加する仕様変更への対応が難しい](#%E8%AA%B2%E9%A1%8C3-%E3%82%BF%E3%82%B0%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B%E4%BB%95%E6%A7%98%E5%A4%89%E6%9B%B4%E3%81%B8%E3%81%AE%E5%AF%BE%E5%BF%9C%E3%81%8C%E9%9B%A3%E3%81%97%E3%81%84)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 問題設定
 
