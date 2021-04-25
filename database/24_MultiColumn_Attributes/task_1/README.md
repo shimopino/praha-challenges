@@ -36,7 +36,7 @@ entity Tag {
 }
 ```
 
-![](./assets/problem.png)
+![](../assets/problem.png)
 
 ではこのテーブル設計で発生する問題を、CRUD
 CRUD操作の観点や将来的な仕様変更への耐性から考えていく。
