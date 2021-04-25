@@ -116,7 +116,401 @@ possible_keys: bdate_lname_idx
   - `stage/sql/executing`
     - スレッドがクエリを実行している状態
 
-> インデックスを使用している場合に統計情報の計算時間が増加している理由は何だろうか
+### インデックスの作成により統計情報の実行時間が伸びた原因の調査
+
+以下の順番でクエリを実行することで、`potential_range_indexes` を確認してどのようなインデックスが認識されているのか、`considered_execution_plans` を確認して実行計画の計算自体に時間がかかっているのか確認する。
+
+```sql
+SET optimizer_trace='enabled=on';
+
+-- ここでクエリを実行する
+
+SELECT * FROM information_schema.optimizer_trace\G
+
+SET optimizer_trace='enabled=off'
+```
+
+ここでそれぞれのログの違いを出力すると、実際に計算されているコストが変更されていたり、余分に実行計画の計算に時間がかかっていることがわかる。
+
+![](compare-query1-log.png)
+
+おそらくはこうした実行計画の計算自体の増加により、`stage/sql/statistics` の実行時間が伸びているのではないかと考えられる。
+
+全体のログはそれぞれ下記に記載している。
+
+<details>
+<summary>ログ</summary>
+<div>
+
+インデックスを使用しない場合のログ
+
+```bash
+*************************** 1. row ***************************
+                            QUERY: SELECT *
+FROM employees
+WHERE birth_date = '1960-01-01'
+AND last_name LIKE 'Kr%'
+                            TRACE: {
+  "steps": [
+    {
+      "join_preparation": {
+        "select#": 1,
+        "steps": [
+          {
+            "expanded_query": "/* select#1 */ select `employees`.`emp_no` AS `emp_no`,`employees`.`birth_date` AS `birth_date`,`employees`.`first_name` AS `first_name`,`employees`.`last_name` AS `last_name`,`employees`.`gender` AS `gender`,`employees`.`hire_date` AS `hire_date` from `employees` where ((`employees`.`birth_date` = '1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+          }
+        ]
+      }
+    },
+    {
+      "join_optimization": {
+        "select#": 1,
+        "steps": [
+          {
+            "condition_processing": {
+              "condition": "WHERE",
+              "original_condition": "((`employees`.`birth_date` = '1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+              "steps": [
+                {
+                  "transformation": "equality_propagation",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal('1960-01-01', `employees`.`birth_date`))"
+                },
+                {
+                  "transformation": "constant_propagation",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal('1960-01-01', `employees`.`birth_date`))"
+                },
+                {
+                  "transformation": "trivial_condition_removal",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal(DATE'1960-01-01', `employees`.`birth_date`))"
+                }
+              ]
+            }
+          },
+          {
+            "substitute_generated_columns": {
+            }
+          },
+          {
+            "table_dependencies": [
+              {
+                "table": "`employees`",
+                "row_may_be_null": false,
+                "map_bit": 0,
+                "depends_on_map_bits": [
+                ]
+              }
+            ]
+          },
+          {
+            "ref_optimizer_key_uses": [
+            ]
+          },
+          {
+            "rows_estimation": [
+              {
+                "table": "`employees`",
+                "table_scan": {
+                  "rows": 298990,
+                  "cost": 232.25
+                }
+              }
+            ]
+          },
+          {
+            "considered_execution_plans": [
+              {
+                "plan_prefix": [
+                ],
+                "table": "`employees`",
+                "best_access_path": {
+                  "considered_access_paths": [
+                    {
+                      "rows_to_scan": 298990,
+                      "access_type": "scan",
+                      "resulting_rows": 298990,
+                      "cost": 30131,
+                      "chosen": true
+                    }
+                  ]
+                },
+                "condition_filtering_pct": 100,
+                "rows_for_plan": 298990,
+                "cost_for_plan": 30131,
+                "chosen": true
+              }
+            ]
+          },
+          {
+            "attaching_conditions_to_tables": {
+              "original_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+              "attached_conditions_computation": [
+              ],
+              "attached_conditions_summary": [
+                {
+                  "table": "`employees`",
+                  "attached": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+                }
+              ]
+            }
+          },
+          {
+            "finalizing_table_conditions": [
+              {
+                "table": "`employees`",
+                "original_table_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+                "final_table_condition   ": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+              }
+            ]
+          },
+          {
+            "refine_plan": [
+              {
+                "table": "`employees`"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "join_execution": {
+        "select#": 1,
+        "steps": [
+        ]
+      }
+    }
+  ]
+}
+MISSING_BYTES_BEYOND_MAX_MEM_SIZE: 0
+          INSUFFICIENT_PRIVILEGES: 0
+```
+
+インデックスを使用した場合のログ
+
+```bash
+*************************** 1. row ***************************
+                            QUERY: SELECT * FROM employees WHERE birth_date = '1960-01-01' AND last_name LIKE 'Kr%'
+                            TRACE: {
+  "steps": [
+    {
+      "join_preparation": {
+        "select#": 1,
+        "steps": [
+          {
+            "expanded_query": "/* select#1 */ select `employees`.`emp_no` AS `emp_no`,`employees`.`birth_date` AS `birth_date`,`employees`.`first_name` AS `first_name`,`employees`.`last_name` AS `last_name`,`employees`.`gender` AS `gender`,`employees`.`hire_date` AS `hire_date` from `employees` where ((`employees`.`birth_date` = '1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+          }
+        ]
+      }
+    },
+    {
+      "join_optimization": {
+        "select#": 1,
+        "steps": [
+          {
+            "condition_processing": {
+              "condition": "WHERE",
+              "original_condition": "((`employees`.`birth_date` = '1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+              "steps": [
+                {
+                  "transformation": "equality_propagation",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal('1960-01-01', `employees`.`birth_date`))"
+                },
+                {
+                  "transformation": "constant_propagation",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal('1960-01-01', `employees`.`birth_date`))"
+                },
+                {
+                  "transformation": "trivial_condition_removal",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal(DATE'1960-01-01', `employees`.`birth_date`))"
+                }
+              ]
+            }
+          },
+          {
+            "substitute_generated_columns": {
+            }
+          },
+          {
+            "table_dependencies": [
+              {
+                "table": "`employees`",
+                "row_may_be_null": false,
+                "map_bit": 0,
+                "depends_on_map_bits": [
+                ]
+              }
+            ]
+          },
+          {
+            "ref_optimizer_key_uses": [
+              {
+                "table": "`employees`",
+                "field": "birth_date",
+                "equals": "DATE'1960-01-01'",
+                "null_rejecting": true
+              }
+            ]
+          },
+          {
+            "rows_estimation": [
+              {
+                "table": "`employees`",
+                "range_analysis": {
+                  "table_scan": {
+                    "rows": 298990,
+                    "cost": 30133
+                  },
+                  "potential_range_indexes": [
+                    {
+                      "index": "PRIMARY",
+                      "usable": false,
+                      "cause": "not_applicable"
+                    },
+                    {
+                      "index": "bdate_lname_idx",
+                      "usable": true,
+                      "key_parts": [
+                        "birth_date",
+                        "last_name",
+                        "emp_no"
+                      ]
+                    }
+                  ],
+                  "setup_range_conditions": [
+                  ],
+                  "group_index_range": {
+                    "chosen": false,
+                    "cause": "not_group_by_or_distinct"
+                  },
+                  "skip_scan_range": {
+                    "potential_skip_scan_indexes": [
+                      {
+                        "index": "bdate_lname_idx",
+                        "usable": false,
+                        "cause": "query_references_nonkey_column"
+                      }
+                    ]
+                  },
+                  "analyzing_range_alternatives": {
+                    "range_scan_alternatives": [
+                      {
+                        "index": "bdate_lname_idx",
+                        "ranges": [
+                          "0x21500f <= birth_date <= 0x21500f AND Kr <= last_name <= Kr??????????????"
+                        ],
+                        "index_dives_for_eq_ranges": true,
+                        "rowid_ordered": false,
+                        "using_mrr": false,
+                        "index_only": false,
+                        "rows": 4,
+                        "cost": 1.66,
+                        "chosen": true
+                      }
+                    ],
+                    "analyzing_roworder_intersect": {
+                      "usable": false,
+                      "cause": "too_few_roworder_scans"
+                    }
+                  },
+                  "chosen_range_access_summary": {
+                    "range_access_plan": {
+                      "type": "range_scan",
+                      "index": "bdate_lname_idx",
+                      "rows": 4,
+                      "ranges": [
+                        "0x21500f <= birth_date <= 0x21500f AND Kr <= last_name <= Kr??????????????"
+                      ]
+                    },
+                    "rows_for_plan": 4,
+                    "cost_for_plan": 1.66,
+                    "chosen": true
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "considered_execution_plans": [
+              {
+                "plan_prefix": [
+                ],
+                "table": "`employees`",
+                "best_access_path": {
+                  "considered_access_paths": [
+                    {
+                      "access_type": "ref",
+                      "index": "bdate_lname_idx",
+                      "chosen": false,
+                      "cause": "range_uses_more_keyparts"
+                    },
+                    {
+                      "rows_to_scan": 4,
+                      "access_type": "range",
+                      "range_details": {
+                        "used_index": "bdate_lname_idx"
+                      },
+                      "resulting_rows": 4,
+                      "cost": 2.06,
+                      "chosen": true
+                    }
+                  ]
+                },
+                "condition_filtering_pct": 100,
+                "rows_for_plan": 4,
+                "cost_for_plan": 2.06,
+                "chosen": true
+              }
+            ]
+          },
+          {
+            "attaching_conditions_to_tables": {
+              "original_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+              "attached_conditions_computation": [
+              ],
+              "attached_conditions_summary": [
+                {
+                  "table": "`employees`",
+                  "attached": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+                }
+              ]
+            }
+          },
+          {
+            "finalizing_table_conditions": [
+              {
+                "table": "`employees`",
+                "original_table_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+                "final_table_condition   ": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+              }
+            ]
+          },
+          {
+            "refine_plan": [
+              {
+                "table": "`employees`",
+                "pushed_index_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+                "table_condition_attached": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "join_execution": {
+        "select#": 1,
+        "steps": [
+        ]
+      }
+    }
+  ]
+}
+MISSING_BYTES_BEYOND_MAX_MEM_SIZE: 0
+          INSUFFICIENT_PRIVILEGES: 0
+```
+
+</div>
+</details>
 
 参考情報
 
