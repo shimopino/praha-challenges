@@ -5,23 +5,24 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [トランザクション分離レベルの種類](#%E3%83%88%E3%83%A9%E3%83%B3%E3%82%B6%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E5%88%86%E9%9B%A2%E3%83%AC%E3%83%99%E3%83%AB%E3%81%AE%E7%A8%AE%E9%A1%9E)
-- [Dirty Read](#dirty-read)
-  - [Concepts](#concepts)
-  - [実演](#%E5%AE%9F%E6%BC%94)
-- [Non-repeatable Read](#non-repeatable-read)
-  - [Concepts](#concepts-1)
-  - [実演](#%E5%AE%9F%E6%BC%94-1)
-- [Phantom Read](#phantom-read)
-  - [Concepts](#concepts-2)
-  - [実演](#%E5%AE%9F%E6%BC%94-2)
+- [課題2](#課題2)
+  - [トランザクション分離レベルの種類](#トランザクション分離レベルの種類)
+  - [Dirty Read](#dirty-read)
+    - [Concepts](#concepts)
+    - [実演](#実演)
+  - [Non-repeatable Read](#non-repeatable-read)
+    - [Concepts](#concepts-1)
+    - [実演](#実演-1)
+  - [Phantom Read](#phantom-read)
+    - [Concepts](#concepts-2)
+    - [実演](#実演-2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## トランザクション分離レベルの種類
 
-トランザクションの分離レベルは4種類存在しているが、レコードの読み込み時に発生する問題に対して以下のように対応している。
+トランザクションの分離レベルは `ASCI/ISO SQL標準` で4種類が定められており、レコードの読み込み時に発生する問題に対してそれぞれ以下のように対応している。
 
 | Isolation Level  | Dirty Read | Non-Repeatable Read | Phantom Read |
 | :--------------: | :--------: | :-----------------: | :----------: |
@@ -29,6 +30,8 @@
 |  READ COMMITTED  |     X      |          O          |      O       |
 | REPEATABLE READ  |     X      |          X          |      O       |
 |   SERIALIZABLE   |     X      |          X          |      X       |
+
+ただし実際の挙動はそれぞれのストレージエンジンで異なっているため、アプリで使用するRDBMSによってロックの動作を理解しておく必要がある。
 
 ## Dirty Read
 
@@ -133,6 +136,7 @@ B> SELECT * FROM employees WHERE emp_no = 10001;
 +--------+------------+------------+-----------+--------+------------+
 ```
 
+確かにトランザクションの分離レベルを `READ COMMITTED` にした場合には、別のトランザクションの未コミットの変更の影響を受けていないことがわかる。
 
 ## Non-repeatable Read
 
@@ -148,7 +152,79 @@ B> SELECT * FROM employees WHERE emp_no = 10001;
 
 ノンリピータブル・リードは、トランザクションの分離レベルが `READ UNCOMMITTED` と `READ COMMITTED` の2つの状態で発生する。
  
-では
+ではより分離レベルの高い `READ COMMITTED` でノンリピータブル・リードを発生させる。
+
+```bash
+# トランザクションAの分離レベルをREAD COMMITTEDに変更する
+A> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+A> START TRANSACTION;
+A> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+
+# トランザクションBの分離レベルをREAD COMMITTEDに変更してレコードを変更する
+B> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+B> START TRANSACTION;
+B> UPDATE employees SET first_name = 'Georgi Georgi' WHERE emp_no = 10001;
+B> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+---------------+-----------+--------+------------+
+| emp_no | birth_date | first_name    | last_name | gender | hire_date  |
++--------+------------+---------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi Georgi | Facello   | M      | 1986-06-26 |
++--------+------------+---------------+-----------+--------+------------+
+
+# トランザクションBは変更をコミットする
+B> COMMIT;
+
+# トランザクションAはコミットされた変更取り込んでしまっている
+A> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+---------------+-----------+--------+------------+
+| emp_no | birth_date | first_name    | last_name | gender | hire_date  |
++--------+------------+---------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi Georgi | Facello   | M      | 1986-06-26 |
++--------+------------+---------------+-----------+--------+------------+
+```
+
+ではトランザクションの分離レベルが1つ高い `REPEATABLE READ` に変更して同じ実験をしてみる。なおこのトランザクションの分離レベルが MySQL のデフォルトである。
+
+```bash
+# トランザクションAの分離レベルを REPEATABLE READ に設定する
+A> SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+A> START TRANSACTION;
+A> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+
+# トランザクションBの分離レベルを REPEATABLE READ に設定する
+B> SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+B> START TRANSACTION;
+B> UPDATE employees SET first_name = 'Georgi Georgi' WHERE emp_no = 10001;
+B> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+---------------+-----------+--------+------------+
+| emp_no | birth_date | first_name    | last_name | gender | hire_date  |
++--------+------------+---------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi Georgi | Facello   | M      | 1986-06-26 |
++--------+------------+---------------+-----------+--------+------------+
+
+# トランザクションBで変更をコミットする
+B> COMMIT;
+
+# トランザクションAはコミットされた変更に影響を受けていないことがわかる
+A> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+```
+
+確かに `REPEATABLE READ` を設定している場合には、他のトランザクションのコミットされた結果に影響を受けていないことがわかる。
 
 ## Phantom Read
 
