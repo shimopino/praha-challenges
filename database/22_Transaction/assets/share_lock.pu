@@ -1,0 +1,39 @@
+@startuml share_lock
+
+skinparam style strictuml
+
+participant transactionA as TranA
+database database as db
+participant transactionB as TranB
+
+TranA -> db: 共有ロック
+activate db
+
+TranB -> db: 共有ロック
+
+db -> TranB
+
+note bottom
+    共有ロックされているデータは
+    他のトランザクションから
+    共有ロックで取得できる
+end note
+
+db -> TranA
+deactivate db
+
+TranA -> db: 共有ロック
+activate db
+
+TranB ->x db: 占有ロック
+
+note bottom
+    共有ロックされているデータは
+    他のトランザクションから
+    占有ロックを取得できない
+end note
+
+db -> TranA
+deactivate db
+
+@enduml
