@@ -14,6 +14,8 @@
     - [Concepts](#concepts-1)
     - [実演](#実演-1)
   - [Phantom Read](#phantom-read)
+    - [Concepts](#concepts-2)
+    - [実演](#実演-2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -56,3 +58,14 @@
 ### 実演
 
 ## Phantom Read
+
+### Concepts
+
+**ファントム・リード (Phantom Read)** は、同じトランザクション内で同じレコードを複数回読み込む間に、別のトランザクションによりレコードが追加・削除されてしまうことで、1回目と取得されるレコード数が変化してしまう現象である。
+
+![](../assets/phantom.png)
+
+例えば上記の図では、トランザクションAが1回目にレコードを取得した後で、別のトランザクションBがレコードを追加してしまい、
+2回目のレコードが取得されたレコード数が増加してしまっている。
+
+### 実演
