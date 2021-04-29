@@ -207,8 +207,7 @@ A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, 
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 | engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
-| INNODB | employees     | employees   | NULL       | TABLE     | IS
-| GRANTED     | NULL      |
+| INNODB | employees     | employees   | NULL       | TABLE     | IS            | GRANTED     | NULL      |
 | INNODB | employees     | employees   | PRIMARY    | RECORD    | S,REC_NOT_GAP | GRANTED     | 10001     |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 ```
@@ -233,11 +232,9 @@ A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, 
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 | engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
-| INNODB | employees     | employees   | NULL       | TABLE     | IX
-| GRANTED     | NULL      |
+| INNODB | employees     | employees   | NULL       | TABLE     | IX            | GRANTED     | NULL      |
 | INNODB | employees     | employees   | PRIMARY    | RECORD    | X,REC_NOT_GAP | WAITING     | 10001     |
-| INNODB | employees     | employees   | NULL       | TABLE     | IS
-| GRANTED     | NULL      |
+| INNODB | employees     | employees   | NULL       | TABLE     | IS            | GRANTED     | NULL      |
 | INNODB | employees     | employees   | PRIMARY    | RECORD    | S,REC_NOT_GAP | GRANTED     | 10001     |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 ```
@@ -254,10 +251,8 @@ A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, 
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 | engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
-| INNODB | employees     | employees   | NULL       | TABLE     | IX
-| GRANTED     | NULL      |
-| INNODB | employees     | employees   | NULL       | TABLE     | IS
-| GRANTED     | NULL      |
+| INNODB | employees     | employees   | NULL       | TABLE     | IX            | GRANTED     | NULL      |
+| INNODB | employees     | employees   | NULL       | TABLE     | IS            | GRANTED     | NULL      |
 | INNODB | employees     | employees   | PRIMARY    | RECORD    | S,REC_NOT_GAP | GRANTED     | 10001     |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 ```
