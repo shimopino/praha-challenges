@@ -11,6 +11,8 @@
     - [Concepts](#concepts)
     - [実演](#実演)
   - [Non-repeatable Read](#non-repeatable-read)
+    - [Concepts](#concepts-1)
+    - [実演](#実演-1)
   - [Phantom Read](#phantom-read)
 
 </details>
@@ -42,5 +44,15 @@
 ### 実演
 
 ## Non-repeatable Read
+
+### Concepts
+
+**ノンリピータブル・リード (Non-Rpeatable Read)** は、同じトランザクション内で同じレコードを複数回読み込む間に、別のトランザクションによりコミットされたレコードを読み込んでしまい、同じトランザクション内でのレコードの読み込み結果が変化してしまう現象である。
+
+![](../assets/non-repeatable.png)
+
+例えば上記の図では、トランザクションAで同じレコードを2回取得しているが1回目では `User A` と読み取っており、2回目は他のトランザクションのコミットされたレコード `User B` を読み込んでしまっている。
+
+### 実演
 
 ## Phantom Read
