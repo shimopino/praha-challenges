@@ -28,14 +28,14 @@
 | :--------------: | :--------: | :-----------------: | :----------: |
 | READ UNCOMMITTED |     O      |          O          |      O       |
 |  READ COMMITTED  |     X      |          O          |      O       |
-| REPEATABLE READ  |     X      |          O          |      O       |
+| REPEATABLE READ  |     X      |          X          |      O       |
 |   SERIALIZABLE   |     X      |          X          |      X       |
 
 ## Dirty Read
 
 ### Concepts
 
-**ダーティ・リード (Dirty Read)** は、コミットされていないトランザクションが書き込んだデータを、別のトランザクションが読み込んでしまう現象である。
+**ダーティ・リード (Dirty Read)** は、 **コミットされていない** トランザクションが書き込んだデータを、別のトランザクションが読み込んでしまう現象である。
 
 ![](../assets/dirty.png)
 
@@ -48,6 +48,7 @@
 ダーティ・リードは、トランザクションの分離レベルが `READ UNCOMMITTED` の状態で発生する。
 
 ```bash
+# トランザクションAで分離レベルを設定する
 A> SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 A> START TRANSACTION;
 A> SELECT * FROM employees WHERE emp_no = 10001;
@@ -57,15 +58,19 @@ A> SELECT * FROM employees WHERE emp_no = 10001;
 |  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
 +--------+------------+------------+-----------+--------+------------+
 
+# トランザクションBで同じレコードに変更を加える
+# 変更を加えた後はコミットはしない
 B> SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 B> START TRANSACTION;
 B> UPDATE employees SET first_name = 'Georgi Georgi' WHERE emp_no = 10001;
+B> SELECT * FROM employees WHERE emp_no = 10001;
 +--------+------------+---------------+-----------+--------+------------+
 | emp_no | birth_date | first_name    | last_name | gender | hire_date  |
 +--------+------------+---------------+-----------+--------+------------+
 |  10001 | 1953-09-02 | Georgi Georgi | Facello   | M      | 1986-06-26 |
 +--------+------------+---------------+-----------+--------+------------+
 
+# トランザクションAはトランザクションBの未コミットの変更を読み取ってしまう
 A> SELECT * FROM employees WHERE emp_no = 10001;
 +--------+------------+---------------+-----------+--------+------------+
 | emp_no | birth_date | first_name    | last_name | gender | hire_date  |
@@ -73,6 +78,7 @@ A> SELECT * FROM employees WHERE emp_no = 10001;
 |  10001 | 1953-09-02 | Georgi Georgi | Facello   | M      | 1986-06-26 |
 +--------+------------+---------------+-----------+--------+------------+
 
+# ロールバックすると元のレコードの状態に戻る
 B> ROLLBACK;
 B> SELECT * FROM employees WHERE emp_no = 10001;
 +--------+------------+------------+-----------+--------+------------+
@@ -84,17 +90,66 @@ B> SELECT * FROM employees WHERE emp_no = 10001;
 
 これでトランザクションの分離レベルが `READ UNCOMMITTED` に設定されている場合には、トランザクションAはトランザクションBによるコミットされていない変更を読み取ってしまっていることがわかる。
 
+次にトランザクションの分離レベルを `READ COMMITTED` を設定した際に同じ現象が発生しないことを確認する。
+
+```bash
+# トランザクションAで分離レベルを設定する
+A> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+A> START TRANSACTION;
+A> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+
+# トランザクションBで同じレコードに変更を加える
+# 変更を加えた後はコミットはしない
+B> SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+B> START TRANSACTION;
+B> UPDATE employees SET first_name = 'Georgi Georgi' WHERE emp_no = 10001;
+B> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+---------------+-----------+--------+------------+
+| emp_no | birth_date | first_name    | last_name | gender | hire_date  |
++--------+------------+---------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi Georgi | Facello   | M      | 1986-06-26 |
++--------+------------+---------------+-----------+--------+------------+
+
+# トランザクションAはコミットされていないトランザクションBの影響を受けていない
+# ここが先ほどの READ UNCOMMITTED と異なる点である
+A> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+
+# ロールバックすると元のレコードの状態に戻る
+B> ROLLBACK;
+B> SELECT * FROM employees WHERE emp_no = 10001;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
++--------+------------+------------+-----------+--------+------------+
+```
+
+
 ## Non-repeatable Read
 
 ### Concepts
 
-**ノンリピータブル・リード (Non-Rpeatable Read)** は、同じトランザクション内で同じレコードを複数回読み込む間に、別のトランザクションによりコミットされたレコードを読み込んでしまい、同じトランザクション内でのレコードの読み込み結果が変化してしまう現象である。
+**ノンリピータブル・リード (Non-Rpeatable Read)** は、同じトランザクション内で同じレコードを複数回読み込む間に、別のトランザクションにより **コミットされた** レコードを読み込んでしまい、同じトランザクション内でのレコードの読み込み結果が変化してしまう現象である。
 
 ![](../assets/non-repeatable.png)
 
 例えば上記の図では、トランザクションAで同じレコードを2回取得しているが1回目では `User A` と読み取っており、2回目は他のトランザクションのコミットされたレコード `User B` を読み込んでしまっている。
 
 ### 実演
+
+ノンリピータブル・リードは、トランザクションの分離レベルが `READ UNCOMMITTED` と `READ COMMITTED` の2つの状態で発生する。
+ 
+では
 
 ## Phantom Read
 
