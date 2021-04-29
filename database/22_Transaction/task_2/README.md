@@ -237,3 +237,86 @@ A> SELECT * FROM employees WHERE emp_no = 10001;
 例えば上記の図では、トランザクションAが1回目にレコードを取得した後で、別のトランザクションBがレコードを追加してしまい、2回目のレコードが取得されたレコード数が増加してしまっている。
 
 ### 実演
+
+ではトランザクションの分離レベルを `REPEATABLE READ` に設定した場合に、ファントム・リードの挙動を確認する。
+
+```bash
+# トランザクションAの分離レベルを REPEATABLE READ に設定する
+A> SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+A> START TRANSACTION;
+A> SELECT * FROM employees WHERE emp_no >= 499999;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 499999 | 1958-05-01 | Sachin     | Tsukuda   | M      | 1997-11-30 |
++--------+------------+------------+-----------+--------+------------+
+
+# トランザクションBの分離レベルを REPEATABLE READ に設定する
+B> SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+B> START TRANSACTION;
+B> INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
+   VALUES (500000, '1990-01-01', 'Keisuke', 'Shimokawa', 'M', '2020-01-01');
+B> SELECT * FROM employees WHERE emp_no >= 499999;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 499999 | 1958-05-01 | Sachin     | Tsukuda   | M      | 1997-11-30 |
+| 500000 | 1990-01-01 | Keisuke    | Shimokawa | M      | 2020-01-01 |
++--------+------------+------------+-----------+--------+------------+
+
+# 挿入したレコードをコミットする
+B> COMMIT;
+
+# トランザクションAには挿入されたレコードは反映されていない
+A> SELECT * FROM employees WHERE emp_no >= 499999;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 499999 | 1958-05-01 | Sachin     | Tsukuda   | M      | 1997-11-30 |
++--------+------------+------------+-----------+--------+------------+
+```
+
+実行結果からわかることは `MySQL` は トランザクションの分離レベルが `REPEATABLE READ` であっても **ファントム・リードを防ぐ** 実装になっている。
+
+- [MySQLのMVCC](https://qiita.com/nkriskeeic/items/24b7714b749d38bba87b)
+
+ちなみにトランザクションの分離レベルを `READ COMMITTED` に設定すればファントム・リードが発生することが確認できる。
+
+```bash
+# トランザクションAの分離レベルを READ COMMITTED に設定する
+A> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+A> START TRANSACTION;
+A> SELECT * FROM employees WHERE emp_no >= 499999;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 499999 | 1958-05-01 | Sachin     | Tsukuda   | M      | 1997-11-30 |
++--------+------------+------------+-----------+--------+------------+
+
+# トランザクションBの分離レベルを READ COMMITTED に設定する
+B> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+B> START TRANSACTION;
+B> INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
+   VALUES (500000, '1990-01-01', 'Keisuke', 'Shimokawa', 'M', '2020-01-01');
+B> SELECT * FROM employees WHERE emp_no >= 499999;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 499999 | 1958-05-01 | Sachin     | Tsukuda   | M      | 1997-11-30 |
+| 500000 | 1990-01-01 | Keisuke    | Shimokawa | M      | 2020-01-01 |
++--------+------------+------------+-----------+--------+------------+
+
+# 挿入されたレコードをコミットする
+B> COMMIT;
+
+# トランザクションAに挿入されたレコードが確認できてしまっている
+A> SELECT * FROM employees WHERE emp_no >= 499999;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+| 499999 | 1958-05-01 | Sachin     | Tsukuda   | M      | 1997-11-30 |
+| 500000 | 1990-01-01 | Keisuke    | Shimokawa | M      | 2020-01-01 |
++--------+------------+------------+-----------+--------+------------+
+```
+
+確かにトランザクションの分離レベルを `READ COMMITTED` に設定した場合に、ファントムリードが発生していることが確認できる。
