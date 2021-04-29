@@ -1,6 +1,6 @@
 <mxfile>
     <diagram id="3Pf2HogiruGGhZbKJb14" name="Page-1">
-        <mxGraphModel dx="1002" dy="482" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#FFFFFF" math="0" shadow="0">
+        <mxGraphModel dx="167" dy="587" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#FFFFFF" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -16,10 +16,10 @@
                         <mxPoint x="480" y="460" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="4" value="Transaction A" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="4" value="Transaction A" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="30" y="50" width="90" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="Transaction B" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="5" value="Transaction B" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="430" y="50" width="90" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="7" value="" style="endArrow=classic;html=1;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" edge="1">
@@ -40,10 +40,10 @@
                         <mxPoint x="270" y="160" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="11" value="BEGIN Transaction" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="11" value="BEGIN Transaction" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="120" y="130" width="120" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="SELECT * From Users;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="13" value="SELECT * From Users;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="110" y="290" width="140" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="" style="endArrow=classic;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" edge="1">
@@ -61,7 +61,7 @@
                         <mxPoint x="290" y="200" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="17" value="BEGIN Transaction" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="17" value="BEGIN Transaction" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="320" y="170" width="120" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="" style="endArrow=classic;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" edge="1">
@@ -70,7 +70,7 @@
                         <mxPoint x="290" y="260" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="19" value="UPDATE Users SET name = User B" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="19" value="UPDATE Users SET name = User B" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="275" y="230" width="210" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="20" value="1. User B" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -85,7 +85,7 @@
                         <mxPoint x="290" y="380" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="23" value="ROLLBACK" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="23" value="ROLLBACK" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;fontColor=#000000;fillColor=#FFFFFF;" parent="1" vertex="1">
                     <mxGeometry x="340" y="350" width="80" height="20" as="geometry"/>
                 </mxCell>
             </root>
