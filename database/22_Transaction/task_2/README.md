@@ -5,17 +5,16 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題2](#課題2)
-  - [トランザクション分離レベルの種類](#トランザクション分離レベルの種類)
-  - [Dirty Read](#dirty-read)
-    - [Concepts](#concepts)
-    - [実演](#実演)
-  - [Non-repeatable Read](#non-repeatable-read)
-    - [Concepts](#concepts-1)
-    - [実演](#実演-1)
-  - [Phantom Read](#phantom-read)
-    - [Concepts](#concepts-2)
-    - [実演](#実演-2)
+- [トランザクション分離レベルの種類](#%E3%83%88%E3%83%A9%E3%83%B3%E3%82%B6%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E5%88%86%E9%9B%A2%E3%83%AC%E3%83%99%E3%83%AB%E3%81%AE%E7%A8%AE%E9%A1%9E)
+- [Dirty Read](#dirty-read)
+  - [Concepts](#concepts)
+  - [実演](#%E5%AE%9F%E6%BC%94)
+- [Non-repeatable Read](#non-repeatable-read)
+  - [Concepts](#concepts-1)
+  - [実演](#%E5%AE%9F%E6%BC%94-1)
+- [Phantom Read](#phantom-read)
+  - [Concepts](#concepts-2)
+  - [実演](#%E5%AE%9F%E6%BC%94-2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
