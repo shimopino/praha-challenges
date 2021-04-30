@@ -97,14 +97,43 @@ InnoDBは以下の4種類の分離レベルを実装しており、上から下�
 
 ### READ UNCOMMITTED
 
+- 最も分離レベルが低い
+- 他のトランザクションのコミットされていない変更を参照できる
+- **ダーティ・リード** が発生する
+
+```sql
+mysql> SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+```
+
 ### READ COMMITTED
+
+- 他のトランザクションがコミットした変更を参照できる
+- MySQL以外のデータベース (Oracle、PostgreSQL、SQL Serverなど)ではこの分離レベルがデフォルトのことが多い
+
+```sql
+mysql> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+```
 
 ### REPEATABLE READ
 
+- 他のトランザクションがコミットした変更に影響を受けずに参照できる
+- ただし他のトランザクションからレコードが追加・削除された場合はその影響を受ける (ファントム・リード)
+- MySQLのデフォルトの分離レベル
+- ただしMySQLでは、`REPEATABLE READ` でもファントム・リードは発生しない
 
-
+```sql
+mysql> SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+```
 
 ### SERIALIZABLE
+
+- 最も分離レベルが高い
+- トランザクションを必ず順序付けて実行するため、整合性を保ったままデータを操作可能
+- ただし性能は低いため、めったに使用されない
+
+```sql
+mysql> SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+```
 
 参考資料
 
@@ -112,7 +141,14 @@ InnoDBは以下の4種類の分離レベルを実装しており、上から下�
 
 ## 行レベルロック、テーブルレベルロックの違いとは何か
 
+行レベルロックとテーブルロックの違いは以下になる。
 
+| lock type   | description                |
+| :---------- | :------------------------- |
+| record lock | 対象のレコードのみをロック |
+| table lock  | テーブル全体をロック       |
+
+MySQLにおいては、共有ロックや占有ロックを取得する前の `FOR UPDATE` や `FOR SHARE` を実行した際に取得される **インテンションロック** がテーブルレベルロックであり、それ以外は行レベルロックに該当する。
 
 ## 悲観ロックと楽観ロックの違いは何か
 
