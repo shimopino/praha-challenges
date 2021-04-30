@@ -165,3 +165,28 @@ B> INSERT INTO Sample (id, salary) VALUES (21, 210000);
 
 </div>
 </details>
+
+## #4 クイズ
+
+以下のクエリの実行結果を確認してみましょう。
+
+クイズ3の結果とどのように異なるでしょうか。
+
+```sql
+A> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+A> START TRANSACTION;
+A> SELECT * FROM Sample Where salary >= 50000 AND salary <= 100000 FOR SHARE;
+
+A> SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+B> START TRANSACTION;
+B> INSERT INTO Sample (id, salary) VALUES (7, 70000);
+```
+
+<details>
+<summary>回答例</summary>
+<div>
+
+トランザクションの分離レベルが `READ COMMITTED` の場合は、ギャップロックが無効になるため、トランザクションBからインデックスレコードの間に、新たにレコードを挿入することが可能となる。
+
+</div>
+</details>
