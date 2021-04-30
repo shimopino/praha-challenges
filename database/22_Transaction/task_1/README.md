@@ -25,8 +25,7 @@
     - [Record Locks](#record-locks)
     - [Gap Locks](#gap-locks)
     - [Next-Key Locks](#next-key-locks)
-    - [Insert Intention LOcks](#insert-intention-locks)
-    - [AUTO-INC Locks](#auto-inc-locks)
+    - [Insert Intention Locks](#insert-intention-locks)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -394,12 +393,76 @@ B> INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hir
 - [MySQLのInnoDBのロック挙動調査](https://github.com/ichirin2501/doc/blob/master/innodb.md#%E8%A1%8C%E3%83%AD%E3%83%83%E3%82%AF%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
 - [良く分かるMySQL Innodbのギャップロック](https://qiita.com/kenjiszk/items/05f7f6e695b93570a9e1)
 - [MySQL InnoDBのinsertとlockの話](http://tech.voyagegroup.com/archives/8085782.html)
+- [ LT：MySQLのギャップロックとネクストキーロックについて](https://speakerdeck.com/yoshiakiyamasaki/lt-mysqlfalsegiyatupurotukutonekusutokirotukunituite)
 
 ### Next-Key Locks
 
+**ネクストキーロック** とは、レコードロックと対象レコードの直前までのギャップロックの組み合わせで構成されている。
 
-### Insert Intention LOcks
+例えば以下のインデックスレコードに対しては、5通りのネクストキーロックが発生する可能性が存在している。
 
+![](../assets/next_key_lock.png)
 
-### AUTO-INC Locks
+最後の区間 `( 20, + INF )` は、インデックス内に存在している20よりも大きな値のインデックスレコードを示している。
 
+InnoDBがデフォルトで有効している分離レベル `REPEATABLE READ` では、ネクストキーロックは有効化されている。
+
+### Insert Intention Locks
+
+**挿入インテンションロック** とは、レコードが挿入される前に `INSERT`
+ によって設定されるギャップロックの一種である。
+
+これは例えば `employees` テーブルのインデックスレコードに `500002` と `500005` が存在しており、その間にインデックスレコードが存在していない場合を考える。
+
+ここで、異なるトランザクション同士が `500003` と `500004` にレコードを挿入する前に、それぞれのトランザクションがギャップロックを `500002 ~ 500005` で取得するが、レコードが競合していないため、お互いにブロックされることはない。
+
+例えば以下のテーブルが存在していたとする。
+
+```sql
+CREATE TABLE child (
+  id INT(11) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
+INSERT INTO child (id)
+VALUES (90, 102);
+```
+
+ここで異なるトランザクションが行を挿入する前に、挿入インテンションロックをギャップロック内のレコードに対して取得する。
+
+```bash
+A> START TRANSACTION;
+A> SELECT * FROM child WHERE id > 100 FOR UPDATE;
++-----+
+| id  |
++-----+
+| 102 |
++-----+
+
+# この時に以下のロックが取得されている。
++--------+---------------+-------------+------------+-----------+-----------+-------------+------------------------+
+| engine | object_schema | object_name | index_name | lock_type | lock_mode | lock_status | lock_data              |
++--------+---------------+-------------+------------+-----------+-----------+-------------+------------------------+
+| INNODB | employees     | child       | NULL       | TABLE     | IX        | GRANTED     | NULL                   |
+| INNODB | employees     | child       | PRIMARY    | RECORD    | X         | GRANTED     | supremum pseudo-record |
+| INNODB | employees     | child       | PRIMARY    | RECORD    | X         | GRANTED     | 102                    |
++--------+---------------+-------------+------------+-----------+-----------+-------------+------------------------+
+
+# 異なるトランザクションBからギャップロックが取得されているインデックスに対してレコードを挿入することを考える
+B> START TRANSACTION;
+B> INSERT INTO child (id) VALUES (101);
+
+# この場合には以下のようにギャップロックがかかっているレコードに対して挿入インテンションロックは待機状態となっていることがわかる
++--------+---------------+-------------+------------+-----------+------------------------+-------------+------------------------+
+| engine | object_schema | object_name | index_name | lock_type | lock_mode              | lock_status | lock_data              |
++--------+---------------+-------------+------------+-----------+------------------------+-------------+------------------------+
+| INNODB | employees     | child       | NULL       | TABLE     | IX                     | GRANTED     | NULL                   |
+| INNODB | employees     | child       | PRIMARY    | RECORD    | X,GAP,INSERT_INTENTION | WAITING     | 102                    |
+| INNODB | employees     | child       | NULL       | TABLE     | IX                     | GRANTED     | NULL                   |
+| INNODB | employees     | child       | PRIMARY    | RECORD    | X                      | GRANTED     | supremum pseudo-record |
+| INNODB | employees     | child       | PRIMARY    | RECORD    | X                      | GRANTED     | 102                    |
++--------+---------------+-------------+------------+-----------+------------------------+-------------+------------------------+
+```
+
+参考資料
+
+- [MySQL - InnoDBのロック関連まとめ](https://qiita.com/mizzwithliam/items/31fb68217899bd0559e8)
