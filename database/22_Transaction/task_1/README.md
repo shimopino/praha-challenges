@@ -26,7 +26,7 @@
     - [Gap Locks](#gap-locks)
     - [Next-Key Locks](#next-key-locks)
     - [Insert Intention LOcks](#insert-intention-locks)
-    - [AUTO=INC Locks](#autoinc-locks)
+    - [AUTO-INC Locks](#auto-inc-locks)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -298,6 +298,8 @@ mysql> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mo
 
 **ギャップロック** とは、インデックスレコードのある **範囲に対して** 取得したり、最初のインデックスレコードの **1つ前** や最後のインデックスレコードの **1つ後** に対して取得するロックである。
 
+![](../assets/gap_lock.png)
+
 例えばあるトランザクションが以下のクエリを発行した際に、他のトランザクションが `employees.emp_no` が `10005` のように範囲内に存在している値に対して、レコードが実際に存在しているかどうかにかかわらず、レコードを挿入・更新することを禁止する。
 
 ```sql
@@ -399,5 +401,5 @@ B> INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hir
 ### Insert Intention LOcks
 
 
-### AUTO=INC Locks
+### AUTO-INC Locks
 
