@@ -9,8 +9,8 @@ entity Post {
 entity Taggings {
     * id: varchar [PK]
     ---
-    post_id: varchar [FK]
-    tag_id: varchar [FK]
+    + post_id: varchar [FK]
+    + tag_id: varchar [FK]
 }
 
 entity Tag {
