@@ -5,25 +5,28 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [デッドロックとは何か](#%E3%83%87%E3%83%83%E3%83%89%E3%83%AD%E3%83%83%E3%82%AF%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-- [ISOLATION LEVELとは何か](#isolation-level%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-  - [READ UNCOMMITTED](#read-uncommitted)
-  - [READ COMMITTED](#read-committed)
-  - [REPEATABLE READ](#repeatable-read)
-  - [SERIALIZABLE](#serializable)
-- [行レベルロック、テーブルレベルロックの違いとは何か](#%E8%A1%8C%E3%83%AC%E3%83%99%E3%83%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%83%AC%E3%83%99%E3%83%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%81%AE%E9%81%95%E3%81%84%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B)
-- [悲観ロックと楽観ロックの違いは何か](#%E6%82%B2%E8%A6%B3%E3%83%AD%E3%83%83%E3%82%AF%E3%81%A8%E6%A5%BD%E8%A6%B3%E3%83%AD%E3%83%83%E3%82%AF%E3%81%AE%E9%81%95%E3%81%84%E3%81%AF%E4%BD%95%E3%81%8B)
-- [ACIDモデル](#acid%E3%83%A2%E3%83%87%E3%83%AB)
-  - [Atomicity (原子性)](#atomicity-%E5%8E%9F%E5%AD%90%E6%80%A7)
-  - [Consistency (一貫性)](#consistency-%E4%B8%80%E8%B2%AB%E6%80%A7)
-  - [Isolation (独立性)](#isolation-%E7%8B%AC%E7%AB%8B%E6%80%A7)
-  - [Durability (永続性)](#durability-%E6%B0%B8%E7%B6%9A%E6%80%A7)
-- [Lock Types](#lock-types)
-  - [Shared and Exclusive Locks](#shared-and-exclusive-locks)
-  - [Intention Locks](#intention-locks)
-  - [Record Locks](#record-locks)
-  - [Gap Locks](#gap-locks)
-  - [Next-Key Locks](#next-key-locks)
+- [課題1](#課題1)
+  - [デッドロックとは何か](#デッドロックとは何か)
+  - [ISOLATION LEVELとは何か](#isolation-levelとは何か)
+    - [READ UNCOMMITTED](#read-uncommitted)
+    - [READ COMMITTED](#read-committed)
+    - [REPEATABLE READ](#repeatable-read)
+    - [SERIALIZABLE](#serializable)
+  - [行レベルロック、テーブルレベルロックの違いとは何か](#行レベルロックテーブルレベルロックの違いとは何か)
+  - [悲観ロックと楽観ロックの違いは何か](#悲観ロックと楽観ロックの違いは何か)
+  - [ACIDモデル](#acidモデル)
+    - [Atomicity (原子性)](#atomicity-原子性)
+    - [Consistency (一貫性)](#consistency-一貫性)
+    - [Isolation (独立性)](#isolation-独立性)
+    - [Durability (永続性)](#durability-永続性)
+  - [Lock Types](#lock-types)
+    - [Shared and Exclusive Locks](#shared-and-exclusive-locks)
+    - [Intention Locks](#intention-locks)
+    - [Record Locks](#record-locks)
+    - [Gap Locks](#gap-locks)
+    - [Next-Key Locks](#next-key-locks)
+    - [Insert Intention LOcks](#insert-intention-locks)
+    - [AUTO=INC Locks](#autoinc-locks)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -202,7 +205,7 @@ A> SELECT * FROM employees WHERE emp_no = 10001 FOR SHARE;
 +--------+------------+---------------+-----------+--------+------------+
 
 # ロックの状況を確認する
-A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM PERFORMANCE_SCHEMA.data_locks;
+A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM performance_schema.data_locks;
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 | engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
@@ -227,7 +230,7 @@ B> SELECT * FROM employees WHERE emp_no = 10001 FOR UPDATE;
 ではこの状態で、以下のようにロックの状態を確認すると確かにインテンションロックは待機状態になっていないことがわかる。（インテンション占有ロックは `GRANTED` となっており、占有ロックは `WAITING` となっている。）
 
 ```bash
-A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM PERFORMANCE_SCHEMA.data_locks;
+A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM performance_schema.data_locks;
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 | engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
@@ -246,7 +249,7 @@ B> SELECT * FROM employees WHERE emp_no = 10001 FOR UPDATE;
 ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction
 
 # 占有ロックの待機処理が消えていることがわかる
-A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM PERFORMANCE_SCHEMA.data_locks;
+A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM performance_schema.data_locks;
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
 | engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
 +--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
@@ -260,33 +263,141 @@ A> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, 
 
 ### Record Locks
 
-**レコードロック** とは、インデックスレコードに対するロックであり、`SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE`などの文を発行した際に取得し、他のトランザクションが `t.c1` が `10` である行の挿入や更新、削除を禁止することができる。
+**レコードロック** とは、インデックスレコードに対するロックであり、`SELECT * FROM employees WHERE emmp_no = 10001 FOR UPDATE` などの文を発行した際に取得し、他のトランザクションが `employees.emp_no` が `10001` である行の挿入や更新、削除を禁止することができる。
 
-InnoDBでは、テーブルにインデックスが存在しない場合でも、クラスタインデックスを背後で作成し、このインデックスに対してロックを取得するらしい。
+InnoDBでは、テーブルにインデックスが存在しない場合でも、クラスタインデックスを背後で作成し、このインデックスに対してロックを取得するらしい。つまりレコードロックは **常に** インデックスをロックする。
 
-### Gap Locks
+試しに主キーではない値を指定した場合に取得されるロックを確認する。
 
-**ギャップロック** とは、インデックスレコードのある**範囲に対して**取得したり、最初のインデックスレコードの1つ前や最後のインデックスレコードの1つ後に対して取得するロックである。
-
-例えばあるトランザクションが以下のクエリを発行した際に、他のトランザクションが `t.c1` が `15` のように範囲内に存在している値に対してレコードを挿入・更新することを禁止する。
-
-```sql
-SELECT c1 FROM t WHERE c1 BETWEEN 10 AND 20 FOR UPDATE
+```bash
+mysql> SELECT * FROM employees WHERE first_name = 'Georgi' FOR UPDATE;
+mysql> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM performance_schema.data_locks;
++--------+---------------+-------------+------------+-----------+-----------+-------------+------------------------+
+| engine | object_schema | object_name | index_name | lock_type | lock_mode | lock_status | lock_data              |
++--------+---------------+-------------+------------+-----------+-----------+-------------+------------------------+
+| INNODB | employees     | employees   | NULL       | TABLE     | IX        | GRANTED     | NULL                   |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | supremum pseudo-record |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | 10002                  |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | 10003                  |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | 10004                  |
+...
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | 499998                 |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | 499999                 |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X         | GRANTED     | 500000                 |
++--------+---------------+-------------+------------+-----------+-----------+-------------+------------------------+
 ```
 
-注意点としては `t.c1` が10から20までの範囲に対して、レコードを挿入することもできず、SロックもXロックも取得することもできない点である。
-
-ギャップロックの特徴は、処理の性能と平衡実効性のトレードオフであり、トランザクションの**分離レベル**によって使用されるかどうかが決定する。
-
-ギャップロックは複数行にまたがるロックを取得する際に使用されるため、もしも主キーなどの一意に定まる検索条件を使用するクエリでは、ギャップロッ
-クは使用されずに先述したレコードロックが取得される。
+> なぜか全レコードに対してレコードロックが取得された。
+> 理由は何か
 
 参考資料
 
+- [知って得するInnoDBセカンダリインデックス活用術！](https://nippondanji.blogspot.com/2010/10/innodb.html)
+
+### Gap Locks
+
+**ギャップロック** とは、インデックスレコードのある **範囲に対して** 取得したり、最初のインデックスレコードの **1つ前** や最後のインデックスレコードの **1つ後** に対して取得するロックである。
+
+例えばあるトランザクションが以下のクエリを発行した際に、他のトランザクションが `employees.emp_no` が `10005` のように範囲内に存在している値に対して、レコードが実際に存在しているかどうかにかかわらず、レコードを挿入・更新することを禁止する。
+
+```sql
+SELECT * FROM employees WHERE emp_no BETWEEN 10001 AND 10010 FOR UPDATE;
+```
+
+実際に上記のクエリを実行した際に取得されるロックを確認すると、以下のように範囲指定した全レコードに対して占有ロックが取得されていることがわかる。
+
+```bash
+mysql> SELECT engine, object_schema, object_name, index_name, lock_type, lock_mode, lock_status, lock_data FROM performance_schema.data_locks;
++--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
+| engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
++--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
+| INNODB | employees     | employees   | NULL       | TABLE     | IX            | GRANTED     | NULL      |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X,REC_NOT_GAP | GRANTED     | 10001     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10002     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10003     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10004     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10005     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10006     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10007     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10008     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10009     |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X             | GRANTED     | 10010     |
++--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
+```
+
+上記の結果からわかるように、 `employees.emp_no` に対して占有ロックを取得しているため、10001 から 10010 までの範囲に対して、レコードを挿入することもできず、共有ロックも占有ロックも取得することもできない点である。
+
+ギャップロックの特徴は、処理の性能と並行実効性のトレードオフであり、トランザクションの **分離レベル** に応じて使用されるかどうかが決定する。例えば分離レベルを `READ COMMITTED` に変更した場合には、ギャップロックが無効になる。
+
+ギャップロックは複数行にまたがるロックを取得する際に使用されるため、もしも主キーなどの一意に定まる検索条件を使用するクエリでは、ギャップロックは使用されずに先述したレコードロックが取得される。
+
+試しに以下のようにとびとびの主キーのレコードを挿入しておく。
+
+```sql
+INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
+VALUES
+    (500000, '1990-01-01', 'A', 'T', 'M', '1991-01-01'),
+    (500001, '1990-01-01', 'B', 'U', 'M', '1991-01-01'),
+    (500002, '1990-01-01', 'C', 'V', 'M', '1991-01-01'),
+    (500005, '1990-01-01', 'D', 'W', 'M', '1991-01-01'),
+    (500008, '1990-01-01', 'E', 'X', 'M', '1991-01-01'),
+    (500009, '1990-01-01', 'F', 'Y', 'M', '1991-01-01'),
+    (500010, '1990-01-01', 'G', 'Z', 'M', '1991-01-01');
+```
+
+次に以下のように範囲指定でレコードに対してロックをかけてみる。
+
+```sql
+SELECT * FROM employees WHERE emp_no BETWEEN 500000 and 500005 FOR SHARE;
+```
+
+この場合には以下のようなロックがかかっている。
+
+```bash
++--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
+| engine | object_schema | object_name | index_name | lock_type | lock_mode     | lock_status | lock_data |
++--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
+| INNODB | employees     | employees   | NULL       | TABLE     | IS            | GRANTED     | NULL      |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S,REC_NOT_GAP | GRANTED     | 500000    |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S             | GRANTED     | 500005    |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S             | GRANTED     | 500002    |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S             | GRANTED     | 500001    |
++--------+---------------+-------------+------------+-----------+---------------+-------------+-----------+
+```
+
+では他のトランザクションからとびとびとなっている主キーの間にレコードを挿入しようとしてみる。
+
+```bash
+# 処理は実行されずに待機状態となる
+B> INSERT INTO employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
+   VALUES 
+       (500004, '1990-01-01', 'A', 'T', 'M', '1991-01-01');
+
+# ロックの状態を確認すると占有ロックが待機状態となっていることがわかる。
++--------+---------------+-------------+------------+-----------+------------------------+-------------+-----------+
+| engine | object_schema | object_name | index_name | lock_type | lock_mode              | lock_status | lock_data |
++--------+---------------+-------------+------------+-----------+------------------------+-------------+-----------+
+| INNODB | employees     | employees   | NULL       | TABLE     | IX                     | GRANTED     | NULL      |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | X,GAP,INSERT_INTENTION | WAITING     | 500005    |
+| INNODB | employees     | employees   | NULL       | TABLE     | IS                     | GRANTED     | NULL      |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S,REC_NOT_GAP          | GRANTED     | 500000    |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S                      | GRANTED     | 500005    |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S                      | GRANTED     | 500002    |
+| INNODB | employees     | employees   | PRIMARY    | RECORD    | S                      | GRANTED     | 500001    |
++--------+---------------+-------------+------------+-----------+------------------------+-------------+-----------+
+```
+
+参考資料
+
+- [MySQLのInnoDBのロック挙動調査](https://github.com/ichirin2501/doc/blob/master/innodb.md#%E8%A1%8C%E3%83%AD%E3%83%83%E3%82%AF%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
 - [良く分かるMySQL Innodbのギャップロック](https://qiita.com/kenjiszk/items/05f7f6e695b93570a9e1)
+- [MySQL InnoDBのinsertとlockの話](http://tech.voyagegroup.com/archives/8085782.html)
 
 ### Next-Key Locks
 
 
+### Insert Intention LOcks
 
+
+### AUTO=INC Locks
 
