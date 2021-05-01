@@ -16,7 +16,7 @@ entity Comment {
     * id: varchar
     ---
     text: varchar
-    belongs_to_id: varchar [FK]
+    belongs_to_id: varchar
 }
 
 Manga ||-r-o{ Comment
