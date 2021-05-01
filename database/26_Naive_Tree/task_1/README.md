@@ -52,13 +52,13 @@ VALUES
 格納されているデータとしては以下を想定している。
 
 ```bash
-#                    'parent root'
+#                   (1)'parent root'
 #                     /          \
-#   'intermediate root 1'         'intermediate root 2'
-#     /             \                     |
-# 'leaf 1'        'leaf 2'             'leaf 3'
-#                                         |
-#                                      'leaf 4'
+#  (2) 'intermediate root 1'     (3) 'intermediate root 2'
+#      /             \                     |
+# (4) 'leaf 1'     (5) 'leaf 2'       (6) 'leaf 3'
+#                                          |
+#                                     (7) 'leaf 4'
 
 +------------+---------------------+-------------------+
 | message_id | text                | parent_message_id |
