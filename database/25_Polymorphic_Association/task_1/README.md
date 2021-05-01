@@ -6,6 +6,8 @@
 <summary>Table of Contents</summary>
 
 - [問題設定](#%E5%95%8F%E9%A1%8C%E8%A8%AD%E5%AE%9A)
+  - [課題1 参照整合性を担保できない](#%E8%AA%B2%E9%A1%8C1-%E5%8F%82%E7%85%A7%E6%95%B4%E5%90%88%E6%80%A7%E3%82%92%E6%8B%85%E4%BF%9D%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84)
+  - [課題2 SELECTクエリの結果に一意性がない](#%E8%AA%B2%E9%A1%8C2-select%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%AE%E7%B5%90%E6%9E%9C%E3%81%AB%E4%B8%80%E6%84%8F%E6%80%A7%E3%81%8C%E3%81%AA%E3%81%84)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
