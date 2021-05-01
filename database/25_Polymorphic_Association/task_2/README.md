@@ -1,7 +1,16 @@
 # 課題2
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [交差テーブル](#%E4%BA%A4%E5%B7%AE%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB)
+  - [課題1 参照整合性を担保できない](#%E8%AA%B2%E9%A1%8C1-%E5%8F%82%E7%85%A7%E6%95%B4%E5%90%88%E6%80%A7%E3%82%92%E6%8B%85%E4%BF%9D%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84)
+  - [課題2](#%E8%AA%B2%E9%A1%8C2)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 交差テーブル
 
