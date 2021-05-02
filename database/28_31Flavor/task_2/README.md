@@ -101,5 +101,36 @@ mysql> SELECT * FROM StudentStatus;
 
 アプリケーション側からは単純に `StudentStatus` テーブルからデータを抽出すれば、ユーザーに対して生徒のステータスの選択肢を表示することができる。
 
+### 課題2 制約の変更が難しい
 
+生徒のステータスに新しく「休学」( `takeoff` )を追加したい場合は、新しく生徒のステータスのレコードを追加すればいい。
 
+```sql
+INSERT INTO StudentStatus (status_id, name)
+VALUES (5, 'takeoff');
+```
+
+これで以下のように新しく制約を追加することができる。
+
+```sql
+mysql> SELECT * FROM StudentStatus;
+
++-----------+-------------+
+| status_id | name        |
++-----------+-------------+
+|         1 | studying    |
+|         2 | graduated   |
+|         3 | suspended   |
+|         4 | transferred |
+|         5 | takeoff     |
++-----------+-------------+
+```
+
+また既存の生徒のステータスを変更する場合には、単純に `Student` テーブルの `status_id` の値を変更すればいい。
+
+実際に `student_id` が4である生徒のステータスを「休学」に変更したい場合は、以下のように単純にステータスを変更すればいい。
+
+```sql
+UPDATE Student SET status_id = 5
+WHERE student_id = 4;
+```
