@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS Taggings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     tag_id INT NOT NULL,
+    UNIQUE(product_id, tag_id),
     FOREIGN KEY (product_id)
         REFERENCES Products(id),
     FOREIGN KEY (tag_id)
