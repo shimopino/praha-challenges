@@ -7,6 +7,7 @@
 
 - [問題設定](#%E5%95%8F%E9%A1%8C%E8%A8%AD%E5%AE%9A)
   - [課題1 制約の確認ができない](#%E8%AA%B2%E9%A1%8C1-%E5%88%B6%E7%B4%84%E3%81%AE%E7%A2%BA%E8%AA%8D%E3%81%8C%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84)
+  - [課題2 制約の変更が難しい](#%E8%AA%B2%E9%A1%8C2-%E5%88%B6%E7%B4%84%E3%81%AE%E5%A4%89%E6%9B%B4%E3%81%8C%E9%9B%A3%E3%81%97%E3%81%84)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
