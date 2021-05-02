@@ -36,11 +36,61 @@ VALUES
 具体的には以下のクエリを実行して得られる文字列から選択肢を抽出する必要が発生する。
 
 ```bash
-mysql> SELECT * FROM information_schema.check_constraints;
-+-------------------------------------------------------------------------------+
-| CHECK_CLAUSE                                                                  |
-+-------------------------------------------------------------------------------+
-| (`status` in (_latin1\'studying\',_latin1\'graduated\',_latin1\'suspended\')) |
-+-------------------------------------------------------------------------------+
+mysql> SELECT CONSTRAINT_NAME, CHECK_CLAUSE FROM information_schema.check_constrai
+nts;
++-----------------+---------------------------------------------------------------------------------------------------+
+| CONSTRAINT_NAME | CHECK_CLAUSE                                                                                      |
++-----------------+---------------------------------------------------------------------------------------------------+
+| status_enum_chk | (`status` in (_latin1\'studying\',_latin1\'graduated\',_latin1\'suspended\',_latin1\'transfer\')) |
++-----------------+---------------------------------------------------------------------------------------------------+
 ```
 
+### 課題2 制約の変更が難しい
+
+例えば生徒のステータスに新しく「転校」( `trasferred` )を追加しようとすると、すでにカラムに設定されている制約を変更する必要がある。
+
+```sql
+-- まずは制約を削除する必要がある
+ALTER TABLE Student DROP CONSTRAINT status_enum_chk;
+
+-- 新たにカラムに制約を追加する
+ALTER TABLE Student ADD CONSTRAINT status_enum_chk
+    CHECK (status IN ('studying', 'graduated', 'suspended', 'trasferred'));
+```
+
+このようにテーブル定義を変更しなければ、以下のデータを挿入することはできない。
+
+```sql
+INSERT INTO Student (student_id, name, status)
+VALUES (4, 'Keisuke', 'trasferred');
+```
+
+このようにテーブル定義自体を変更する必要があるため、稼働中のサービスに影響を与えてしまう可能性が存在する。
+
+またこのようにしてテーブル定義を変更する場合、もしも既存の制約に存在している値を削除することが難しくなってしまい、以下のように制約から `suspended` を削除することができない。
+
+例えば以下のデータが存在しているとする。
+
+```sql
+SELECT * FROM Student;
++------------+---------+------------+
+| student_id | name    | status     |
++------------+---------+------------+
+|          1 | John    | studying   |
+|          2 | Mike    | graduated  |
+|          3 | Lisa    | suspended  |
+|          4 | Keisuke | trasferred |
++------------+---------+------------+
+```
+
+このときに以下の手順でテーブル定義を変更しようとするとエラーが発生する。
+
+```sql
+-- まずは制約を削除する必要がある
+ALTER TABLE Student DROP CONSTRAINT status_enum_chk;
+
+-- 新たにカラムに制約を追加する
+ALTER TABLE Student ADD CONSTRAINT status_enum_chk
+    CHECK (status IN ('studying', 'graduated', 'trasferred'));
+ERROR 3819 (HY000): Check constraint 'status_enum_chk' is violated.
+```
