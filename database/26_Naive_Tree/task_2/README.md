@@ -209,4 +209,93 @@ SELECT * FROM MessageTree mt WHERE mt.descendant = 8;
 
 ### 課題2 ノードの削除が難しい
 
+このテーブル設計にしていれば、リーフノードを削除することは非常に簡単である。
+
+例えばリーフノードであるメッセージIDが8のノードを削除する場合には、単純に子孫 `descendant` がメッセージIDが8であるノードを全て削除すればいいだけである。
+
+```sql
+DELETE FROM MessageTree WHERE descendant = 8;
+```
+
+またサブツリーを削除したい場合は、指定した先祖 `ancestor` を有しているレコードの子孫 `descendant` を全て削除すればいい。
+
+これは以下のようなデータを有している際に先祖が `2` であるサブツリーを削除したい場合には、先祖が `2` であるレコードの `descendant` が `4,5,8`を削除すればいいことになる。
+
+```bash
+# (1) parent root
+#  └── (2) intermediate root 1
+#       ├── (4) leaf 1
+#       └── (5) leaf 2
+#            └── (8) leaf 5
+```
+
+つまり以下のように紐づけを削除すればいいことがわかる。
+
+```sql
+DELETE FROM MessageTree
+WHERE descendant IN (
+    SELECT descendant
+    FROM MessageTree
+    WHERE ancestor = 2
+)
+AND descedant != 2;
+
+-- 以下のデータが削除される
+/*
+| ancestor | descendant |
+|:--------:|:----------:|
+|    2     |     4      |
+|    2     |     5      |
+|    2     |     8      |
+*/
+```
+
+なお自己参照は削除しないようにしている。
+
+### 課題3 サブツリーの移動
+
+このテーブル設計にしていれば、サブツリーの削除だけではなく、ほかのメッセージにサブツリー全体を移動させることも可能である。
+
+例えば以下の状態のデータを考える。
+
+```bash
+# (1) parent root
+#  ├── (2) intermediate root 1
+#  │    ├── (4) leaf 1
+#  │    └── (5) leaf 2
+#  │         └── (8) leaf 5
+#  │
+#  └── (3) intermediate root 2
+#       └── (6) leaf 3
+#            └── (7) leaf 4
+```
+
+この状態からメッセージIDが5を親とした場合のサブツリーを、メッセージIDが3を親としたサブツリーに付け替える。
+
+```bash
+# (1) parent root
+#  ├── (2) intermediate root 1
+#  │    └── (4) leaf 1
+#  │    
+#  └── (3) intermediate root 2
+#       ├── (6) leaf 3
+#       │    └── (7) leaf 4
+#       └── (5) leaf 2
+#            └── (8) leaf 5
+```
+
+このためにまずは以下のデータを削除する必要がある。
+
+| ancestor | descendant |
+|:--------:|:----------:|
+|    1     |     5      |
+|    1     |     8      |
+|    2     |     5      |
+|    2     |     8      |
+
+注意点としてはサブツリー内部の紐づけは削除する必要がない点である。
+
+
+
+
 
