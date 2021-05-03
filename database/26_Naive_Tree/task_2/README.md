@@ -7,6 +7,7 @@
 
 - [閉包テーブル (Closure Table)](#%E9%96%89%E5%8C%85%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB-closure-table)
   - [課題1 全階層からのメッセージ抽出が難しい](#%E8%AA%B2%E9%A1%8C1-%E5%85%A8%E9%9A%8E%E5%B1%A4%E3%81%8B%E3%82%89%E3%81%AE%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E6%8A%BD%E5%87%BA%E3%81%8C%E9%9B%A3%E3%81%97%E3%81%84)
+  - [課題2 ノードの削除が難しい](#%E8%AA%B2%E9%A1%8C2-%E3%83%8E%E3%83%BC%E3%83%89%E3%81%AE%E5%89%8A%E9%99%A4%E3%81%8C%E9%9B%A3%E3%81%97%E3%81%84)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
