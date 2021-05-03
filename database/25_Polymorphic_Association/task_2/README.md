@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS MangaComment (
     id INT AUTO_INCREMENT PRIMARY KEY,
     manga_id INT,
     comment_id INT,
+    UNIQUE(manga_id, comment_id),
     UNIQUE(comment_id),  -- あるコメントは1つの漫画のみに紐づく
     FOREIGN KEY (manga_id)
         REFERENCES Manga(manga_id),
@@ -96,6 +97,7 @@ CREATE TABLE IF NOT EXISTS NovelComment (
     id INT AUTO_INCREMENT PRIMARY KEY,
     novel_id INT,
     comment_id INT,
+    UNIQUE(novel_id, comment_id),
     UNIQUE(comment_id),  -- あるコメントは1つの小説のみに紐づく
     FOREIGN KEY (novel_id)
         REFERENCES Novel(novel_id),
@@ -132,12 +134,33 @@ VALUES (1, 4), (2, 5);
 しかし、注意点として完全に参照整合性を保つことができているわけではなく、以下のようにあるコメントを漫画と小説の両方に紐づけてしまうことができる点は注意が必要である。
 
 ```sql
+INSERT INTO Comment (text)
+VALUES ('no consistency');
+
 -- あるコメント (id=1) が漫画と小説の両方に紐づいており、整合性が取れていない
 INSERT INTO MangaComment (manga_id, comment_id)
-VALUES (10, 1);
+VALUES (1, 6);
 
-INSERT INTO MangaComment (manga_id, comment_id)
-VALUES (10, 1);
+INSERT INTO NovelComment (novel_id, comment_id)
+VALUES (2, 6);
+```
+
+上記の例では、1つのコメントがある小説とある漫画の両方のリソースに紐づいており、本来はありえない状況が再現されてしまっている。
+
+```sql
+SELECT Comment.comment_id
+      ,MangaComment.manga_id
+      ,NovelComment.novel_id
+FROM Comment
+INNER JOIN MangaComment ON Comment.comment_id = MangaComment.comment_id
+INNER JOIN NovelComment ON Comment.comment_id = NovelComment.comment_id
+AND Comment.comment_id = 6;
+
++------------+----------+----------+
+| comment_id | manga_id | novel_id |
++------------+----------+----------+
+|          6 |        1 |        2 |
++------------+----------+----------+
 ```
 
 これはアプリケーション側で防ぐ必要がある。
