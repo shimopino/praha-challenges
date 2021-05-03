@@ -62,13 +62,14 @@ VALUES
 格納されているデータとしては以下を想定している。
 
 ```bash
-#                   (1)'parent root'
-#                     /          \
-#  (2) 'intermediate root 1'     (3) 'intermediate root 2'
-#      /             \                     |
-# (4) 'leaf 1'     (5) 'leaf 2'       (6) 'leaf 3'
-#                                          |
-#                                     (7) 'leaf 4'
+# (1) parent root
+#  ├── (2) intermediate root 1
+#  │    ├── (4) leaf 1
+#  │    └── (5) leaf 2
+#  │
+#  └── (3) intermediate root 2
+#       └── (6) leaf 3
+#            └── (7) leaf 4
 
 +------------+---------------------+-------------------+
 | message_id | text                | parent_message_id |
@@ -85,28 +86,21 @@ VALUES
 
 ### 課題1 全階層からのメッセージ抽出が難しい
 
-メッセージは親テーブルとして自身を参照する階層構造を有しているため、1レコード内に子ノードを含めようとすると、階層分の外部結合が必要になってしまう。
+メッセージは親テーブルとして自身を参照する階層構造を有しているため、1レコード内に全ての子ノードを含めようとすると、階層分の外部結合が必要になってしまう。
 
-例えば以下のクエリでは、1レコードで2階層分のノードしか追跡することができない。
+例えば以下のクエリでは、自分自身を含めて3階層分のノードを有しているメッセージIDが `3` のノードを見てみると、直近の子ノードであるメッセージIDが `6` のノードしか抽出できていない。
 
 ```sql
 SELECT m1.message_id, m1.parent_message_id
       ,m2.message_id, m2.parent_message_id
 FROM Message m1
-LEFT OUTER JOIN Message m2 ON m1.message_id = m2.parent_message_id;
+LEFT OUTER JOIN Message m2 ON m1.message_id = m2.parent_message_id
+WHERE m1.message_id =  3;
 
 +------------+-------------------+------------+-------------------+
 | message_id | parent_message_id | message_id | parent_message_id |
 +------------+-------------------+------------+-------------------+
-|          1 |              NULL |          2 |                 1 |
-|          1 |              NULL |          3 |                 1 |
-|          2 |                 1 |          4 |                 2 |
-|          2 |                 1 |          5 |                 2 |
 |          3 |                 1 |          6 |                 3 |
-|          4 |                 2 |       NULL |              NULL |
-|          5 |                 2 |       NULL |              NULL |
-|          6 |                 3 |          7 |                 6 |
-|          7 |                 6 |       NULL |              NULL |
 +------------+-------------------+------------+-------------------+
 ```
 
@@ -118,21 +112,13 @@ SELECT m1.message_id, m1.parent_message_id
       ,m3.message_id, m3.parent_message_id
 FROM Message m1
 LEFT OUTER JOIN Message m2 ON m1.message_id = m2.parent_message_id
-LEFT OUTER JOIN Message m3 ON m2.message_id = m3.parent_message_id;
+LEFT OUTER JOIN Message m3 ON m2.message_id = m3.parent_message_id
+WHERE m1.message_id =  3;
 
 +------------+-------------------+------------+-------------------+------------+-------------------+
 | message_id | parent_message_id | message_id | parent_message_id | message_id | parent_message_id |
 +------------+-------------------+------------+-------------------+------------+-------------------+
-|          1 |              NULL |          2 |                 1 |          4 |                 2 |
-|          1 |              NULL |          2 |                 1 |          5 |                 2 |
-|          1 |              NULL |          3 |                 1 |          6 |                 3 |
-|          2 |                 1 |          4 |                 2 |       NULL |              NULL |
-|          2 |                 1 |          5 |                 2 |       NULL |              NULL |
 |          3 |                 1 |          6 |                 3 |          7 |                 6 |
-|          4 |                 2 |       NULL |              NULL |       NULL |              NULL |
-|          5 |                 2 |       NULL |              NULL |       NULL |              NULL |
-|          6 |                 3 |          7 |                 6 |       NULL |              NULL |
-|          7 |                 6 |       NULL |              NULL |       NULL |              NULL |
 +------------+-------------------+------------+-------------------+------------+-------------------+
 ```
 
@@ -145,7 +131,7 @@ LEFT OUTER JOIN Message m3 ON m2.message_id = m3.parent_message_id;
 まずは `intermediate root 1` のノードのIDを確認してみる。
 
 ```sql
-mysql> SELECT * FROM Message WHERE text = 'intermediate root 1';
+SELECT * FROM Message WHERE text = 'intermediate root 1';
 
 +------------+---------------------+-------------------+
 | message_id | text                | parent_message_id |
@@ -161,7 +147,7 @@ SELECT * FROM Message WHERE parent_message_id = 2; -- (4, 5)が返る
 SELECT * FROM Message WHERE parent_message_id = 4; -- Empty
 SELECT * FROM Message WHERE parent_message_id = 5; -- Empty
 
-DELETE FROM Message WHERE message_id = 4;
+DELETE FROM Message WHERE message_id = 4; -- 子ノードから順番に削除していく
 DELETE FROM Message WHERE message_id = 5;
 DELETE FROM Message WHERE message_id = 2;
 ```
@@ -220,3 +206,6 @@ SELECT * FROM MessageTree;
 参考資料
 
 - [SQL: ナイーブツリーと再帰クエリ](https://blog.amedama.jp/entry/2016/05/05/215954)
+- [13.2.15 WITH (Common Table Expressions)](https://dev.mysql.com/doc/refman/8.0/en/with.html)
+- [MySQL 8.0 Lab版: MySQLの (再帰)共通テーブル式(CTE)](https://yakst.com/ja/posts/4322)
+- [MySQL 8.0の再帰With句のサンプル集](https://codezine.jp/article/detail/2679)
