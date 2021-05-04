@@ -287,6 +287,8 @@ AND descedant != 2;
 
 このためにまずは以下のデータを削除する必要がある。
 
+つまり先祖 `ancestor` には1と2を、子孫 `descendant` には5と8を抽出して全パターンのレコードを削除すればいい。
+
 | ancestor | descendant |
 |:--------:|:----------:|
 |    1     |     5      |
@@ -296,7 +298,76 @@ AND descedant != 2;
 
 注意点としてはサブツリー内部の紐づけは削除する必要がない点である。
 
+```sql
+DELETE FROM MessageTree
+WHERE descendant IN (
+    -- 別名にしないと ERROR 1093 が発生する
+    -- MySQLではWHERE句のサブクエリで指定したテーブル名は
+    -- UPDATEできないらしい
+    SELECT x.id FROM (
+        SELECT descendant AS id
+        FROM MessageTree
+        WHERE ancestor = 5 -- 先祖が5、つまり子孫には5と8が抽出される
+    ) AS x
+)
+AND ancestor IN (
+    SELECT y.id FROM (
+        SELECT ancestor AS id
+        FROM MessageTree
+        WHERE descendant = 5 -- 子孫が5、つまり先祖には自己参照も合わせて1と2と5が抽出される
+        AND ancestor != descendant
+    ) AS y
+);
+```
 
+これでより上位の階層との紐づけ `(1, 5), (1, 8), (2, 5), (2, 8` を削除した上で、サブツリー内の紐づけ `(5, 5), (5, 8` は残したままにすることができた。
 
+次にサブツリーを移動させるためには、以下の紐づけを新しく追加する必要がある。
 
+| ancestor | descendant |
+|:--------:|:----------:|
+|    1     |     5      |
+|    1     |     8      |
+|    3     |     5      |
+|    3     |     8      |
 
+そのためにはデカルト積を使用して全てのノードを組み合わせたうえで、新たな挿入先のメッセージIDが3までのノードと、メッセージIDが5である先祖の全パターンを抽出すればいい。
+
+```sql
+INSERT INTO MessageTree (ancestor, descendant)
+  SELECT supertree.ancestor, subtree.descendant
+  FROM MessageTree AS supertree
+    CROSS JOIN MessageTree AS subtree
+  WHERE supertree.descendant = 3
+    AND subtree.ancestor = 5;
+```
+
+試しにメッセージIDが3のノードを親にもつ全ての紐づけを確認してみると、新たにメッセージIDが5と8のノードが追加されていることがわかる。
+
+```sql
+SELECT * FROM MessageTree WHERE ancestor = 3;
+
++----+----------+------------+
+| id | ancestor | descendant |
++----+----------+------------+
+| 13 |        3 |          3 |
+| 30 |        3 |          5 | -- サブツリーの1階層目
+| 14 |        3 |          6 |
+| 15 |        3 |          7 |
+| 31 |        3 |          8 | -- サブツリーの2階層目
++----+----------+------------+
+```
+
+つまり期待通り、以下の構造になるようにサブツリーを移動させることができている。
+
+```bash
+# (1) parent root
+#  ├── (2) intermediate root 1
+#  │    └── (4) leaf 1
+#  │    
+#  └── (3) intermediate root 2
+#       ├── (6) leaf 3
+#       │    └── (7) leaf 4
+#       └── (5) leaf 2
+#            └── (8) leaf 5
+```
