@@ -13,13 +13,10 @@
 
 ## 問題設定
 
-
-
-
-以下の物理設計で検証を実施する。
+以下のテーブル設計でどのような課題が発生するのか見ていく。
 
 ```sql
-CREATE TABLE IF NOT EXISTS NewCustomer (
+CREATE TABLE IF NOT EXISTS Contract (
     new_conster_id INT PRIMARY KEY,
     telephone BOOLEAN,  -- 電話を掛けたらTRUE
     metOnce BOOLEAN,    -- アポで面談したらTRUE
@@ -29,6 +26,13 @@ CREATE TABLE IF NOT EXISTS NewCustomer (
 ) ENGINE=InnoDB;
 ```
 
-### 課題1 ｌ
+### 課題1 NULLが入り込む設計となる
+
+
+Appointment
+
+Interview
+
+Completion
 
 
