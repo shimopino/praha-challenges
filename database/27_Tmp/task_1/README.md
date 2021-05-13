@@ -6,7 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [問題設定](#%E5%95%8F%E9%A1%8C%E8%A8%AD%E5%AE%9A)
-  - [課題1 NULLが入り込む設計となる](#%E8%AA%B2%E9%A1%8C1-null%E3%81%8C%E5%85%A5%E3%82%8A%E8%BE%BC%E3%82%80%E8%A8%AD%E8%A8%88%E3%81%A8%E3%81%AA%E3%82%8B)
+  - [課題1](#%E8%AA%B2%E9%A1%8C1)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
