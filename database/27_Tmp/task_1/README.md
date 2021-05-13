@@ -13,10 +13,9 @@
 
 ## 問題設定
 
+課題の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/recs0SLG3aI2wTeWi?blocks=hide) を確認する。
 
-
-
-以下の物理設計で検証を実施する。
+以下のスキーマ設計でどのような問題が生じるのか検証する。
 
 ```sql
 CREATE TABLE IF NOT EXISTS NewCustomer (
@@ -29,6 +28,6 @@ CREATE TABLE IF NOT EXISTS NewCustomer (
 ) ENGINE=InnoDB;
 ```
 
-### 課題1 ｌ
+### 課題1 
 
 
