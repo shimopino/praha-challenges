@@ -6,6 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [#10 Jestで単体テストを書こう](#10-jest%E3%81%A7%E5%8D%98%E4%BD%93%E3%83%86%E3%82%B9%E3%83%88%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86)
+- [#11 Storybookを作ろう](#11-storybook%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
