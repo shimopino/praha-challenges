@@ -151,7 +151,7 @@ LEFT OUTER JOIN Completion CP  ON CP.activity_id = A.id;
 
 カラムではなくレコードとして営業イベントを格納しているため、2回のアポイントをとって面談した場合は、新たにレコードとして対象の営業イベントを実施すればいい。
 
-例えば以下では `google` に対して2回目の
+例えば以下では `google` に対して2回目のアポイントをとって面談を行った場合の処理を記載している。
 
 ```sql
 INSERT INTO Appointment (activity_id, metAt)
