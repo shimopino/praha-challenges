@@ -6,6 +6,9 @@
 <summary>Table of Contents</summary>
 
 - [テーブル継承](#%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E7%B6%99%E6%89%BF)
+  - [課題1 NULLが入り込む設計となる](#%E8%AA%B2%E9%A1%8C1-null%E3%81%8C%E5%85%A5%E3%82%8A%E8%BE%BC%E3%82%80%E8%A8%AD%E8%A8%88%E3%81%A8%E3%81%AA%E3%82%8B)
+  - [課題2 顧客と各イベントが1対1に紐づいてしまう](#%E8%AA%B2%E9%A1%8C2-%E9%A1%A7%E5%AE%A2%E3%81%A8%E5%90%84%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%8C1%E5%AF%BE1%E3%81%AB%E7%B4%90%E3%81%A5%E3%81%84%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86)
+  - [注意点](#%E6%B3%A8%E6%84%8F%E7%82%B9)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
