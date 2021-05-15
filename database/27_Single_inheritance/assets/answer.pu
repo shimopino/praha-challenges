@@ -1,0 +1,53 @@
+@startuml answer
+
+entity User {
+    * id: varchar [PK]
+    ---
+    name: varchar
+}
+
+entity Project {
+    * id: vvarchar [PK]
+    ---
+    description: varchar
+}
+
+entity Activity {
+    * id: varchar [PK]
+    ---
+    + user_id: varchar [FK]
+    + project_id: varchar [FK]
+}
+
+User ||--r--o{ Activity
+Project ||--l--o{ Activity
+
+entity Interview {
+    * id: varchar [PK]
+    ---
+    + user_id: varchar [FK]
+    + project_id: varchar [FK]
+    telephone: varchar
+}
+
+entity Appointment {
+    * id: varchar [PK]
+    ---
+    + user_id: varchar [FK]
+    + project_id: varchar [FK]
+    metAt: varchar
+}
+
+entity Completion {
+    * id: varchar [PK]
+    ---
+    + user_id: varchar [FK]
+    + project_id: varchar [FK]
+    chosedAt: varchar
+}
+
+Activity ||--|| Interview
+Activity ||--|| Appointment
+Activity ||--|| Completion
+
+@enduml
