@@ -47,8 +47,7 @@ VALUES
 具体的には以下のクエリを実行して得られる文字列から選択肢を抽出する必要が発生する。
 
 ```bash
-mysql> SELECT CONSTRAINT_NAME, CHECK_CLAUSE FROM information_schema.check_constrai
-nts;
+mysql> SELECT CONSTRAINT_NAME, CHECK_CLAUSE FROM information_schema.check_constraints;
 +-----------------+---------------------------------------------------------------------------------------------------+
 | CONSTRAINT_NAME | CHECK_CLAUSE                                                                                      |
 +-----------------+---------------------------------------------------------------------------------------------------+
