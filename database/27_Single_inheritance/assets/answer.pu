@@ -23,26 +23,20 @@ User ||--r--o{ Activity
 Project ||--l--o{ Activity
 
 entity Interview {
-    * id: varchar [PK]
+    * id: varchar [PK, FK]
     ---
-    + user_id: varchar [FK]
-    + project_id: varchar [FK]
     telephone: varchar
 }
 
 entity Appointment {
-    * id: varchar [PK]
+    * id: varchar [PK, FK]
     ---
-    + user_id: varchar [FK]
-    + project_id: varchar [FK]
     metAt: varchar
 }
 
 entity Completion {
-    * id: varchar [PK]
+    * id: varchar [PK, FK]
     ---
-    + user_id: varchar [FK]
-    + project_id: varchar [FK]
     chosedAt: varchar
 }
 
