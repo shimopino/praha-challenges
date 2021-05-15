@@ -14,6 +14,8 @@
 
 ## 問題設定
 
+課題の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/recJclAcSDreEzHsY?blocks=hide) を参照する。
+
 学校の生徒に関する状態として「在学中」「卒業」「停学中」の3パターンが存在しており、以下のような制約によって表現している。
 
 ```sql
