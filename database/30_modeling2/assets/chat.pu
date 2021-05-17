@@ -1,5 +1,7 @@
 @startuml chat
 
+skinparam linetype ortho
+
 entity User {
     * id: varchar [PK]
     ---
@@ -61,5 +63,16 @@ entity ChannelInWorkspace {
     + workspace_id: varchar [FK]
     + channel_id: varchar [FK]
 }
+
+User ||--o{ BelongingToChannel
+Channel ||--o{ BelongingToChannel
+User ||--o{ BelongingToWorkspace
+Workspace ||--o{ BelongingToWorkspace
+Channel ||--o{ ChannelInWorkspace
+Workspace ||--o{ ChannelInWorkspace
+Message ||--o{ MessageInChannel
+ChannelInWorkspace ||--o{ MessageInChannel
+Message ||--o{ MessageTree
+
 
 @enduml
