@@ -1,7 +1,65 @@
 @startuml chat
 
+entity User {
+    * id: varchar [PK]
+    ---
+    name: varchar
+}
+
 entity Message {
     * id: varchar [PK]
+    ---
+    + user_id: varchar [FK]
+    + channel_id: varchar [FK]
+    created_at: varchar
+    contents: varchar
+}
+
+entity MessageTree {
+    * id: varchar [PK]
+    ---
+    + parent: varchar [FK]
+    + child: varchar [FK]
+}
+
+entity Channel {
+    * id: varchar [PK]
+    ---
+    name: varchar
+}
+
+entity MessageInChannel {
+    * id: varchar [PK]
+    ---
+    + message_id: varchar [FK]
+    + channel_id: varchar [FK]
+}
+
+entity BelongingToChannel {
+    * id: varchar [PK]
+    ---
+    + channel_id: varchar [FK]
+    + user_id: varchar [FK]
+}
+
+entity Workspace {
+    * id: varchar [PK]
+    ---
+    description: varchar [PK]
+}
+
+entity BelongingToWorkspace {
+    * id: varchar [PK]
+    ---
+    + workspace_id: varchar [FK]
+    + user_id: varchar [FK]
+}
+
+entity ChannelInWorkspace {
+    * id: varchar [PK]
+    ---
+    + workspace_id: varchar [FK]
+    + channel_id: varchar [FK]
 }
 
 @enduml
