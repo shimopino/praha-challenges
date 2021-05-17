@@ -1,0 +1,7 @@
+@startuml chat
+
+entity Message {
+    * id: varchar [PK]
+}
+
+@enduml
