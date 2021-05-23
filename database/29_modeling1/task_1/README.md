@@ -6,8 +6,6 @@
 <summary>Table of Contents</summary>
 
 - [モデリング](#%E3%83%A2%E3%83%87%E3%83%AA%E3%83%B3%E3%82%B0)
-  - [イベント系エンティティの抽出](#%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E7%B3%BB%E3%82%A8%E3%83%B3%E3%83%86%E3%82%A3%E3%83%86%E3%82%A3%E3%81%AE%E6%8A%BD%E5%87%BA)
-  - [リソース系エンティティの抽出](#%E3%83%AA%E3%82%BD%E3%83%BC%E3%82%B9%E7%B3%BB%E3%82%A8%E3%83%B3%E3%83%86%E3%82%A3%E3%83%86%E3%82%A3%E3%81%AE%E6%8A%BD%E5%87%BA)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
