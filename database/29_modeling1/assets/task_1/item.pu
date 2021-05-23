@@ -1,28 +1,28 @@
-@startuml
+@startuml item
 
 package 商品マスタ {
-    entity 単品商品 {
+    entity 単品商品 <<M,MASTER_MARK_COLOR>> {
         * 単品商品ID
         --
         商品名
         商品種別ID [FK]
     }
 
-    entity 単品商品種別 {
+    entity 単品商品種別 <<M,MASTER_MARK_COLOR>> {
         * 商品種別ID
         --
         単品商品種別名
         単価
     }
 
-    entity セット商品 {
+    entity セット商品 <<M,MASTER_MARK_COLOR>> {
         * セット商品ID
         --
         商品名
         単価
     }
 
-    entity セット商品種別 {
+    entity セット商品種別 <<M,MASTER_MARK_COLOR>> {
         * セット商品種別ID
         --
         セット商品種別名

@@ -1,0 +1,11 @@
+@startuml tax
+
+package 税率マスタ {
+    entity 税率 <<M,MASTER_MARK_COLOR>> {
+        * 税率ID
+        --
+        税率
+    }
+}
+
+@enduml

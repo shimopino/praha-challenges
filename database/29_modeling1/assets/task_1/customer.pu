@@ -1,7 +1,7 @@
 @startuml customer
 
 package 顧客マスタ {
-    entity 顧客 {
+    entity 顧客 <<M,MASTER_MARK_COLOR>> {
         * 顧客ID
         --
         お名前
