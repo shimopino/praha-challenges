@@ -22,7 +22,7 @@
 
 仕様の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/recCDmAj926oLfOde?blocks=hide) を確認する。
 
-<iframe width="560" height="315" src='https://dbdiagram.io/embed/60a27221b29a09603d1535b5'> </iframe>
+![](../assets/chat-dbdiagram.png)
 
 リンクは [ここ](https://dbdiagram.io/d/60a27221b29a09603d1535b5)
 
