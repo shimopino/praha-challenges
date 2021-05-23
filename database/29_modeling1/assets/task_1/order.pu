@@ -1,0 +1,34 @@
+@startuml order
+
+skinparam Linetype ortho
+
+package 注文管理 {
+    entity 注文 {
+        * 注文ID
+        --
+        顧客ID [FK]
+        注文日時
+        合計皿数
+    }
+
+    entity 単品注文明細 {
+        * 注文ID [FK]
+        * 単品商品ID [FK]
+        --
+        個数
+        わさびあり
+    }
+
+    entity セット注文明細 {
+        * 注文ID [FK]
+        * セット商品ID [FK]
+        --
+        個数
+        わさびあり
+    }
+
+    注文 ||-do-o{ 単品注文明細
+    注文 ||-do-o{ セット注文明細
+}
+
+@enduml
