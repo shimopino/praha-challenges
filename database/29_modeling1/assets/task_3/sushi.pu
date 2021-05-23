@@ -1,9 +1,11 @@
 @startuml sushi
 
 skinparam Linetype ortho
+!define MASTER_MARK_COLOR AAFFAA
+!define TRANSACTION_MARK_COLOR FFAA00
 
 package 顧客マスタ {
-    entity 顧客 {
+    entity 顧客 <<M,MASTER_MARK_COLOR>> {
         * 顧客ID
         --
         お名前
@@ -12,7 +14,7 @@ package 顧客マスタ {
 }
 
 package 税率マスタ {
-    entity 税率 {
+    entity 税率 <<M,MASTER_MARK_COLOR>> {
         * 税率ID
         --
         税率
@@ -20,7 +22,7 @@ package 税率マスタ {
 }
 
 package 注文管理 {
-    entity 注文 {
+    entity 注文 <<T,TRANSACTION_MARK_COLOR>> {
         * 注文ID
         --
         顧客ID [FK]
@@ -29,7 +31,7 @@ package 注文管理 {
         注文方法ID [FK]
     }
 
-    entity 単品注文明細 {
+    entity 単品注文明細 <<T,TRANSACTION_MARK_COLOR>> {
         * 注文ID [FK]
         * 単品商品ID [FK]
         --
@@ -39,7 +41,7 @@ package 注文管理 {
         シャリ種別ID [FK]
     }
 
-    entity セット注文明細 {
+    entity セット注文明細 <<T,TRANSACTION_MARK_COLOR>> {
         * 注文ID [FK]
         * セット商品ID [FK]
         --
@@ -52,13 +54,13 @@ package 注文管理 {
 
     note right of セット注文明細: 注文明細に価格を\n別途持たせておく\n計算はアプリで実施
 
-    entity シャリ種別 {
+    entity シャリ種別 <<M,MASTER_MARK_COLOR>> {
         * シャリ種別ID
         --
         シャリ種別名
     }
 
-    entity 注文方法 {
+    entity 注文方法 <<M,MASTER_MARK_COLOR>> {
         * 注文方法ID
         --
         注文方法
@@ -75,34 +77,34 @@ package 注文管理 {
 
 
 package 商品マスタ {
-    entity 単品商品 {
+    entity 単品商品 <<M,MASTER_MARK_COLOR>> {
         * 単品商品ID
         --
         商品名
         商品種別ID [FK]
     }
 
-    entity 単品商品種別 {
+    entity 単品商品種別 <<M,MASTER_MARK_COLOR>> {
         * 商品種別ID
         --
         単品商品種別名
         単価
     }
 
-    entity セット商品 {
+    entity セット商品 <<M,MASTER_MARK_COLOR>> {
         * セット商品ID
         --
         商品名
         単価
     }
 
-    entity セット商品種別 {
+    entity セット商品種別 <<M,MASTER_MARK_COLOR>> {
         * セット商品種別ID
         --
         セット商品種別名
     }
 
-    entity セット商品構成 {
+    entity セット商品構成 <<M,MASTER_MARK_COLOR>> {
         * 単品商品ID [FK]
         * セット商品ID [FK]
         --
