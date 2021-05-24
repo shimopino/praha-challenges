@@ -1,4 +1,4 @@
-@startuml all
+@startuml sushi-v2
 
 skinparam Linetype ortho
 !define MASTER_MARK_COLOR AAFFAA
