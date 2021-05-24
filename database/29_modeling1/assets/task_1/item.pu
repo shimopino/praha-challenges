@@ -6,6 +6,7 @@ package 商品マスタ {
         --
         商品名
         商品種別ID [FK]
+        消費税区分ID [FK]
     }
 
     entity 単品商品種別 <<M,MASTER_MARK_COLOR>> {

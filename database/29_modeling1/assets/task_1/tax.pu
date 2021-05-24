@@ -1,11 +1,22 @@
 @startuml tax
 
-package 税率マスタ {
-    entity 税率 <<M,MASTER_MARK_COLOR>> {
-        * 税率ID
+package 税マスタ {
+    entity 消費税区分 <<M,MASTER_MARK_COLOR>> {
+        * 消費税区分ID
         --
+        消費税区分名
+    }
+
+    entity 税率区分 <<M,MASTER_MARK_COLOR>> {
+        * 税率区分
+        --
+        適用開始日
+        適用終了日
+        消費税区分ID [FK]
         税率
     }
+
+    消費税区分 ||--|{ 税率区分
 }
 
 @enduml
