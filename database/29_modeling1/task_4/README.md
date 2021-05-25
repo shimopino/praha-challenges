@@ -118,5 +118,9 @@ CREATE TABLE IF NOT EXISTS SushiOrderDetail (
 
 ## サンプルデータ
 
+サンプルデータは [Google Spread Sheet](https://docs.google.com/spreadsheets/d/1ePLciL0BeTwNiJC_K4yfBLfe4ujrR_ecgttDUoCMdlE/edit?usp=sharing) を使用して作成した。
 
+```sql
+
+```
 
