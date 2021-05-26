@@ -3,76 +3,51 @@
 skinparam linetype ortho
 
 entity User {
-    * id: varchar [PK]
+    * id
     ---
-    name: varchar
-}
-
-entity Message {
-    * id: varchar [PK]
-    ---
-    + user_id: varchar [FK]
-    + channel_id: varchar [FK]
-    created_at: varchar
-    contents: varchar
-}
-
-entity MessageTree {
-    * id: varchar [PK]
-    ---
-    + parent: varchar [FK]
-    + child: varchar [FK]
+    name
 }
 
 entity Channel {
-    * id: varchar [PK]
+    * id
     ---
-    name: varchar
-}
-
-entity MessageInChannel {
-    * id: varchar [PK]
-    ---
-    + message_id: varchar [FK]
-    + channel_id: varchar [FK]
-}
-
-entity BelongingToChannel {
-    * id: varchar [PK]
-    ---
-    + channel_id: varchar [FK]
-    + user_id: varchar [FK]
+    name
+    workspace_id [FK]
 }
 
 entity Workspace {
-    * id: varchar [PK]
+    * id
     ---
-    description: varchar [PK]
+    description
 }
 
-entity BelongingToWorkspace {
-    * id: varchar [PK]
-    ---
-    + workspace_id: varchar [FK]
-    + user_id: varchar [FK]
+entity Workspace_User_Type {
+    * id
+    --
+    type
 }
 
-entity ChannelInWorkspace {
-    * id: varchar [PK]
-    ---
-    + workspace_id: varchar [FK]
-    + channel_id: varchar [FK]
+entity Workspace_Member {
+    * user_id [FK]
+    * workspace_id [FK]
+    --
+    user_type [FK]
 }
 
-User ||--o{ BelongingToChannel
-Channel ||--o{ BelongingToChannel
-User ||--o{ BelongingToWorkspace
-Workspace ||--o{ BelongingToWorkspace
-Channel ||--o{ ChannelInWorkspace
-Workspace ||--o{ ChannelInWorkspace
-Message ||--o{ MessageInChannel
-ChannelInWorkspace ||--o{ MessageInChannel
-Message ||--o{ MessageTree
+entity Channel_Member {
+    * user_id
+    * channel_id
+}
 
+entity Channel_Thread {
+    * id
+    --
+    channel_id [FK]
+}
+
+entity Channel_Thread_Message {
+    * user_id [FK]
+    * channel_thread_id [FK]
+}
 
 @enduml
