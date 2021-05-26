@@ -8,6 +8,12 @@ entity User {
     name
 }
 
+entity Workspace {
+    * id
+    ---
+    name
+}
+
 entity Channel {
     * id
     ---
@@ -15,23 +21,9 @@ entity Channel {
     workspace_id [FK]
 }
 
-entity Workspace {
-    * id
-    ---
-    description
-}
-
-entity Workspace_User_Type {
-    * id
-    --
-    type
-}
-
 entity Workspace_Member {
     * user_id [FK]
     * workspace_id [FK]
-    --
-    user_type [FK]
 }
 
 entity Channel_Member {
@@ -39,15 +31,19 @@ entity Channel_Member {
     * channel_id
 }
 
-entity Channel_Thread {
-    * id
-    --
-    channel_id [FK]
-}
-
 entity Channel_Thread_Message {
     * user_id [FK]
-    * channel_thread_id [FK]
+    * channel_id [FK]
+    --
+    message
 }
+
+Workspace ||--|{ Channel
+User ||--o{ Workspace_Member
+Workspace ||--|{ Workspace_Member
+User ||--o{ Channel_Member
+Channel ||--|{ Channel_Member
+User ||--o{ Channel_Thread_Message
+Channel ||--o{ Channel_Thread_Message
 
 @enduml
