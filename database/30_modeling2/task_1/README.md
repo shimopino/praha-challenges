@@ -145,10 +145,31 @@ Slackでチャンネルにメッセージを投稿することを考えると、
 INSERT
 ```
 
-### メッセージに対してスレッドメッセージを投稿できる
+### スレッドメッセージに対してメッセージを投稿できる
+
+```sql
+INSERT INTO ()
+VALUES ();
+```
 
 ### ユーザーは所属しているチャンネル内のメッセージしか見れない
 
+```sql
+
+```
+
 ### ユーザーはワークスペースやチャンネルに参加・脱退できる
 
+```sql
+INSERT INTO Channel_Member (user_id, channel_id)
+VALUES (1, 1);
+
+INSERT INTO Workspace_Member (user_id, workspace_id)
+VALUES (1, 1);
+```
+
 ### メッセージとスレッドメッセージを横断的に検索できる
+
+```sql
+
+```
