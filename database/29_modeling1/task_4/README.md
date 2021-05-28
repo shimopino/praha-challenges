@@ -129,6 +129,38 @@ CREATE TABLE IF NOT EXISTS SushiOrderDetail (
 サンプルデータは [Google Spread Sheet](https://docs.google.com/spreadsheets/d/1ePLciL0BeTwNiJC_K4yfBLfe4ujrR_ecgttDUoCMdlE/edit?usp=sharing) を使用して作成した。
 
 ```sql
+-- Customer
+INSERT INTO Customer (id, name, phone) VALUES (1,'John', '080-0000-0000');
+INSERT INTO Customer (id, name, phone) VALUES (2,'Mike', '080-0000-1234');
+INSERT INTO Customer (id, name, phone) VALUES (3,'Bob', '080-1234-0000');
+
+-- TaxCategory
+INSERT INTO TaxCategory (id, tax_category_name) VALUES (1,'normal tax');
+INSERT INTO TaxCategory (id, tax_category_name) VALUES (2,'reduced tax');
+INSERT INTO TaxCategory (id, tax_category_name) VALUES (3,'tax free');
+
+-- TaxRate
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (1,'1900/01/01','1989/03/31','1','0');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (2,'1900/01/01','1989/03/31','2','0');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (3,'1900/01/01','1989/03/31','3','0');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (4,'1989/04/01','1997/03/31','1','3');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (5,'1989/04/01','1997/03/31','2','3');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (6,'1989/04/01','1997/03/31','3','0');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (7,'1997/04/01','2014/03/31','1','5');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (8,'1997/04/01','2014/03/31','2','5');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (9,'1997/04/01','2014/03/31','3','0');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (10,'2014/04/01','2019/09/30','1','8');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (11,'2014/04/01','2019/09/30','2','8');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (12,'2014/04/01','2019/09/30','3','0');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (13,'2019/10/01','2099/12/31','1','10');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (14,'2019/10/01','2099/12/31','2','8');
+INSERT INTO TaxRate (id, start_date, last_date, tax_category_id, tax_rate) VALUES (15,'2019/10/01','2099/12/31','3','0');
+
+-- ItemCategory
+INSERT INTO ItemCategory (id, tax_category_name) VALUES (1,'100');
+INSERT INTO ItemCategory (id, tax_category_name) VALUES (2,'150');
+INSERT INTO ItemCategory (id, tax_category_name) VALUES (3,'180');
+
 
 ```
 
