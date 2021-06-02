@@ -46,10 +46,10 @@ entity MessageTree {
 }
 
 Workspace ||--|{ Channel
-User ||--o{ Workspace_Member
+User ||-u-o{ Workspace_Member
 Workspace ||--|{ Workspace_Member
-User ||--o{ Channel_Member
-Channel ||--|{ Channel_Member
+User ||-r-o{ Channel_Member
+Channel ||-l-|{ Channel_Member
 User ||--o{ Channel_Thread_Message
 Channel ||--o{ Channel_Thread_Message
 Channel_Thread_Message ||--o{ MessageTree
