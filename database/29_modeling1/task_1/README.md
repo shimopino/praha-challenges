@@ -18,3 +18,7 @@
 
 ![](../assets/task_1/sushi-v2.png)
 
+## 参考資料
+
+- [SQLで消費税の処理](https://sikushima.hatenablog.com/entry/2020/06/09/113306)
+- [関連チェックはトリガーで](https://sikushima.hatenablog.com/entry/20110715/1310693513)
