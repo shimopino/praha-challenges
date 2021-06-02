@@ -36,6 +36,13 @@ entity Channel_Thread_Message {
     * channel_id [FK]
     --
     message
+    sent_at
+    is_root
+}
+
+entity MessageTree {
+    * ancestor_id
+    * descendant_id
 }
 
 Workspace ||--|{ Channel

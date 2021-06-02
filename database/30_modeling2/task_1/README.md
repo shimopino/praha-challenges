@@ -22,10 +22,6 @@
 
 仕様の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/recCDmAj926oLfOde?blocks=hide) を確認する。
 
-![](../assets/chat-dbdiagram.png)
-
-リンクは [ここ](https://dbdiagram.io/d/60a27221b29a09603d1535b5)
-
 ![](../assets/chat.png)
 
 ## 物理設計
