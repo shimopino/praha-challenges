@@ -24,6 +24,12 @@
 
 ![](../assets/chat.png)
 
+参考資料
+
+- [イミュータブルデータモデル(入門編)](https://www.slideshare.net/kawasima/ss-40471672)
+- [イミュータブルデータモデル](https://scrapbox.io/kawasima/%E3%82%A4%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%96%E3%83%AB%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB)
+- [チャットアプリの実例でDynamoDBのモデリングを考えてみる](https://zenn.dev/dove/scraps/576858405f1411)
+
 ## 物理設計
 
 以下の物理設計を載せておく。
