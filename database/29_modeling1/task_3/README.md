@@ -6,6 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [追加仕様](#%E8%BF%BD%E5%8A%A0%E4%BB%95%E6%A7%98)
+- [追加仕様 (ペア)](#%E8%BF%BD%E5%8A%A0%E4%BB%95%E6%A7%98-%E3%83%9A%E3%82%A2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
