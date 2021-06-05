@@ -37,7 +37,7 @@ entity Channel_Thread_Message {
     --
     message
     sent_at
-    is_root
+    is_thread
 }
 
 entity MessageTree {
