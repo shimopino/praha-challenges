@@ -15,3 +15,10 @@
 仕様の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/recQgEc0Z8Ic0AzLQ?blocks=hide) を参照する。
 
 ![](../assets/docs.png)
+
+- 感想
+  - 懸念事項
+    - 現在の設計では、文書が削除された際に `文書ステータス` を変更する
+    - これは文書に対する変更を追跡することができない
+  - 改善案
+    - イミュータブルデータモデルを採用し、文書とドキュメントに対するCRUD操作をイベントエンティティとして切り出す
