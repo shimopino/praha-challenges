@@ -2,27 +2,42 @@
 
 skinparam linetype ortho
 
-entity User {
-    * user_id
-    ---
-    name
+package ユーザ {
+    entity ユーザ {
+        * ユーザID
+        ---
+        ユーザ名
+    }
 }
 
-entity UserOwnDocument {
-    * user_id
-    * document_id
+package ドキュメント {
+    entity ドキュメント {
+        * ドキュメントID
+        ---
+        文書内容
+        文書ステータス
+        + ディレクトリID [FK]
+        + ユーザID [FK]
+    }
 }
 
-entity Document {
-    * document_id
-    ---
-    created_at
-    contents
+package ディレクトリ {
+    entity ディレクトリ {
+        * ディレクトリID
+        --
+        ディレクトリ名
+    }
+
+    entity ディレクトリ構造 {
+        * 親ディレクトリID [FK]
+        * 子ディレクトリID [FK]
+    }
+
+    ディレクトリ ||--|{ ディレクトリ構造
+    ディレクトリ ||--|{ ディレクトリ構造
 }
 
-entity DocumentTree {
-    * ancestor_id
-    * desccendant_id
-}
+ユーザ ||-ri-o{ ドキュメント
+ドキュメント }o-ri-|| ディレクトリ
 
 @enduml
