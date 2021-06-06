@@ -6,6 +6,8 @@
 <summary>Table of Contents</summary>
 
 - [チャットサービスのモデリング](#%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E3%81%AE%E3%83%A2%E3%83%87%E3%83%AA%E3%83%B3%E3%82%B0)
+  - [閉包テーブル](#%E9%96%89%E5%8C%85%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB)
+  - [隣接テーブル](#%E9%9A%A3%E6%8E%A5%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
