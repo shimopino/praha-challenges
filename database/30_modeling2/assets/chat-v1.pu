@@ -2,57 +2,68 @@
 
 skinparam linetype ortho
 
-entity User {
-    * id
-    ---
-    name
+package ユーザ {
+    entity ユーザ {
+        * ユーザID
+        ---
+        ユーザ名
+    }
+
+    entity ワークスペース所属 {
+        * ユーザID [FK]
+        * ワークスペースID [FK]
+        --
+        ユーザステータス
+    }
+
+    entity チャンネル所属 {
+        * ユーザID [FK]
+        * チャンネルID [FK]
+        --
+        ユーザステータス
+    }
 }
 
-entity Workspace {
-    * id
-    ---
-    name
+package ワークスペース構造 {
+    entity ワークスペース {
+        * ワークスペースID
+        ---
+        ワークスペース名
+    }
+
+    entity チャンネル {
+        * チャンネルID
+        ---
+        チャンネル名
+        ワークスペースID [FK]
+    }
 }
 
-entity Channel {
-    * id
-    ---
-    name
-    workspace_id [FK]
+package メッセージ {
+    entity メッセージ {
+        * メッセージID
+        --
+        + ユーザID [FK]
+        + チャンネルID [FK]
+        投稿内容
+        投稿日時
+        スレッドフラグ
+    }
+
+    entity メッセージ関係 {
+        * 親メッセージID [FK]
+        * 子メッセージID [FK]
+    }
 }
 
-entity Workspace_Member {
-    * user_id [FK]
-    * workspace_id [FK]
-}
-
-entity Channel_Member {
-    * user_id
-    * channel_id
-}
-
-entity Channel_Thread_Message {
-    * user_id [FK]
-    * channel_id [FK]
-    --
-    message
-    sent_at
-    is_thread
-}
-
-entity MessageTree {
-    * ancestor_id
-    * descendant_id
-}
-
-Workspace ||--|{ Channel
-User ||-u-o{ Workspace_Member
-Workspace ||--|{ Workspace_Member
-User ||-r-o{ Channel_Member
-Channel ||-l-|{ Channel_Member
-User ||--o{ Channel_Thread_Message
-Channel ||--o{ Channel_Thread_Message
-Channel_Thread_Message ||--o{ MessageTree
-Channel_Thread_Message ||--o{ MessageTree
+ワークスペース ||--|{ チャンネル
+ユーザ ||-u-o{ ワークスペース所属
+ワークスペース ||--|{ ワークスペース所属
+ユーザ ||-r-o{ チャンネル所属
+チャンネル ||-l-|{ チャンネル所属
+ユーザ ||--o{ メッセージ
+チャンネル ||--o{ メッセージ
+メッセージ ||--o{ メッセージ関係
+メッセージ ||--o{ メッセージ関係
 
 @enduml
