@@ -14,5 +14,18 @@
 
 仕様の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/reckOBNlLbwf5m8ut?blocks=hide) を参照する。
 
-![](../assets/penpen-v1.png)
+![](../assets/penpen-v2.png)
 
+- 前提事項
+  - システムを最も複雑化させてしまうものは `UPDATE` であるという前提でモデリングを行う
+  - `CREATE` と `DELETE` と `INSERT` のみを使用する
+- 懸念点
+  - 今回は配信頻度を事前にテーブルに設定されたものだけを許可する形
+  - 頻度の想定は以下の4種類
+    - 時別: `every 2 hours`
+    - 日別: `every 3 days`
+    - 週別: `every Monday`
+    - 月別: `the second of the month` 
+  - 正規表現で4つの分類と、具体的な設定時間を抽出する
+  - 抽出した2つのデータが、すでにテーブルに登録されている場合にのみ、タスクを作成する
+  - 該当なしの場合、対応の分類で設定可能な値を列挙する
