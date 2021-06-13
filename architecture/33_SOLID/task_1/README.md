@@ -18,6 +18,17 @@
 
 ## SOLID原則とは
 
+**SOLID原則** とは、Robert C. Martinにより考案されたものであり、プログラムを開発者にとって読みやすく、メンテナンスしやすい設計にするための5つのガイドラインである。
+
+5つの原則の頭文字をとってSOLID原則と呼ばれている。
+
+- Single Responsibility Principle (SRP): 単一責任原則
+- Open-Closed-Principle (OCP): 解法閉鎖の原則
+- Liskov Substitution Pricinples (LSP): リスコフの置換原則
+- Interface Separation Principle (ISP): インターフェース分離の原則
+- Dependancy Inversion Principle (DIP): 依存性逆転の原則
+
+
 ## 単一責任の原則
 
 ## Open-Closed-Principleの原則
@@ -35,3 +46,4 @@
 - [オブジェクト指向のその前に-凝集度と結合度/Coheision-Coupling](https://speakerdeck.com/sonatard/coheision-coupling)
 - [TypeScript with SOLID Architecture](https://learn.uno/learning/typescript-solid/)
 - [Implementing SOLID and the onion architecture in Node.js with TypeScript and InversifyJS](https://dev.to/remojansen/implementing-the-onion-architecture-in-nodejs-with-typescript-and-inversifyjs-10ad)
+- [イラストで理解するSOLID原則](https://qiita.com/baby-degu/items/d058a62f145235a0f007)
