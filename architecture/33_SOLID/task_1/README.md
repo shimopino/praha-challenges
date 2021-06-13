@@ -28,8 +28,68 @@
 - Interface Separation Principle (ISP): インターフェース分離の原則
 - Dependancy Inversion Principle (DIP): 依存性逆転の原則
 
-
 ## 単一責任の原則
+
+> A class should have only one reason to change
+> 「クラスは変更する理由を1つだけ持つべきである」
+
+これはクラスを変更する理由は1つの「役割」だけであるという意味である。
+
+例えば、学校の生徒や先生を1つにまとめたクラスを作成してしまうと、生徒や先生といった異なる役割を起因として、クラスが変更されてしまうため、それぞれの責任を分離させようというものである。
+
+しかしこの役割とは、画面の表示やデータベースへの保存、ドメインロジックなども含まれている。
+
+以下に具体的なコードを示す。
+
+```typescript
+class Circle {
+    radius: number;
+
+    // 円の半径を計算するドメインロジック
+    public calculateArea(): number {
+        return Math.PI * (radius * radius);
+    }
+
+    public saveCircle(): void {
+        // 円の半径をRDBMSに保存するロジック
+    }
+
+    public drawCircle(): void {
+        // 円を画面に描画するためのロジック
+    }
+}
+```
+
+このクラスを変更しようとする場合、以下の理由が考えられる。
+
+- ドメインロジックの変更
+- 保存するRDBMSの変更
+- 描画するロジックの変更
+
+```typescript
+class CircleEntity {
+    radius: number;
+
+    // 円の半径を計算するドメインロジック
+    public calculateArea(): number {
+        return Math.PI * (radius * radius);
+    }
+}
+
+class CircleRepository {
+    public saveCircle(): void {
+        // 円の半径をRDBMSに保存するロジック
+    }
+}
+
+class CircleUI {
+    public drawCircle(): void {
+        // 円を画面に描画するためのロジック
+    }
+}
+```
+
+これで1つの変更理由に対して、1つのクラスに対してのみ変更を加えるように設計することができた。
 
 ## Open-Closed-Principleの原則
 
