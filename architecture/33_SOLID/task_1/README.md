@@ -31,6 +31,7 @@
 ## 単一責任の原則
 
 > A class should have only one reason to change
+> 
 > 「クラスは変更する理由を1つだけ持つべきである」
 
 これはクラスを変更する理由は1つの「役割」だけであるという意味である。
@@ -96,6 +97,7 @@ class CircleUI {
 ## Open-Closed-Principleの原則
 
 > software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification
+> 
 > 「ソフトウェアの実体（クラス、モジュール、関数など）は、拡張に対してはオープンであるが、修正に対してはクローズであるべきである」
 
 実際の商品で考えると、リングフィットアドベンチャーは、Joy-Conを専用の機器につなぐだけで使用することができ、Joy-Con自体には何ら変更を食わせる必要がない。
@@ -184,6 +186,7 @@ console.log(simulator.discount(customer));
 ## リスコフの置換原則
 
 > if S is a subtype of T, then objects of type T in a program may be replaced with objects of type S without altering any of the desirable properties of that program
+> 
 > 「S型がT型のサブタイプであるならば、T型のオブジェクトを使用しているプログラムは、何も修正を加えることなくサブタイプのS型のオブジェクトに置き換えることができる」
 
 これはオブジェクト指向における基底クラスと派生クラスの関係を表している。
@@ -256,6 +259,7 @@ class WirelessEarbuds implements Earbuds {
 ## インタフェース分離の原則
 
 > Many client-specific interfaces are better than one general-purpose interface.
+> 
 > 「1つの汎用的なインターフェーズよりも、クライアント固有のインターフェースを多く用意するほうがいい」
 
 ありとあらゆる仕様を満たすようなインターフェースを作成してしまうと、実装クラスは本来は不必要な実装も行わなければならなくなり、無駄な実装を増やしてしまう。
@@ -295,6 +299,7 @@ class PrintOnlyPrinter implements Printer {
 ## 依存性逆転の原則
 
 > Depend upon abstractions, [not] concretions.
+> 
 > 抽象に依存すべきであり、具体に依存するべきではない。
 
 より低レベルな実装に依存しないようにするために、この原則は以下の2つが含まれている。
