@@ -14,7 +14,7 @@
 
 仕様の詳細は [airtable](https://airtable.com/tblTnXBXFOYJ0J7lZ/viwyi8muFtWUlhNKG/recQgEc0Z8Ic0AzLQ?blocks=hide) を参照する。
 
-![](../assets/docs.png)
+![](../assets/docs-v2.png)
 
 - 感想
   - 懸念事項
