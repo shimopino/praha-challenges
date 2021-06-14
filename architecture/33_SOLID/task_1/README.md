@@ -183,6 +183,76 @@ console.log(simulator.discount(customer));
 
 ## リスコフの置換原則
 
+> if S is a subtype of T, then objects of type T in a program may be replaced with objects of type S without altering any of the desirable properties of that program
+> 「S型がT型のサブタイプであるならば、T型のオブジェクトを使用しているプログラムは、何も修正を加えることなくサブタイプのS型のオブジェクトに置き換えることができる」
+
+これはオブジェクト指向における基底クラスと派生クラスの関係を表している。
+
+この際に基底クラスに対して、派生クラスが基底クラスの仕様を超えてしまうような実装をしてしまうと、リスコフの置換原則に違反してしまう。
+
+例えば基底クラスと派生クラスの関係性を間違ってしまうと、呼び出し型のクラスに修正を加える必要が発生してしまう。
+
+```typescript
+class WiredEarbuds {
+    public getDeviceDriver(): number {
+        return 20;
+    }
+}
+
+class WirelessEarbuds extends WiredEarbuds {
+    public getDeviceDriver(): number {
+        throw new Error('not implemented');
+    }
+
+    public getBluetoothDriver(): number {
+        return 100;
+    }
+}
+
+// Javaの感覚で書いたけど動かないので修正が必要
+class EarbudsUtils {
+    public showEarbuds(): void {
+        const earbuds_1: WiredEarbuds = new WiredEarbuds();
+        const earbuds_2: WirelessEarbuds = new WirelessEarbuds();
+
+        const list: Array<WiredEarbuds> = [];
+        list.push(earbuds_1);
+        list.push(earbuds_2);
+
+        for (const earbuds in list) {
+            console.log(earbuds.getDeviceDriver());
+        }
+    }
+}
+```
+
+今回の場合はインターフェースを利用して、必ず共通メソッドの実装を加えるようにすればいい。
+
+```typescript
+interface Earbuds {
+  getDeviceDriver(): number;
+}
+
+class WiredEarbuds implements Earbuds {
+    public getDeviceDriver(): number {
+        return 20;
+    }
+}
+
+class WirelessEarbuds implements Earbuds {
+    // ここで共通メソッドから派生クラス専用のメソッドを呼びだす
+    public getDeviceDriver(): number {
+        return this.getBluetoothDriver();
+    }
+
+    public getBluetoothDriver(): number {
+        return 100;
+    }
+}
+```
+
+これで呼び出し元のコードを修正することなく、基底クラスと派生クラスを置換することが可能となった。
+
 ## インターフェースのメリット
 
 ## 依存性の逆転
