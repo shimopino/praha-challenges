@@ -37,6 +37,8 @@
 
 例えば、学校の生徒や先生を1つにまとめたクラスを作成してしまうと、生徒や先生といった異なる役割を起因として、クラスが変更されてしまうため、それぞれの責任を分離させようというものである。
 
+これは単にファイルを分割するだけではできないものである。
+
 しかしこの役割とは、画面の表示やデータベースへの保存、ドメインロジックなども含まれている。
 
 以下に具体的なコードを示す。
@@ -92,6 +94,92 @@ class CircleUI {
 これで1つの変更理由に対して、1つのクラスに対してのみ変更を加えるように設計することができた。
 
 ## Open-Closed-Principleの原則
+
+> software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification
+> 「ソフトウェアの実体（クラス、モジュール、関数など）は、拡張に対してはオープンであるが、修正に対してはクローズであるべきである」
+
+実際の商品で考えると、リングフィットアドベンチャーは、Joy-Conを専用の機器につなぐだけで使用することができ、Joy-Con自体には何ら変更を食わせる必要がない。
+
+これが解法閉鎖の原則である。
+
+例えばWebサービスにおいて、会員の登録ランクに応じて商品の価格を下げるロジックを変更する場合を考える。
+
+```typescript
+class PriceCalculator {
+    public discount(customer: Profile): number {
+        if (customer.isLoyalCustomer()) {
+            return 20;
+        }
+        return 0;
+    }
+}
+
+class Profile {
+    public isLoyalCustomer(): boolean {
+        return true;
+    }
+}
+```
+
+ここで新しく `AnotherProfile` が追加された場合、新しくシグニチャを追加するしかなくなってしまう。
+
+```typescript
+class AnotherProfile {
+    public isLoyalCustomer(): boolean {
+        return true;
+    }
+}
+
+// 新しく判定メソッドを追加する必要がある
+class PriceCalculator {
+    public discount(customer: Profile): number {
+        if (customer.isLoyalCustomer()) {
+            return 20;
+        }
+        return 0;
+    }
+
+    public discountAnother(customer: AnotherProfile): number {
+        if (customer.isLoyalCustomer()) {
+            return 50;
+        }
+        return 0;
+    }
+}
+```
+
+つまり既存に存在するメソッドに対して、新しい機能を拡張した場合に、元のソースことを修正する必要が出てきてしまう。
+
+そこで解法閉鎖の原則にしたがって、新しい機能を拡張する際には、元のソースを修正することなく、新しい機能のコードを追加するのみで実現する必要がある。
+
+これは、新しい機能を拡張しても共通となるインターフェースを使用することで実現できる。
+
+```typescript
+interface CustomerProfile {
+    public isLoyalCustomer(): boolean;
+}
+
+class PriceCalculator {
+    public discount(customer: CustomerProfile): number {
+        if (customer.isLoyalCustomer()) {
+            return 20;
+        }
+        return 0;
+    }
+}
+
+class AnotherProfile implements CustomerProfile {
+  public isLoyalCustomer(): boolean {
+    return true;
+  }
+}
+
+const simulator = new PriceCalculator();
+const customer = new AnotherProfile();
+console.log(simulator.discount(customer));
+```
+
+これで新しい会員のルールが増えたとしても、既存のコードを修正することなく、新しい会員自体を追加するだけで対応することが可能となる。
 
 ## リスコフの置換原則
 
