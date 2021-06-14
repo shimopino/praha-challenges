@@ -23,7 +23,7 @@
 5つの原則の頭文字をとってSOLID原則と呼ばれている。
 
 - Single Responsibility Principle (SRP): 単一責任原則
-- Open-Closed-Principle (OCP): 解法閉鎖の原則
+- Open-Closed-Principle (OCP): 開放閉鎖の原則
 - Liskov Substitution Pricinples (LSP): リスコフの置換原則
 - Interface Separation Principle (ISP): インターフェース分離の原則
 - Dependancy Inversion Principle (DIP): 依存性逆転の原則
@@ -100,7 +100,7 @@ class CircleUI {
 
 実際の商品で考えると、リングフィットアドベンチャーは、Joy-Conを専用の機器につなぐだけで使用することができ、Joy-Con自体には何ら変更を食わせる必要がない。
 
-これが解法閉鎖の原則である。
+これが開放閉鎖の原則である。
 
 例えばWebサービスにおいて、会員の登録ランクに応じて商品の価格を下げるロジックを変更する場合を考える。
 
@@ -150,7 +150,7 @@ class PriceCalculator {
 
 つまり既存に存在するメソッドに対して、新しい機能を拡張した場合に、元のソースことを修正する必要が出てきてしまう。
 
-そこで解法閉鎖の原則にしたがって、新しい機能を拡張する際には、元のソースを修正することなく、新しい機能のコードを追加するのみで実現する必要がある。
+そこで開放閉鎖の原則にしたがって、新しい機能を拡張する際には、元のソースを修正することなく、新しい機能のコードを追加するのみで実現する必要がある。
 
 これは、新しい機能を拡張しても共通となるインターフェースを使用することで実現できる。
 
@@ -253,9 +253,46 @@ class WirelessEarbuds implements Earbuds {
 
 これで呼び出し元のコードを修正することなく、基底クラスと派生クラスを置換することが可能となった。
 
-## インターフェースのメリット
+## インタフェース分離の原則
 
-## 依存性の逆転
+> Many client-specific interfaces are better than one general-purpose interface.
+> 「1つの汎用的なインターフェーズよりも、クライアント固有のインターフェースを多く用意するほうがいい」
+
+ありとあらゆる仕様を満たすようなインターフェースを作成してしまうと、実装クラスは本来は不必要な実装も行わなければならなくなり、無駄な実装を増やしてしまう。
+
+そこでインターフェース分離の原則に従って、固有の仕様を満たすようなインターフェーズを作成するほうがいい。
+
+例えば印刷機のインターフェースを以下のようにあらゆる仕様に対応するように設計してみる。
+
+```typescript
+interface Printer {
+    print(): void;
+    scan(): void;
+    fax(): void;
+}
+```
+
+しかしこの場合、Fax機能を持たない印刷機に `fax` 関数を実装する必要が発生してしまったり、スキャン機能を持たない印刷機に `scan` 関数を実装する必要が発生してしまう。
+
+```typescript
+class PrintOnlyPrinter implements Printer {
+  public print(): void {
+    console.log('印刷の実装');
+  }
+
+  public scan(): void {
+    throw new Error('not implemented');
+  }
+
+  public fax(): void {
+    throw new Error('not implemented');
+  }
+}
+```
+
+この場合、空実装が含まれていたり、凝集度が低くなってしまっているため、それぞれのデバイスごとにインターフェースを分離したほうがいい。
+
+## 依存性逆転の原則
 
 ## 参考資料
 
