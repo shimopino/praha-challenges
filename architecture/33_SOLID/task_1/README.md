@@ -294,6 +294,94 @@ class PrintOnlyPrinter implements Printer {
 
 ## 依存性逆転の原則
 
+> Depend upon abstractions, [not] concretions.
+> 抽象に依存すべきであり、具体に依存するべきではない。
+
+より低レベルな実装に依存しないようにするために、この原則は以下の2つが含まれている。
+
+- A
+  - 高レベルのモジュールは、低レベルのモジュールに依存してはならない
+  - 両方とも抽象化 (インターフェース) に依存すべきである
+- B
+  - 抽象化は詳細に依存してはならない
+  - 詳細 (具体的な実装) は抽象化に依存すべきである
+
+例えば以下のような顧客情報をRDBに保存する機能は、詳細に依存してしまっている。
+
+```typescript
+class CustomerRepository {
+  public getAllCustomer(): Array<string> {
+    return ['sample1', 'sample2'];
+  }
+}
+
+class CustomerCatalog {
+  public listAllCustomer(): void {
+    const repo = new CustomerRepository();
+    const list = repo.getAllCustomer();
+  }
+}
+```
+
+この場合リポジトリ層に何らかの変更が加わってしまうと、インスタンスを生成している側にもその変更に対する影響を受けてしまう。
+
+理想的には `CustomerProfile` は、リポジトリに関するインスタンスがどこでどのように生成されているのかという知識を全く意識しないようにしてしまえばいい。
+
+そこであらかじめリポジトリ自体をインスタンス化させておき、インスタンスそのものを `CustomerProfile` に渡してしまえばいい。
+
+ではまずリポジトリのインターフェースを定義して、ファクトリクラスでリポジトリの生成に関する知識を集約させておく。
+
+```typescript
+interface CustomerRepository {
+  getAllCustomer(): string[];
+}
+
+
+class CustomerRepositoryImpl implements CustomerRepository {
+  public getAllCustomer(): string[] {
+    return ['sample1', 'sample2'];
+  }
+}
+
+class CustomerFactory {
+  public static create(): CustomerRepository {
+    return new CustomerRepositoryImpl();
+  }
+}
+```
+
+そして `CustomerCatalog` では、インスタンス化されているリポジトリを受け取って、インターフェース経由でメソッドを指定すればいい。
+
+```typescript
+class CustomerCatalog {
+
+  private customerRepository: CustomerRepository;
+
+  constructor(customerRepository: CustomerRepository) {
+    this.customerRepository = customerRepository;
+  }
+
+  public listAllCustomer(): void {
+    const list = this.customerRepository.getAllCustomer();
+  }
+}
+```
+
+あとはmain関数で呼びだせばいい。
+
+```typescript
+class Application {
+  public main(): void {
+    const customerRepository: CustomerRepository = CustomerFactory.create();
+
+    const customerCatalog = new CustomerCatalog(customerRepository);
+    customerCatalog.listAllCustomer();
+  }
+}
+```
+
+これで `CustomerCatalog` は、より低レベルで具体的な実装であるリポジトリに依存することなく、依存性を逆転させることができた。
+
 ## 参考資料
 
 - [開発者が知っておくべきSOLIDの原則](https://postd.cc/solid-principles-every-developer-should-know/)
