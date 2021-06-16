@@ -333,6 +333,25 @@ function unJoinTypeMethod(): Employees {
 }
 ```
 
+## 凝集度の判定ロジック例
+
+以下に面白いツイートがあったので載せておく。
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">Cohesion(凝集度)という概念が作られた47年前の論文読んでみたら、すでに完成された無茶苦茶分かりやすい判定ロジックが書いてあるのですよね。<a href="https://t.co/vOCxwswUOt">https://t.co/vOCxwswUOt</a> <a href="https://t.co/caHHmSoZkO">pic.twitter.com/caHHmSoZkO</a></p>&mdash; :craftsman/kawasima (@kawasima) <a href="https://twitter.com/kawasima/status/1382682335301099522?ref_src=twsrc%5Etfw">April 15, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+1. モジュールの機能を説明する文を書く
+2. 句点を含む、複数の文から構成されている、または1つ以上の動詞を持っている
+  - 1つ以上の機能を持っている
+  - 逐次的凝集、通信的凝集の可能性が高い
+3. 文が時間と関係している単語 (「最初」「次に」「～の後」「～するとき」) を」含む
+  - 逐次的凝集、一時的凝集の可能性が高い
+4. 文の述語が、単一の特定オブジェクトを含んでいない
+  - 論理的凝集の可能性が高い
+5. 「初期化」や「クリーンアップ」が含まれている
+  - 一時的凝集
+
+ただしこの記述はオブジェクト指向の考え方が出てくる前の判定例なので、今使用する場合は適宜言い換えが必要らしい。
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
