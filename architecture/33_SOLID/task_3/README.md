@@ -17,6 +17,7 @@
   - [React Hooks](#react-hooks)
     - [useState](#usestate)
     - [useEffect](#useeffect)
+  - [クラスコンポーネントから関数コンポーネントへ](#クラスコンポーネントから関数コンポーネントへ)
   - [参考資料](#参考資料)
 
 </details>
@@ -253,7 +254,71 @@ const Sample = () => {
 
 そのため、新しい更新が始まる前に常に、1つ前のレンダーで指定された副作用をクリーンアップする。
 
+## クラスコンポーネントから関数コンポーネントへ
+
+React Hooksの機能を使用することで、時間的凝集から機能的凝集に、つまり凝集度をより高い状態に変更することができる。
+
+以下のタイマーのカウントを行うクラスコンポーネントを考える。
+
+```js
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({ count: this.state.count + 1} );
+  }
+
+  render() {
+    return (
+      <div>
+        now count: {this.state.count}
+      </div>
+    )
+  }
+}
+```
+
+クラスコンポーネントを使用している場合、タイマーをカウントするという機能が、ライフサイクルメソッド別に分散してしまっていることがわかる。
+
+これでHooksの機能を使用すれば、機能的凝集を実現できる。
+
+```js
+const Clock = () => {
+
+  // 機能的凝集を実現できる
+  // --- ココカラ ---
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const timerID = setInterval(() => setCount(prev => prev + 1));
+    return () => {
+      clearInterval(timerID);
+    }
+  }, []);
+  // --- ココマデ ---
+
+  return (
+    <div>
+      now count: {count}
+    </div>
+  )
+}
+```
+
+これでクラスコンポーネントが抱える時間的凝集の問題を、Hooksを使用することで機能的凝集に変換することが可能となった。
+
 ## 参考資料
 
 - [state とライフサイクル](https://ja.reactjs.org/docs/state-and-lifecycle.html)
+- [関心の分離](https://ja.wikipedia.org/wiki/%E9%96%A2%E5%BF%83%E3%81%AE%E5%88%86%E9%9B%A2)
 - [React.jsのComponent Lifecycle](https://qiita.com/koba04/items/66e9c5be8f2e31f28461)
