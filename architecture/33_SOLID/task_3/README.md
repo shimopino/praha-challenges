@@ -5,15 +5,18 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [コンポーネントのライフサイクル](#%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB)
-  - [マウントとアンマウント](#%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88%E3%81%A8%E3%82%A2%E3%83%B3%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88)
-  - [constructor(props)](#constructorprops)
-  - [render](#render)
-  - [componentDidMount](#componentdidmount)
-  - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
-  - [componentWillUnmount](#componentwillunmount)
-- [クラスコンポーネントの凝集度](#%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E5%87%9D%E9%9B%86%E5%BA%A6)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [課題3](#課題3)
+  - [コンポーネントのライフサイクル](#コンポーネントのライフサイクル)
+    - [マウントとアンマウント](#マウントとアンマウント)
+    - [constructor(props)](#constructorprops)
+    - [render](#render)
+    - [componentDidMount](#componentdidmount)
+    - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
+    - [componentWillUnmount](#componentwillunmount)
+  - [クラスコンポーネントの凝集度](#クラスコンポーネントの凝集度)
+  - [React Hooks](#react-hooks)
+  - [useState](#usestate)
+  - [参考資料](#参考資料)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -177,6 +180,50 @@ Reactが提供するクラスコンポーネントを凝集度の観点から考
 - 1つのライフサイクルメソッドに、まったく関係のない処理がまとめられてしまう
 
 こうした課題を解決するために提案されたものが **React Hooks** である。
+
+## React Hooks
+
+React16.8からクラスコンポーネントを使用せずに、関数のまま状態を管理する機能が導入された。
+
+以下に基本的なフック機能を紹介した後で、クラスコンポーネントで発生する論理的凝集をどのように解決しているのか述べる。
+
+- useState
+- useEffect
+
+## useState
+
+`useState` 関数を使用することで、関数コンポーネントに対して状態管理を行う機能を追加することができる。
+
+```js
+const SampleComponent = () => {
+  // state: 状態を表す変数
+  // setState: 状態を更新するための関数
+  const [state, setState] = useState(initialState);
+
+  return (
+    <div>
+      <button onClick={() => setState(10)} >{state}</button>
+    </div>
+  )
+}
+```
+
+また状態を更新する `setState` にはコールバック関数を指定することができ、その際には更新前の状態値を参照することが可能である。
+
+```js
+const Counter = () => {
+  const [count, setCount] = useState(initialCount);
+
+  // 以下では状態を更新する際に使用する関数の引数に、更新前の状態を受け取っている
+  return (
+    <div>
+      Count: {count}
+      <button onClick={() => setCount(prevCount => prevCount + 1)}}>+</button>
+    </div>
+  )
+}
+```
+
 
 ## 参考資料
 
