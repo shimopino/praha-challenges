@@ -5,17 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [コンポーネントのライフサイクル](#%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB)
-  - [マウントとアンマウント](#%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88%E3%81%A8%E3%82%A2%E3%83%B3%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88)
-  - [constructor(props)](#constructorprops)
-  - [render](#render)
-  - [componentDidMount](#componentdidmount)
-  - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
-  - [componentWillUnmount](#componentwillunmount)
-- [クラスコンポーネントの凝集度](#%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E5%87%9D%E9%9B%86%E5%BA%A6)
-- [React Hooks](#react-hooks)
-- [useState](#usestate)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [課題3](#課題3)
+  - [コンポーネントのライフサイクル](#コンポーネントのライフサイクル)
+    - [マウントとアンマウント](#マウントとアンマウント)
+    - [constructor(props)](#constructorprops)
+    - [render](#render)
+    - [componentDidMount](#componentdidmount)
+    - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
+    - [componentWillUnmount](#componentwillunmount)
+  - [クラスコンポーネントの凝集度](#クラスコンポーネントの凝集度)
+  - [React Hooks](#react-hooks)
+    - [useState](#usestate)
+    - [useEffect](#useeffect)
+  - [参考資料](#参考資料)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -189,7 +191,7 @@ React16.8からクラスコンポーネントを使用せずに、関数のま�
 - useState
 - useEffect
 
-## useState
+### useState
 
 `useState` 関数を使用することで、関数コンポーネントに対して状態管理を行う機能を追加することができる。
 
@@ -223,6 +225,33 @@ const Counter = () => {
 }
 ```
 
+### useEffect
+
+`useEffect` 関数を使用することで、レンダーの結果が画面に反映された後に動作させたい関数を指定することができる。
+
+また特定の値が変更された場合にのみ関数を動作させることも可能である。
+
+クラスコンポーネントにおける `componentDidMount`、`componentDidUpdate`、`componentWillUnmount` を1つのAPIに統合したものであり、以下のように使用する。
+
+```js
+const Sample = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // componentDidMount, componentDidUpdate に相当する
+    const subscription = props.source.subscribe();
+
+    return () => {
+      // componentWillUnmount に相当する
+      subscription.unsubscribe();
+    }
+  })
+}
+```
+
+`useEffect` 関数は、ブラウザが描画を終えるまで実行が遅延されるが、次回のレンダーが発生する前には実行が保証されている。
+
+そのため、新しい更新が始まる前に常に、1つ前のレンダーで指定された副作用をクリーンアップする。
 
 ## 参考資料
 
