@@ -7,6 +7,7 @@
 
 - [凝集度](#%E5%87%9D%E9%9B%86%E5%BA%A6)
 - [結合度](#%E7%B5%90%E5%90%88%E5%BA%A6)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
