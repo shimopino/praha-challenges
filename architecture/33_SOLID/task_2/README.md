@@ -90,8 +90,29 @@ function changeProductInfo(productId: string): void {
 }
 ```
 
+なおこの段階では関数内での実行順序に意味はない。
+
 ### 4. 手順的凝集
 
+実行順番に意味のあるものを集めたモジュールである。
+
+例えば以下の関数では、引数で与えられたデータに対して、先に整合性などの確認を行い、そのあとで実行したい操作を実現している。
+
+```typescript
+/**
+ * 商品IDをもとに、対象の商品の整合性確認と商品情報更新を実行する
+ * 
+ * @param {string} - 商品ID
+ */
+function checkAndChangeProductInfo(productId: string): void {
+  // 先に整合性の確認を行う
+  !existProduct(productId);
+  !checkProductStatus(productId);
+
+  // 整合性の確認が終了した後で、更新処理を実行する
+  changeProductInfo(productId);
+}
+```
 
 ### 5. 時間的凝集
 
