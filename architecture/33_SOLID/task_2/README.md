@@ -63,7 +63,7 @@ function calculateTaxPrice(
  * @return {number} 商品の税込み価格
  */
 function getProductPrice(productId: string): number {
-    
+
   // getOriginalPrice関数の出力を、calculateTaxPrice関数に渡す
   const productPrice = getOriginalPrice(productId);
   const taxPrice = calculateTaxPrice(productPrice);
@@ -71,9 +71,24 @@ function getProductPrice(productId: string): number {
 }
 ```
 
-
 ### 3. 通信的凝集
 
+同じデータを扱う部分を集めたモジュールである。
+
+例えば以下の関数では、引数で与えられたデータに対して、異なる操作を実行する複数のモジュールがまとめられている。
+
+```typescript
+/**
+ * 商品IDをもとに、対象の商品の情報を更新する
+ * 
+ * @param {string} - 商品ID
+ */
+function changeProductInfo(productId: string): void {
+  changeProductName(productId);
+  changeProductPrice(productId);
+  changeProductOwner(productId);
+}
+```
 
 ### 4. 手順的凝集
 
