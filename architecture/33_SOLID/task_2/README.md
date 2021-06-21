@@ -51,6 +51,26 @@ function calculateTaxPrice(
 
 ### 2. 逐次的凝集
 
+ある部分の出力が別の部分の入力となるような部分を集めたモジュールである。
+
+例えば以下の関数では、引数で与えられた数値の計算結果を、関数内で呼び出しているほかの関数への入力として渡している。
+
+```typescript
+/**
+ * 商品のIDをもとに、商品の税込み価格を計算する
+ * 
+ * @param {string} - 商品のID
+ * @return {number} 商品の税込み価格
+ */
+function getProductPrice(productId: string): number {
+    
+  // getOriginalPrice関数の出力を、calculateTaxPrice関数に渡す
+  const productPrice = getOriginalPrice(productId);
+  const taxPrice = calculateTaxPrice(productPrice);
+  return taxPrice;
+}
+```
+
 
 ### 3. 通信的凝集
 
