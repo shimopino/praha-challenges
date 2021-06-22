@@ -172,6 +172,26 @@ function main() {
 }
 ```
 
+### スタンプ結合
+
+複数のモジュールがデータ構造を共有し、その一部のみを使ったり、異なる部分を使ったりする結合である。
+
+例えば以下の関数では、`User` というデータ構造をモジュールに渡している。
+
+```typescript
+function main() {
+  const user: User = {
+    name: 'keisuke shimokawa',
+    address: 'xxx-xxx',
+    phone: 'xxx-xxx-xxx'
+  }
+
+  const result = updateUser(user);
+}
+```
+
+スタンプ結合では、モジュールが必要としないフィールドが変更されることにより、モジュールのレコードを読み取る方法を変更することに繋がってしまう可能性がある。
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
