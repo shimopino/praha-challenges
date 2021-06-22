@@ -145,6 +145,21 @@ function checkAndChangeProductInfo(productId: string): void {
 6. 共通結合
 7. 内部結合
 
+### メッセージ結合
+
+最も結合度が低く、引数のないメソッド呼び出しによる結合である。
+
+例えば以下の関数では、関数の内部でさらに関数を呼び出しているが引数は渡していないため、関数同士の結合度は低いとされる。
+
+```typescript
+function main() {
+  initialize();
+  setUP();
+}
+```
+
+
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
