@@ -126,6 +126,23 @@ function checkAndChangeProductInfo(productId: string): void {
 
 ### 5. 時間的凝集
 
+モジュール内の各部分が時間的に近く動作するモジュールである。
+
+例えば以下の関数では、アプリケーションの初期化処理を1つのモジュールにまとめた関数であり、時間的に近いだけで実行順序に意味はない。
+
+```typescript
+/**
+ * アプリケーションを立ち上げる際に、設定ファイルやDBとの接続
+ * ロガーの生成などを行う`
+ * 
+ * 時間的に近いだけで、実行順序を入れ替えても動作する
+ */
+function initializeApp(): void {
+  initConfig();
+  connectDB();
+  getLogger();
+}
+```
 
 ### 6. 論理的凝集
 
