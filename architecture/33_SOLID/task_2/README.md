@@ -313,6 +313,25 @@ function updateUser2() {
 }
 ```
 
+### 内部結合
+
+あるモジュールが、別のモジュールの内部動作によって変化したり、依存したりする。
+
+例えば以下の関数では、モジュール内で呼び出しているほかのモジュールに変更が加えられると、呼び出し元のモジュールにも変更を加えなければならない可能性が発生する。
+
+```typescript
+function internalJoinTypeMethod(name: string): Employee {
+  const employees = unJoinTypeMethod();
+  const result = employees.filter((employee) => employee.includes(name));
+
+  return result;
+}
+
+function unJoinTypeMethod(): Employees {
+  return [new Employee('name1'), new Employee('name2'), new Employee('name3')];
+}
+```
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
