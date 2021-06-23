@@ -146,6 +146,24 @@ function initializeApp(): void {
 
 ### 6. 論理的凝集
 
+論理的に似ている複数の処理が1つにまとまったモジュールである。
+
+例えば以下の関数では、論理的に似た意味を持つ関数を引数で渡されたフラグを用いて分岐させており、実行側はモジュールの内部構造を意識してフラグを渡さなければならない。
+
+```typescript
+/**
+ * 論理的に似た複数の処理を、引数のフラグで分岐実行させる
+ * 
+ * @param {boolean} - 分岐フラグ
+ */
+function aggregateProcess(isSomething: boolean): void {
+  if isSomething {
+    logicallyResembleFuncA();
+  } else {
+    logicallyResembleFuncB();
+  }
+}
+```
 
 ### 7. 偶発的凝集
 
