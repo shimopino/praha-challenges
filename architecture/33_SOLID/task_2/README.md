@@ -167,6 +167,23 @@ function aggregateProcess(isSomething: boolean): void {
 
 ### 7. 偶発的凝集
 
+無作為に集められたモジュールが存在しており、各部分に関連性がないモジュールである。
+
+例えば以下の関数では、内部のモジュールや処理には何も関連性はなく、とりあえずは動いているような状況である。
+
+```typescript
+/**
+ * 無作為な処理が実行されている
+ */
+function randomProcess(): void {
+  const user = getUser(userId);
+  const taxPrice = calculateTaxPrice(1000, 1.08);
+  console.log("processing");
+}
+```
+
+実際は偶発的凝集を発生させてしまうようなことはない。
+
 ## 結合度
 
 結合度は、モジュール同士がどの程度相互依存しているのかを示す尺度である。
