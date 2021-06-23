@@ -290,10 +290,33 @@ function exeternalCoupling2() {
 }
 ```
 
+### 共通結合
+
+複数のモジュールが同じグローバルデータにアクセスできる状態である。
+
+例えば以下の関数では、それぞれのモジュールが共通のグローバル変数を編集しており、予期しない副作用が発生してしまう可能性が存在する。
+
+```typescript
+const user = {
+  name: 'sample1',
+  address: 'xxxxxxxxxx',
+  phone: 'xxx-xxx-xxx'
+}
+
+function updateUser1() {
+  user.name = 'sample2';
+}
+
+function updateUser2() {
+  user.address = 'oooooooooo';
+}
+```
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
 - [[Wikipedia] 結合度](https://ja.wikipedia.org/wiki/%E7%B5%90%E5%90%88%E5%BA%A6)
 - [ オブジェクト指向のその前に-凝集度と結合度/Coheision-Coupling](https://speakerdeck.com/sonatard/coheision-coupling)
 - [良いコードとは何か - エンジニア新卒研修 スライド公開](https://speakerdeck.com/moriatsushi/liang-ikodotohahe-ka-enziniaxin-zu-yan-xiu-suraidogong-kai)
+- [モジュール結合度について](https://qiita.com/eKushida/items/39bdb3f88fb68ecd66f6)
 - [TypeScript Playground](https://www.typescriptlang.org/play?#code/PQKhFgCgAIWxUfUA6mhzBkHBygJBkJEMgYhkPoMg4L0ByjQWQZBC+UB4LQCwZ9Bw50GkGTQQAZ9Ae+MH8GCwJIZAIKMHTvQTQZA0QxRY0EXAACABwCGAJxkBbaAG8AdgFdFAIwCmcgL7QpcgJYBjXdAC00ImXLjo0+UtWad+owBcZADwVvK1taJwk5XW8NOTV3LT1DO3YKcWAoADMNNXNvUwB7WPMZABtzDWKZIIAVfwAFM0sAChFjBt0ALmgPBIAaFt8Ayo6u+P0oAEpO7v1VFoiomNaLKzgBwN0AbigDKChQCBg4QDFVQEGVQDsGAEkAEU5AIIZKQGsGRlOz1g5yHgFhQ7EflwVlCoAM7eMxqADmRlsL2uYXm0Vi6lGiRebxShzSkEy2VyBWg4Mi9TyABMNDl6stGiYSWTvBdiZ0QWDwZMRp45LMYNBzAUQa0aeS2tAALz4yIAeTM4NMahKFKa1NJOXp4y2XJ5aj5A3lVlFRVK5SGNT8OqpcgF3h1qrmkQR0G1bTVO0gezATlO1zuj0YgD-tQCGMWcXoBRg0AjBqcQAvZoAG0yETjCsgBqiZMshNmgHquqQyWRy+UKAAsZBDdESlXS1Ok8maLfTGaDk6yAG55UzEznQbkFosl2kAOSUuirpZVavb5k7BO7gspitpw5aY8LE-NpfFAHc1PpB7PidbIM7XQdROmvU9-YHzoAXU0AECqAcgNAF0egFioyinUNRziAfO1ADIRMZ+cdcgKTCEoTTE5YQxLMcVzDtdHMABrABBNRiQAYXHYtl1nctKxnZUGWgQCWU6JsWzbaBgGAaBAAlFB5rxvM5H04T9ADEGFoAEJdD8UwQUnbwt1w3d21YscYNgniAGVfCiIE+LpHc1RacjoFo+iH0AGQZACFfQAwuUAdQZcEAGP1kEYKNADPFQAwFw-b9vlHNCeIuLCZLnPcgA)
