@@ -268,6 +268,27 @@ function logicallyResembleFunc(isSomething: boolean) {
 
 モジュールの実装からわかるように、論理的凝集が発生してしまう。
 
+### 外部結合
+
+外部結合は、単一のグローバル変数に依存しており、外部ツールやデバイスの通信に関連する処理を実行する際に発生することがある。
+
+```typescript
+function exeternalCoupling1() {
+  // グローバルなシングルトンにキャッシュを保存
+  const userCache = UserCacheImpl.getInstance();
+  const user = userCache("user1");
+}
+
+function exeternalCoupling2() {
+  const newUser = {
+    name: 'sample1'
+  }
+  // グローバルなシングルトンからキャッシュを取得
+  const userCache = UserCacheImpl.getInstance();
+  userCache.update("user1", newUser);
+}
+```
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
