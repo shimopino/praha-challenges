@@ -246,6 +246,27 @@ function main() {
 
 スタンプ結合では、モジュールが必要としないフィールドが変更されることにより、モジュールのレコードを読み取る方法を変更することに繋がってしまう可能性がある。
 
+### 制御結合
+
+関数パラメータを使って、対象のモジュールに何をすべきかについての情報を渡すことで、別のモジュール処理の流れを制御する結合である。
+
+```typescript
+function main() {
+  logicallyResembleFunc(true);
+}
+
+function logicallyResembleFunc(isSomething: boolean) {
+  // 論理的凝集が発生する
+  if isSomething {
+    logicallyResembleFuncA();
+  } else {
+    logicallyResembleFuncB();
+  }
+}
+```
+
+モジュールの実装からわかるように、論理的凝集が発生してしまう。
+
 ## 参考資料
 
 - [[Wikipedia] 凝集度](https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6)
