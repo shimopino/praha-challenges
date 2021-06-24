@@ -77,6 +77,37 @@ class Clock extends React.Component {
 
 上記のコードでは、JSX経由で `React.createElement()` に変換されて、DOMノードをレンダーする。
 
+### componentDidMount
+
+コンポーネントがDOMに挿入された直後に呼び出されるライフサイクルメソッドである。
+
+DOMに関係する初期化処理を行う際に便利なメソッドであり、DOMの操作や、AjaxリクエストやsetIntervalの登録などの初期化処理で使用する。
+
+```js
+class Clock extends React.Component {
+  // constructor
+
+  componentDidMount() {
+    // 状態を1秒間ごとに変更するコールバック関数を登録する
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  // コールバック関数内で呼び出されるメソッド
+  // setState で状態を更新すると再度 render メソッドが呼び出される
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  // render
+}
+```
+
 ## 参考資料
 
 - [state とライフサイクル](https://ja.reactjs.org/docs/state-and-lifecycle.html)
+- [React.jsのComponent Lifecycle](https://qiita.com/koba04/items/66e9c5be8f2e31f28461)
