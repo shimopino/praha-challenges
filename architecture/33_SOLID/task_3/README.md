@@ -5,14 +5,16 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [コンポーネントのライフサイクル](#%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB)
-  - [マウントとアンマウント](#%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88%E3%81%A8%E3%82%A2%E3%83%B3%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88)
-  - [constructor(props)](#constructorprops)
-  - [render](#render)
-  - [componentDidMount](#componentdidmount)
-  - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
-  - [componentWillUnmount](#componentwillunmount)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [課題3](#課題3)
+  - [コンポーネントのライフサイクル](#コンポーネントのライフサイクル)
+    - [マウントとアンマウント](#マウントとアンマウント)
+    - [constructor(props)](#constructorprops)
+    - [render](#render)
+    - [componentDidMount](#componentdidmount)
+    - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
+    - [componentWillUnmount](#componentwillunmount)
+  - [クラスコンポーネントの凝集度](#クラスコンポーネントの凝集度)
+  - [参考資料](#参考資料)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -161,6 +163,21 @@ class Clock extends React.Component {
 ```
 
 コンポーネントは再レンダーされないので、 `setState` を呼び出さない点に注意が必要である。
+
+## クラスコンポーネントの凝集度
+
+Reactが提供するクラスコンポーネントを凝集度の観点から考える。
+
+以下の公式サイトで提供されている1秒間ごとに現在時刻を表示するコンポーネントを例に考えると、クラスコンポーネントが有するライフサイクルメソッドは **時間的凝集、つまり近い時間に実行する処理をまとめたモジュールである** と考えることができる。
+
+![](../assets/ClockComponentCohesion.png)
+
+つまりクラスコンポーネントは以下の2点に関して、凝集度が低いと判断することができる。
+
+- ある目的を達成するための処理が、異なるライフサイクルメソッドに分散してしまう
+- 1つのライフサイクルメソッドに、まったく関係のない処理がまとめられてしまう
+
+こうした課題を解決するために提案されたものが **React Hooks** である。
 
 ## 参考資料
 
