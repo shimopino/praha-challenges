@@ -35,7 +35,7 @@ Reactにおけるマウントとアンマウントをまず理解する。
 
 以下ではクラスコンポーネントにおける特別なメソッドの例を挙げる。
 
-### constructor
+### constructor(props)
 
 Reactのコンポーネントのコンストラクタは、 **マウントされる前** に呼び出されるライフサイクルメソッドであり、コンポーネントに状態を持たせることが可能となる。
 
@@ -107,6 +107,24 @@ class Clock extends React.Component {
   // render
 }
 ```
+
+### componentDidUpdate(prevProps, prevState, snapshot)
+
+更新が行われた直後に呼び出されるライフサイクルメソッドであり、最初のレンダーでは呼び出されない点に注意が必要である。
+
+これは以下のように、更新前後で props の比較を行う場合などで使用する。
+
+```js
+componentDidUpdate(prevProps) {
+  // 典型的な使い方
+  // 更新前後での props を比較
+  if (this.props.userID !== prevProps.userID) {
+    this.fetchData(this.props.userID);
+  }
+}
+```
+
+内部で `setState` を呼び出すこともできるが、条件でラップしなければ無限ループを引き起こしてしまう点に注意が必要である。
 
 ## 参考資料
 
