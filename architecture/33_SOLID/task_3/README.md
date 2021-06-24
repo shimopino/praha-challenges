@@ -33,6 +33,27 @@ Reactにおけるマウントとアンマウントをまず理解する。
 
 以下ではクラスコンポーネントにおける特別なメソッドの例を挙げる。
 
+### constructor
+
+Reactのコンポーネントのコンストラクタは、 **マウントされる前** に呼び出されるライフサイクルメソッドであり、コンポーネントに状態を持たせることが可能となる。
+
+具体的には以下のように、コンストラクタ内でコンポーネントに持たせたい状態を定義することで、ライフサイクルにまたがって状態を管理することが可能となる。
+
+```js
+class Clock extends React.Component {
+  constructor(props) {
+    // 継承元に props を渡さないと this.props が未定義となってしまう
+    super(props);
+
+    // コンポーネントで管理したい状態を定義する
+    this.state = { counter: 0 };
+
+    // イベントハンドラは、インスタンスにバインドさせておく
+    this.handleClick = this.handleClick.bind(this);
+  }
+}
+```
+
 ## 参考資料
 
 - [state とライフサイクル](https://ja.reactjs.org/docs/state-and-lifecycle.html)
