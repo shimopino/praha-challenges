@@ -5,13 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [コンポーネントのライフサイクル](#%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB)
-  - [マウントとアンマウント](#%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88%E3%81%A8%E3%82%A2%E3%83%B3%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88)
-  - [constructor(props)](#constructorprops)
-  - [render](#render)
-  - [componentDidMount](#componentdidmount)
-  - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
-- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [課題3](#課題3)
+  - [コンポーネントのライフサイクル](#コンポーネントのライフサイクル)
+    - [マウントとアンマウント](#マウントとアンマウント)
+    - [constructor(props)](#constructorprops)
+    - [render](#render)
+    - [componentDidMount](#componentdidmount)
+    - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
+    - [componentWillUnmount](#componentwillunmount)
+  - [参考資料](#参考資料)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -127,6 +129,39 @@ componentDidUpdate(prevProps) {
 ```
 
 内部で `setState` を呼び出すこともできるが、条件でラップしなければ無限ループを引き起こしてしまう点に注意が必要である。
+
+### componentWillUnmount
+
+コンポーネントがアンマウントされて、DOMから削除される直前に呼び出されるライフサイクルメソッドである。
+
+以下のように登録したタイマーの無効化や、ネットワークリクエストのキャンセルなど、必要とされるクリーンアップ処理を実行する。
+
+```js
+class Clock extends React.Component {
+  // constructor
+
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  // render
+}
+```
+
+コンポーネントは再レンダーされないので、 `setState` を呼び出さない点に注意が必要である。
 
 ## 参考資料
 
