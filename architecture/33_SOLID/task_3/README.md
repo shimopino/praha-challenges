@@ -55,6 +55,28 @@ class Clock extends React.Component {
 }
 ```
 
+### render
+
+クラスコンポーネントで **必ず定義** しなければならない唯一のライフサイクルメソッドである。
+
+コンポーネントの state を変更せず、呼び出されるたびに同じ結果を返す、つまりブラウザと直接対話することはないメソッドである。
+
+```js
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <!-- render内部では state は参照するのみ -->
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+```
+
+上記のコードでは、JSX経由で `React.createElement()` に変換されて、DOMノードをレンダーする。
+
 ## 参考資料
 
 - [state とライフサイクル](https://ja.reactjs.org/docs/state-and-lifecycle.html)
