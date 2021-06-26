@@ -1,0 +1,18 @@
+@startuml problem
+
+entity Post {
+    * id: varchar [PK]
+    ---
+    content: varchar
+    + tag1: varchar [FK]
+    + tag2: varchar [FK]
+    + tag3: varchar [FK]
+}
+
+entity Tag {
+    * id: varchar [PK]
+    ---
+    content: varchar
+}
+
+@enduml
