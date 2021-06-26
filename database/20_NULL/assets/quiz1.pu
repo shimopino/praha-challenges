@@ -1,0 +1,19 @@
+@startuml quiz1
+
+hide circle
+
+skinparam linetype ortho
+
+entity "users" as users {
+  * id: varchar [PK]
+  ---
+  name: varchar
+}
+
+entity "tweet" as tweet {
+  * id: varchar [PK]
+  ---
+  contents: varchar
+}
+
+@enduml

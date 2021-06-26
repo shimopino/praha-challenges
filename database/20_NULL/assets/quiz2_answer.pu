@@ -1,0 +1,44 @@
+@startuml quiz2_answer
+
+hide circle
+
+skinparam linetype ortho
+
+entity "users" as users {
+  * user_id: varchar [PK]
+  ---
+  name: varchar
+}
+
+entity "posts_likes" as posts_likes {
+  * id: varchar [PK]
+  ---
+  user_id: varchar
+  post_id: varchar
+}
+
+entity "posts" as posts {
+  * id: varchar [PK]
+  ---
+  description: TEXT
+}
+
+entity "comments_likes" as comments_likes {
+  * id: varchar [PK]
+  ---
+  user_id: varchar
+  comment_id: varchar
+}
+
+entity "comments" as comments {
+  * comment_id: varchar [PK]
+  ---
+  contents: varchar
+}
+
+users ||--o{ posts_likes
+posts_likes }o--|| posts
+users ||--o{ comments_likes
+comments_likes }o--|| comments
+
+@enduml
