@@ -1,0 +1,20 @@
+@startuml answer
+
+entity Message {
+    * message_id: varchar [PK]
+    ---
+    text: varchar
+}
+
+entity MessageTree {
+    * id: varchar
+    ---
+    + ancestor: varchar [FK]
+    + descendant: varchar [FK]
+}
+
+note right of MessageTree: 親と子のメッセージIDの組み合わせには一意制約が必要\n 主キー制約に変更してもよさそう
+
+Message ||--o{ MessageTree
+
+@enduml
