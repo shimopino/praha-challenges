@@ -1,0 +1,138 @@
+*************************** 1. row ***************************
+                            QUERY: SELECT *
+FROM employees
+WHERE birth_date = '1960-01-01'
+AND last_name LIKE 'Kr%'
+                            TRACE: {
+  "steps": [
+    {
+      "join_preparation": {
+        "select#": 1,
+        "steps": [
+          {
+            "expanded_query": "/* select#1 */ select `employees`.`emp_no` AS `emp_no`,`employees`.`birth_date` AS `birth_date`,`employees`.`first_name` AS `first_name`,`employees`.`last_name` AS `last_name`,`employees`.`gender` AS `gender`,`employees`.`hire_date` AS `hire_date` from `employees` where ((`employees`.`birth_date` = '1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+          }
+        ]
+      }
+    },
+    {
+      "join_optimization": {
+        "select#": 1,
+        "steps": [
+          {
+            "condition_processing": {
+              "condition": "WHERE",
+              "original_condition": "((`employees`.`birth_date` = '1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+              "steps": [
+                {
+                  "transformation": "equality_propagation",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal('1960-01-01', `employees`.`birth_date`))"
+                },
+                {
+                  "transformation": "constant_propagation",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal('1960-01-01', `employees`.`birth_date`))"
+                },
+                {
+                  "transformation": "trivial_condition_removal",
+                  "resulting_condition": "((`employees`.`last_name` like 'Kr%') and multiple equal(DATE'1960-01-01', `employees`.`birth_date`))"
+                }
+              ]
+            }
+          },
+          {
+            "substitute_generated_columns": {
+            }
+          },
+          {
+            "table_dependencies": [
+              {
+                "table": "`employees`",
+                "row_may_be_null": false,
+                "map_bit": 0,
+                "depends_on_map_bits": [
+                ]
+              }
+            ]
+          },
+          {
+            "ref_optimizer_key_uses": [
+            ]
+          },
+          {
+            "rows_estimation": [
+              {
+                "table": "`employees`",
+                "table_scan": {
+                  "rows": 298990,
+                  "cost": 232.25
+                }
+              }
+            ]
+          },
+          {
+            "considered_execution_plans": [
+              {
+                "plan_prefix": [
+                ],
+                "table": "`employees`",
+                "best_access_path": {
+                  "considered_access_paths": [
+                    {
+                      "rows_to_scan": 298990,
+                      "access_type": "scan",
+                      "resulting_rows": 298990,
+                      "cost": 30131,
+                      "chosen": true
+                    }
+                  ]
+                },
+                "condition_filtering_pct": 100,
+                "rows_for_plan": 298990,
+                "cost_for_plan": 30131,
+                "chosen": true
+              }
+            ]
+          },
+          {
+            "attaching_conditions_to_tables": {
+              "original_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+              "attached_conditions_computation": [
+              ],
+              "attached_conditions_summary": [
+                {
+                  "table": "`employees`",
+                  "attached": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+                }
+              ]
+            }
+          },
+          {
+            "finalizing_table_conditions": [
+              {
+                "table": "`employees`",
+                "original_table_condition": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))",
+                "final_table_condition   ": "((`employees`.`birth_date` = DATE'1960-01-01') and (`employees`.`last_name` like 'Kr%'))"
+              }
+            ]
+          },
+          {
+            "refine_plan": [
+              {
+                "table": "`employees`"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "join_execution": {
+        "select#": 1,
+        "steps": [
+        ]
+      }
+    }
+  ]
+}
+MISSING_BYTES_BEYOND_MAX_MEM_SIZE: 0
+          INSUFFICIENT_PRIVILEGES: 0
