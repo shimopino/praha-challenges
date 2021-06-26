@@ -5,18 +5,17 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題3](#課題3)
-  - [コンポーネントのライフサイクル](#コンポーネントのライフサイクル)
-    - [マウントとアンマウント](#マウントとアンマウント)
-    - [constructor(props)](#constructorprops)
-    - [render](#render)
-    - [componentDidMount](#componentdidmount)
-    - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
-    - [componentWillUnmount](#componentwillunmount)
-  - [クラスコンポーネントの凝集度](#クラスコンポーネントの凝集度)
-  - [React Hooks](#react-hooks)
-  - [useState](#usestate)
-  - [参考資料](#参考資料)
+- [コンポーネントのライフサイクル](#%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB)
+  - [マウントとアンマウント](#%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88%E3%81%A8%E3%82%A2%E3%83%B3%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88)
+  - [constructor(props)](#constructorprops)
+  - [render](#render)
+  - [componentDidMount](#componentdidmount)
+  - [componentDidUpdate(prevProps, prevState, snapshot)](#componentdidupdateprevprops-prevstate-snapshot)
+  - [componentWillUnmount](#componentwillunmount)
+- [クラスコンポーネントの凝集度](#%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88%E3%81%AE%E5%87%9D%E9%9B%86%E5%BA%A6)
+- [React Hooks](#react-hooks)
+- [useState](#usestate)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
