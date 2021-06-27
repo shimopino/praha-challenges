@@ -139,6 +139,32 @@ export class UserRepositoryPostgreSQL implements IUserRepository {
 
 ## アクセス制限機能はどの層に実装するのが適切なのか
 
+特定のリソースに対する認可機能、例えば特定のユーザーしか投稿されたブログを編集できないようにする場合を考える。
+
+この場合、リソースを表現するドメインモデルに認可機能を持たせることができる。
+
+```typescript
+// ドメインモデルに認可機能を持たせる
+export interface Blog {
+    canEditContentBy(userId: UserId): void;
+    editContent(contents: BlogContent): void;
+}
+
+// ユースケースからはドメインモデルが有する認可機能を呼び出す
+export class BlogUseCase {
+  public patchBlog(blogDTO) {
+    const blog = this.blogRepository.findByBlogId(blogDTO.getBlogID());
+    // 認可を行った後で、ブログ内容を更新する
+    blog.canEditContentBy(blogDTO.getEditorId());
+    blog.editContent(blogDTO.getContents());
+  }
+}
+```
+
+参考質問集
+
+- [質問1](https://github.com/little-hands/ddd-q-and-a/issues/121)
+- [質問2](https://github.com/little-hands/ddd-q-and-a/issues/133)
 
 ## 参考資料
 
