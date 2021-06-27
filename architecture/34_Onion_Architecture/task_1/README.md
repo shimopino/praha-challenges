@@ -17,6 +17,23 @@
 
 ## オニオンアーキテクチャとは何か
 
+「エリック・エヴァンスのドメイン駆動設計」において、ドメイン駆動設計で使用するアーキテクチャとして「レイヤードアーキテクチャ」が提案されている。
+
+このアーキテクチャは、元々3層アーキテクチャで発生してしまう、ビジネスロジック層が責務過剰であるという問題に対処するため、ビジネスロジック自体を「ユースケースを実現する層」と「ドメイン知識を表現する層」の2つに分割したアーキテクチャである。
+
+![](../assets/LayeredArchitecture.png)
+
+> 図1. レイヤードアーキテクチャ
+
+しかしレイヤードアーキテクチャでは、ドメイン層がインフラ層に依存してしまっており、ドメインロジックが特定のRDBMSやORマッパーなどに依存してしまう。
+
+そこで依存性の逆転 (Dependancy Injection) を活用して、インフラ層とドメイン層の依存関係を逆転させたものが、[Jeffrey Palermo](https://jeffreypalermo.com/) によって提案された「オニオンアーキテクチャ」である。
+
+![](../assets/OnionArchitecture.png)
+
+> 図2. オニオンアーキテクチャ
+
+
 ## ドメインモデル層がほかの層に依存しないようにするメリットは何か
 
 ## インターフェースへの依存のみ許可することのメリットは何か
@@ -26,3 +43,12 @@
 ## RDBMSを変更する場合、どの層を変更すべきか
 
 ## アクセス制限機能はどの層に実装するのが適切なのか
+
+
+## 参考資料
+
+- [The Onion Architecture : part 1](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-1/)
+- [The Onion Architecture : part 2](https://jeffreypalermo.com/2008/07/the-onion-architecture-part-2/)
+- [The Onion Architecture : part 3](https://jeffreypalermo.com/2008/08/the-onion-architecture-part-3/)
+- [Onion Architecture: Part 4 – After Four Years](https://jeffreypalermo.com/2013/08/onion-architecture-part-4-after-four-years/)
+- [ドメイン駆動設計で実装を始めるのに一番とっつきやすいアーキテクチャは何か](https://little-hands.hatenablog.com/entry/2017/10/04/231743)
