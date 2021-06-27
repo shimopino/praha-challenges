@@ -41,6 +41,36 @@
 
 ## インターフェースへの依存のみ許可することのメリットは何か
 
+インターフェースへの依存のみを許可することで、具体的な実装を意識することなく、各層を独立させることができる。
+
+例えば以下の例では、集約単位での永続下層へのアクセスを提供するリポジトリを使用することで、永続化手法をインメモリやRDBMS、そのほかの手法に変更したとしても、ドメイン層はまったく影響を受けなくなる。
+
+```typescript
+// ドメイン層のフォルダにそれぞれエンティティとリポジトリのインターフェースを配置
+export interface User {
+    name: string;
+}
+
+export interface IUserRepository {
+    findByUsername(name: string): Promise<User[]>;
+}
+```
+
+後は具体的な実装はインフラ層が提供するようにすれば、ほかの層は永続化の具体的な方法を一切意識することなく、依存性の逆転により疎結合を実現することができる。
+
+```typescript
+// インフラ層に具体的な実装を配置する
+export class UserRepositoryMySQL implements IUserRepository {
+    constructor() {
+        console.log('new instance created');
+    }
+    
+    public findByUsername(name: string) : Promise<User[]> {
+        throw new Error('またMySQLの具体的実装はなし')
+    }
+}
+```
+
 ## 依存性の逆転とオニオンアーキテクチャとの関係は何か
 
 ## RDBMSを変更する場合、どの層を変更すべきか
