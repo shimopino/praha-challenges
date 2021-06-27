@@ -73,6 +73,38 @@ export class UserRepositoryMySQL implements IUserRepository {
 
 ## 依存性の逆転とオニオンアーキテクチャとの関係は何か
 
+オニオンアーキテクチャでは、外側から内側への依存を持たせる場合に依存性の逆転 (Dependancy Injection) を利用している。
+
+例えば、内側のアプリケーション層でユースケースを実装する際は、ユースケースがリポジトリの機能を使用している場合、アプリケーション層の外側から具体的なインスタンスをユースケースに注入している。
+
+```typescript
+// 一番外側のUIやインフラ層に該当するController
+export class UserController {
+  public patch(req: Request, res: Response) {
+    // 
+    const userRepository = new UserRepositoryMySQL();
+    const userUseCase = new UserUseCase(userRepository);
+    const userDTO = createUserDTO(req);
+    const user = userUseCase.patchUser()
+    res.status(201).send(user);
+  }
+}
+
+export class UserUseCase {
+  private userRepository: IUserRepository;
+
+  constructor(userRepository: IUserRepository) {
+    this.userRepository = userRepository;
+  }
+
+  public patchUser(userDTO: UserDTO) {
+    const userName = userDTO.getUserName();
+    const Users = this.userRepository.findByUsername(userName);
+    Users.patchUser();
+  }
+}
+```
+
 ## RDBMSを変更する場合、どの層を変更すべきか
 
 ## アクセス制限機能はどの層に実装するのが適切なのか
