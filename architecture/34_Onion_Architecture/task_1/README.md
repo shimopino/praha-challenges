@@ -107,6 +107,36 @@ export class UserUseCase {
 
 ## RDBMSを変更する場合、どの層を変更すべきか
 
+インフラ層を変更する。
+
+どのRDBMSを使用するのかは、具体的な実装に直結しており、リポジトリの具体的な実装はインフラ層に定義しているため、インフラ層を変更すればいい。
+
+具体的には以下のように異なるRDBMSでの実装を追加して、UI層に配置されているコントローラーからユースケースに注入するインスタンスを変更すればいい。
+
+```typescript
+// インフラ層に具体的な実装を配置する
+export class UserRepositoryMySQL implements IUserRepository {
+    constructor() {
+        console.log('new instance created');
+    }
+    
+    public findByUsername(name: string) : Promise<User[]> {
+        throw new Error('MySQLの具体的実装を配置')
+    }
+}
+
+// PostgreSQL特有の実装をリポジトリに追加する
+export class UserRepositoryPostgreSQL implements IUserRepository {
+    constructor() {
+        console.log('new instance created');
+    }
+    
+    public findByUsername(name: string) : Promise<User[]> {
+        throw new Error('PostgreSQLの具体的実装を配置')
+    }
+}
+```
+
 ## アクセス制限機能はどの層に実装するのが適切なのか
 
 
