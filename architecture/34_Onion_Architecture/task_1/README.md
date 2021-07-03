@@ -146,9 +146,26 @@ export class UserRepositoryPostgreSQL implements IUserRepository {
 
 ```typescript
 // ドメインモデルに認可機能を持たせる
-export interface Blog {
-    canEditContentBy(userId: UserId): void;
+export interface IBlog {
+    canEditContentBy(user: User): void;
     editContent(contents: BlogContent): void;
+}
+
+class Blog {
+  private contents: BlogContent;
+  
+  public editContent(contents: BlogContent, user: User) {
+    if !canEditContentBy() {
+      throw new Error("editor is not authorized");
+    }
+
+    // ブログ内容を編集するロジック
+    this.contents = contents;
+  }
+
+  private canEditContentBy(user: User) {
+    return User.isAuthorized();
+  }
 }
 
 // ユースケースからはドメインモデルが有する認可機能を呼び出す
@@ -156,8 +173,7 @@ export class BlogUseCase {
   public patchBlog(blogDTO) {
     const blog = this.blogRepository.findByBlogId(blogDTO.getBlogID());
     // 認可を行った後で、ブログ内容を更新する
-    blog.canEditContentBy(blogDTO.getEditorId());
-    blog.editContent(blogDTO.getContents());
+    blog.editContent(blogDTO.getContents(), blogDTO.getEditor());
   }
 }
 ```
