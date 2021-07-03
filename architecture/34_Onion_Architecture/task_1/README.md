@@ -153,18 +153,14 @@ export interface IBlog {
 
 class Blog {
   private contents: BlogContent;
-  
+
   public editContent(contents: BlogContent, user: User) {
-    if !canEditContentBy() {
+    if !User.isAuthorized() {
       throw new Error("editor is not authorized");
     }
 
     // ブログ内容を編集するロジック
     this.contents = contents;
-  }
-
-  private canEditContentBy(user: User) {
-    return User.isAuthorized();
   }
 }
 
