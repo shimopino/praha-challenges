@@ -145,13 +145,11 @@ export class UserRepositoryPostgreSQL implements IUserRepository {
 この場合、リソースを表現するドメインモデルに認可機能を持たせることができる。
 
 ```typescript
-// ドメインモデルに認可機能を持たせる
 export interface IBlog {
-    canEditContentBy(user: User): void;
     editContent(contents: BlogContent): void;
 }
 
-class Blog {
+class Blog implements IBlog {
   private contents: BlogContent;
 
   public editContent(contents: BlogContent, user: User) {
@@ -159,12 +157,10 @@ class Blog {
       throw new Error("editor is not authorized");
     }
 
-    // ブログ内容を編集するロジック
     this.contents = contents;
   }
 }
 
-// ユースケースからはドメインモデルが有する認可機能を呼び出す
 export class BlogUseCase {
   public patchBlog(blogDTO) {
     const blog = this.blogRepository.findByBlogId(blogDTO.getBlogID());
