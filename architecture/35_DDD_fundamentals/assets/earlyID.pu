@@ -1,0 +1,21 @@
+@startuml earlyID
+
+participant Client
+participant Product
+participant ProductRepository
+participant Database
+
+activate Client
+
+Client -> Product: new
+activate Product
+
+Client -> ProductRepository: add(aProduct)
+activate ProductRepository
+
+ProductRepository -> Database: Insert
+activate Database
+
+ProductRepository -> Product: setProductId()
+
+@enduml
