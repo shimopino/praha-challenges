@@ -78,6 +78,54 @@ public class HibernateProductRepository implements ProductRepository {
 
 ## 値オブジェクト (バリューオブジェクト)
 
+システムで発生する値には、数字や文字列、日付や時刻などが存在しているが、これをドメインの概念でモデリングするための道具が、値オブジェクトである。
+
+値オブジェクトが有する特徴の1つは、不変性であり、例えば以下のオブジェクトは一旦インスタンス化されると、外部から属性を変更することはできない。
+
+```java
+// 実践ドメイン駆動設計 p.212 より
+public class BusinessPriority implements Serializable {
+    // 下記の型も値オブジェクトである
+    private BusinessPriorityRatings ratings;
+
+    // 属性を変更できるのはコンストラクタのみ
+    public BusinessPriority(BusinessPriorityRatings aRatings) {
+        super();
+        this.setRatings(aRatings);
+        this.initialize()l
+    }
+
+    private setratings(BusinessPriorityRatings aRatings) {
+        // implements
+    }
+
+    private initialize() {
+        // implements
+    }
+}
+```
+
+また値オブジェクトで使用する属性やクラスの名称などは、境界付けられたコンテキストとユビキタス言語が定まってからでないと定義することが難しい点に注意が必要である。
+
+値オブジェクトの特徴は、その等価性は2つのオブジェクトの型とそれぞれの属性値との比較で判定することである。
+
+```java
+// 実践ドメイン駆動開発 p.217
+public boolean equals(Object anObject) {
+    boolean equalObject = false;
+
+    // 最初に型の比較を行う
+    if (anObject != null && this.getClass() == anObbject.getClass() ) {
+        FullName typedObject = (FullName) anObject;
+
+        // それぞれの属性値の等価性を比較する
+        equalObject = 
+            this.firstName().equals(typedObject.firstName()) &&
+            this.lastName().equals(typedObject.getlastName());
+    }
+    return equalObject;
+}
+```
 
 ## 集約
 
