@@ -129,6 +129,7 @@ public boolean equals(Object anObject) {
 
 ## 集約
 
+集約とは、必ず守りたい強い整合性をもったオブジェクトの集まりを表している。
 
 
 ## ユビキタス言語
