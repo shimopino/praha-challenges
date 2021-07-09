@@ -153,6 +153,7 @@ public boolean equals(Object anObject) {
 
 ## 境界付けられたコンテキスト
 
+特定のモデルを定義・適用する境界を明示的に示したものである。
 
 ## ドメイン
 
