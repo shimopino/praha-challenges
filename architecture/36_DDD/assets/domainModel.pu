@@ -1,0 +1,31 @@
+@startuml domainModel
+
+/'
+  集約: packages
+  オブジェクト: objects
+  メモ: notes
+  関連: * → コンポジッション (インスタンス参照)
+        > → 集約間の連携 (ID参照)
+  多重度: "<>" -()- "<>"
+'/
+
+skinparam PackageStyle rectangle
+skinparam Linetype ortho
+
+package ユーザー集約 {
+    object 参加者 {
+        参加者ID
+        名前
+        メールアドレス
+        在籍ステータス
+    }
+}
+
+note left of 参加者 
+    ●メールアドレスの重複は許容しない
+    ●以下の在籍ステータスを有する
+       「在籍中」「休会中」「退会済」
+    ●「在籍中」の場合はどのペアにも所属しない
+end note
+
+@enduml
