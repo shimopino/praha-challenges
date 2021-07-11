@@ -41,4 +41,17 @@ note right of チーム
     ●最低でも3名の参加者が必要となる
 end note
 
+package ペア集約 {
+    object ペア {
+        ペアID
+        ペア名
+        参加者ID
+    }
+}
+
+note bottom of ペア
+    ペア名は [a-z]{1} を満たす
+    参加者は2~3名で構成される
+end note
+
 @enduml
