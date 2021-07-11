@@ -28,4 +28,17 @@ note left of 参加者
     ●「在籍中」の場合はどのペアにも所属しない
 end note
 
+package チーム集約 {
+    object チーム {
+        チームID
+        チーム名
+        参加者ID
+    }
+}
+
+note right of チーム
+    ●チーム名は [0-9]{1,3} の条件を満たす
+    ●最低でも3名の参加者が必要となる
+end note
+
 @enduml
