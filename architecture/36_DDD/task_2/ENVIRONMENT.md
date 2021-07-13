@@ -227,3 +227,62 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
 ## Controller によるルーティング
 
+Nestjs では、`@Controller()` や `@Get()` などのアノテーションで設定する。
+
+例えば以下は `GET /cats` というHTTPリクエストに対応している。
+
+```js
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {
+  @Get()
+  findAll(): string {
+    return 'This action returns all cats';
+  }
+}
+```
+
+## Module設定の変更
+
+後は追加したコントローラーや依存性の注入を行うために、モジュールの設定を追加する必要がある。
+
+これは `app.module.ts` に下記のように作成したコントローラーと `@Injectable` を設定したクラスを指定しておけばいい。
+
+```js
+@Module({
+  imports: [],
+  controllers: [AppController, SampleController],
+  providers: [AppService, PrismaService, UserService, PostService],
+})
+export class AppModule {}
+```
+
+なおモジュール自体は以下のように別のファイルに分割することも可能である。
+（コードは公式からのサンプルを使用している）
+
+```js
+// cats/cats.module.ts
+// コンテキストごとにモジュールの設定をしておく
+import { Module } from '@nestjs/common';
+import { CatsController } from './cats.controller';
+import { CatsService } from './cats.service';
+
+@Module({
+  controllers: [CatsController],
+  providers: [CatsService],
+})
+export class CatsModules {}
+```
+
+あとはこれを `main.ts` で使用している `app.module.ts` 内で読み込むようにすればいい。
+
+```js
+import { Module } from '@nestjs/common';
+import { CatsModule } from './cats/cats.module';
+
+@Module({
+  imports: [CatsModule],
+})
+export class AppModule {}
+```
