@@ -5,13 +5,16 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Node.js](#nodejs)
-- [Nestjs](#nestjs)
-- [Prisma](#prisma)
-- [DBスキーマ設定](#db%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E8%A8%AD%E5%AE%9A)
-- [型安全なCRUD操作](#%E5%9E%8B%E5%AE%89%E5%85%A8%E3%81%AAcrud%E6%93%8D%E4%BD%9C)
-- [Prisma Client](#prisma-client)
-- [Controller によるルーティング](#controller-%E3%81%AB%E3%82%88%E3%82%8B%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0)
+- [環境構築](#環境構築)
+  - [Node.js](#nodejs)
+  - [Nestjs](#nestjs)
+  - [Prisma](#prisma)
+  - [DBスキーマ設定](#dbスキーマ設定)
+  - [型安全なCRUD操作](#型安全なcrud操作)
+  - [Prisma Client](#prisma-client)
+  - [Controller によるルーティング](#controller-によるルーティング)
+  - [Module設定の変更](#module設定の変更)
+  - [テスト用の環境構築](#テスト用の環境構築)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -298,4 +301,56 @@ import { CatsModule } from './cats/cats.module';
   imports: [CatsModule],
 })
 export class AppModule {}
+```
+
+## テスト用の環境構築
+
+テスト用にDB接続先や環境変数を管理するために、[`dotenv`](https://www.npmjs.com/package/dotenv) を使用する。
+
+このライブラリを使用することで、`.env` の拡張子に設定されているキーと値を `process.env` に設定することが可能となる。
+
+```bash
+npm install dotenv
+```
+
+`package.json` 内の `scripts` で指定しているコマンド内でも使用できるように、[`dotenv-cli`](https://www.npmjs.com/package/dotenv-cli) をインストールする。
+
+```bash
+npm install -D dotenv-cli
+```
+
+これで例えばテスト用の環境設定で Prisma を動作させたい場合は、以下のようにコマンドを指定すればいい。
+
+```js
+// package.json
+// `--` の後で実行したいコマンドを指定する
+"scripts": {
+  "migrate:dev": "dotenv -e .env.test -- npx prisma migrate dev",
+  "migrate:dev:reset": "dotenv -e .env.test -- npx prisma migrate reset"
+  "migrate:test": "dotenv -e .env.test -- npx prisma migrate reset --force",
+  "migrate:prd": "prisma migrate deploy",
+  "model-gerate": "prisma generate"
+}
+```
+
+上記のように環境に応じて設定ファイルを分割しておく考え方は、テスティングフレームワークである `jest` でも同様であり、テストの目的に応じて設定ファイルを分割しておくと便利である。
+
+```js
+"scripts": {
+  "test:unit": "dotenv -e .env.test -- jest",
+  "test:integration": "npm migrate:test && dotenv -e .env.test -- jest -c ./jest.integration.config.js --runInBand"
+}
+```
+
+TypeScript に関しても、`src` 内にそれぞれ `__tests__` を配置してその内部でテストを実行していくが、共通で使用することのできる関数などは、設定で同じ場所から読み込めるようにしておくと便利である。
+
+そのため `tsconfig.json` でパスの設定を以下のようにしておけばいい。
+
+```js
+{
+  "compilerOptions": {
+    // ここで各ファイルの先頭で import を使用した際の mapping を追加できる
+    "paths": { "@testUtil/*": ["testUtil/*"] }
+  }
+}
 ```
