@@ -5,16 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [環境構築](#環境構築)
-  - [Node.js](#nodejs)
-  - [Nestjs](#nestjs)
-  - [Prisma](#prisma)
-  - [DBスキーマ設定](#dbスキーマ設定)
-  - [型安全なCRUD操作](#型安全なcrud操作)
-  - [Prisma Client](#prisma-client)
-  - [Controller によるルーティング](#controller-によるルーティング)
-  - [Module設定の変更](#module設定の変更)
-  - [テスト用の環境構築](#テスト用の環境構築)
+- [Node.js](#nodejs)
+- [Nestjs](#nestjs)
+- [Prisma](#prisma)
+- [DBスキーマ設定](#db%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E8%A8%AD%E5%AE%9A)
+- [型安全なCRUD操作](#%E5%9E%8B%E5%AE%89%E5%85%A8%E3%81%AAcrud%E6%93%8D%E4%BD%9C)
+- [Prisma Client](#prisma-client)
+- [Controller によるルーティング](#controller-%E3%81%AB%E3%82%88%E3%82%8B%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0)
+- [Module設定の変更](#module%E8%A8%AD%E5%AE%9A%E3%81%AE%E5%A4%89%E6%9B%B4)
+- [テスト用の環境構築](#%E3%83%86%E3%82%B9%E3%83%88%E7%94%A8%E3%81%AE%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
