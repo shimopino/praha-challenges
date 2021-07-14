@@ -15,6 +15,7 @@
   - [Controller によるルーティング](#controller-によるルーティング)
   - [Module設定の変更](#module設定の変更)
   - [テスト用の環境構築](#テスト用の環境構築)
+  - [Linter設定の変更](#linter設定の変更)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -354,3 +355,23 @@ TypeScript に関しても、`src` 内にそれぞれ `__tests__` を配置し�
   }
 }
 ```
+
+## Linter設定の変更
+
+Nestjs でデフォルトで作成される設定は、下記のように強制的にLinterを適用する設定になっている。
+
+```js
+"scripts": {
+  "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+}
+```
+
+そこで解析用のコマンドと修正用のコマンドを分離する。
+
+```js
+"scripts": {
+  "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
+  "lint:fix": "npm run lint --fix"
+}
+```
+
