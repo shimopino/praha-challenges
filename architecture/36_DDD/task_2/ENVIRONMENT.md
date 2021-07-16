@@ -8,13 +8,13 @@
 - [Node.js](#nodejs)
 - [Nestjs](#nestjs)
 - [Prisma](#prisma)
-- [DBスキーマ設定](#db%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E8%A8%AD%E5%AE%9A)
-- [型安全なCRUD操作](#%E5%9E%8B%E5%AE%89%E5%85%A8%E3%81%AAcrud%E6%93%8D%E4%BD%9C)
+- [DB スキーマ設定](#db%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E8%A8%AD%E5%AE%9A)
+- [型安全な CRUD 操作](#%E5%9E%8B%E5%AE%89%E5%85%A8%E3%81%AAcrud%E6%93%8D%E4%BD%9C)
 - [Prisma Client](#prisma-client)
 - [Controller によるルーティング](#controller-%E3%81%AB%E3%82%88%E3%82%8B%E3%83%AB%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0)
-- [Module設定の変更](#module%E8%A8%AD%E5%AE%9A%E3%81%AE%E5%A4%89%E6%9B%B4)
+- [Module 設定の変更](#module%E8%A8%AD%E5%AE%9A%E3%81%AE%E5%A4%89%E6%9B%B4)
 - [テスト用の環境構築](#%E3%83%86%E3%82%B9%E3%83%88%E7%94%A8%E3%81%AE%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
-- [Linter設定の変更](#linter%E8%A8%AD%E5%AE%9A%E3%81%AE%E5%A4%89%E6%9B%B4)
+- [Linter 設定の変更](#linter%E8%A8%AD%E5%AE%9A%E3%81%AE%E5%A4%89%E6%9B%B4)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -102,7 +102,7 @@ generator client {
 }
 ```
 
-DBサーバを起動せずに、`sqlite` で簡単に実験する場合以下の設定を利用する。
+DB サーバを起動せずに、`sqlite` で簡単に実験する場合以下の設定を利用する。
 
 ```js
 datasource db {
@@ -114,14 +114,14 @@ datasource db {
 `.env` ファイルには以下を設定する。
 
 ```js
-DATABASE_URL = "file:./dev.db"
+DATABASE_URL = 'file:./dev.db';
 ```
 
-## DBスキーマ設定
+## DB スキーマ設定
 
 練習として下記のテーブルを Prisma Migrate で作成する。
 
-これはDB設定を記述している `prisma.schema` に記述する。
+これは DB 設定を記述している `prisma.schema` に記述する。
 
 ```js
 model User {
@@ -160,7 +160,7 @@ prisma
 └── schema.prisma
 ```
 
-今回の場合は下記のSQL文が自動生成されている。
+今回の場合は下記の SQL 文が自動生成されている。
 
 ```sql
 -- CreateTable
@@ -186,7 +186,7 @@ CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
 
 外部キー制約に関しては、親テーブルに対して削除が実行された場合には対応する子テーブルを `NULL` に変更し、親テーブルに対して更新が実行された場合には対応する子テーブルのキーを更新する設定になっている。
 
-## 型安全なCRUD操作
+## 型安全な CRUD 操作
 
 Prisma Client を使用することで、モデル定義から型安全な CRUD 操作を実現することが可能となる。
 
@@ -240,12 +240,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
 あとはこのクラスを使用すれば、Prisma が提供している様々な機能にアクセスすることが可能となる。
 
-
 ## Controller によるルーティング
 
 Nestjs では、`@Controller()` や `@Get()` などのアノテーションで設定する。
 
-例えば以下は `GET /cats` というHTTPリクエストに対応している。
+例えば以下は `GET /cats` という HTTP リクエストに対応している。
 
 ```js
 import { Controller, Get } from '@nestjs/common';
@@ -259,7 +258,7 @@ export class CatsController {
 }
 ```
 
-## Module設定の変更
+## Module 設定の変更
 
 後は追加したコントローラーや依存性の注入を行うために、モジュールの設定を追加する必要がある。
 
@@ -305,7 +304,7 @@ export class AppModule {}
 
 ## テスト用の環境構築
 
-テスト用にDB接続先や環境変数を管理するために、[`dotenv`](https://www.npmjs.com/package/dotenv) を使用する。
+テスト用に DB 接続先や環境変数を管理するために、[`dotenv`](https://www.npmjs.com/package/dotenv) を使用する。
 
 このライブラリを使用することで、`.env` の拡張子に設定されているキーと値を `process.env` に設定することが可能となる。
 
@@ -355,9 +354,9 @@ TypeScript に関しても、`src` 内にそれぞれ `__tests__` を配置し�
 }
 ```
 
-## Linter設定の変更
+## Linter 設定の変更
 
-Nestjs でデフォルトで作成される設定は、下記のように強制的にLinterを適用する設定になっている。
+Nestjs でデフォルトで作成される設定は、下記のように強制的に Linter を適用する設定になっている。
 
 ```js
 "scripts": {
@@ -373,4 +372,3 @@ Nestjs でデフォルトで作成される設定は、下記のように強制�
   "lint:fix": "npm run lint --fix"
 }
 ```
-
