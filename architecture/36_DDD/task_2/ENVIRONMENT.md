@@ -372,3 +372,35 @@ Nestjs でデフォルトで作成される設定は、下記のように強制�
   "lint:fix": "npm run lint --fix"
 }
 ```
+
+## OpenAPI と Swagger
+
+OpanAPIの仕様書に従うことで、プログラミング言語に依存しない形でRESTfulなAPIの仕様書を作成することができる。
+
+```bash
+npm install --save @nestjs/swagger swagger-ui-express
+```
+
+必要なライブラリがインストールできた後は `main.ts` を編集し、Swaggerを使用できるように設定を行う。
+
+```js
+import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  const config = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(3000);
+}
+bootstrap();
+```
