@@ -19,7 +19,7 @@ export class SampleController {
   ) {}
 
   @Get('post/:id')
-  async getPostById(@Param('id') id: string): Promise<PostModel> {
+  async getPostById(@Param('id') id: string): Promise<PostModel | null> {
     return this.postService.post({ id: Number(id) });
   }
 

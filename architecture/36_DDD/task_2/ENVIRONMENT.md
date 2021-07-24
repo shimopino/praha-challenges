@@ -404,3 +404,41 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+
+これでサーバーを起動して `http://localhost:3000/api` にアクセスすれば、OpenAPIの仕様に従った仕様書を確認することができる。
+
+```bash
+npm run start:dev
+```
+
+なおJSONファイルとして仕様書をダウンロードすることも可能であり、Express環境なら `http://localhost:3000/api-json` を使用して、Fastify環境なら `http://localhost:3000/api/json` を使用すればいい。
+
+API仕様書を作成する際には、いくつか [設定](https://docs.nestjs.com/openapi/introduction#document-options) を変更することも可能である。
+
+```js
+const options: SwaggerDocumentOptions = {
+  operationIdFactory: (
+    controllerKey: string,
+    methodKey: string
+  ) => methodKey
+};
+
+const document = SwaggerModule.createDocument(app, config, options);
+```
+
+## Curlでエンドポイントの検証を行う
+
+```bash
+# 新規のユーザー作成
+curl http://localhost:3000/user \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"name": "shimokawa", "email": "shimokawa@example.com"}'
+
+>>
+{
+  "id": 1,
+  "email": "shimokawa@example.com",
+  "name": "shimokawa"
+}
+```
