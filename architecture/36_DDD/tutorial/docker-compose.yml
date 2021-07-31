@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  prisma-db:
+    container_name: prisma-db
+    image: postgres:12
+    ports:
+      - '5403:5432'
+    volumes:
+      # https://hub.docker.com/_/postgres/
+      # 公式に従い、/var/lib/postgres/data がデフォルトのデータ格納場所である
+      - prisma-store:/var/lib/postgres/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: prisma2020
+      POSTGRES_DB: prisma
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+      TZ: 'Asia/Tokyo'
+  prisma-test-db:
+    container_name: prisma-test-db
+    image: postgres:12
+    ports:
+      - '5402:5432'
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: prisma2020
+      POSTGRES_DB: prisma
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+      TZ: 'Asia/Tokyo'
+
+# https://teratail.com/questions/229090
+volumes:
+  prisma-store:
+    driver: local
+  prisma-test-store:
+    driver: local
