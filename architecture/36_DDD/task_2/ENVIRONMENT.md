@@ -443,3 +443,71 @@ curl http://localhost:3000/user \
   "name": "shimokawa"
 }
 ```
+
+## TypeScript による DDD の実装
+
+TypeScript では型システムとして 構造的型システム (`Substructural type system`) ではなく、公称型システム (`Nominal type system`) の理解する必要がある。
+
+TypeScript では構造的型システムを採用しており、データ構造をもとにして型の同一性の判断を行うため、以下のように同一名称のプロパティ (`_name`) を有する場合、本来異なるはずの型を同じ型であると判定してしまいます。
+
+```ts
+class Foo {
+  _name: string;
+
+  constructor(name: string) {
+    this._name = name;
+  }
+}
+
+class Bar {
+  _name: string;
+
+  constructor(name: string) {
+    this._name = name;
+  }
+}
+
+// `_name` プロパティを有しているため同じ型と判定される
+const foo: Foo = new Bar("bar");
+```
+
+静的型つき言語で実装を行う理由は、誤ったエンティティなどに対する操作をコンパイル時点で防ぐことができるからであるが、TypeScript が構造的型システムを採用していることを意識しないと、コンパイルエラーが発生しない可能性がある。
+
+そこで存在しないはずの値を表現する [`never`](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#the-never-type) 型を使用することで、異なるプロパティが存在することになり、型が一意性を有するように判定される。
+
+```ts
+class Foo {
+  _foo: never;
+  _name: string;
+
+  constructor(name: string) {
+    this._name = name;
+  }
+}
+
+class Bar {
+  _bar: never
+  _name: string;
+
+  constructor(name: string) {
+    this._name = name;
+  }
+}
+
+// Compile Error
+const foo: Foo = new Bar("bar");
+```
+
+実際に上記のコードはコンパイルエラーが発生する。
+
+このように型を定義する際には、必ず対象の型が一意に判定されるように独自のプロパティを設定しておけば、公称型システムのように取り扱うことができる。
+
+## Value Object の実装
+
+DDD における値オブジェクトの特徴とは以下になる。
+
+- 不変であること
+- 値によって等価性が担保されること
+
+
+
