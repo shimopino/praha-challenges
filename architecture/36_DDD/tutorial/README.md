@@ -90,10 +90,10 @@ model Profile {
   // ...
   "script": {
     // 開発用サーバーを起動する
-    "dev": "dotenv -e .env.local -- nest start --watch",
+    "dev": "dotenv -e .env.dev -- nest start --watch",
     // DB環境を構築する
-    "migrate:dev": "dotenv -e .env.local -- prisma migrate dev --preview-feature",
-    "migrate:dev:reset": "dotenv -e .env.local -- prisma migrate reset --preview-feature",
+    "migrate:dev": "dotenv -e .env.dev -- prisma migrate dev --preview-feature",
+    "migrate:dev:reset": "dotenv -e .env.dev -- prisma migrate reset --preview-feature",
     "migrate:test": "dotenv -e .env.test -- prisma migrate reset --force --preview-feature",
     // 単体テスト環境を構築する
     "test:unit": "dotenv -e .env.test -- jest -c ./jest.unittest.config.js",
@@ -103,5 +103,17 @@ model Profile {
 }
 ```
 
+これでコンテナを立ち上げた状態で開発を進めていくことができる。
 
+なお開発時に DB に登録されている内容を確認するために、[`Prisma Studio`](https://www.prisma.io/studio) を設定しておく。
 
+```js
+{
+  "scripts": {
+    "studio:dev": "dotenv -e .env.dev -- prisma studio",
+    "studio:test": "dotenv -e .env.test -- prisma studio",
+  }
+}
+```
+
+これでコマンドを実行すれば、DB に登録されているデータをブラウザ上で確認することができる。
