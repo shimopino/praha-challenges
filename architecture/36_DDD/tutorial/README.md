@@ -16,6 +16,8 @@
 
 公式から提供されている [サンプルアプリ](https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nestjs) を題材にして、Nestjs や Prisma を使った開発をどのように進めればいいのか検証していく。
 
+なおここでは **軽量DDD** を採用して開発を進めていく。
+
 ## サンプルアプリの全体像
 
 このアプリは、ユーザーが記事を投稿でき、提供されているAPIリクエストは以下になる。
@@ -39,7 +41,7 @@
 // ./prisma/schema.prisma
 
 model User {
-  id      Int      @default(autoincrement()) @id
+  id      Int      @id
   name    String?
   email   String   @unique
   posts   Post[]
@@ -47,7 +49,7 @@ model User {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String
@@ -59,12 +61,16 @@ model Post {
 }
 
 model Profile {
-  id     Int     @default(autoincrement()) @id
+  id     Int     @id
   bio    String?
   user   User    @relation(fields: [userId], references: [id])
   userId Int     @unique
 }
 ```
+
+上記のモデリングには、下記の制約が存在している点に注意である。
+
+![](docs/sample.png)
 
 また開発には、Postgres を採用している。
 
@@ -126,3 +132,27 @@ model Profile {
 ```
 
 これでコマンドを実行すれば、DB に登録されているデータをブラウザ上で確認することができる。
+
+## 軽量DDD
+
+ドメイン駆動設計における戦術的な設計のみを採用し、オニオンアーキテクチャや値オブジェクト、エンティティやリポジトリなどの実装パターンのみを採用する。
+
+## Prisma の流れ
+
+Prisma では作成している `prisma.schema` をマイグレーションすると、以下の処理が実行される。
+
+![](https://www.prisma.io/docs/static/153657b52bde1b006c94234b5753d495/3c492/prisma-migrate-development-workflow.png)
+
+マイグレーションを実行することで、DB へのデータモデルの反映やクライアント側で使用できる型を生成する。
+
+Prisma で型安全な開発を行うには、以下のようにクライアント側からエンジンへの接続やクエリを実行することで、DB への接続や SQL 実行をエンジンが代替わりしてくれる。
+
+![](https://i.imgur.com/I8do25A.png)
+
+## 値オブジェクトの実装
+
+値オブジェクトを「実践ドメイン駆動設計」の考え方にしたがって実装していく。
+
+```js
+
+```

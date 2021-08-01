@@ -1,0 +1,45 @@
+@startuml sample
+
+skinparam linetype ortho
+
+package ユーザー集約 {
+    object ユーザー {
+        ユーザーID
+        ユーザー名
+        メールアドレス
+    }
+
+    object プロファイル {
+        プロファイルID
+        Bio
+        ユーザーID
+    }
+    ユーザー "1" -down-> "0..1" プロファイル
+
+}
+note left of プロファイル
+    * Bioは140文字以内
+    * 2つ以上の作成はできない
+end note
+
+package 記事集約 {
+    object 記事 {
+        記事ID
+        作成日
+        更新日
+        タイトル
+        記事内容
+        公開ステータス
+        閲覧回数
+        ユーザーID
+    }
+    ユーザー "1" -left-> "0..n" 記事
+}
+
+note right of 記事
+    * 記事内容は140文字以内
+    * 存在するユーザーのみ
+    作成可能
+end note
+
+@enduml
