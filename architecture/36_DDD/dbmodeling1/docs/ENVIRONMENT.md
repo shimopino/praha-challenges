@@ -11,6 +11,7 @@
     - [環境変数の切り替え](#%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0%E3%81%AE%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88)
     - [テスト用の設定](#%E3%83%86%E3%82%B9%E3%83%88%E7%94%A8%E3%81%AE%E8%A8%AD%E5%AE%9A)
     - [テスト用のコマンドの追加](#%E3%83%86%E3%82%B9%E3%83%88%E7%94%A8%E3%81%AE%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89%E3%81%AE%E8%BF%BD%E5%8A%A0)
+    - [TypeScript の設定](#typescript-%E3%81%AE%E8%A8%AD%E5%AE%9A)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
