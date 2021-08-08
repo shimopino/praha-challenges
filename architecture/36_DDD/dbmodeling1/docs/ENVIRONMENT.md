@@ -68,3 +68,100 @@ Prisma で使用するコマンドを `package.json` に追加する。
   }
 }
 ```
+
+### 環境変数の切り替え
+
+各種コマンドに `dotenv -e <.env file> -- <command>` を追加する
+
+```js
+{
+  "scripts": {
+    "migrate:dev": "dotenv -e .env.dev -- prisma migrate dev --preview-feature",
+    "migrate:dev:reset": "dotenv -e .env.dev -- prisma migrate reset --preview-feature",
+    "migrate:test": "dotenv -e .env.test -- prisma migrate reset --force --preview-feature",
+    "migrate:prod": "prisma migrate deploy",
+    "model-generate": "prisma generate",
+    "studio:dev": "dotenv -e .env.dev -- prisma studio",
+    "studio:test": "dotenv -e .env.test -- prisma studio",
+  }
+}
+```
+
+### テスト用の設定
+
+単体テストと結合テストで使用するテスト設定を変更する。
+
+そのために、共通的に使用する設定と、テスト環境に合わせて設定を用意する。
+
+まずは共通設定として `jest.common.config.js` を記述する。
+
+```js
+module.exports = {
+  // デフォルト設定では {"\\.[jt]sx?$": "babel-jest"}
+  transform: {
+    '^.+\\.ts': 'ts-jest',
+  },
+  // デフォルト設定では {testEnvironment: "node"}
+  testEnvironment: 'node',
+  // デフォルト設定では {roots: ["<rootDir>"]}
+  // テストファイルを配置している場所を指定する
+  roots: ['<rootDir>/src'],
+  // デフォルト設定では {moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node"]}
+  moduleFileExtensions: ['js', 'ts'],
+  // デフォルト設定では {moduleFileMapper: null}
+  // import する際のファイル配置場所とファイル名のマッピングを行う
+  moduleFileMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1',
+  },
+  coverageDirectory: './coverage',
+};
+```
+
+次に単体テストの設定として `jest.unittest.config.json` を記述する。
+
+```js
+const defaultConfig = require('./jest.common.config');
+
+module.exports = {
+  ...defaultConfig,
+  // デフォルト設定では [ "**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)" ]
+  // テストファイルの配置場所を指定する
+  testMatch: ['**/__tests__/**/*.spec.[jt]s'],
+  // デフォルト設定では ["/node_modules/"]
+  // 結合テスト用のファイルは除外する
+  testPathIgnorePatterns: ['integration'],
+  // デフォルト設定では undefined
+  collectCoverageFrom: ['**/*.(t|j)s'],
+};
+```
+
+最後に結合テストの設定として `jest.integration.config.json` を記述する
+
+```js
+const defaultConfig = require('./jest.common.config');
+
+module.exports = {
+  ...defaultConfig,
+  roots: ['<rootDir>/test'],
+  testMatch: ['**/*.e2e-spec.[jt]s'],
+};
+```
+
+### テスト用のコマンドの追加
+
+テストで使用するコマンドを `package.json` に追加する。
+
+```js
+{
+  "scripts": {
+    "test:unit": "dotenv -e .env.test -- jest --config=./jest.unittest.config.json",
+    "test:unit:watch": "npm run test:unit --watch",
+    "test:unit:cov": "npm run test:unit --coverage",
+    "test:unit:reset": "npm run migrate:test && jest --config=./jest.unittest.config.json",
+    "test:integration": "dotenv -e .env.test -- jest --config=./jest.integration.config.json"
+    "test:integration:reset": "npm run migrate:test && jest --config=./jest.integration.config.json",
+  }
+}
+```
+
+データベースをリセットするためのコマンドも追加しておく。
