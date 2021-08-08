@@ -168,3 +168,45 @@ module.exports = {
 ```
 
 データベースをリセットするためのコマンドも追加しておく。
+
+またデータベースにデータを投入するためのコマンドも追加しておく。
+
+```js
+{
+  "scripts": {
+    // https://www.prisma.io/docs/guides/database/seed-database
+    "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
+    "seed:dev": "dotenv -e .env.dev -- prisma db seed --preview-feature",
+    "seed:test": "dotenv -e .env.test -- prisma db seed --preview-feature",
+    "seed": "prisma db seed --preview-feature"
+  }
+}
+```
+
+### TypeScript の設定
+
+テスト用のファイルを読み込む設定を `tsconfig.json` に追加する。
+
+```js
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "paths": {
+      "src/*": ["src/*"],
+      // 単体テストや結合テストで使用するファイルは下記から読み込む
+      "@testUtils/*": ["test/utils/*"]
+    }
+  }
+}
+```
