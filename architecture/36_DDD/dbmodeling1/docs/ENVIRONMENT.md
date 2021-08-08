@@ -33,3 +33,36 @@ npm install @prisma/client
 # https://www.prisma.io/docs/concepts/more/environment-variables/using-multiple-env-files
 npm install --save-dev dotenv-cli
 ```
+
+### DB のセットアップ
+
+今回は Postgres を Docker コンテナ上で使用する。
+
+コンテナを起動するコマンドは `package.json` に追加する。
+
+```js
+{
+  "scripts": {
+    // https://www.prisma.io/docs/guides/testing/integration-testing
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+  }
+}
+```
+
+### Prisma 関係のコマンドを追加
+
+Prisma で使用するコマンドを `package.json` に追加する。
+
+```js
+{
+  "scripts": {
+    "migrate:dev": "prisma migrate dev --preview-feature",
+    "migrate:dev:reset": "prisma migrate reset --preview-feature",
+    "migrate:test": "prisma migrate reset --force --preview-feature",
+    "migrate:prod": "prisma migrate deploy",
+    "model-generate": "prisma generate",
+    "studio": "prisma studio"
+  }
+}
+```
