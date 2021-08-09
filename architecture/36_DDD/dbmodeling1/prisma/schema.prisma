@@ -9,3 +9,30 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+// 消費税区分
+model TaxCategory {
+  // 種別なので [1, 2, 3] で定義する
+  id              Int            @id @default(autoincrement())
+  taxCategoryName String
+  taxRateRanges   TaxRateRange[]
+  items           Item[]
+
+  @@map("tax_category")
+}
+
+// 税率区分
+model TaxRateRange {
+  // 10数個程度のレコードなので 整数 で定義する
+  id               Int         @id @default(autoincrement())
+  // appliedStateDate DateTime
+  // appliedEndDate   DateTime
+  appliedStateDate String
+  appliedEndDate   String
+  taxCategory      TaxCategory @relation(fields: [taxCategoryId], references: [id])
+  taxCategoryId    Int
+  taxRate          Float
+
+  @@map("tax_rate_range")
+}
+
