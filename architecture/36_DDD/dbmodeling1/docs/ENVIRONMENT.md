@@ -42,6 +42,11 @@ npm install --save-dev dotenv-cli
 # UUID用の生成ライブラリ
 npm install nanoid
 
+# オブジェクト比較用のライブラリ
+npm install shallow-equal-object
+
+# テストデータ生成用のライブラリ
+npm install --save-dev faker
 ```
 
 ### DB のセットアップ
