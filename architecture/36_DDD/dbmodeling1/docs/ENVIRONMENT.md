@@ -47,6 +47,12 @@ npm install shallow-equal-object
 
 # テストデータ生成用のライブラリ
 npm install --save-dev faker
+
+# OpenAPI 用のライブラリ
+npm install @nestjs/swagger
+
+# コントローラー層での検証用ライブラリ
+npm install class-validator
 ```
 
 ### DB のセットアップ
