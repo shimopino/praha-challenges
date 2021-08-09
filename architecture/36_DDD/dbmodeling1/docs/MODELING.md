@@ -212,3 +212,44 @@ model SetItemComponent {
 }
 ```
 
+### 注文管理
+
+次に **注文管理** を考える。
+
+- 主キーは同様にアプリケーション側で生成する
+
+```prisma
+// 注文
+model Order {
+  id            String        @id
+  // One-to-Many の関係
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  customerId    String
+  // One-to-Many の関係
+  orderDetails  OrderDetail[]
+  // DateTime は ISO-8601 のフォーマットに従っている
+  // 以下は Postgres の場合は @db.Timestamp(3) にマッピングされる
+  // 括弧の中は小数点以下の秒数 (ミリ秒など) をあらわす
+  orderDate     DateTime
+  customerName  String
+  customerPhone String
+  isPayed       Boolean
+
+  @@map("order")
+}
+
+// 注文明細
+model OrderDetail {
+  order          Order   @relation(fields: [orderId], references: [id])
+  orderId        String
+  item           Item    @relation(fields: [itemId], references: [id])
+  itemId         String
+  count          Int
+  appliedTaxRate Float
+  appliedPrice   Decimal
+  containWasabi  Boolean
+
+  @@unique([orderId, itemId], name: "OrderDetail_unique_key")
+  @@map("order_detail")
+}
+```
