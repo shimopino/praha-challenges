@@ -39,6 +39,14 @@ export class Customer implements Entity {
     return new Customer({ id, name, phone });
   }
 
+  public getAllProperties() {
+    return {
+      id: this.id.value,
+      name: this.name.value,
+      phone: this.phone.value,
+    };
+  }
+
   equals(entity?: Customer): boolean {
     return this.id.equals(entity?.id);
   }

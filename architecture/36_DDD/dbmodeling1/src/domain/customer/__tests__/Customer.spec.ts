@@ -22,8 +22,8 @@ const buildCustomer = (overrides?): Customer => {
 
   return new Customer({
     id: CustomerId.random(),
-    name: CustomerName.create(customer_info.customerName),
-    phone: CustomerPhone.create(customer_info.customerPhone),
+    name: CustomerName.create(customer_info.name),
+    phone: CustomerPhone.create(customer_info.phone),
   });
 };
 
@@ -95,5 +95,25 @@ describe('エンティティ Customer', () => {
     // Assert
     expect(sut).toThrow(InvalidArgumentError);
     expect(sut).toThrow('必須項目が入力されていません。');
+  });
+
+  it('[正常系] エンティティの属性をプリミティブ型で取得できる', () => {
+    // Arrange
+    const customerId = '10';
+    const customerName = 'shimokawa';
+    const customerPhone = '000-0000-0000';
+    randomSpy.mockReturnValueOnce(customerId);
+
+    // Act
+    const customer = buildCustomer({
+      name: customerName,
+      phone: customerPhone,
+    });
+    const { id, name, phone } = customer.getAllProperties();
+
+    // Assert
+    expect(id).toBe(customerId);
+    expect(name).toBe(customerName);
+    expect(phone).toBe(customerPhone);
   });
 });
