@@ -38,6 +38,10 @@ npm install @prisma/client
 #  環境変数を切り替える dotenv-cli をインストール
 # https://www.prisma.io/docs/concepts/more/environment-variables/using-multiple-env-files
 npm install --save-dev dotenv-cli
+
+# UUID用の生成ライブラリ
+npm install nanoid
+
 ```
 
 ### DB のセットアップ
