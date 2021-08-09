@@ -10,9 +10,9 @@ module.exports = {
   roots: ['<rootDir>/src'],
   // デフォルト設定では {moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node"]}
   moduleFileExtensions: ['js', 'ts'],
-  // デフォルト設定では {moduleFileMapper: null}
+  // デフォルト設定では {moduleNameMapper: null}
   // import する際のファイル配置場所とファイル名のマッピングを行う
-  moduleFileMapper: {
+  moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
   },
   coverageDirectory: './coverage',
