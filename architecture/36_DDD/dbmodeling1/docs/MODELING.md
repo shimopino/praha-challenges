@@ -66,6 +66,76 @@ model TaxRateRange {
 }
 ```
 
+初期データ投入用の [`prisma/seed.ts`](../prisma/seed.ts) を作成する。
+
+作成した後は下記のコマンドを使用してデータを投入する。
+
+```bash
+# マイグレーションを実行する
+npm run migrate:dev
+
+# 下記コマンドを実行すれば、データ投入結果が確認できる
+npm run migrate:test
+
+Running seed: ts-node --compiler-options "{\"module\":\"commonjs\"}" "prisma/seed.ts" ...
+seeding 1 : 通常税率
+seeding 2 : 軽減税率
+seeding 3 : 非課税
+seeding succeed ...
+```
+
+実際にデータが投入されていることを確認する。
+
+```bash
+# コンテナ内の Postgres にアクセスする
+docker container exec -it prisma-test-db psql -U test prisma
+
+# Postgres 内で作成されているテーブルを確認する
+prisma=# \dt
+>
+              List of relations
+ Schema |        Name        | Type  | Owner
+--------+--------------------+-------+-------
+ public | _prisma_migrations | table | test
+ public | customer           | table | test
+ public | item               | table | test
+ public | item_category      | table | test
+ public | order              | table | test
+ public | order_detail       | table | test
+ public | set_item_component | table | test
+ public | tax_category       | table | test
+ public | tax_rate_range     | table | test
+(9 rows)
+
+prisma=# select * from tax_category;
+ id | taxCategoryName
+----+-----------------
+  1 | 通常税率
+  2 | 軽減税率
+  3 | 非課税
+(3 rows)
+
+prisma=# select * from tax_rate_range;
+ id | appliedStateDate | appliedEndDate | taxCategoryId | taxRate
+----+------------------+----------------+---------------+---------
+  1 | 1900-01-01       | 1989-03-31     |             1 |       1
+  2 | 1989-04-01       | 1997-03-31     |             1 |    1.03
+  3 | 1997-04-01       | 2014-03-31     |             1 |    1.05
+  4 | 2014-04-01       | 2019-09-30     |             1 |    1.08
+  5 | 2019-10-01       | 2099-12-31     |             1 |     1.1
+  6 | 1900-01-01       | 1989-03-31     |             2 |       1
+  7 | 1989-04-01       | 1997-03-31     |             2 |       1
+  8 | 1997-04-01       | 2014-03-31     |             2 |       1
+  9 | 2014-04-01       | 2019-09-30     |             2 |       1
+ 10 | 2019-10-01       | 2099-12-31     |             2 |    1.08
+ 11 | 1900-01-01       | 1989-03-31     |             3 |       1
+ 12 | 1989-04-01       | 1997-03-31     |             3 |       1
+ 13 | 1997-04-01       | 2014-03-31     |             3 |       1
+ 14 | 2014-04-01       | 2019-09-30     |             3 |       1
+ 15 | 2019-10-01       | 2099-12-31     |             3 |       1
+(15 rows)
+```
+
 ### 顧客マスタ
 
 次に **顧客マスタ** を考える。
