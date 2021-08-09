@@ -157,3 +157,57 @@ model Customer {
 }
 ```
 
+### 商品マスタ
+
+次に **商品マスタ** を考える。
+
+- セット商品構成に関して、複合主キーで考える
+  - そのため同じテーブルに対する外部キー制約が発生する
+  - 制約上、外部キー制約の名称を分けておく必要がある
+    - `SetItem` と `ComponentItem`
+
+```prisma
+// 商品
+model Item {
+  // アプリケーション側の UUID で生成する
+  id             String             @id
+  itemName       String
+  // 以下は　Postgres の場合は decimal(65,30) にマッピングされる
+  // @db.Decimal(X, Y) でも指定することができる
+  normalPrice    Decimal
+  category       ItemCategory       @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  taxCategory    TaxCategory        @relation(fields: [taxCategoryId], references: [id])
+  taxCategoryId  Int
+  // セット商品区分
+  isSetItem      Boolean
+  orderDetails   OrderDetail[]
+  setItems       SetItemComponent[] @relation("SetItem")
+  ComponentItems SetItemComponent[] @relation("ComponentItem")
+
+  @@map("item")
+}
+
+// 商品カテゴリ
+model ItemCategory {
+  // アプリケーション側の UUID で生成する
+  id           String @id
+  categoryName String
+  items        Item[]
+
+  @@map("item_category")
+}
+
+// セット商品構成
+model SetItemComponent {
+  setItem   Item   @relation(name: "SetItem", fields: [setItemId], references: [id])
+  setItemId String
+  item      Item   @relation(name: "ComponentItem", fields: [itemId], references: [id])
+  itemId    String
+  count     Int
+
+  @@unique([setItemId, itemId], name: "SetItemComponent_unique_key")
+  @@map("set_item_component")
+}
+```
+
