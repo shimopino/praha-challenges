@@ -33,6 +33,10 @@
 
 ![](../assets/ER.png)
 
+## ユースケース図
+
+![](../assets/UseCase.png)
+
 ## 参考資料
 
 - [PlantUMLでドメイン駆動設計のモデリングを実装する（Nizi Project編）](https://tech.holmescloud.com/entry/2020/10/16/150605#%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%A2%E3%83%87%E3%83%AB%E5%9B%B3)
