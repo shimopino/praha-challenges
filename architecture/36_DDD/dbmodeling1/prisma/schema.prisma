@@ -36,3 +36,14 @@ model TaxRateRange {
   @@map("tax_rate_range")
 }
 
+// 顧客
+model Customer {
+  // アプリケーション側の UUID で生成する
+  id     String  @id
+  name   String
+  phone  String  @unique
+  orders Order[]
+
+  @@map("customer")
+}
+

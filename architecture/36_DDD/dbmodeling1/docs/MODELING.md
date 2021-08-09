@@ -64,3 +64,25 @@ model TaxRateRange {
   @@map("tax_rate_range")
 }
 ```
+
+### 顧客マスタ
+
+次に **顧客マスタ** を考える。
+
+- 主キーはアプリケーション側で生成した `UUID` を使用する
+  - [`nanoid`](https://www.npmjs.com/package/nanoid) を使用する
+- 電話番号は被りがないように一意性制約を設ける
+
+```prisma
+// 顧客
+model Customer {
+  // アプリケーション側の UUID で生成する
+  id     String  @id
+  name   String
+  phone  String  @unique
+  orders Order[]
+
+  @@map("customer")
+}
+```
+
