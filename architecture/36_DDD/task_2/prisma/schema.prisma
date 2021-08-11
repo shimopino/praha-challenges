@@ -66,3 +66,53 @@ enum EnrollmentStatus {
   ABSENCE
   WITHDRAWAL
 }
+
+// ###############
+//  ペア集約
+// ###############
+model Pair {
+  id           String                @id
+  name         String
+  participants PairWithParticipant[]
+  updatedAt    DateTime              @updatedAt
+  createdAt    DateTime              @default(now())
+
+  @@map("pair")
+}
+
+model PairWithParticipant {
+  pair          Pair        @relation(fields: [pairId], references: [id])
+  pairId        String
+  participant   Participant @relation(fields: [participantId], references: [id])
+  participantId String
+  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime    @default(now())
+
+  @@unique([pairId, participantId])
+  @@map("pair_with_participant")
+}
+
+// ###############
+//  チーム集約
+// ###############
+model Team {
+  id           String                @id
+  name         String
+  participants TeamWithParticipant[]
+  updatedAt    DateTime              @updatedAt
+  createdAt    DateTime              @default(now())
+
+  @@map("team")
+}
+
+model TeamWithParticipant {
+  team          Team        @relation(fields: [teamId], references: [id])
+  teamId        String
+  participant   Participant @relation(fields: [participantId], references: [id])
+  participantId String
+  updatedAt     DateTime    @updatedAt
+  createdAt     DateTime    @default(now())
+
+  @@unique([teamId, participantId])
+  @@map("team_with_participant")
+}
