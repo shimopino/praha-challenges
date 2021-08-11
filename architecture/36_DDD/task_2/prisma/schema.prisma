@@ -10,18 +10,37 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id      Int     @default(autoincrement()) @id
-  email   String  @unique
-  name    String?
-  posts   Post[]
+// ###############
+//  課題集約
+// ###############
+model Task {
+  id          String           @id
+  name        String
+  description String
+  progresses  TaskProgresses[]
+  updatedAt   DateTime         @updatedAt
+  createdAt   DateTime         @default(now())
+
+  @@map("task")
 }
 
-model Post {
-  id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model TaskProgresses {
+  participantId  String
+  participant    Participant    @relation(fields: [participantId], references: [id])
+  taskId         String
+  task           Task           @relation(fields: [taskId], references: [id])
+  progressStatus ProgressStatus @default(NOT_YET_DOING)
+  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime       @default(now())
+
+  @@unique([participantId, taskId])
+  @@map("task_progresses")
 }
+
+enum ProgressStatus {
+  NOT_YET_DOING
+  DOING
+  IN_REVIEW
+  DONE
+}
+
