@@ -44,3 +44,25 @@ enum ProgressStatus {
   DONE
 }
 
+// ###############
+//  参加者集約
+// ###############
+model Participant {
+  id               String                @id
+  email            String                @unique
+  name             String
+  enrollmentStatus EnrollmentStatus      @default(ENROLLMENT)
+  progresses       TaskProgresses[]
+  pairs            PairWithParticipant[]
+  teams            TeamWithParticipant[]
+  updatedAt        DateTime              @updatedAt
+  createdAt        DateTime              @default(now())
+
+  @@map("participant")
+}
+
+enum EnrollmentStatus {
+  ENROLLMENT
+  ABSENCE
+  WITHDRAWAL
+}
