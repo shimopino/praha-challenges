@@ -1,0 +1,92 @@
+@startuml ER-v2
+
+/'
+  集約: packages
+  オブジェクト: objects
+  メモ: notes
+  関連: * → コンポジッション (インスタンス参照)
+        > → 集約間の連携 (ID参照)
+  多重度: "<>" -()- "<>"
+'/
+
+skinparam PackageStyle rectangle
+skinparam Linetype ortho
+
+package 課題 {
+    entity 課題 {
+        課題ID
+        ---
+        課題名
+        課題内容
+    }
+
+    note bottom of 課題
+        課題ステータスは3種
+        ●未着手
+        ●着手中
+        ●レビュー待ち
+        ●完了
+    end note
+
+    entity 課題進捗 {
+        + 課題ID
+        + 参加者ID
+        ---
+        課題ステータスID
+    }
+
+    課題 ||--o{ 課題進捗
+}
+
+package ユーザー {
+    entity 参加者 {
+        参加者ID
+        ---
+        名前
+        メールアドレス
+        在籍ステータスID
+    }
+
+    note right of 参加者
+        在籍ステータスは3種
+        ●在籍中
+        ●休会中
+        ●退会済
+    end note
+}
+
+package チーム {
+    entity チーム {
+        チームID
+        ---
+        チーム名
+    }
+
+    entity チーム所属 {
+        + チームID
+        + 参加者ID
+    }
+
+    チーム ||--o{ チーム所属
+}
+
+package ペア {
+    entity ペア {
+        ペアID
+        ---
+        ペア名
+    }
+
+    entity ペア所属 {
+        + ペアID
+        + 参加者ID
+    }
+
+    ペア ||--o{ ペア所属
+}
+
+参加者 ||--o{ 課題進捗
+参加者 ||--o{ チーム所属
+参加者 ||-u-o{ ペア所属
+
+@enduml
