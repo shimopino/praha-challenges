@@ -4,6 +4,11 @@
 <summary>Table of Contents</summary>
 
 - [React Tutorial](#react-tutorial)
+  - [Environment](#environment)
+    - [Initial Setup](#initial-setup)
+    - [ESLint & Prettier](#eslint--prettier)
+    - [CSS](#css)
+  - [React](#react)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
