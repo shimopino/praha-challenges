@@ -124,3 +124,6 @@ module.exports = {
 }
 ```
 
+## React
+
+TypeScript と React の組み合わせで悩むときは [`typescript-cheatsheets`](https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets) を参照する。
