@@ -49,18 +49,25 @@ npx create-next-app tutorial --use-npm --typescript
 └── tsconfig.json
 ```
 
+### ESLint & Prettier
+
+`ESLint` はデフォルトで設定されているため、追加で `Prettier` を有効化する。
+
+まずは必要なライブラリをインストールする。
 
 ```bash
-npm run dev
-# or
-yarn dev
+npm install --save-dev prettier eslint-config-prettier
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+次に設定ファイル (`.eslintrc.js`) を以下のように編集する。
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```js
+module.exports = {
+  extends: ['next/core-web-vitals', 'prettier'],
+};
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+これでコードの静的解析によるスタイル統一はできるようになった。
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
