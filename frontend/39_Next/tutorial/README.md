@@ -1,22 +1,18 @@
-<<<<<<< HEAD
-# NextJS Tutorial
-=======
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <details>
 <summary>Table of Contents</summary>
 
-- [環境設定](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A)
+- [環境設定](#環境設定)
   - [Initial Setup](#initial-setup)
   - [ESLint & Prettier](#eslint--prettier)
 - [Next.js](#nextjs)
-  - [Server-Side Rendering の動作検証](#server-side-rendering-%E3%81%AE%E5%8B%95%E4%BD%9C%E6%A4%9C%E8%A8%BC)
+  - [Server-Side Rendering の動作検証](#server-side-rendering-の動作検証)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
->>>>>>> c4abbc1973906355d977400930a78986fec47f8f
 
 ## 環境設定
 
