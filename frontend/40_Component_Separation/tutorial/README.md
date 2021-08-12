@@ -37,3 +37,58 @@ tutorial
 └── tsconfig.json
 ```
 
+### ESLint & Prettier
+
+`ESLint` の設定は [`typescript-eslint`](https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md) に記載されている手順に従う。
+
+```bash
+# ESLint に必要なライブラリをインストールする
+npm install --save-dev eslint @typescript-eslint/{parser,eslint-plugin}
+
+# Prettier に必要なライブラリをインストールする
+npm install --save-dev prettier eslint-config-prettier
+
+# テストひ必要なライブラリをインストールする
+npm install --save-dev eslint-plugin-jest
+```
+
+設定を `.eslintrc.js` に記述する。
+
+```js
+module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'jest'],
+  env: {
+    node: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jest/recommended',
+    'prettier',
+  ],
+};
+```
+
+解析をしないファイルは `.eslintignore` に追加しておく。
+
+```
+# don't ever lint node_modules
+node_modules
+# don't lint build output (make sure it's set to your correct build folder name)
+dist
+# don't lint nyc coverage output
+coverage
+```
+
+`package.json` に解析を起動するためのコマンドを追加する。
+
+```js
+{
+  "scripts": {
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+}
+```
+
