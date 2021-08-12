@@ -6,7 +6,9 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Getting Started](#getting-started)
+- [環境設定](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A)
+  - [Initial Setup](#initial-setup)
+  - [ESLint & Prettier](#eslint--prettier)
 - [Learn More](#learn-more)
 - [Deploy on Vercel](#deploy-on-vercel)
 
