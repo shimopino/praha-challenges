@@ -1,8 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NextJS Tutorial
 
-## Getting Started
+## 環境設定
 
-First, run the development server:
+### Initial Setup
+
+下記のコマンドを使用して `Next.js` のプロジェクトを立ち上げた。
+
+```bash
+npx create-next-app tutorial --use-npm --typescript
+```
+
+これで下記の初期フォルダが設定される。
+
+```bash
+.
+├── README.md
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── pages
+│   ├── _app.tsx
+│   ├── api
+│   │   └── hello.ts
+│   └── index.tsx
+├── public
+│   ├── favicon.ico
+│   └── vercel.svg
+├── styles
+│   ├── Home.module.css
+│   └── globals.css
+└── tsconfig.json
+```
+
 
 ```bash
 npm run dev
