@@ -71,19 +71,35 @@ module.exports = {
 
 これでコードの静的解析によるスタイル統一はできるようになった。
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Next.js
 
-## Learn More
+### Server-Side Rendering の動作検証
 
-To learn more about Next.js, take a look at the following resources:
+まずは `pages` 以下に配置されている内容は、デフォルトで `SSR` されるのか検証するために、下記のような簡単なファイルを作成し、実際にブラウザに送信される HTML ファイルの中身を検証する
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```ts
+// pages/index.tsx
+import { NextPage } from 'next';
+import styles from '../styles/Home.module.css';
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+const Home: NextPage = () => {
+  return (
+    <div className={styles.container}>
+      <h1>Hello Next App</h1>
+    </div>
+  );
+};
 
-## Deploy on Vercel
+export default Home;
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+HTML ボディの一部だけ載せておくが、確かにブラウザで HTML ファイルを受け取っている時点で、設定した内容がレンダリングされていることがわかる。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```html
+<body>
+  <div id="__next">
+    <!-- クラス名には CSS Module による乱数が設定されている -->
+    <div class="Home_container__1EcsU"><h1>Hello Next App</h1></div>
+  </div>
+</body>
+```
