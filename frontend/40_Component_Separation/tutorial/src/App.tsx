@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.module.scss';
 
 const App = (): JSX.Element => {
   return <div>Hello World</div>;

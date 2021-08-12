@@ -92,3 +92,35 @@ coverage
 }
 ```
 
+### CSS
+
+CSS Modules を使用してスタイリングを行っていく。
+
+なお SASS も使用するが、これは公式ページに記載されている [`node-sass`](https://github.com/sass/node-sass) ではなく、[`dart-sass`](https://github.com/sass/dart-sass) を使用する。
+
+`index.module.scss` のようなファイル名に変更すれば、コンポーネントから読み取ることができる。
+
+また CSS に対してスタイル解析ツールである [`stylelint`](https://stylelint.io/user-guide/get-started) を使用する。
+
+```bash
+npm install --save-dev stylelint stylelint-config-standard
+```
+
+`stylelint.config.js` に下記を記載する。
+
+```js
+module.exports = {
+  extends: 'stylelint-config-standard',
+};
+```
+
+`package.json` に解析を起動するコマンドを追加する。
+
+```bash
+{
+  "scripts": {
+    "style": "npx stylelint \"**/*.module.scss\""
+  }
+}
+```
+
