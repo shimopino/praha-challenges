@@ -11,6 +11,7 @@
   - [File-based Routing](#file-based-routing)
   - [Dynamic-Routing Path](#dynamic-routing-path)
   - [Link to Page](#link-to-page)
+  - [Custom Error Page](#custom-error-page)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
