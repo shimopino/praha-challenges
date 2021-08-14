@@ -217,3 +217,17 @@ const Home: NextPage = () => {
 
 通常の `<a>` タグと異なる点は、ルーティングを行う際に HTTP リクエストを伴わない点である。
 
+### Custom Error Page
+
+`/pages` 直下に `404.tsx` を配置することで、自作の 404 エラーページを作成することができる。
+
+```ts
+// /pages/404.tsx
+const NotFoundPage: NextPage = () => {
+  return (
+    <div>
+      <h1>Page not Found!</h1>
+    </div>
+  );
+};
+```
