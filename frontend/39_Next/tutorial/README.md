@@ -120,3 +120,70 @@ HTML ボディの一部だけ載せておくが、確かにブラウザで HTML 
 
 また、`[id]` のようなファイル名にすることで、URL が動的に変化する場合のページを作成することができる。
 
+### Dynamic-Routing Path
+
+動的ルーティングを行った場合、`useRouter()` を使用することで、ルーティングを行った際の情報を取得することができる。
+
+ここから `query` を選択すれば、URL からファイル名に従う動的に変化する ID を取得することができる。
+
+```ts
+// /pages/users/[userId].tsx
+
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+
+const UserPage: NextPage = () => {
+  const router = useRouter();
+  const query = router.query;
+  const userId = router.query.userId;
+
+  // http://localhost:3000/users/10 の場合、
+  // { userId: 10 } というオブジェクトが `query` に格納されている
+  console.log(query);
+
+  // http://localhost:3000/users/10 の場合、変数には 10 が格納されている
+  console.log(userId);
+
+  return (
+    <div>
+      <h1>The User Page: {userId}</h1>
+    </div>
+  );
+};
+
+export default UserPage;
+```
+
+複数の動的ルーティングが含まれている場合でも、同じ方法でページの ID を取得することができる。
+
+例えば以下のようなファイル構造を考える。
+
+```bash
+/pages
+└── collections
+    ├── index.tsx
+    └── [collectionId]
+        ├── index.tsx
+        └── [bookId].tsx
+```
+
+このとき、`[bookId].tsx` では下記のような方法で URL の情報を取得する。
+
+```ts
+const BookPage: NextPage = () => {
+  const router = useRouter();
+  const query = router.query;
+
+  const collectionId = query.collectionId;
+  const bookId = query.bookId;
+
+  return (
+    <div>
+      <h1>
+        The Book of {bookId} in the Collection: {collectionId}
+      </h1>
+    </div>
+  );
+};
+```
+
