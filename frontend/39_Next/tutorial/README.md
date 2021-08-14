@@ -3,11 +3,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [環境設定](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A)
+- [環境設定](#環境設定)
   - [Initial Setup](#initial-setup)
   - [ESLint & Prettier](#eslint--prettier)
 - [Next.js](#nextjs)
-  - [Server-Side Rendering の動作検証](#server-side-rendering-%E3%81%AE%E5%8B%95%E4%BD%9C%E6%A4%9C%E8%A8%BC)
+  - [Server-Side Rendering の動作検証](#server-side-rendering-の動作検証)
+  - [File-based Routing](#file-based-routing)
+  - [Dynamic-Routing Path](#dynamic-routing-path)
+  - [Link to Page](#link-to-page)
+  - [Custom Error Page](#custom-error-page)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -99,3 +103,23 @@ HTML ボディの一部だけ載せておくが、確かにブラウザで HTML 
   </div>
 </body>
 ```
+
+### File-based Routing
+
+`Next.js` では、`pages` フォルダ以下にコンポーネントを配置することで、ファイル名をベースにレンダリングを行うことができる。
+
+例えば以下のようなファイル構造になっている場合、それぞれファイル名に従う URL にアクセスすれば、ページが表示されることがわかる。
+
+```bash
+/pages
+├── index.tsx       # http://localhost:3000/
+├── about.tsx       # http://localhost:3000/about
+└── /users
+    ├── index.tsx   # http://localhost:3000/users
+    └── [id].tsx    # http://localhost:3000/users/1
+```
+
+> `/pages/about.tsx` は `/pages/about/index.tsx` と同等である
+
+また、`[id]` のようなファイル名にすることで、URL が動的に変化する場合のページを作成することができる。
+
