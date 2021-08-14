@@ -188,3 +188,31 @@ const BookPage: NextPage = () => {
 };
 ```
 
+### Link to Page
+
+直接 URL を入力してアクセスする以外にも、HTML での `<a>` タグに相当する機能を `Next.js` は有している。
+
+例えば以下のように使用することで、指定した URL に対するリンクを作成することができる。
+
+```ts
+import Link from 'next/link';
+
+const Home: NextPage = () => {
+  return (
+    <div>
+      <h1>Hello Next App</h1>
+      <ul>
+        <li>
+          <Link href="/users">Users Page</Link>
+        </li>
+        <li>
+          <Link href="/collections">Collections Page</Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
+```
+
+通常の `<a>` タグと異なる点は、ルーティングを行う際に HTTP リクエストを伴わない点である。
+
