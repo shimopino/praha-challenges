@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "formulahendry.auto-close-tag",
+    "coenraads.bracket-pair-colorizer",
+    "ionutvmi.path-autocomplete",
+    "christian-kohler.path-intellisense",
+    "prisma.prisma"
+  ]
+}
