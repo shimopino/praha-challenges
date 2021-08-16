@@ -17,3 +17,43 @@
 今回対象とするデータ構造は以下になる。
 
 ![](assets/aggregation.png)
+
+上記のデータモデリングを反映させた Prisma のスキーマを以下のように定義する。
+
+```prisma
+model User {
+  id      Int      @id @default(autoincrement())
+  name    String
+  email   String
+  posts   Post[]
+  reviews Review[]
+
+  @@map("user")
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  contents  String
+  published Boolean   @default(false)
+  Author    User      @relation(fields: [authorId], references: [id])
+  authorId  Int
+  reviews   Review[]
+  postedAt  DateTime? @default(now())
+
+  @@map("post")
+}
+
+model Review {
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  post       Post      @relation(fields: [postId], references: [id])
+  postId     Int
+  contents   String?
+  rating     Int
+  reviewedAt DateTime? @default(now())
+
+  @@unique([userId, postId])
+  @@map("review")
+}
+```
