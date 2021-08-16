@@ -1,0 +1,46 @@
+@startuml aggregation
+
+skinparam Linetype ortho
+
+entity ユーザー {
+    * ID
+    ---
+    名前
+    メールアドレス
+}
+
+entity 記事 {
+    * ID
+    ---
+    タイトル
+    内容
+    公開ステータス
+    投稿日
+    + ユーザーID [FK]
+}
+
+note top of 記事
+    タイトルは必須
+    内容は必須
+    公開ステータスは公開、非公開
+end note
+
+entity レビュー {
+    + ユーザーID
+    + 記事ID
+    ---
+    内容
+    レーティング
+    投稿日
+}
+
+note top of レビュー
+    内容は任意
+    レーティングは必須 (1,2,3,4,5)
+end note
+
+ユーザー ||-r-o{ 記事
+ユーザー ||-r-o{ レビュー
+記事 ||-l-o{ レビュー
+
+@enduml
