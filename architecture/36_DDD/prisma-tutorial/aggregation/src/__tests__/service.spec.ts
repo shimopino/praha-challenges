@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { GetPostService } from '../post/service';
+import { GetPostService } from 'src/post/service';
 
 describe('GetPostService', () => {
   let service: GetPostService;
@@ -19,6 +19,9 @@ describe('GetPostService', () => {
   afterEach(async () => {
     await prisma.truncate();
     await prisma.resetSequences();
+  });
+
+  afterAll(async () => {
     await prisma.$disconnect();
   });
 
