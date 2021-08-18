@@ -57,3 +57,27 @@ model Review {
   @@map("review")
 }
 ```
+
+## 再現したい SQL
+
+```sql
+-- 登録されているユーザーの一覧を取得する
+SELECT * FROM User;
+
+-- 2つのテーブルを結合する
+SELECT * FROM User
+INNER JOIN Post ON Post.authorId = User.id;
+
+-- ユーザーが所有している記事の総数を計算する
+SELECT id, COUNT(*) FROM User
+INNER JOIN Post ON Post.authorId = User.id;
+
+-- 特定のユーザーのレビューを投稿日の降順で取得する
+SELECT * FROM Review
+WHERE userId = '1'
+ORDER BY reviewedAt DESC;
+
+-- 公開されている記事のみを取得する
+SELECT * FROM Post
+WHERE published IS TRUE;
+```
