@@ -9,10 +9,10 @@ export interface Props {
 
 export const Move = ({ history, jumpTo }: Props) => {
   const moves = history.map((step, move) => {
-    const desc = move ? `Go to move#${move}` : `Go to game start`;
+    const desc = move ? `Go to move #${move}` : `Go to game start`;
     return (
       <li>
-        <button type="button" onClick={() => jumpTo(move)}>
+        <button type="button" onClick={() => jumpTo(move)} data-e2e="move">
           {desc}
         </button>
       </li>

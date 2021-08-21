@@ -1,0 +1,11 @@
+@startuml intention_lock
+
+skinparam style strictuml
+
+participant transactionA as TranA
+database database as db
+participant transactionB as TranB
+
+
+
+@enduml

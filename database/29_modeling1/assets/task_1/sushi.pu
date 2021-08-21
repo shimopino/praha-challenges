@@ -1,0 +1,16 @@
+@startuml sushi
+
+!include settings.pu
+
+!include customer.pu
+!include item.pu
+!include order.pu
+!include tax.pu
+
+顧客 ||-ri-o{ 注文
+単品注文明細 }o-do-|| 単品商品
+セット注文明細 }o-do-|| セット商品
+単品注文明細 }o-ri-|| 税率
+セット注文明細 }o-ri-|| 税率
+
+@enduml

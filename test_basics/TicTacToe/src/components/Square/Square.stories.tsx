@@ -21,13 +21,13 @@ Default.args = {
 export const X = Template.bind({});
 X.args = {
   ...Default.args,
-  value: '半',
+  value: 'X',
 };
 
 export const O = Template.bind({});
 O.args = {
   ...Default.args,
-  value: '丁',
+  value: 'O',
 };
 
 // 以下はTypeScriptでコンパイルエラーが発生する

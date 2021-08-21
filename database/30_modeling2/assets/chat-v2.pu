@@ -1,0 +1,80 @@
+@startuml chat-v2
+
+title "隣接テーブルを使ったSlackアプリ"
+
+skinparam linetype ortho
+
+/'
+  イベント系テーブル: E
+  リソース系テーブル: R
+'/ 
+!define EVENT_MARK_COLOR AAFFAA
+!define RESOURCE_MARK_COLOR FFAA00
+
+package ユーザ {
+    entity ユーザ <<R,RESOURCE_MARK_COLOR>> {
+        * ユーザID
+        ---
+        ユーザ名
+    }
+
+    entity チャンネル所属 <<R,RESOURCE_MARK_COLOR>> {
+        * ユーザID [FK]
+        * チャンネルID [FK]
+        --
+        ユーザステータス
+    }
+
+    entity ワークスペース所属 <<R,RESOURCE_MARK_COLOR>> {
+        * ユーザID [FK]
+        * ワークスペースID [FK]
+        --
+        ユーザステータス
+    }
+
+    ユーザ ||--|{ チャンネル所属
+    ユーザ ||--|{ ワークスペース所属
+}
+
+package ワークスペース構造 {
+    entity ワークスペース <<R,RESOURCE_MARK_COLOR>> {
+        * ワークスペースID
+        --
+        ワークスペース名
+    }
+
+    entity チャンネル <<R,RESOURCE_MARK_COLOR>> {
+        * チャンネルID
+        --
+        チャンネル名
+    }
+
+    entity ワークスペース内チャンネル <<R,RESOURCE_MARK_COLOR>> {
+        * ワークスペースID [FK]
+        * チャンネルID [FK]
+    }
+
+    ワークスペース ||--|{ ワークスペース内チャンネル
+    チャンネル ||--|{ ワークスペース内チャンネル
+}
+
+package メッセージ {
+    entity メッセージ <<E, EVENT_MARK_COLOR>> {
+        * メッセージID
+        --
+        + ユーザID [FK]
+        + チャンネルID [FK]
+        + 親メッセージID [FK]
+        投稿日時
+        投稿内容
+    }
+
+    メッセージ }|--|| メッセージ
+}
+
+チャンネル所属 }|--|| チャンネル
+ワークスペース所属 }|--|| ワークスペース
+ユーザ ||--o{ メッセージ 
+チャンネル ||--o{ メッセージ
+
+@enduml

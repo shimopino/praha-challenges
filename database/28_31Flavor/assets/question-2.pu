@@ -1,0 +1,28 @@
+@startuml question-2
+
+skinparam Linetype ortho
+
+entity Student {
+    * id: varchar [PK]
+    ---
+    name: varchar
+    status: varchar [FK]
+}
+
+entity Status {
+    * id: varchar [PK]
+    ---
+    name: varchar
+}
+
+entity StudentStatus {
+    + student_id: varchar [FK]
+    + status_id: varcahr [FK]
+}
+
+note right of StudentStatus : 生徒に複数の\nステータスを\n付与可能
+
+Student ||--o{ StudentStatus
+Status ||--o{ StudentStatus
+
+@enduml

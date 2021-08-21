@@ -1,0 +1,24 @@
+@startuml Bad ER
+
+hide circle
+
+skinparam linetype ortho
+
+entity "assignee" as assignee {
+  * id: varchar [PK]
+}
+
+note left of assignee: "あるasigneeに対して\n issueは0以上紐づいている"
+
+entity "issue" as issue {
+  * id: varchar [PK]
+  ---
+  text: varchar
+  assigned_to_id: varchar [FK]
+}
+
+note left of issue: "あるissueに対しては\n assigneeは0~1人割り当てられる"
+
+assignee |o--o{ issue
+
+@enduml

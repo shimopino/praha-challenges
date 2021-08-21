@@ -1,0 +1,25 @@
+@startuml
+
+entity Products {
+    + id: number [PK]
+    ---
+    text: varchar
+}
+
+entity Tags {
+    + id: number [PK]
+    ---
+    tag: varchar
+}
+
+entity Taggings {
+    + id: number [PK]
+    ---
+    # product_id [FK]
+    # tag_id [FK]
+}
+
+Products    ||-ri-o{ Taggings
+Taggings    }o-ri-|| Tags
+
+@enduml

@@ -1,0 +1,23 @@
+@startuml question-1
+
+entity Student {
+    * id: varchar [PK]
+    ---
+    name: varchar
+    isGraduated: boolean
+    status: varchar
+}
+
+entity StudentStatus {
+    * id: varchar [PK]
+    ---
+    name: varchar
+}
+
+note right of Student: isGraduatedで\n「在学中」と「卒業」\nを表現する
+
+note right of StudentStatus: 他のステータスは\n別のテーブルに持たせる
+
+Student }o--|| StudentStatus
+
+@enduml

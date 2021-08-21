@@ -1,0 +1,39 @@
+@startuml penpen-v1
+
+skinparam Linetype ortho
+
+package ユーザ {
+    entity ユーザ {
+        * ユーザID
+        --
+        ユーザ名
+    }
+}
+
+package リマインダー {
+    entity タスク {
+        * タスクID
+        --
+        文面
+        作成ユーザID [FK]
+    }
+
+    entity リマインド周期 {
+        * リマインド周期ID
+        --
+        周期期間
+    }
+
+    entity リマインドユーザ {
+        * タスクID
+        * ユーザID
+        --
+        タスクステータス
+    }
+}
+
+タスク ||--|{ リマインドユーザ
+ユーザ ||-r-o{ リマインドユーザ
+ユーザ ||-r-o{ タスク
+
+@enduml
