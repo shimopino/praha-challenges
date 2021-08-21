@@ -21,13 +21,13 @@ Default.args = {
 export const AllX = Template.bind({});
 AllX.args = {
   ...Default.args,
-  squares: Array(9).fill('半'),
+  squares: Array(9).fill('X'),
 };
 
 export const AllO = Template.bind({});
 AllO.args = {
   ...Default.args,
-  squares: Array(9).fill('丁'),
+  squares: Array(9).fill('O'),
 };
 
 // TypeScript的にはここは undefined は許容する?
