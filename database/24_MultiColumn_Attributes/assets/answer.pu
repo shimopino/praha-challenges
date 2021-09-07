@@ -1,0 +1,25 @@
+@startuml answer
+
+entity Post {
+    * id: varchar [PK]
+    ---
+    content: varchar
+}
+
+entity Taggings {
+    * id: varchar [PK]
+    ---
+    + post_id: varchar [FK]
+    + tag_id: varchar [FK]
+}
+
+entity Tag {
+    * id: varchar [PK]
+    ---
+    content: varchar
+}
+
+Post ||-r-o{ Taggings
+Tag ||-l-o{ Taggings
+
+@enduml

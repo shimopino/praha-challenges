@@ -1,0 +1,148 @@
+@startuml sushi
+
+skinparam Linetype ortho
+!define MASTER_MARK_COLOR AAFFAA
+!define TRANSACTION_MARK_COLOR FFAA00
+
+note as 疑問点
+    Q1
+    ユーザー登録なしで注文できる
+    ようにするにはどうすればいいか
+
+    Q2
+    税抜きの価格と税込みの価格を
+    商品マスタに持たせておくべきか
+    ↓
+    税込み価格は税率から計算する
+end note
+
+package 顧客マスタ {
+    entity 顧客 <<M,MASTER_MARK_COLOR>> {
+        * 顧客ID
+        --
+        お名前
+        電話番号
+    }
+
+    note left of 顧客
+        注文を行ったお客と
+        持ち帰りをする人や
+        電話番号は異なる
+        可能性がある
+    end note
+}
+
+package 税マスタ {
+    entity 消費税区分 <<M,MASTER_MARK_COLOR>> {
+        * 消費税区分ID
+        --
+        消費税区分名
+    }
+
+    note left of 消費税区分
+        1: 通常税率
+        2: 軽減税率
+        3: 非課税
+    end note
+
+    entity 税率区分 <<M,MASTER_MARK_COLOR>> {
+        * 税率区分
+        --
+        適用開始日
+        適用終了日
+        消費税区分ID [FK]
+        税率
+    }
+
+    note bottom of 税率区分
+        適用期間は以下のように設定
+        2019/10/01 ~ 2099/12/31
+        注文日を検索条件に含める
+    end note
+
+    消費税区分 ||--|{ 税率区分
+}
+
+package 商品マスタ {
+    entity 商品 <<M,MASTER_MARK_COLOR>> {
+        * 商品ID
+        --
+        商品名
+        通常価格
+        商品カテゴリID [FK]
+        消費税区分ID [FK]
+        セット商品区分
+    }
+
+    entity 商品カテゴリ <<M,MASTER_MARK_COLOR>> {
+        * 商品カテゴリID
+        --
+        カテゴリ名
+    }
+
+    entity セット商品構成 <<M,MASTER_MARK_COLOR>> {
+        * セット商品ID [FK]
+        * 商品ID [FK]
+        --
+        個数
+    }
+
+    note bottom of セット商品構成
+        セット商品IDには、
+        商品マスタの中の
+        セット商品区分が
+        Trueの商品IDになる
+
+        対象のセット商品IDが
+        どの商品で構成されて
+        いるのかを示す
+    end note
+
+    商品 }o--|| 商品カテゴリ
+    商品 ||--o{ セット商品構成
+    商品 ||--o{ セット商品構成
+}
+
+package 注文管理 {
+    entity 注文 <<T,TRANSACTION_MARK_COLOR>> {
+        * 注文ID
+        --
+        顧客ID [FK]
+        注文日時
+        お名前
+        電話番号
+        支払い済みフラグ
+    }
+
+    entity 注文明細 <<T,TRANSACTION_MARK_COLOR>> {
+        * 注文ID [FK]
+        * 商品ID [FK]
+        --
+        個数
+        わさびあり
+        適用税率
+        シャリ種別ID [FK]
+    }
+
+    entity シャリ種別 <<M,MASTER_MARK_COLOR>> {
+        * シャリ種別ID
+        --
+        シャリ種別名
+    }
+
+    note bottom of シャリ種別
+        シャリの種別が
+        格納される
+        1: 大
+        2: 小
+    end note
+
+    注文 ||-do-o{ 注文明細
+    注文明細 }o--|| シャリ種別
+}
+
+商品 ||-le-o{ 消費税区分
+顧客 }o-le-|| 注文
+注文明細 }o-le-|| 商品
+
+@enduml

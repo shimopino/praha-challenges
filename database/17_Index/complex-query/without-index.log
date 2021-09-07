@@ -1,0 +1,97 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "1080067.75"
+    },
+    "nested_loop": [
+      {
+        "table": {
+          "table_name": "YP2",
+          "access_type": "ALL",
+          "rows_examined_per_scan": 298980,
+          "rows_produced_per_join": 298980,
+          "filtered": "100.00",
+          "cost_info": {
+            "read_cost": "3739.75",
+            "eval_cost": "29898.00",
+            "prefix_cost": "33637.75",
+            "data_read_per_join": "6M"
+          },
+          "used_columns": [
+            "HIRE_YEAR",
+            "NEW_EMPLOYEES"
+          ],
+          "materialized_from_subquery": {
+            "sharing_temporary_table_with": {
+              "select_id": 2
+            }
+          }
+        }
+      },
+      {
+        "table": {
+          "table_name": "YP1",
+          "access_type": "ref",
+          "possible_keys": [
+            "<auto_key0>"
+          ],
+          "key": "<auto_key0>",
+          "used_key_parts": [
+            "HIRE_YEAR"
+          ],
+          "key_length": "5",
+          "ref": [
+            "func"
+          ],
+          "rows_examined_per_scan": 10,
+          "rows_produced_per_join": 2989800,
+          "filtered": "100.00",
+          "cost_info": {
+            "read_cost": "747450.00",
+            "eval_cost": "298980.00",
+            "prefix_cost": "1080067.75",
+            "data_read_per_join": "68M"
+          },
+          "used_columns": [
+            "HIRE_YEAR",
+            "NEW_EMPLOYEES"
+          ],
+          "attached_condition": "(`YP1`.`HIRE_YEAR` = (`YP2`.`HIRE_YEAR` - 1))",
+          "materialized_from_subquery": {
+            "using_temporary_table": true,
+            "dependent": false,
+            "cacheable": true,
+            "query_block": {
+              "select_id": 2,
+              "cost_info": {
+                "query_cost": "30130.25"
+              },
+              "grouping_operation": {
+                "using_temporary_table": true,
+                "using_filesort": false,
+                "table": {
+                  "table_name": "employees",
+                  "access_type": "ALL",
+                  "rows_examined_per_scan": 298980,
+                  "rows_produced_per_join": 298980,
+                  "filtered": "100.00",
+                  "cost_info": {
+                    "read_cost": "232.25",
+                    "eval_cost": "29898.00",
+                    "prefix_cost": "30130.25",
+                    "data_read_per_join": "38M"
+                  },
+                  "used_columns": [
+                    "emp_no",
+                    "hire_date"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+@startuml problem
+
+entity Manga {
+    * id: varchar [PK]
+    ---
+    name: varchar 
+}
+
+entity Novel {
+    * id: varchar
+    ---
+    name: varchar
+}
+
+entity Comment {
+    * id: varchar
+    ---
+    text: varchar
+    belongs_to_id: varchar
+}
+
+Manga ||-r-o{ Comment
+Novel ||-l-o{ Comment
+
+@enduml

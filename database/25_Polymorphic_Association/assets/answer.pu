@@ -1,0 +1,40 @@
+@startuml answer
+
+entity Manga {
+    * manga_id: varchar [PK]
+    ---
+    name: varchar 
+}
+
+entity Novel {
+    * novel_id: varchar
+    ---
+    name: varchar
+}
+
+entity Comment {
+    * comment_id: varchar
+    ---
+    text: varchar
+}
+
+entity MangaComment {
+    * id: varchar
+    ---
+    + manga_id: varchar [FK]
+    + comment_id: varchar [FK]
+}
+
+entity NovelComment {
+    * id: varchar
+    ---
+    + novel_id: varchar [FK]
+    + comment_id: varchar [FK]
+}
+
+Comment ||-l-o{ MangaComment
+Manga ||--o{ MangaComment
+Comment ||-r-o{ NovelComment
+Novel ||--o{ NovelComment
+
+@enduml

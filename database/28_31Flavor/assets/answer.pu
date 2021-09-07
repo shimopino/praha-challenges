@@ -1,0 +1,18 @@
+@startuml answer
+
+entity Student {
+    * student_id: varchar [PK]
+    ---
+    name: varchar
+    + status: varchar [FK]
+}
+
+entity StudentStatus {
+    * status_id: varchar [PK]
+    ---
+    name: varchar
+}
+
+Student }o--|| StudentStatus
+
+@enduml

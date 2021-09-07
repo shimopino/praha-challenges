@@ -1,0 +1,12 @@
+@startuml
+
+hide footbox
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+
+Client -> Server: POST /upload\nX-File-Id: <file identifier>\nX-Start-Byte: <byte which are resuming> 
+Client -> Server: GET /status\nX-File-Id: <file identifier>
+Server -> Client: return bytes has been already received
+Server -> Client: end
+
+@enduml

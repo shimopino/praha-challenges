@@ -1,0 +1,37 @@
+@startuml quiz2
+
+hide circle
+
+skinparam linetype ortho
+
+entity "users" as users {
+  * id: varchar [PK]
+  ---
+  name: varchar
+}
+
+entity "likes" as likes {
+  * id: varchar [PK]
+  ---
+  user_id: varchar
+  post_id: varchar
+  comment_id: varchar
+}
+
+entity "posts" as posts {
+  * id: varchar [PK]
+  ---
+  description: TEXT
+}
+
+entity "comments" as comments {
+  * id: varchar [PK]
+  ---
+  contents: varchar
+}
+
+users ||-r-o{ likes
+posts ||--o{ likes
+comments ||--o{ likes
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml quiz1_ansewr
+
+entity "users" as users {
+  * user_id: number [PK]
+  ---
+  name: varchar
+}
+
+entity "tweet" as tweet {
+  * tweet_id: number [PK]
+  ---
+  contents: varchar
+}
+
+entity "likes" as likes {
+    * id: number [PK]
+    ---
+    user_id: number [FK]
+    tweet_id: number [FK]
+}
+
+users ||-r-o{ likes
+likes }o-r-|| tweet
+
+@enduml

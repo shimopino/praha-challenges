@@ -49,6 +49,18 @@
   - [rest parameters](#rest-parameters)
   - [Destructuring](#destructuring)
   - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99-2)
+- [&#035;5 Class & Interface](#5-class--interface)
+  - [constructor](#constructor)
+  - [instantiation](#instantiation)
+  - [private & public](#private--public)
+  - [readonly](#readonly)
+  - [inheritance](#inheritance)
+  - [override](#override)
+  - [Getter & Setter](#getter--setter)
+  - [static](#static)
+  - [abstract](#abstract)
+  - [singleton](#singleton)
+  - [interface](#interface)
 - [&#035;14 React & TypeScript](#14-react--typescript)
   - [Adding TypeScript](#adding-typescript)
   - [Basic React](#basic-react)
@@ -852,6 +864,274 @@ JavaScript での主な型
 
 - [JS 機能一覧](https://kangax.github.io/compat-table/es6/)
 - [モダンな JavaScript の機能](https://typescript-jp.gitbook.io/deep-dive/future-javascript)
+
+## #5 Class & Interface
+
+### constructor
+
+- TypeScriptを使用すれば、他の言語と似たような間隔でオブジェクト指向プログラミングを実現できる
+- 以下では、部署の名称を有するオブジェクトを作成してみる
+
+  ```js
+  class Department {
+    // オブジェクトが保持するプロパティを指定する
+    name: string;
+
+    constructor(name: string) {
+      this.name = name;
+    }
+  }
+
+  // クラスをインスタンス化させてコンソールに表示する
+  const accounting = new Department("Accounting");
+  console.log(accounting);
+  ```
+
+### instantiation
+
+- 注意点としては、クラス内のプロパティにアクセスする際には、`this` キーワードを指定して、インスタンス自身を参照する必要がある点である
+- 引数に明示的に参照するオブジェクトを指定することができる
+
+  ```js
+  class Department {
+    // オブジェクトが保持するプロパティを指定する
+    name: string;
+
+    constructor(name: string) {
+      this.name = name;
+    }
+
+    describe(this: Department) {
+      console.log(`Department: ${this.name}`);
+    }
+  }
+  ```
+
+### private & public
+
+- 上記の `name` はメソッド経由でなくでも、インスタンスオブジェクトから直接編集することができてしまう
+- プロパティに対して修飾子を指定することで、クラス外からのプロパティへのアクセスを制限することができる
+- 設定できる修飾子の例は以下になる。
+  - `private`
+  - `public`
+
+    ```js
+    class Department {
+      // クラス外からアクセス可能
+      public name: string;
+      // クラス外からアクセス不可能
+      private employees: string = [];
+
+      constructor(name: string) {
+        this.name = name;
+      }
+
+      addEmployee(employee) {
+        this.employees.push(employee);
+      }
+    }
+  ```
+
+- なおコンストラクタでアクセス修飾子を使用することで、コンストラクタ実行時に、引数と全く同じ名称のプロパティを設定できる。
+
+  ```js
+  class Department {
+
+    constructor(private id: string, public name: string)
+  }
+  ```
+
+### readonly
+
+- 読み取り専用のアクセス修飾子も存在している。
+- 例えば初期化時に実行するIDの決定などで `readonly` を設定することで、読み取り不可の設定を追加できる。
+
+  ```js
+  class Department {
+
+    constructor(private readonly id: string, public name: string) {
+      // ...
+    }
+  }
+  ```
+
+- なお生成されるJavaScriptではプロトタイプオブジェクトにメソッドが追加されている
+- 参考資料
+  - [継承とプロトタイプチェーン](https://developer.mozilla.org/ja/docs/Web/JavaScript/Inheritance_and_the_prototype_chain)
+
+### inheritance
+
+- `extends` キーワードを使用することで、特定のクラスを継承することができる
+
+  ```js
+  // ITDepartmentのインスタンスは、Departmentのメソッドを使用することができる
+  class ITDepartment extends Department {
+    constructor(id: string, private admins: string[]) {
+      super(id, "IT");
+      // super() の後で this を使用できる
+      this.admins = admins;
+    }
+  }
+
+  class AccountingDepartment extends Department {
+    constructor(id: string, private reports: string[]) {
+      super(id, "Accounting");
+    }
+
+    addReport(text: string) {
+      this.reports.push(text);
+    }
+  }
+  ```
+
+### override
+
+- 親クラスを継承する際に、親クラスと同じシグニチャを指定することで、メソッドを Override することが可能である
+- また親クラスのプロパティに `protected` を使用することで、子クラスからもプロパティにアクセスすることが可能となる
+
+  ```js
+  class Department {
+    // "protected" なプロパティは子クラスからアクセス可能
+    protected employees: string[];
+    constructor(private id: string, public name: string)
+
+    addEmployee(employee: text) {
+      // something
+    }
+  }
+
+  class AccountingDepartment extends Department {
+
+    // override
+    addEmployee(employee: string) {
+      // have access to "protected" property
+      this.employees.push(employee);
+    }
+  }
+  ```
+
+### Getter & Setter
+
+- TypeScript では `get` と `set` を使用することで、プロパティのようにメソッドを実行することができる
+- Python とかの `@getter` のような挙動になる
+
+  ```js
+  class Department {
+    private lastReport: string[];
+
+    get mostRecentReport) [
+      if (this.lastReport) {
+        return this.lastReport;
+      }
+      throw new error("there isn't any report");
+    ]
+
+    set mostRecentReport(value: string) {
+      if (!value) {
+        throw new Error("正しい値を設定してください");
+      }
+      this.addReport(value);
+    }
+
+    // ...
+  }
+
+  const SampleDepartment = new Department(/* コンストラクタ指定 */)
+
+  // getter の起動
+  SampleDepartment.mostRecentReport;
+
+  // setter の起動
+  SampleDepartment.mostRecentReport = "sample Report";
+  ```
+
+### static
+
+- `static` を追加することで、クラスをインスタンス化させることなく、使用可能なメソッドを作成できる
+- 使い勝手としては `Math.pi` のようにインスタンス化させることなく、ユーティリティ関数のような処理を実行することができる
+
+  ```js
+  class Department {
+    static fiscalYear = 2020;
+
+    static createUser(name: string) {
+      return {name: name}
+    }
+  }
+
+  // 直截呼び出しが可能
+  const employee = Department.createUser("Max");
+  console.log(Department.fiscalYear);
+  ```
+
+- ただし `static` 名プロパティやメソッドは、`static` ではないメソッドなどからアクセスすることができない
+
+### abstract
+
+- `abstract` 修飾子を指定することで、メソッドの `override` を強制することができる
+- ただし抽象メソッドを設定する場合には、抽象クラスに変換する必要がある
+
+  ```js
+  abstract class Department {
+
+    // メソッドの名称、引数、返り値という構造を指定しているのみ
+    // 実装は extends しているクラスで "必ず" 実装する必要がある
+    abstract describe(this: Department): void;
+  }
+  ```
+
+- 注意点は、抽象クラスはインスタンス化させることができないため、必ず継承する必要がある
+
+### singleton
+
+- シングルトンのデザインパターンを使用することで、オブジェクトを必ず1つに限定させることができる
+- コンストラクタを `private` メソッドにしてしまい、`static` メソッドから呼び出す形にする
+
+  ```js
+  class Department {
+    // クラス自体が保持しているプロパティ
+    ]private static instance: Department; 
+
+    static getInstance() {
+      // ここでの this は static メソッドのクラスをさしている
+      if (this.instance) {
+        return this.instance;
+      }
+
+      // 以下は最初の1回しか実行されない
+      this.insstance = new Department("sample");
+      return this.instance;
+    }
+  }
+  ```
+
+### interface
+
+- `interface` キーワードを使用することで、クラスの構造だけを設計することができる
+- 主にデータの構造などを設計するために使用される
+
+  ```js
+  interface Person {
+    name: string;
+    age: number;
+
+    greet(phrase: string): void;
+  }
+  ```
+
+- インターフェースを指定することで、新たに型として使用することができる
+
+  ```js
+  let user1: Person;
+
+  user1 = {
+    name: "max",
+    age: 30,
+    greet(phrase: string) {
+      console.log(`${phrase} ${this.mame}`)
+    }
+  }
+  ```
 
 ## #14 React & TypeScript
 
