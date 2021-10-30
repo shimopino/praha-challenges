@@ -5,9 +5,10 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -53,6 +54,9 @@ npm install @nestjs/typeorm typeorm sqlite3
 export class AppModule {}
 ```
 
+- `synchronize`
+  - 開発時に使用する設定であり、SQLite でのマイグレーションを同期させて実行する
+
 ## Entity
 
 TypeORM でエンティティを作成するには、まずは以下のようにクラスを作成する。
@@ -70,6 +74,9 @@ export class User {
   password: string;
 }
 ```
+
+- `@PrimaryGeneratedColumn`
+  - DB 側で主キーを自動採番する設定
 
 あとはこのエンティティを使用するモジュール内で設定に追加する必要がある。
 
