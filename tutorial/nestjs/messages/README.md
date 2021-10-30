@@ -134,3 +134,41 @@ Connection: close
 - `class-validator`
   - 変換されたインスタンスの各プロパティに対して、指定されたアノテーションに該当する検証処理を実行する
   - 検証処理に違反した場合は、その時点でステータスコードが 400 系のコードでレスポンスを返す
+<<<<<<< HEAD
+=======
+
+### TypeScript / JavaScript
+
+バリデーションを実行しているコードは `JavaScript` であることを意識する必要があり、以下のように `TypeScript` のコードは実際に実行されるわけではなく、変換されたコードが実行されている。
+
+- TypeScript
+  - `addMessage(@Body() body: CreateMessageDTO) {}`
+- JavaScript
+  - `addMessage(body) {}`
+
+この時の処理がどのように実行されているのか確認するための方法の 1 つが `TypeScript` のコンパイル設定であり、以下のようの設定を有効にしておくことで、デコレータなどの処理がどのようにマッピングされているのか理解することができる。
+
+```json
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+```
+
+以下が実際に出力されている `JavaScript` のコードである。
+
+```js
+//
+__decorate(
+  [
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata('design:type', Function),
+    __metadata('design:paramtypes', [create_message_dto_1.CreateMessageDTO]),
+    __metadata('design:returntype', void 0),
+  ],
+  MessagesController.prototype,
+  'createMessage',
+  null,
+);
+```
+
+>>>>>>> 3c3efc7 (バリデーション処理の背景で実施されていることの説明 #151)
