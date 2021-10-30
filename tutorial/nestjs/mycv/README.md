@@ -9,6 +9,7 @@
   - [init](#init)
   - [ORM](#orm)
   - [Entity](#entity)
+  - [Validation](#validation)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -88,4 +89,39 @@ export class User {
   imports: [TypeOrmModule.forFeature([User])],
 })
 export class UsersModule {}
+```
+
+## Validation
+
+セキュリティを考慮して、バリデーション設定に `whitelist: true` を追加することで設定されているプロパティのみを受け付けるようにする。
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
+  await app.listen(3000);
+}
+```
+
+つまり以下のように HTTP ボディを送信することを考える。
+
+```json
+{
+  "email": "example@example.com",
+  "password": "example",
+  "admin": true
+}
+```
+
+この場合 `whitelist: true` を設定した上で、メールアドレスとパスワードのみを受け取るように設定しておけば、以下のように特定のプロパティのみを受け取ることができる。
+
+```json
+{
+  "email": "example@example.com",
+  "password": "example"
+}
 ```
