@@ -5,15 +5,17 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [CLI](#cli)
-  - [Module](#module)
-  - [Controller](#controller)
-- [Validation Pipe](#validation-pipe)
-  - [implement ValidationPipe](#implement-validationpipe)
-  - [TypeScript / JavaScript](#typescript--javascript)
-- [Service / Repository](#service--repository)
-  - [implement Repository](#implement-repository)
-  - [Service](#service)
+- [NestJS tutorial: Messages](#nestjs-tutorial-messages)
+  - [CLI](#cli)
+    - [Module](#module)
+    - [Controller](#controller)
+  - [Validation Pipe](#validation-pipe)
+    - [implement ValidationPipe](#implement-validationpipe)
+    - [TypeScript / JavaScript](#typescript--javascript)
+  - [Service / Repository](#service--repository)
+    - [implement Repository](#implement-repository)
+    - [Service](#service)
+  - [Dependency Injection](#dependency-injection)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -247,4 +249,28 @@ export class MessagesService {
     return this.messagesRepo.create(content);
   }
 }
+```
+
+## Dependency Injection
+
+NestJS の DI 機能を使用した以下のコードの出力結果はどのようになるでしょうか。
+
+```ts
+export class MessagesController {
+  constructor(
+    public messagesService: MessagesService,
+    public messagesService2: MessagesService,
+    public messagesService3: MessagesService,
+  ) {
+    console.log(messagesService === messagesService2);
+    console.log(messagesService === messagesService3);
+  }
+}
+```
+
+NestJS では、DI コンテナに一度生成されたインスタンスが指定された箇所に注入されるため、異なる変数名だったとしても同じインスタンスになる。
+
+```bash
+true
+true
 ```
