@@ -8,6 +8,7 @@
 - [CLI](#cli)
   - [Module](#module)
   - [Controller](#controller)
+- [Validation Pipe](#validation-pipe)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
