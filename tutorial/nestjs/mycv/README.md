@@ -5,11 +5,10 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Authentication App](#authentication-app)
-  - [init](#init)
-  - [ORM](#orm)
-  - [Entity](#entity)
-  - [Validation](#validation)
+- [init](#init)
+- [ORM](#orm)
+- [Entity](#entity)
+- [Validation](#validation)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
