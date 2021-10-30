@@ -5,8 +5,7 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [モジュールの動作検証](#モジュールの動作検証)
-  - [Module](#module)
+- [Module](#module)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
