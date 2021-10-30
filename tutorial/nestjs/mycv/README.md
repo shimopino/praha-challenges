@@ -5,8 +5,9 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -31,4 +32,23 @@ nest g service reports
 
 ```bash
 npm install @nestjs/typeorm typeorm sqlite3
+```
+
+`sqlite` でデータを永続化したい場合は、トップレベルのモジュールに `typeorm` のモジュールを追加する。
+
+```ts
+@Module({
+  imports: [
+    UsersModule,
+    ReportsModule,
+    // DBへの接続設定を以下のように追加する
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'db.sqlite',
+      entities: [],
+      synchronize: true,
+    }),
+  ],
+})
+export class AppModule {}
 ```
