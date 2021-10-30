@@ -5,8 +5,10 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -50,4 +52,34 @@ npm install @nestjs/typeorm typeorm sqlite3
   ],
 })
 export class AppModule {}
+```
+
+## Entity
+
+TypeORM でエンティティを作成するには、まずは以下のようにクラスを作成する。
+
+```ts
+// users/users.entity.ts
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+}
+```
+
+あとはこのエンティティを使用するモジュール内で設定に追加する必要がある。
+
+```ts
+// users/users.module.ts
+@Module({
+  controllers: [UsersController],
+  providers: [UsersService],
+  imports: [TypeOrmModule.forFeature([User])],
+})
+export class UsersModule {}
 ```
