@@ -5,16 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [NestJS tutorial: Messages](#nestjs-tutorial-messages)
-  - [CLI](#cli)
-    - [Module](#module)
-    - [Controller](#controller)
-  - [Validation Pipe](#validation-pipe)
-    - [implement ValidationPipe](#implement-validationpipe)
-    - [TypeScript / JavaScript](#typescript--javascript)
-  - [Service / Repository](#service--repository)
-    - [implement Repository](#implement-repository)
-    - [Service](#service)
+- [CLI](#cli)
+  - [Module](#module)
+  - [Controller](#controller)
+- [Validation Pipe](#validation-pipe)
+  - [implement ValidationPipe](#implement-validationpipe)
+  - [TypeScript / JavaScript](#typescript--javascript)
+- [Service / Repository](#service--repository)
+  - [implement Repository](#implement-repository)
+  - [Service](#service)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
