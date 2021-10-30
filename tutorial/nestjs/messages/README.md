@@ -11,6 +11,7 @@
     - [Controller](#controller)
   - [Validation Pipe](#validation-pipe)
     - [implement ValidationPipe](#implement-validationpipe)
+    - [TypeScript / JavaScript](#typescript--javascript)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -134,8 +135,6 @@ Connection: close
 - `class-validator`
   - 変換されたインスタンスの各プロパティに対して、指定されたアノテーションに該当する検証処理を実行する
   - 検証処理に違反した場合は、その時点でステータスコードが 400 系のコードでレスポンスを返す
-<<<<<<< HEAD
-=======
 
 ### TypeScript / JavaScript
 
@@ -170,5 +169,3 @@ __decorate(
   null,
 );
 ```
-
->>>>>>> 3c3efc7 (バリデーション処理の背景で実施されていることの説明 #151)
