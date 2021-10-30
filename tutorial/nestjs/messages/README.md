@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
+
+- [Description](#description)
+- [Installation](#installation)
+- [Running the app](#running-the-app)
+- [Test](#test)
+- [Support](#support)
+- [Stay in touch](#stay-in-touch)
+- [License](#license)
+
+</details>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
