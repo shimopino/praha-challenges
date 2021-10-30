@@ -60,3 +60,18 @@ UPDATE src/messages/messages.module.ts (182 bytes)
 #     ├── messages.controller.ts
 #     └── messages.module.ts
 ```
+
+## Validation Pipe
+
+HTTP リクエストに対して、ユーザーが入力した値が格納されている HTTP ボディの値を検証したい場合、以下のように `ValidationPipe` をアプリケーション全体の設定として追加する必要がある。
+
+```ts
+import { ValidationPipe } from '@nestjs/common';
+
+async function bootstrap() {
+  const app = await NestFactory.create(MessagesModule);
+  // HERE
+  app.useGlobalPipes(new ValidationPipe());
+  await app.listen(3000);
+}
+```
