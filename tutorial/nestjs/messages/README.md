@@ -12,6 +12,9 @@
   - [Validation Pipe](#validation-pipe)
     - [implement ValidationPipe](#implement-validationpipe)
     - [TypeScript / JavaScript](#typescript--javascript)
+  - [Service / Repository](#service--repository)
+    - [implement Repository](#implement-repository)
+    - [Service](#service)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -168,4 +171,81 @@ __decorate(
   'createMessage',
   null,
 );
+```
+
+## Service / Repository
+
+### implement Repository
+
+リポジトリの実装をする前に、どのような処理が必要になるのかそのインターフェースを定義する。
+
+```ts
+export class MessagesRepository {
+  async findOne(id: string) {}
+  async findAll() {}
+  async create(content: string) {}
+}
+```
+
+ここでは `fx/promises` ライブラリを使用してローカルファイルをデータベースとして扱い、アプリケーション上のオブジェクトを処理するようにする。
+
+```ts
+import { readFile, writeFile } from 'fs/promises';
+
+export class MessagesRepository {
+  async findOne(id: string) {
+    const contents = await readFile('messages.json', 'utf8');
+    const messages = JSON.parse(contents);
+
+    return messages[id];
+  }
+
+  async findAll() {
+    const contents = await readFile('messages.json', 'utf8');
+    const messages = JSON.parse(contents);
+
+    return messages;
+  }
+
+  async create(content: string) {
+    const contents = await readFile('messages.json', 'utf8');
+    const messages = JSON.parse(contents);
+
+    const id = Math.floor(Math.random() * 999);
+    messages[id] = { id, content };
+
+    await writeFile('messages.json', JSON.stringify(messages));
+  }
+}
+```
+
+これでリポジトリの実装は完了した。
+
+### Service
+
+サービスの実装としては、リポジトリを呼び出す簡単な処理になる。
+
+```ts
+import { MessagesRepository } from './messages.repository';
+
+export class MessagesService {
+  messagesRepo: MessagesRepository;
+
+  constructor() {
+    // Service is creating its own dependencies
+    this.messagesRepo = new MessagesRepository();
+  }
+
+  findOne(id: string) {
+    return this.messagesRepo.findOne(id);
+  }
+
+  findAll() {
+    return this.messagesRepo.findAll();
+  }
+
+  create(content: string) {
+    return this.messagesRepo.create(content);
+  }
+}
 ```
