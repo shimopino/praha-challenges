@@ -1,0 +1,11 @@
+:root {
+  // 背景色
+  --bg-opacity: 1;
+  --bg-primary: rgba(75, 85, 99, var(--bg-opacity));
+  --bg-secondary: rgba(107, 114, 128, var(--bg-opacity));
+
+  // テキスト設定
+  --text-gray: rgba(243, 244, 246, var(--bg-opacity));
+  --text-blue: rgba(59, 130, 246, var(--bg-opacity));
+  --font-weight-bold: 700;
+}
