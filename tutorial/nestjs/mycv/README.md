@@ -5,18 +5,20 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -398,4 +400,36 @@ if (storedHash !== hash.toString('hex')) {
 }
 
 return user;
+```
+
+### Session
+
+今回は Cookie ベースでセッション管理を実施する。
+
+```bash
+npm install cookie-session @types/cookie-session
+```
+
+ここで NestJS のアプリケーション設定に、ミドルウェアとして追加する。
+
+```ts
+app.use(
+  cookieSession({
+    keys: ['sldjhfas'],
+  }),
+);
+```
+
+こうしておけばコントローラーのハンドラ関数に以下のように引数にセッションを指定しておけば、Cookie に指定の値を登録しておくことが可能となる。
+
+```ts
+@Get('/colors/:color')
+setColor(@Param('color') color: string, @Session() session: any) {
+  session.color = color;
+}
+
+@Get('/colors')
+getColor(@Session() session: any) {
+  return session.color;
+}
 ```
