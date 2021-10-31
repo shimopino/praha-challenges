@@ -5,17 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Atomic Design](#atomic-design)
-  - [自然界からの着想](#%E8%87%AA%E7%84%B6%E7%95%8C%E3%81%8B%E3%82%89%E3%81%AE%E7%9D%80%E6%83%B3)
-  - [Atom とは](#atom-%E3%81%A8%E3%81%AF)
-  - [Molecules とは](#molecules-%E3%81%A8%E3%81%AF)
-  - [Organisms とは](#organisms-%E3%81%A8%E3%81%AF)
-  - [Templates とは](#templates-%E3%81%A8%E3%81%AF)
-  - [Pages とは](#pages-%E3%81%A8%E3%81%AF)
-  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
-- [Class/Functional Component](#classfunctional-component)
-  - [Functional Component](#functional-component)
-  - [Class Component](#class-component)
+- [課題 1](#課題-1)
+  - [Atomic Design](#atomic-design)
+    - [自然界からの着想](#自然界からの着想)
+    - [Atom とは](#atom-とは)
+    - [Molecules とは](#molecules-とは)
+    - [Organisms とは](#organisms-とは)
+    - [Templates とは](#templates-とは)
+    - [Pages とは](#pages-とは)
+    - [参考資料](#参考資料)
+  - [Class/Functional Component](#classfunctional-component)
+    - [Functional Component](#functional-component)
+    - [Class Component](#class-component)
+    - [参考資料](#参考資料-1)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -96,4 +98,92 @@ Web におけるインターフェースも同じように原子要素に分解�
 
 ### Functional Component
 
+関数コンポーネントでは、hooks を使用してコンポーネントの状態管理を行っており、props も関数を実行する際の引数として指定する形式である。
+
+```ts
+type FunctionalComponentProps = {
+  initial: number;
+  min: number;
+  max: number;
+};
+
+export const FunctionalComponent = ({
+  initial = 0,
+  min = 0,
+  max = 10,
+}: FunctionalComponentProps) => {
+  const [count, setCount] = useState(initial);
+
+  const increment = () => {
+    if (count < max) {
+      setCount((prev) => prev + 1);
+    }
+  };
+  const decrement = () => {
+    if (count > min) {
+      setCount((prev) => prev - 1);
+    }
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>increment</button>
+      <button onClick={decrement}>decrement</button>
+    </div>
+  );
+};
+```
+
 ### Class Component
+
+クラスコンポーネントでは、状態管理をクラスのプロパティを通して行っており、クラスのインスタンス化の際の初期値として props を渡している。
+
+また関数コンポーネントと異なり、`render()` 関数を使用して JSX を返す必要がある点や、イベント発生時に実行する関数の指定方法などで、クラスのスコープを考慮する必要がある。
+
+```ts
+type ClassComponentProps = {
+  initial: number;
+  min: number;
+  max: number;
+};
+
+type ClassComponentState = {
+  count: number;
+};
+
+export class ClassComponent extends Component<
+  ClassComponentProps,
+  ClassComponentState
+> {
+  state: ClassComponentState = {
+    count: this.props.initial,
+  };
+
+  increment = () => {
+    if (this.state.count < this.props.max) {
+      this.setState({ count: this.state.count + 1 });
+    }
+  };
+
+  decrement = () => {
+    if (this.state.count > this.props.min) {
+      this.setState({ count: this.state.count - 1 });
+    }
+  };
+
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.increment}>increment</button>
+        <button onClick={this.decrement}>decrement</button>
+      </div>
+    );
+  }
+}
+```
+
+### 参考資料
+
+- [https://github.com/typescript-cheatsheets/react](https://github.com/typescript-cheatsheets/react)
