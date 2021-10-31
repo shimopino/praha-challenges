@@ -307,3 +307,27 @@ export class SerializeInterceptor implements NestInterceptor {
   }
 }
 ```
+
+なお以下のようにカスタムアノテーションを作成して、コントローラーに付与できるようにしておくと便利である。
+
+```ts
+export function Serialize(dto: any) {
+  return UseInterceptors(new SerializeInterceptor(dto));
+}
+```
+
+これで以下のようにメソッドだけでなく、クラス全体にも適用できるアノテーションを付与することができた。
+
+```ts
+@Controller('auth')
+@Serialize(UserDto)
+export class UserController {
+  // ...
+
+  @Serialize(UserDto)
+  @Get('/:id')
+  async findUser(@Param('id') id: string) {
+    // ...
+  }
+}
+```
