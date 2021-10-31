@@ -12,7 +12,7 @@
 
 ## 環境設定
 
-以下のコマンドでプロジェクトを初期化する。
+### Next.js
 
 ```bash
 # Next.js アプリケーション (v12) の初期化
@@ -41,7 +41,7 @@ yarn add --dev eslint-plugin-import
 yarn add --dev eslint-plugin-unused-imports
 ```
 
-次に Storybook を利用できる設定を追加する。
+### Storybook
 
 ```bash
 # Storybook の導入
@@ -57,3 +57,18 @@ yarn add -D sass-loader@^10.0.0
 参考資料
 
 - [Next.js+CSSModules(Saas)+Storybook のセットアップ](https://zenn.dev/thim/articles/7c8ceba730dad35d27dc)
+
+## スタイル周りのメモ
+
+参考資料
+
+- [ダークモードにも柔軟に対応できる CSS&Sass 変数のカラー設定方法](https://higemura.com/blog/programming/dark-mode-css-variables-01)
+
+## デザインシステム
+
+参考になるデザインシステムをまとめておく。
+
+- [Polaris](https://polaris.shopify.com/)
+- [React Spectrum](https://react-spectrum.adobe.com/react-spectrum/index.html)
+- [Primer React](https://primer.style/react/)
+- [Primer CSS](https://primer.style/css/)
