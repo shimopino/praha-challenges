@@ -5,12 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -204,3 +207,40 @@ async update(id: number, attrs: Partial<User>) {
   return this.repo.save(user);
 }
 ```
+
+## Exclude
+
+現在では取得したエンティティのプロパティをすべてユーザーに返しているが、一部のプロパティはユーザーに返す必要はない。
+
+こういった場合は以下のように `Exclude` を付与すればいい。
+
+```ts
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  email: string;
+
+  @Column()
+  @Exclude()
+  password: string;
+}
+```
+
+あとは適用したいコントローラーのメソッドにアノテーションを付与すればいい。
+
+```ts
+@UseInterceptors(ClassSerializerInterceptor)
+@Get('/:id')
+async findUser(@Param('id') id: string) {
+  const user = await this.usersService.findOne(parseInt(id));
+  if (!user) {
+    throw new NotFoundException('user not found');
+  }
+
+  return user;
+}
+```
+
+## Interceptors
