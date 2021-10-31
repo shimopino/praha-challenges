@@ -5,15 +5,22 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
+<<<<<<< Updated upstream
+
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+      > > > > > > > Stashed changes
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -329,4 +336,70 @@ export class UserController {
     // ...
   }
 }
+```
+
+今の処理では引数に文字列なども受け入れることができてしまうため、以下のようにクラスのみを指定できるように、型による制限を追加する。
+
+```ts
+interface ClassConstructor {
+  new (...args: any[]): void;
+}
+
+export function Serialize(dto: ClassConstructor) {
+  return UseInterceptors(new SerializeInterceptor(dto));
+}
+```
+
+## Authentication
+
+### Sign Up
+
+まずは登録時に指定されたメールアドレスを他のユーザーも使用していないのか検証する。
+
+```ts
+async signup(email: string, password: string) {
+  const users = await this.usersService.find(email);
+  if (users.length) {
+    throw new BadRequestException('email in use');
+  }
+}
+```
+
+ユーザーの登録時には、メールアドレスとパスワードを保存する必要があるが、パスワードは平文ではなくハッシュ化させた状態で保持するようにする。
+
+そのため `scrypt` ライブラリを使用する。またユーザーのパスワードの文字列数が少ない場合にも対応するため `salt` と呼ばれるハッシュ関数に入力する文字列を自動生成させ、パスワードと組み合わせてハッシュ化させる。
+
+```ts
+const scrypt = promisify(_scrypt);
+
+// ...
+
+const salt = randomBytes(8).toString('hex');
+const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+const result = salt + '.' + hash.toString('hex');
+```
+
+あとはこの内容で DB に登録すればいい。
+
+```ts
+const user = await this.usersService.create(email, result);
+```
+
+### Sign In
+
+ユーザーのログイン時には、登録時と同じ手順でパスワードをハッシュ化させて、DB に登録されているパスワードと比較を行えばいい。
+
+```ts
+const [user] = await this.usersService.find(email);
+
+const [salt, storedHash] = user.password.split('.');
+
+const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+if (storedHash !== hash.toString('hex')) {
+  throw new BadRequestException('bad password');
+}
+
+return user;
 ```
