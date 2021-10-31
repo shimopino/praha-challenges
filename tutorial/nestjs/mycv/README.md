@@ -5,10 +5,12 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -122,5 +124,49 @@ async function bootstrap() {
 {
   "email": "example@example.com",
   "password": "example"
+}
+```
+
+## Create / Save
+
+TypeORM でエンティティを永続化するには、アプリケーション内にエンティティをインスタンスとして生成することと、実際に DB に永続化することが必要となる。
+
+```ts
+create(email: string, password: string) {
+  // インスタンス化させる
+  const user = this.repo.create({email, password})
+
+  // 永続化
+  return this.repo.save(user)
+}
+```
+
+TypeORM では、特定のアノテーションを付与することで、インスタンスを永続化させる前後に処理を挟み込むことができる。
+
+以下のように実装すると、`this.repo.save(user)` が実行された際に、`@AfterInsert()` のメソッドが呼び出される。
+
+```ts
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  email: string;
+
+  @AfterInsert()
+  logInsert() {
+    console.log('Inserted User with id', this.id);
+  }
+
+  @AfterUpdate()
+  logUpdate() {
+    console.log('Updated User with id', this.id);
+  }
+
+  @AfterRemove()
+  logRemove() {
+    console.log('Removed User with id', this.id);
+  }
 }
 ```
