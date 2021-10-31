@@ -36,4 +36,13 @@ yarn add sass
 
 # CSS クラス名の推論ライブラリ
 yarn add -D typescript-plugin-css-modules
+
+# Prettier 設定
+yarn add --dev prettier eslint-config-prettier
+
+# パッケージの読み込み順をアルファベット順に並び替える
+yarn add --dev eslint-plugin-import
+
+# 不要なパッケージを削除する
+yarn add --dev eslint-plugin-unused-imports
 ```
