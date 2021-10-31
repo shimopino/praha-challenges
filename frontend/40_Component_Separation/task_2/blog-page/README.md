@@ -18,14 +18,8 @@
 # Next.js アプリケーション (v12) の初期化
 npx create-next-app@latest --typescript
 
-# Storybook の導入
-npx sb init
-
 # アプリけーションの起動
 yarn dev
-
-# Storybookの起動
-yarn storybook
 
 # CSS のクラス名管理
 yarn add clsx
@@ -46,3 +40,20 @@ yarn add --dev eslint-plugin-import
 # 不要なパッケージを削除する
 yarn add --dev eslint-plugin-unused-imports
 ```
+
+次に Storybook を利用できる設定を追加する。
+
+```bash
+# Storybook の導入
+npx sb init
+
+# Storybookの起動
+yarn storybook
+
+# sass の読み込み問題のため、バージョンを固定しておく
+yarn add -D sass-loader@^10.0.0
+```
+
+参考資料
+
+- [Next.js+CSSModules(Saas)+Storybook のセットアップ](https://zenn.dev/thim/articles/7c8ceba730dad35d27dc)
