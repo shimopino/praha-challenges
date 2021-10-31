@@ -5,9 +5,8 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#課題-1)
-  - [Atomic Design](#atomic-design)
-  - [参考資料](#参考資料)
+- [Atomic Design](#atomic-design)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
