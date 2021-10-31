@@ -244,3 +244,34 @@ async findUser(@Param('id') id: string) {
 ```
 
 ## Interceptors
+
+`Exclude` を使用すれば、ユーザーに返すプロパティを制御することが可能だが、ユーザーの特性に合わせて返すプロパティを選択するようなことはできない。
+
+そこでより柔軟な方法である `Interceptor` を採用する。
+
+```ts
+export class SerializeInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
+    // HTTPリクエストを処理する前に実行する処理
+    console.log('running before the handler', context);
+
+    return handler.handle().pipe(
+      map((data: any) => {
+        // HTTPリクエストを処理した後で実行する処理
+        console.log('running before response is sent out.');
+      }),
+    );
+  }
+}
+```
+
+- `ExecutionContext`
+  - HTTP リクエストに関する情報が含まれている
+- `CallHandler`
+  - 次に実行する処理の情報が含まれている
+
+あとはコントローラーの処理に付与していたアノテーションを以下のように変更すればいい。
+
+```ts
+@UseInterceptors(SerializeInterceptor)
+```
