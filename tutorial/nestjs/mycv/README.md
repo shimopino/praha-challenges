@@ -14,6 +14,7 @@
   - [Update](#update)
   - [Exclude](#exclude)
   - [Interceptors](#interceptors)
+  - [DTO](#dto)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -274,4 +275,35 @@ export class SerializeInterceptor implements NestInterceptor {
 
 ```ts
 @UseInterceptors(SerializeInterceptor)
+```
+
+## DTO
+
+柔軟に変更することが可能な DTO 形式を採用する。
+
+```ts
+export class UserDto {
+  @Expose()
+  id: number;
+
+  @Expose()
+  email: string;
+}
+```
+
+あとは Interceptor を使用して、以下のように DTO に変換してえばえばいい。
+
+```ts
+export class SerializeInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
+    return handler.handle().pipe(
+      map((data: any) => {
+        // Userエンティティを特定のDTOに変換する
+        return plainToClass(UserDto, data, {
+          excludeExtraneousValues: true,
+        });
+      }),
+    );
+  }
+}
 ```
