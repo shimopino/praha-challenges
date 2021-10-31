@@ -5,11 +5,13 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -167,5 +169,39 @@ export class User {
   logRemove() {
     console.log('Removed User with id', this.id);
   }
+}
+```
+
+## Update
+
+エンティティを更新する場合、必ず全てのプロパティをユーザーが指定する必要はない。
+
+このような場合、DTO のプロパティに対して `Optional` な項目であることを指定する必要がある。
+
+```ts
+export class UpdateUserDTO {
+  @IsEmail()
+  @IsOptional()
+  email: string;
+
+  @IsString()
+  @IsOptional()
+  password: string;
+}
+```
+
+TypeORM 経由でエンティティの値を更新する場合は、まず最初にエンティティのインスタンスを取得してから更新する必要がある。
+
+```ts
+async update(id: number, attrs: Partial<User>) {
+  const user = await this.findOne(id);
+
+  if (!user) {
+    throw new Error('user not found');
+  }
+
+  Object.assign(user, attrs);
+
+  return this.repo.save(user);
 }
 ```
