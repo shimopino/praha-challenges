@@ -5,18 +5,17 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#課題-1)
-  - [Atomic Design](#atomic-design)
-    - [自然界からの着想](#自然界からの着想)
-    - [Atom とは](#atom-とは)
-    - [Molecules とは](#molecules-とは)
-    - [Organisms とは](#organisms-とは)
-    - [Templates とは](#templates-とは)
-    - [Pages とは](#pages-とは)
-    - [参考資料](#参考資料)
-  - [Class/Functional Component](#classfunctional-component)
-    - [Functional Component](#functional-component)
-    - [Class Component](#class-component)
+- [Atomic Design](#atomic-design)
+  - [自然界からの着想](#%E8%87%AA%E7%84%B6%E7%95%8C%E3%81%8B%E3%82%89%E3%81%AE%E7%9D%80%E6%83%B3)
+  - [Atom とは](#atom-%E3%81%A8%E3%81%AF)
+  - [Molecules とは](#molecules-%E3%81%A8%E3%81%AF)
+  - [Organisms とは](#organisms-%E3%81%A8%E3%81%AF)
+  - [Templates とは](#templates-%E3%81%A8%E3%81%AF)
+  - [Pages とは](#pages-%E3%81%A8%E3%81%AF)
+  - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
+- [Class/Functional Component](#classfunctional-component)
+  - [Functional Component](#functional-component)
+  - [Class Component](#class-component)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
