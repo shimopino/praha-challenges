@@ -26,4 +26,14 @@ yarn dev
 
 # Storybookの起動
 yarn storybook
+
+# CSS のクラス名管理
+yarn add clsx
+
+# Sass
+# https://nextjs.org/docs/basic-features/built-in-css-support#sass-support
+yarn add sass
+
+# CSS クラス名の推論ライブラリ
+yarn add -D typescript-plugin-css-modules
 ```
