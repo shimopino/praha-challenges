@@ -5,25 +5,28 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -734,3 +737,72 @@ Connection: close
   "error": "Forbidden"
 }
 ```
+
+## Testing
+
+### Injection
+
+以下のようにテスト用のモジュール設定を登録する際に、テスト対象である `AuthService` を DI コンテナに登録する。
+
+```ts
+describe('', () => {
+  let service: AuthService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [AuthService],
+    }).compile();
+
+    service = module.get(AuthService);
+  });
+
+  it('can create an instance of auth service', async () => {
+    expect(service).toBeDefined();
+  });
+});
+```
+
+しかし認証系のサービスが依存しているユーザーモジュールは DI コンテナに登録されていないため、テストを実行すると対象のインスタンスを取得できないため、以下のようなエラーが発生してしまう。
+
+```bash
+ FAIL  src/users/auth.service.spec.ts
+  ✕ can create an instanve of auth service (8 ms)
+
+  ● can create an instanve of auth service
+
+    Nest can't resolve dependencies of the AuthService (?). Please make sure that the argument UsersService at index [0] is available in the RootTestModule context.
+
+    Potential solutions:
+    - If UsersService is a provider, is it part of the current RootTestModule?
+    - If UsersService is exported from a separate @Module, is that module imported within RootTestModule?
+      @Module({
+        imports: [ /* the Module containing UsersService */ ]
+      })
+```
+
+そこで依存している `UsersService` を使用できるように仮作成したものを DI コンテナに登録する必要がある。
+
+```ts
+beforeEach(async () => {
+  // 依存しているサービスクラスのモックオブジェクトを作成する
+  const fakeUsersService: Partial<UsersService> = {
+    find: () => Promise.resolve([]),
+    // logInsert 関数などは不要であるため、強制的に型識別させるため `as User` を使う
+    create: (email: string, password: string) =>
+      Promise.resolve({ id: 1, email, password } as User),
+  };
+
+  const module = await Test.createTestingModule({
+    providers: [
+      AuthService,
+      // 依存クラスに対して、DIコンテナに登録するオブジェクトを指定する
+      { provide: UsersService, useValue: fakeUsersService },
+    ],
+  }).compile();
+
+  // DIコンテナから対象のサービスクラスのインスタンスを取得する
+  service = module.get(AuthService);
+});
+```
+
+これでテストを合格させることができる。
