@@ -5,24 +5,26 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -684,4 +686,52 @@ export class UsersController {
   imports: [TypeOrmModule.forFeature([User])],
 })
 export class UsersModule {}
+```
+
+### Guard
+
+今の状態ではユーザーがログインしていない状態でも 200 系のステータスコードが返ってきている。
+
+そこで NestJS が提供している `Guard` を使用して、以下のようにどのリクエストを許可・拒否するのかを表すために、`boolean` を返すクラスを作成する。
+
+```ts
+import { CanActivate, ExecutionContext } from '@nestjs/common';
+
+export class AuthGuard implements CanActivate {
+  canActivate(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest();
+
+    // null や　undefined の場合は falsy となる
+    // つまりアクセスは拒否される
+    return request.session.userId;
+  }
+}
+```
+
+後はこの `Guard` を適用したいコントローラーやハンドラー関数に対して適用すればいい。
+
+```bash
+@Get('/whoami')
+@UseGuards(AuthGuard)
+WhoAmI(@CurrentUser() user: User) {
+  return user;
+}
+```
+
+こうすればログインしていない状態で対象のエンドポイントにリクエストを送信すると、以下のように `403` の非認証エラーが表示される。
+
+```bash
+HTTP/1.1 403 Forbidden
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 69
+ETag: W/"45-T7Txzr/IRLfQ4TEPfbVWLpgje4Q"
+Date: Wed, 03 Nov 2021 11:54:24 GMT
+Connection: close
+
+{
+  "statusCode": 403,
+  "message": "Forbidden resource",
+  "error": "Forbidden"
+}
 ```
