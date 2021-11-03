@@ -5,23 +5,25 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -660,4 +662,27 @@ export const CurrentUser = createParamDecorator(
 export class UsersController {
   // ...
 }
+```
+
+### Globally Scoped
+
+コントローラーに対して個別にインターセプターを設定する場合、コントローラー自体の数が増えていくにつれて設定する内容が冗長的になってしまう。
+
+そこで以下のように `module` に対してどのコントローラーに対しても共通的にインターセプターを適用する設定を追加できる。
+
+```ts
+@Module({
+  controllers: [UsersController],
+  providers: [
+    UsersService,
+    AuthService,
+    // アプリケーションの設定として追加できる
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CurrentUserInteceptor,
+    },
+  ],
+  imports: [TypeOrmModule.forFeature([User])],
+})
+export class UsersModule {}
 ```
