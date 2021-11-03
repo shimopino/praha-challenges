@@ -5,21 +5,23 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -577,3 +579,32 @@ findOne(id: number) {
   return this.repo.findOne(id);
 }
 ```
+
+### Decorator
+
+NestJS のデコレーター機能を使用すれば、ハンドラー関数の引数に HTTP リクエスト情報を渡す前に、任意の処理を挟み込ませて、ハンドラー関数の引数を変更することができる。
+
+イメージとしては、以下のように引数にデコレーターを渡してセッション情報から現在ログインしているユーザーを取得する処理を、デコレーター側の処理で記述することができる。
+
+```ts
+@Get('/whoami')
+WhoAmI(@CurrentUser() user: User) {
+  return user;
+}
+```
+
+上記のようなデコレーターは `createParamDecorator` を使用することで簡単に作成することができ、`ExecutionContext` から HTTP リクエストやその他のプロトコルに関する情報を抽出することができる。
+
+```ts
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const CurrentUser = createParamDecorator(
+  (data: never, context: ExecutionContext) => {
+    const request = context.switchToHttp().getRequest();
+    console.log(request.session.userId);
+    return 'hi there';
+  },
+);
+```
+
+ここで現在ログインしているユーザーの情報を取得するには、ユーザーの情報を取り扱うためのサービスクラスを利用する必要があるが、ユーザーモジュールの依存関係を使用する必要がある。

@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
 import { UserDto } from './dtos/users.dto';
@@ -32,9 +33,14 @@ export class UsersController {
     return user;
   }
 
+  // @Get('/whoami')
+  // WhoAmI(@Session() session: any) {
+  //   return this.usersService.findOne(session.userId);
+  // }
+
   @Get('/whoami')
-  WhoAmI(@Session() session: any) {
-    return this.usersService.findOne(session.userId);
+  WhoAmI(@CurrentUser() user: User) {
+    return user;
   }
 
   @Post('/signout')
