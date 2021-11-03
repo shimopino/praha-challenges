@@ -5,19 +5,22 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -460,4 +463,118 @@ Date: Wed, 03 Nov 2021 09:31:37 GMT
 Connection: close
 
 red
+```
+
+### Signup / Signin
+
+セッションを使用すると、以下のようにユーザーの登録やログイン時に、セッションに対してユーザーの ID を設定することが可能となる。
+
+```ts
+  @Post('/signup')
+  async createUser(@Body() body: CreateUserDTO, @Session() session: any) {
+    const user = await this.authService.signup(body.email, body.password);
+    session.userId = user.id;
+    return user;
+  }
+
+  @Post('/signin')
+  async signin(@Body() body: CreateUserDTO, @Session() session: any) {
+    const user = await this.authService.signin(body.email, body.password);
+    session.userId = user.id;
+    return user;
+  }
+```
+
+これで以下のようにユーザーの登録を行えばユーザー ID がクッキーとして渡されていることがわかる。
+
+```bash
+# POST http://localhost:3000/auth/signup
+# Content-Type: application/json
+
+# {
+#     "email": "test@test.com",
+#     "password": "zxcv"
+# }
+
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 32
+ETag: W/"20-OieX8llTxVyn25/DqLzbCp9cTZU"
+Set-Cookie: express:sess=eyJjb2xvciI6InJlZCIsInVzZXJJZCI6Mn0=; path=/; httponly,express:sess.sig=KsBHtPNjFI8CZXHpb7gFGOjfEXU; path=/; httponly
+Date: Wed, 03 Nov 2021 09:54:15 GMT
+Connection: close
+
+{
+  "id": 2,
+  "email": "test@test.com"
+}
+```
+
+後続の HTTP リクエストでユーザーのログインを実施すると、新たにクッキーが渡されていないことがわかる。これは、サーバー内でのセッション ID が書きかわっていないためである。
+
+```bash
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 32
+ETag: W/"20-OieX8llTxVyn25/DqLzbCp9cTZU"
+Date: Wed, 03 Nov 2021 09:55:03 GMT
+Connection: close
+
+{
+  "id": 2,
+  "email": "test@test.com"
+}
+```
+
+これで以下のように現在のセッションを使用しているユーザーの情報を取得するエンドポイントを設けることで、ユーザー情報を確認することができる。
+
+```ts
+@Get('/whoami')
+WhoAmI(@Session() session: any) {
+  return this.usersService.findOne(session.userId);
+}
+```
+
+### Sign out
+
+後は以下のようにログインしているユーザーをログアウトするためのエンドポイントを作成する。
+
+```ts
+@Post('/signout')
+singOut(@Session() session: any) {
+  session.userId = null;
+}
+```
+
+これで現在のセッションに登録されているユーザー ID を初期化することができた。
+
+しかし、ログアウトした状態から `/whoami` にアクセスすると、ユーザーテーブルに登録されている最初のユーザー情報が取得できてしまっていることがわかる。
+
+```bash
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 32
+ETag: W/"20-5oGrrW/Q7an1ZWKqR2T/LBlM9s8"
+Date: Wed, 03 Nov 2021 10:10:39 GMT
+Connection: close
+
+{
+  "id": 1,
+  "email": "asdf@asdf.com"
+}
+```
+
+そこで内部で使用している `findOne` 関数で、ユーザー ID が無効化されていた場合にユーザー情報を返さないように処理を変更する必要がある。
+
+```ts
+findOne(id: number) {
+  if (!id) {
+    return null;
+  }
+
+  return this.repo.findOne(id);
+}
 ```
