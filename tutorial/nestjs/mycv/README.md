@@ -5,29 +5,31 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -846,4 +848,34 @@ fakeUsersService = {
     return Promise.resolve(user);
   },
 };
+```
+
+### Controller
+
+コントローラーの処理をテストする場合には、デコレーターで担保している機能を再現することが重要となる。
+
+```ts
+@Post('/signin')
+async signin(@Body() body: CreateUserDTO, @Session() session: any) {
+  const user = await this.authService.signin(body.email, body.password);
+  session.userId = user.id;
+  return user;
+}
+```
+
+あくまでもデコレーターは TypeScript の機能であるため、第 1 引数で指定されている HTTP リクエストのボディや、第 2 引数のセッションオブジェクトを自前で用意する必要がある。
+
+そこで以下のようにテスト内でオブジェクトを用意する必要がある。
+
+```ts
+it('signin update session object and returns user', async () => {
+  const session = { userId: -10 };
+  const user = await controller.signin(
+    { email: 'asdf@asdf.com', password: 'asdf' },
+    session,
+  );
+
+  expect(user.id).toEqual(1);
+  expect(session.userId).toEqual(1);
+});
 ```
