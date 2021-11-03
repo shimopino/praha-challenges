@@ -5,30 +5,33 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -878,3 +881,86 @@ it('signin update session object and returns user', async () => {
   expect(session.userId).toEqual(1);
 });
 ```
+
+## E2E Testing
+
+E2E テストの場合でも、単体テストのサイト同じ容量でアプリケーションの設定を追加していく必要がある。
+
+```ts
+beforeEach(async () => {
+  const moduleFixture: TestingModule = await Test.createTestingModule({
+    imports: [AppModule],
+  }).compile();
+
+  app = moduleFixture.createNestApplication();
+  setupApp(app);
+  await app.init();
+});
+```
+
+注意点としては、この状態だと `main.ts` で行っているバリデーションやクッキーセッションの設定が反映されない点である。
+
+そこでアプリケーション全体の設定を行う関数を作成し、テスト用サーバーにも適用することで、設定を反映できるようにする。
+
+```ts
+import { ValidationPipe } from '@nestjs/common';
+// eslint-disable-next-line
+const cookieSession = require('cookie-session');
+
+export const setupApp = (app: any) => {
+  app.use(
+    cookieSession({
+      keys: ['sldjhfas'],
+    }),
+  );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
+};
+```
+
+後はこの関数をテストからも呼び出せば設定を反映させることができる。
+
+### App Module
+
+別途設定を行う関数を用意する以外の方法としては、テストで読み込んでいる `AppModule` 自体にクッキーセッションとバリデーションの設定を追加する方法が存在している。
+
+例えば以下では `providers` に対してアプリケーション全体の設定であるバリデーションを追加している。
+
+```ts
+@Module({
+  imports: [
+    UsersModule,
+    ReportsModule,
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'db.sqlite',
+      entities: [User, Reports],
+      synchronize: true,
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+      }),
+    },
+  ],
+});
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        cookieSession({
+          keys: ['asdfasdf'],
+        }),
+      )
+      .forRoutes('*');
+  }
+}
+```
+
+また `configure` 関数内で全てのルートに対してクッキーセッションを使用する設定を追加していることがわかる。
