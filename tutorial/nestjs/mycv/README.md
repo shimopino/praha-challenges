@@ -5,19 +5,20 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -431,4 +432,33 @@ setColor(@Param('color') color: string, @Session() session: any) {
 getColor(@Session() session: any) {
   return session.color;
 }
+```
+
+これで以下のように HTTP リクエストを発行すると、サーバーから Cookie が送信されていることがわかる。
+
+```bash
+# GET http://localhost:3000/auth/colors/red
+
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Set-Cookie: express:sess=eyJjb2xvciI6InJlZCJ9; path=/; httponly,express:sess.sig=WswN9RZRMvAvbPjr0HWvCnfYEi4; path=/; httponly
+Date: Wed, 03 Nov 2021 09:31:09 GMT
+Connection: close
+Content-Length: 0
+```
+
+これで以下のようにセッションに格納されている内容を取得する処理を実行すると、前回のリクエスト時に登録した値がセッションに格納されていることがわかる。
+
+```bash
+# GET http://localhost:3000/auth/colors
+
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 3
+ETag: W/"3-eJiAELiQzm9NITZIHzknh+xtYQY"
+Date: Wed, 03 Nov 2021 09:31:37 GMT
+Connection: close
+
+red
 ```
