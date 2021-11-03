@@ -22,6 +22,7 @@
     - [Signup / Signin](#signup--signin)
     - [Sign out](#sign-out)
     - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -608,3 +609,56 @@ export const CurrentUser = createParamDecorator(
 ```
 
 ここで現在ログインしているユーザーの情報を取得するには、ユーザーの情報を取り扱うためのサービスクラスを利用する必要があるが、ユーザーモジュールの依存関係を使用する必要がある。
+
+### Interceptor
+
+ユーザーの情報を取得するためには、インターセプターを利用して HTTP リクエストの内容を受けてセッション情報を加工することができる。
+
+ここでは、以下のように HTTP リクエストを受けた際にセッション情報からユーザー ID を取得し、ユーザー ID から取得できたユーザー情報を新たにセッションに登録し、登録されたユーザー情報をデコレーターから抽出するように変更する。
+
+```ts
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
+import { UsersService } from '../users.service';
+
+@Injectable()
+export class CurrentUserInteceptor implements NestInterceptor {
+  constructor(private userService: UsersService) {}
+
+  async intercept(context: ExecutionContext, handler: CallHandler) {
+    const request = context.switchToHttp().getRequest();
+    const { userId } = request.session || {};
+
+    if (userId) {
+      const user = await this.userService.findOne(userId);
+      request.currentUser = user;
+    }
+
+    return handler.handle();
+  }
+}
+```
+
+つまり以下のようにデコレーターを修正する。
+
+```ts
+export const CurrentUser = createParamDecorator(
+  (data: never, context: ExecutionContext) => {
+    const request = context.switchToHttp().getRequest();
+    return request.currentUser;
+  },
+);
+```
+
+後は以下のようにコントローラーの処理の前後に挟み込めばいい。
+
+```ts
+@UseInterceptors(CurrentUserInteceptor)
+export class UsersController {
+  // ...
+}
+```
