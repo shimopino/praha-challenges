@@ -5,27 +5,30 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -805,3 +808,43 @@ beforeEach(async () => {
 ```
 
 これでテストを合格させることができる。
+
+### SignUp
+
+ユーザーの登録をテストするためには、登録されたユーザーが意図通りハッシュ化されていることを確認する必要がある。そのため、以下のように与えられたパスワードがハッシュ化されて、`.` で分割できることを確認する。
+
+```ts
+it('...', async () => {
+  const user = await this.service.signup('asdf@asdf.com', 'asdf');
+
+  expect(user.password).not.toEqual('asdf');
+  const [salt, hash] = user.password.split('.');
+  expect(salt).toBeDefined();
+  expect(hash).toBeDefined();
+});
+```
+
+### Mock
+
+`UsersService` をモックする際には、固定値を返すようにしているが、これでは柔軟にテストを実行することができない。
+
+モックする際には、極力モック対象のオブジェクトの振る舞いを再現することが重要になるが、`UsersService` のユーザーを作成し、検索する機能を再現するためには、データベースの代わりにオンメモリにユーザーを管理するようにし、オンメモリのオブジェクトの検索や要素の追加を実施すればいい。
+
+```ts
+const users: User[] = [];
+fakeUsersService = {
+  find: (email: string) => {
+    const filteredUsers = users.filter((user) => user.email === email);
+    return Promise.resolve(filteredUsers);
+  },
+  create: (email: string, password: string) => {
+    const user = {
+      id: Math.floor(Math.random() * 999999),
+      email,
+      password,
+    } as User;
+    users.push(user);
+    return Promise.resolve(user);
+  },
+};
+```
