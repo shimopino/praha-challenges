@@ -5,34 +5,38 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+- [<<<<<<< Updated upstream](#-updated-upstream)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -995,3 +999,100 @@ DB_NAME=test.sqlite
   }
 }
 ```
+
+# <<<<<<< Updated upstream
+
+### jest setup
+
+テストを実行する際に、各テストで使用されたデータベース用のファイルを削除して新規作成を行う必要がある。
+
+Jest では、各テストの前後に共通する処理を実行する機能が提供されており、`setupFilesAfterEnv` で実行するファイルを指定すれば、そのファイルの内容を実行する必要がある。
+
+```json
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "setupFilesAfterEnv": ["<rootDir>/setup.ts"]
+}
+```
+
+ここで以下のように、テストの実行前に前回のテストで使用された `test.sqlite` を削除し、テストが終了した後に、データベースファイルへの接続を切断する必要がある。
+
+```ts
+import { rm } from 'fs/promises';
+import { join } from 'path';
+import { getConnection } from 'typeorm';
+
+global.beforeEach(async () => {
+  try {
+    await rm(join(__dirname, '..', 'test.sqlite'));
+  } catch (err) {}
+});
+
+global.afterEach(async () => {
+  const conn = await getConnection();
+  await conn.close();
+});
+```
+
+これで各テストの依存関係を無くした状態を実現できる。
+
+### ConfigModule
+
+`@nestjs/config` を使用すればアプリケーションの設定を行う際に環境設定用のファイルを指定することができる。
+
+実際に以下のように環境変数の値を使用して、環境変数ファイルを読み込む設定を追加する。
+
+```ts
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+    // ...
+  ],
+  // ...
+})
+export class AppModule {
+  // ...
+}
+```
+
+これでアプリケーション全体に読み込ませた環境設定ファイルの内容を反映させることができた。
+
+後は環境変数ファイルに指定されているデータベースファイルの名称を、TypeORM の設定をする際に読み込むことができればいい。
+
+これは `useFactory` を使用して環境設定を注入して、そこから取得した値で使用するデータベースファイルを指定すればいい。
+
+```ts
+@Module({
+  imports: [
+    // ...
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          entities: [User, Reports],
+          synchronize: true,
+        };
+      },
+    }),
+  ],
+  // providers: ...
+})
+export class AppModule {
+  // ...
+}
+```
+
+これで E2E テストからは、アプリケーションの設定を読み込むだけでテストの設定も変更することができるようになった。
+
+> > > > > > > Stashed changes
