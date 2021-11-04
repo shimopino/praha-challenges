@@ -5,32 +5,35 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -963,3 +966,33 @@ export class AppModule {
 ```
 
 また `configure` 関数内で全てのルートに対してクッキーセッションを使用する設定を追加していることがわかる。
+
+## Application Configuration
+
+### Dotenv
+
+`dotenv` を使用することで、`.env` ファイルを開発・テスト用に作成して、それぞれの環境にだけ適用したい環境変数などを指定することができる。
+
+```bash
+npm install @nestjs/config cross-env
+```
+
+ここで以下のような環境設定ファイルを作成する。
+
+```bash
+# .env.development
+DB_NAME=db.sqlite
+
+# .env.test
+DB_NAME=test.sqlite
+```
+
+これで後は npm コマンドを実行した際に環境変数を設定できるように、以下のようにコマンドを編集する必要がある。
+
+```json
+{
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nest start"
+  }
+}
+```
