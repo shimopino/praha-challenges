@@ -5,36 +5,39 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1091,4 +1094,44 @@ export class AppModule {
 
 これで E2E テストからは、アプリケーションの設定を読み込むだけでテストの設定も変更することができるようになった。
 
-> > > > > > > Stashed changes
+## Report
+
+### Create Report
+
+新しくレポートを作成するためのエンドポイントを用意する。
+
+ログインしているユーザーしかアクセスすることができないように、以下のように `AuthGuard` をエンドポイントに対して付与する。
+
+```ts
+@Post()
+@UseGuards(AuthGuard)
+createReport(@Body() body: CreateReportDTO) {
+  return this.reportsService.create(body);
+}
+```
+
+この時の HTTP リクエストを格納するクラスに対しては、文字列や数字の判定以外にも、以下のように数値の最小値・最大値を検証したり、緯度や経度の値が正しいのか検証することができる。
+
+```ts
+export class CreateReportDTO {
+  @IsString()
+  make: string;
+
+  // ...
+
+  @IsNumber()
+  @Min(1930)
+  @Max(2050)
+  year: number;
+
+  // ...
+
+  @IsLongitude()
+  lng: number;
+
+  @IsLatitude()
+  lat: number;
+
+  // ...
+}
+```
