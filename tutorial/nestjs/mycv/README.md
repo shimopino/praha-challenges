@@ -33,7 +33,6 @@
     - [App Module](#app-module)
   - [Application Configuration](#application-configuration)
     - [Dotenv](#dotenv)
-- [<<<<<<< Updated upstream](#-updated-upstream)
     - [jest setup](#jest-setup)
     - [ConfigModule](#configmodule)
 
@@ -998,8 +997,6 @@ DB_NAME=test.sqlite
   }
 }
 ```
-
-# <<<<<<< Updated upstream
 
 ### jest setup
 
