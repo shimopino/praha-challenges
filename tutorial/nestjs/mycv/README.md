@@ -5,7 +5,6 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Authentication App](#authentication-app)
   - [init](#init)
   - [ORM](#orm)
   - [Entity](#entity)
