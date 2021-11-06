@@ -4,6 +4,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { User } from '../users/users.entity';
@@ -13,6 +14,7 @@ import { ReportsService } from './reports.service';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { ReportDTO } from './dtos/report.dto';
 import { ApproveReportDTO } from './dtos/approve-report.dto';
+import { AdminGuard } from '../guards/admin.guard';
 
 @Controller('reports')
 export class ReportsController {
@@ -26,6 +28,7 @@ export class ReportsController {
   }
 
   @Patch('/:id')
+  @UseGuards(AdminGuard)
   approveReport(@Param('id') id: string, @Body() body: ApproveReportDTO) {
     return this.reportsService.changeApproval(id, body.approved);
   }
