@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Reports } from './reports/reports.entity';
+import { Report } from './reports/reports.entity';
 import { ReportsModule } from './reports/reports.module';
 import { User } from './users/users.entity';
 import { UsersModule } from './users/users.module';
@@ -23,7 +23,7 @@ const cookieSession = require('cookie-session');
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [User, Reports],
+          entities: [User, Report],
           synchronize: true,
         };
       },
