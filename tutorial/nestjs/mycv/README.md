@@ -5,44 +5,46 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1292,3 +1294,50 @@ export class AdminGuard implements CanActivate {
 ```
 
 ただしこの状態であれば `Forbidden Error` が発生してしまう。
+
+### Middleware
+
+NestJS では以下の順番で処理が実行される。
+
+1.  Middleware
+2.  Guard
+3.  Interceptor
+
+HTTP リクエストのセッション情報にログインしているユーザーの情報を登録する処理は `CurrentUserInteceptor` で実行されているが、`AdminGuard` による検証処理はインターセプターの前に実行されるため、認証情報の検証できないためエラーが発生してしまう。
+
+そこでインターセプターによる処理をミドルウェアの処理に変更する。
+
+```ts
+@Injectable()
+export class CurrentUserMiddleware implements NestMiddleware {
+  constructor(private usersService: UsersService) {}
+
+  async use(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req.session || {};
+
+    if (userId) {
+      const user = await this.usersService.findOne(userId);
+      req.currentUser = user;
+    }
+
+    next();
+  }
+}
+```
+
+そして作成されたミドルウェアをユーザーモジュールの設定に追加すればいい。
+
+```ts
+@Module({
+  controllers: [UsersController],
+  providers: [UsersService, AuthService],
+  imports: [TypeOrmModule.forFeature([User])],
+})
+export class UsersModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CurrentUserMiddleware).forRoutes('*');
+  }
+}
+```
+
+これで `Guard` 処理の前に HTTP リクエストにユーザーの情報を追加で登録することができた。
