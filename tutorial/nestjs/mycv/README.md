@@ -5,38 +5,40 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1134,3 +1136,37 @@ export class CreateReportDTO {
   // ...
 }
 ```
+
+### Associations
+
+ユーザーとレポートの関係性を考えると、ユーザーは 0 個以上のレポートを作成することができ、レポートには必ず作成したユーザーが 1 人紐づいているはずである。
+
+こうした 1 対多の表現を TypeORM で表現するには、特定のアノテーションを使用する必要がある。
+
+```ts
+// users.entity.ts
+import { OneToMany } from 'typeorm';
+
+export class User {
+  // ...
+
+  // ユーザーは複数のレポートを所持することができる
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
+}
+
+// -----------------
+
+// reports.entity.ts
+import { ManyToOne } from 'typeorm';
+
+export class Report {
+  // ...
+
+  // レポートは必ず1人のユーザーが紐づいている
+  @ManyToOne(() => User, (user) => user.reports)
+  user: User;
+}
+```
+
+これでユーザーエンティティとレポートエンティティの関係性を表現することができた。
