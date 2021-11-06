@@ -5,46 +5,48 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
-  - [Middleware](#middleware)
-  - [Query String](#query-string)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
+    - [Query String](#query-string)
+  - [Query Builder](#query-builder)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1379,3 +1381,29 @@ export class GetEstimateDTO {
 ```
 
 これで指定した処理内容でクエリ文字列を変換することができる。
+
+## Query Builder
+
+TypeORM ではデータベースから値を取得する際に、ある程度自由度のある SQL を構築することが可能である。
+
+例えば以下では、保存されているエンティティに対して簡易的な SQL クエリを発行している。
+
+```ts
+createEstimate({ make, model, lng, lat, year, mileage }: GetEstimateDTO) {
+  return this.repo
+    .createQueryBuilder()
+    .select('AVG(price)', 'price')
+    .where('make = :make', { make })
+    .andWhere('model = :model', { model })
+    .andWhere('lng - :lng BETWEEN -5 AND 5', { lng })
+    .andWhere('lat - :lat BETWEEN -5 AND 5', { lat })
+    .andWhere('year - :year BETWEEN -3 AND 3', { year })
+    .andWhere('approved IS TRUE')
+    .orderBy('ABS(mileage - :mileage)', 'DESC')
+    .setParameters({ mileage })
+    .limit(3)
+    .getRawOne();
+}
+```
+
+このようにクエリをカスタムすることが可能である。
