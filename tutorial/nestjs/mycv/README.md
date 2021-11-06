@@ -5,39 +5,41 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1169,3 +1171,29 @@ export class Report {
 ```
 
 これでユーザーエンティティとレポートエンティティの関係性を表現することができた。
+
+### Save Associations
+
+ではレポートを作成する際に、レポートを作成したユーザーに関する情報も保存するように処理を変更する。
+
+これはレポートエンティティに新しく追加したユーザーの関係性に合わせて、レポジトリを通して作成したインスタンスに対してユーザー情報を付与すればいい。
+
+まずはハンドラーを起動した際に、送信されたユーザー情報をセッションから取得するように変更を加える。
+
+```ts
+createReport(@Body() body: CreateReportDTO, @CurrentUser() user: User) {
+  return this.reportsService(body, user);
+}
+```
+
+次に作成されたインスタンスに対してユーザーを紐づける。
+
+```ts
+create(reportDTO: CreateReportDTO, user: User) {
+  const report = this.repo.create(reportDTO);
+  report.user = user;
+  return this.repo.save(report);
+}
+```
+
+これでユーザーと作成されたレポートを紐づけた状態で保存し、追加した内容をクライアントに返すことができるようになった。
