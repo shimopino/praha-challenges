@@ -5,41 +5,44 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1225,5 +1228,36 @@ export class ReportDTO {
 @Serialize(ReportDTO)
 createReport(@Body() body: CreateReportDTO, @CurrentUser() user: User) {
   return this.reportsService.create(body, user);
+}
+```
+
+## Authorization
+
+レポートに関して、ログインしているユーザーであるなら誰でもレポートを作成するようにし、管理者権限でログインしているユーザーのみがレポートの承認を行えるような認可機能を追加する。
+
+### default column
+
+TypeORM では、インスタンスを作成する際に対象のカラムのデフォルト値を設定することができる。
+
+```ts
+export class Report {
+  // ...
+
+  @Column({ default: false })
+  approved: boolean;
+}
+```
+
+後は以下のようにサービスクラス内部で変更対象のレポートエンティティの ID と、レポートの承認状態をどの状態に変更するのか指定すればいい。
+
+```ts
+async changeApproval(id: string, approved: boolean) {
+  const report = await this.repo.findOne(id);
+  if (!report) {
+    throw new NotFoundException('not found');
+  }
+  report.approved = approved;
+
+  return this.repo.save(report);
 }
 ```
