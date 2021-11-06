@@ -5,45 +5,47 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
-  - [Middleware](#middleware)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
+    - [Query String](#query-string)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1340,3 +1342,41 @@ export class UsersModule {
 ```
 
 これで `Guard` 処理の前に HTTP リクエストにユーザーの情報を追加で登録することができた。
+
+### Query String
+
+HTTP リクエストで指定されたクエリ文字列を処理するには、NestJS では以下のように `@Query` 関数を使用することができる。
+
+```ts
+@Get()
+getEstimate(@Query() query: GetEstimateDTO) {
+  console.log(query);
+}
+```
+
+しかし DTO にプロパティを設定するだけでは、全てのクエリ文字列は文字列として認識されるため、年や走行距離を整数に変換したり、緯度経度を浮動小数点数に変換したりすることはどのままではできない。
+
+そこで以下のように `@Transform` アノテーションで処理内容を記述する必要がある。
+
+```ts
+export class GetEstimateDTO {
+  @IsString()
+  make: string;
+
+  // ...
+
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
+  @Min(0)
+  @Max(1000000)
+  mileage: number;
+
+  @Transform(({ value }) => parseFloat(value))
+  @IsLongitude()
+  lng: number;
+
+  // ...
+}
+```
+
+これで指定した処理内容でクエリ文字列を変換することができる。
