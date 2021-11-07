@@ -5,51 +5,53 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
-  - [Middleware](#middleware)
-  - [Query String](#query-string)
-- [Query Builder](#query-builder)
-- [Production](#production)
-  - [Cookie Key](#cookie-key)
-  - [TypeORM Connection](#typeorm-connection)
-  - [Migrations](#migrations)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
+    - [Query String](#query-string)
+  - [Query Builder](#query-builder)
+  - [Production](#production)
+    - [Cookie Key](#cookie-key)
+    - [TypeORM Connection](#typeorm-connection)
+    - [Migrations](#migrations)
+    - [Test Environment](#test-environment)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1565,3 +1567,21 @@ npm run typeorm migration:generate -- -n initial-schema -o
 migrations
 └── 1636254545678-initial-schema.js
 ```
+
+### Test Environment
+
+テストを実行した際には、必ずマイグレーションを実行するように設定を変更する。
+
+```js
+case 'test':
+  Object.assign(dbConfig, {
+    type: 'sqlite',
+    database: 'test.sqlite',
+    entities: ['**/*.entity.ts'],
+    // HERE
+    migrationsRun: true,
+  });
+  break;
+```
+
+これでテストを実行する際には毎回マイグレーションが実行されるため、テストを複数回実行したとしても新規作成されたファイルにデータベースを作成することができるようになる。
