@@ -5,52 +5,54 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
-  - [Middleware](#middleware)
-  - [Query String](#query-string)
-- [Query Builder](#query-builder)
-- [Production](#production)
-  - [Cookie Key](#cookie-key)
-  - [TypeORM Connection](#typeorm-connection)
-  - [Migrations](#migrations)
-  - [Test Environment](#test-environment)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
+    - [Query String](#query-string)
+  - [Query Builder](#query-builder)
+  - [Production](#production)
+    - [Cookie Key](#cookie-key)
+    - [TypeORM Connection](#typeorm-connection)
+    - [Migrations](#migrations)
+    - [Test Environment](#test-environment)
+    - [Production Environment](#production-environment)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1584,3 +1586,49 @@ case 'test':
 ```
 
 これでテストを実行する際には毎回マイグレーションが実行されるため、テストを複数回実行したとしても新規作成されたファイルにデータベースを作成することができるようになる。
+
+### Production Environment
+
+Heroku 環境を本番環境として利用する。
+
+まずは本番環境では Postgres を使用するため、対応する設定を追加する。また Heroku では接続先のデータベースの情報を `DATABASE_URL` という環境変数に登録しているため、この情報も接続先設定に反映する。
+
+```js
+case 'production':
+  Object.assign(dbConfig, {
+    type: 'postgres',
+    url: process.env.DATABASE_URL,
+    migrationsRun: true,
+    entities: ['**/*.entity.js'],
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
+  break;
+```
+
+また、アプリケーションを起動するポート番号も Heroku が自動生成するものを利用するため、以下のようにポート番号を環境変数から参照する形式に変更する。
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(process.env.PORT || 3000);
+}
+bootstrap();
+```
+
+後は公式サイトに則り、CLI コマンドを順次実行していけばいい。
+
+```bash
+heroku auth:whoami
+
+heroku create
+
+heroku addons:create heroku-postgresql:hobby-dev
+
+heroku config:set COOKIE_KEY=kdljhywru2894y
+
+heroku config:set NODE_ENV=production
+
+git push heroku master
+```
