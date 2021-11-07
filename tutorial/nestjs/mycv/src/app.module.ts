@@ -2,9 +2,7 @@ import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Report } from './reports/reports.entity';
 import { ReportsModule } from './reports/reports.module';
-import { User } from './users/users.entity';
 import { UsersModule } from './users/users.module';
 // eslint-disable-next-line
 const cookieSession = require('cookie-session');
@@ -17,17 +15,7 @@ const cookieSession = require('cookie-session');
     }),
     UsersModule,
     ReportsModule,
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'sqlite',
-          database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
-          synchronize: true,
-        };
-      },
-    }),
+    TypeOrmModule.forRoot(),
   ],
   providers: [
     {

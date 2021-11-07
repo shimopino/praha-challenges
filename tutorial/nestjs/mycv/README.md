@@ -5,49 +5,51 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
-  - [Middleware](#middleware)
-  - [Query String](#query-string)
-- [Query Builder](#query-builder)
-- [Production](#production)
-  - [Cookie Key](#cookie-key)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
+    - [Query String](#query-string)
+  - [Query Builder](#query-builder)
+  - [Production](#production)
+    - [Cookie Key](#cookie-key)
+    - [TypeORM Connection](#typeorm-connection)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1437,6 +1439,59 @@ export class AppModule {
         }),
       )
       .forRoutes('*');
+  }
+}
+```
+
+### TypeORM Connection
+
+TypeORM では、別途データベースへの接続設定ファイルを作成し、アプリケーションの設定ではこの設定ファイルを読み込ませることができる。
+
+そのためにまずはアプリケーション設定を以下のように変更する。
+
+```ts
+@Module({
+  imports: [
+    // ...
+    TypeOrmModule.forRoot(),
+  ],
+  providers: [
+    // ...
+  ],
+})
+```
+
+次に設定ファイルを用意するが、以下の点に注意する必要がある。
+
+- 開発環境
+  - TypeScript は一度トランスパイルされ、実際には JavaScript ファイルを起動する
+- テスト環境
+  - `ts-jest` を使って TypeScript を読み込ませ、ランタイムでトランスパイルする
+
+つまり環境に応じて、TypeScript ファイルを対象にしたり、JavaScript ファイルを対象にしたりする必要がある。
+
+そこで、以下の設定を追加する。
+
+```js
+// ormconfig.js
+module.export = {
+  type: 'sqlite',
+  database: 'db.sqlite',
+  entities:
+    process.env.NODE_ENV === 'development'
+      ? ['**/*.entity.js']
+      : ['**/*.entity.ts'],
+  synchronize: false,
+};
+```
+
+またテスト環境では TypeScript ファイルを読み込むため、JavaScript で記述されている設定ファイルを読み込むことができるように、コンパイラ設定を以下のように変更する。
+
+```js
+{
+  "compilerOptions": {
+    // ...
+    "allowJs": true
   }
 }
 ```
