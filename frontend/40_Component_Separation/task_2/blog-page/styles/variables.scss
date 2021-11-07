@@ -5,7 +5,8 @@
   --bg-secondary: rgba(107, 114, 128, var(--bg-opacity));
 
   // テキスト設定
-  --text-gray: rgba(243, 244, 246, var(--bg-opacity));
-  --text-blue: rgba(59, 130, 246, var(--bg-opacity));
+  --text-opacity: 1;
+  --text-gray: rgba(243, 244, 246, var(--text-opacity));
+  --text-blue: rgba(59, 130, 246, var(--text-opacity));
   --font-weight-bold: 700;
 }
