@@ -5,50 +5,52 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [init](#init)
-- [ORM](#orm)
-- [Entity](#entity)
-- [Validation](#validation)
-- [Create / Save](#create--save)
-- [Update](#update)
-- [Exclude](#exclude)
-- [Interceptors](#interceptors)
-- [DTO](#dto)
-- [Authentication](#authentication)
-  - [Sign Up](#sign-up)
-  - [Sign In](#sign-in)
-  - [Session](#session)
-  - [Signup / Signin](#signup--signin)
-  - [Sign out](#sign-out)
-  - [Decorator](#decorator)
-  - [Interceptor](#interceptor)
-  - [Globally Scoped](#globally-scoped)
-  - [Guard](#guard)
-- [Testing](#testing)
-  - [Injection](#injection)
-  - [SignUp](#signup)
-  - [Mock](#mock)
-  - [Controller](#controller)
-- [E2E Testing](#e2e-testing)
-  - [App Module](#app-module)
-- [Application Configuration](#application-configuration)
-  - [Dotenv](#dotenv)
-  - [jest setup](#jest-setup)
-  - [ConfigModule](#configmodule)
-- [Report](#report)
-  - [Create Report](#create-report)
-  - [Associations](#associations)
-  - [Save Associations](#save-associations)
-  - [Formatting Response](#formatting-response)
-- [Authorization](#authorization)
-  - [default column](#default-column)
-  - [Admin Guard](#admin-guard)
-  - [Middleware](#middleware)
-  - [Query String](#query-string)
-- [Query Builder](#query-builder)
-- [Production](#production)
-  - [Cookie Key](#cookie-key)
-  - [TypeORM Connection](#typeorm-connection)
+- [Authentication App](#authentication-app)
+  - [init](#init)
+  - [ORM](#orm)
+  - [Entity](#entity)
+  - [Validation](#validation)
+  - [Create / Save](#create--save)
+  - [Update](#update)
+  - [Exclude](#exclude)
+  - [Interceptors](#interceptors)
+  - [DTO](#dto)
+  - [Authentication](#authentication)
+    - [Sign Up](#sign-up)
+    - [Sign In](#sign-in)
+    - [Session](#session)
+    - [Signup / Signin](#signup--signin)
+    - [Sign out](#sign-out)
+    - [Decorator](#decorator)
+    - [Interceptor](#interceptor)
+    - [Globally Scoped](#globally-scoped)
+    - [Guard](#guard)
+  - [Testing](#testing)
+    - [Injection](#injection)
+    - [SignUp](#signup)
+    - [Mock](#mock)
+    - [Controller](#controller)
+  - [E2E Testing](#e2e-testing)
+    - [App Module](#app-module)
+  - [Application Configuration](#application-configuration)
+    - [Dotenv](#dotenv)
+    - [jest setup](#jest-setup)
+    - [ConfigModule](#configmodule)
+  - [Report](#report)
+    - [Create Report](#create-report)
+    - [Associations](#associations)
+    - [Save Associations](#save-associations)
+    - [Formatting Response](#formatting-response)
+  - [Authorization](#authorization)
+    - [default column](#default-column)
+    - [Admin Guard](#admin-guard)
+    - [Middleware](#middleware)
+    - [Query String](#query-string)
+  - [Query Builder](#query-builder)
+  - [Production](#production)
+    - [Cookie Key](#cookie-key)
+    - [TypeORM Connection](#typeorm-connection)
+    - [Migrations](#migrations)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1493,4 +1495,74 @@ module.export = {
     "allowJs": true
   }
 }
+```
+
+より設定を柔軟にするためにデフォルト設定と、環境変数によるカスタム設定方式に変更する。
+
+```ts
+const dbConfig = {
+  synchronize: false,
+};
+
+switch (process.env.NODE_ENV) {
+  case 'development':
+    Object.assign(dbConfig, {
+      type: 'sqlite',
+      database: 'db.sqlite',
+      entities: ['**/*.entity.js'],
+    });
+    break;
+  case 'test':
+    Object.assign(dbConfig, {
+      type: 'sqlite',
+      database: 'test.sqlite',
+      entities: ['**/*.entity.ts'],
+    });
+    break;
+  case 'production':
+    break;
+  default:
+    throw new Error('unknown environment');
+}
+
+module.exports = dbConfig;
+```
+
+### Migrations
+
+データベースへの接続設定で `synchronize: false` にしていた場合、エンティティの情報が自動的にデータベースに反映されることはなく、自身でデータベースに反映させるためのマイグレーションファイルの生成と適用を実施する必要がある。
+
+まずは TypeORM の CLI 機能を利用するために、`package.json` に TypeScript でも認識できるように以下のコマンドを追加する。
+
+```js
+{
+  "scripts": {
+    "typeorm": "cross-env NODE_ENV=development node --require ts-node/register ./node_modules/typeorm/cli.js"
+  }
+}
+```
+
+マイグレーションを実施するための設定を追加する。
+
+```js
+const dbConfig = {
+  synchronize: false,
+  migrations: ['migrations/*.js'],
+  cli: {
+    migrationsDir: 'migrations',
+  },
+};
+```
+
+これで以下のマイグレーションコマンドを実行する。
+
+```bash
+npm run typeorm migration:generate -- -n initial-schema -o
+```
+
+下記のファイルが生成されていることがわかる。
+
+```bash
+migrations
+└── 1636254545678-initial-schema.js
 ```
