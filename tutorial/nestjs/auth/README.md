@@ -26,7 +26,27 @@
 
 ## 環境構築
 
+まずは必要なライブラリをインストールする。
+
 ```bash
 npm install --save @nestjs/passport passport passport-local
 npm install --save-dev @types/passport-local
+```
+
+## Passport Strategy
+
+`@nestjs/passport` を使用することで、ライブラリが提供している `PassportStrategy` クラスを継承することで認証処理を実装することができる。
+
+まずは認証処理を実装するモジュールを作成する。
+
+```bash
+nest generate module auth
+nest generate service auth
+```
+
+認証処理を実装するにあたって、ユーザーの検索処理などが必要となるため、追加でモジュールを作成する。
+
+```bash
+nest generate module users
+nest generate service users
 ```
