@@ -3,18 +3,20 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [認証 / 認可](#%E8%AA%8D%E8%A8%BC--%E8%AA%8D%E5%8F%AF)
-  - [概要](#%E6%A6%82%E8%A6%81)
-  - [環境構築](#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+- [認証 / 認可](#認証--認可)
+  - [概要](#概要)
+  - [環境構築](#環境構築)
   - [Passport Strategy](#passport-strategy)
-  - [ユーザー検索処理](#%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E6%A4%9C%E7%B4%A2%E5%87%A6%E7%90%86)
-  - [認証処理](#%E8%AA%8D%E8%A8%BC%E5%87%A6%E7%90%86)
+  - [ユーザー検索処理](#ユーザー検索処理)
+  - [認証処理](#認証処理)
   - [Passport Local](#passport-local)
   - [Built-in Passport Guard](#built-in-passport-guard)
   - [Login Route](#login-route)
-  - [JWT の利用](#jwt-%E3%81%AE%E5%88%A9%E7%94%A8)
+  - [JWT の利用](#jwt-の利用)
   - [Passport JWT](#passport-jwt)
   - [JWT Strategy Guard](#jwt-strategy-guard)
+  - [暗号化](#暗号化)
+  - [ハッシュ化](#ハッシュ化)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -474,3 +476,65 @@ curl http://localhost:3000/profile \
 ```
 
 実際にはトークンの有効期限が切れていた場合の処理や、リフレッシュトークンなどの処理が必要となる。
+
+## 暗号化
+
+パスワードなどは、平文のままデータベースに保存するのではなく、暗号化をおこなってデータベースに保存しておく必要がある。
+
+Node.js では備え付けで `crypto` モジュールという暗号化を行うためのライブラリがインストールされている。
+
+実際に下記では `aws-256-ctr` というアルゴリズムで暗号化を行う。
+
+```ts
+import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import { promisify } from 'util';
+
+const iv = randomBytes(16);
+const password = 'Password used to generate key';
+
+// The key length is dependent on the algorithm.
+// In this case for aes256, it is 32 bytes.
+const key = (await promisify(scrypt)(password, 'salt', 32)) as Buffer;
+const cipher = createCipheriv('aes-256-ctr', key, iv);
+
+const textToEncrypt = 'Nest';
+const encryptedText = Buffer.concat([
+  cipher.update(textToEncrypt),
+  cipher.final(),
+]);
+```
+
+こうして暗号化された文章をもとに戻すには以下の手順を実施する。
+
+```ts
+import { createDecipheriv } from 'crypto';
+
+const decipher = createDecipheriv('aes-256-ctr', key, iv);
+const decryptedText = Buffer.concat([
+  decipher.update(encryptedText),
+  decipher.final(),
+]);
+```
+
+## ハッシュ化
+
+平文を暗号文に変換するための乱数生成ライブラリとして `bcrypt` が提供されている。
+
+```bash
+npm install --save bcrypt
+npm install --save-dev @types/bcrypt
+```
+
+あとは以下のように処理を実装すればいい。
+
+```ts
+import * as bcrypt from 'bcrypt';
+
+const saltOrRounds = 10;
+const password = 'random_password';
+const hash = await bcrypt.hash(password, saltOrRounds);
+
+const salt = await bcrypt.genSalt();
+
+const isMatch = await bcrypt.compare(password, hash);
+```
