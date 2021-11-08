@@ -3,10 +3,13 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [認証 / 認可](#%E8%AA%8D%E8%A8%BC--%E8%AA%8D%E5%8F%AF)
-  - [概要](#%E6%A6%82%E8%A6%81)
-  - [環境構築](#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+- [認証 / 認可](#認証--認可)
+  - [概要](#概要)
+  - [環境構築](#環境構築)
   - [Passport Strategy](#passport-strategy)
+  - [ユーザー検索処理](#ユーザー検索処理)
+  - [認証処理](#認証処理)
+  - [Passport Local](#passport-local)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -50,4 +53,133 @@ nest generate service auth
 ```bash
 nest generate module users
 nest generate service users
+```
+
+## ユーザー検索処理
+
+インメモリにユーザー情報を保存して、指定されたユーザー名をもとにユーザーを検索する処理を追加する。
+
+```ts
+import { Injectable } from '@nestjs/common';
+
+// This should be a real class/interface representing a user entity
+export type User = any;
+
+@Injectable()
+export class UsersService {
+  private readonly users = [
+    {
+      userId: 1,
+      username: 'john',
+      password: 'changeme',
+    },
+    {
+      userId: 2,
+      username: 'maria',
+      password: 'guess',
+    },
+  ];
+
+  async findOne(username: string): Promise<User | undefined> {
+    return this.users.find((user) => user.username === username);
+  }
+}
+```
+
+またユーザーモジュールの設定では、認証モジュールでユーザー検索処理を使用するため、以下のように外部モジュールにサービスクラスを追加する。
+
+```ts
+import { Module } from '@nestjs/common';
+import { UsersService } from './users.service';
+
+@Module({
+  providers: [UsersService],
+  exports: [UsersService],
+})
+export class UsersModule {}
+```
+
+## 認証処理
+
+認証処理では、クライアントから送信されたユーザー名をもとにユーザーを取得し、送信されたパスワードと保存されているパスワードが一致しているのか検証処理を実施する。
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+
+@Injectable()
+export class AuthService {
+  constructor(private usersService: UsersService) {}
+
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+}
+```
+
+上記ではユーザーに関するサービスクラスを使用しているため、以下のようにモジュール設定でユーザーモジュールを読み込んでおく必要がある。
+
+```ts
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { UsersModule } from '../users/users.module';
+
+@Module({
+  imports: [UsersModule],
+  providers: [AuthService],
+})
+export class AuthModule {}
+```
+
+## Passport Local
+
+認証処理を実装するには `PassportStrategy` クラスを継承する必要がある。
+
+また `validate` メソッドを実装すれば、この処理を認証時に実行することができ、どの認証戦略でもユーザーが存在していることと認証情報が有効であることを検証する必要がある。
+
+```ts
+// auth/local.strategy.ts
+
+import { Strategy } from 'passport-local';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from './auth.service';
+
+@Injectable()
+export class LocalStrategy extends PassportStrategy(Strategy) {
+  constructor(private authService: AuthService) {
+    super();
+  }
+
+  async validate(username: string, password: string): Promise<any> {
+    const user = await this.authService.validateUser(username, password);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return user;
+  }
+}
+```
+
+これで `validate` メソッドの実行が成功すれば、`Request` オブジェクトに対して `user` プロパティに認証されたユーザー情報が登録される。
+
+あとは外部のモジュールで使用できるように以下のようにモジュールの設定を追加する。
+
+```ts
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { UsersModule } from '../users/users.module';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './local.strategy';
+
+@Module({
+  imports: [UsersModule, PassportModule],
+  providers: [AuthService, LocalStrategy],
+})
+export class AuthModule {}
 ```
