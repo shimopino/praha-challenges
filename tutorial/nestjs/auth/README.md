@@ -6,6 +6,7 @@
 - [認証 / 認可](#%E8%AA%8D%E8%A8%BC--%E8%AA%8D%E5%8F%AF)
   - [概要](#%E6%A6%82%E8%A6%81)
   - [環境構築](#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+  - [Passport Strategy](#passport-strategy)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
