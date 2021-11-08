@@ -3,16 +3,17 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [認証 / 認可](#%E8%AA%8D%E8%A8%BC--%E8%AA%8D%E5%8F%AF)
-  - [概要](#%E6%A6%82%E8%A6%81)
-  - [環境構築](#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+- [認証 / 認可](#認証--認可)
+  - [概要](#概要)
+  - [環境構築](#環境構築)
   - [Passport Strategy](#passport-strategy)
-  - [ユーザー検索処理](#%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E6%A4%9C%E7%B4%A2%E5%87%A6%E7%90%86)
-  - [認証処理](#%E8%AA%8D%E8%A8%BC%E5%87%A6%E7%90%86)
+  - [ユーザー検索処理](#ユーザー検索処理)
+  - [認証処理](#認証処理)
   - [Passport Local](#passport-local)
   - [Built-in Passport Guard](#built-in-passport-guard)
   - [Login Route](#login-route)
-  - [JWT の利用](#jwt-%E3%81%AE%E5%88%A9%E7%94%A8)
+  - [JWT の利用](#jwt-の利用)
+  - [Passport JWT](#passport-jwt)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -367,4 +368,55 @@ curl http://localhost:3000/auth/login \
 
 ```bash
 {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTYzNjM3OTc5NSwiZXhwIjoxNjM2Mzc5ODU1fQ.X0zYuiHmyIT1dmP_qQV3cTnPNgmpBqbxU9idykyjMfg"}%
+```
+
+## Passport JWT
+
+JWT トークンの発行処理は完了したので、`passport-jwt` を使用してルートハンドラーに対するアクセス制御を追加する。
+
+このためには、`LocalStrategy` の時と同じように、`validate` メソッドを実装する。
+
+```ts
+// auth/jwt.strategy.ts
+
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
+import { jwtConstants } from './constants';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: jwtConstants.secret,
+    });
+  }
+
+  async validate(payload: any) {
+    return { userId: payload.sub, username: payload.username };
+  }
+}
+```
+
+`super` メソッド内で検証処理の設定を追加することができる。
+
+- `jwtFromRequest`
+  - `Request` オブジェクトから JWT トークンを抽出する方法を指定する
+  - ここでは `Bearer Token` から取得できるようにしている
+- `ignoreExpiration`
+  - JWT の有効期限を適用する
+  - トークンの有効期限が切れていた場合は `401` を返す
+- `secretOrKey`
+  - 暗号化するためのキー情報を指定する
+
+あとは以下のように自作の `Guard` を適用すればいい。
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}
 ```
