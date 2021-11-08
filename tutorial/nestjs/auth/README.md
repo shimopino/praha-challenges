@@ -3,17 +3,18 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [認証 / 認可](#%E8%AA%8D%E8%A8%BC--%E8%AA%8D%E5%8F%AF)
-  - [概要](#%E6%A6%82%E8%A6%81)
-  - [環境構築](#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89)
+- [認証 / 認可](#認証--認可)
+  - [概要](#概要)
+  - [環境構築](#環境構築)
   - [Passport Strategy](#passport-strategy)
-  - [ユーザー検索処理](#%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E6%A4%9C%E7%B4%A2%E5%87%A6%E7%90%86)
-  - [認証処理](#%E8%AA%8D%E8%A8%BC%E5%87%A6%E7%90%86)
+  - [ユーザー検索処理](#ユーザー検索処理)
+  - [認証処理](#認証処理)
   - [Passport Local](#passport-local)
   - [Built-in Passport Guard](#built-in-passport-guard)
   - [Login Route](#login-route)
-  - [JWT の利用](#jwt-%E3%81%AE%E5%88%A9%E7%94%A8)
+  - [JWT の利用](#jwt-の利用)
   - [Passport JWT](#passport-jwt)
+  - [JWT Strategy Guard](#jwt-strategy-guard)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -420,3 +421,56 @@ import { AuthGuard } from '@nestjs/passport';
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {}
 ```
+
+## JWT Strategy Guard
+
+あとは以下のようにルートハンドラーに対して `Guard` を適用する。
+
+```ts
+import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { LocalAuthGuard } from './auth/local-auth.guard';
+import { AuthService } from './auth/auth.service';
+
+@Controller()
+export class AppController {
+  constructor(private authService: AuthService) {}
+
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
+}
+```
+
+これで想定通りの挙動を再現することが可能となる。
+
+```bash
+# GET /profile
+curl http://localhost:3000/profile
+>>
+{"statusCode":401,"message":"Unauthorized"}
+
+# POST /auth/login
+curl http://localhost:3000/auth/login \
+  -X POST \
+  -d '{"username": "john", "password": "changeme"}' \
+  -H "Content-Type: application/json"
+>>
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTYzNjM4MDk1MCwiZXhwIjoxNjM2MzgxMDEwfQ.ny_A5pna80sNimwn0H13dJIEUX_SPD6VsJLqp1RAbQ4"}
+
+# GET /profile using access_token returned from previous step as bearer code
+curl http://localhost:3000/profile \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTYzNjM4MDk1MCwiZXhwIjoxNjM2MzgxMDEwfQ.ny_A5pna80sNimwn0H13dJIEUX_SPD6VsJLqp1RAbQ4"
+>>
+{"userId":1,"username":"john"}
+```
+
+実際にはトークンの有効期限が切れていた場合の処理や、リフレッシュトークンなどの処理が必要となる。
