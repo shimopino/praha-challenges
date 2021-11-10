@@ -15,4 +15,14 @@ model User {
   name     String
   email    String @unique
   password String
+  posts    Post[]
+}
+
+model Post {
+  id        String  @id
+  title     String
+  content   String
+  published Boolean
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
 }
