@@ -13,6 +13,15 @@ export class PostsService {
     return this.posts;
   }
 
+  getPostById(id: number) {
+    const post = this.posts.find((post) => post.id === id);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return post;
+  }
+
   createPost(post: CreatePostDTO) {
     const newPost = {
       id: this.posts.length + 1,

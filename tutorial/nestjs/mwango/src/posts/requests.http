@@ -21,3 +21,6 @@ Content-Type: application/json
 
 ### Delete a Post
 DELETE http://localhost:3000/posts/1
+
+### Get a Post
+GET http://localhost:3000/posts/1

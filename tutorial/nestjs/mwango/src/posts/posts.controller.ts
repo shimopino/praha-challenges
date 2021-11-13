@@ -20,6 +20,11 @@ export class PostsController {
     return this.postsService.getAllPosts();
   }
 
+  @Get(':id')
+  getPostById(@Param('id') id: string) {
+    return this.postsService.getPostById(parseInt(id));
+  }
+
   @Post()
   createPost(@Body() body: CreatePostDTO) {
     return this.postsService.createPost(body);

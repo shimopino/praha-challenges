@@ -332,3 +332,29 @@ deletePost(id: number) {
 ```
 
 これで記事を削除することが可能となった。
+
+### 特定の記事を取得する
+
+次に指定された記事を取得するためのエンドポイント `GET /posts/:id` に対応するハンドラーを作成する。
+
+```ts
+@Get(':id')
+getPostById(@Param('id') id: string) {
+  return this.postsService.getPostById(parseInt(id));
+}
+```
+
+次に対応するサービスクラスを作成する。
+
+```ts
+getPostById(id: number) {
+  const post = this.posts.find((post) => post.id === id);
+  if (!post) {
+    throw new NotFoundException('Post not found');
+  }
+
+  return post;
+}
+```
+
+これで特定の記事を取得することができた。
