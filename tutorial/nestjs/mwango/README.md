@@ -486,6 +486,8 @@ model Post {
   id      Int    @id @default(autoincrement())
   title   String
   content String
+
+  @@map("post")
 }
 ```
 
@@ -627,3 +629,22 @@ async deletePost(id: number) {
 ```
 
 これで実際に PgAdmin を確認すればデータベースに対してアクセスできていることがわかる。
+
+## #3. Authentication with bcrypt, passport, jwt, cookies
+
+### データモデルの準備
+
+認証機能を作成するために、ユーザーに関するデータモデルを作成する。この際にメールアドレスが一意であることに注意する必要がある。
+
+```js
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  name     String
+  password String
+
+  @@map("user")
+}
+```
+
+あとはマイグレーションを実行すればデータベースに反映される。
