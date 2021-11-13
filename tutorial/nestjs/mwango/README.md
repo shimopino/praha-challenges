@@ -14,11 +14,25 @@ mwango さんの [コース](https://wanago.io/2020/05/11/nestjs-api-controllers
 
 ## 環境設定
 
+### 初期化
+
 まずは NestJS でプロジェクトを初期化する。
 
 ```bash
 nest new mwango
 ```
+
+なお、プロジェクトを初期化した際に生成されるファイルのうち、コントローラーやサービスに関しては不要なので削除しておく。
+
+これで以下のようなシンプルなファイル構造が残っている。
+
+```bash
+src
+├── app.module.ts
+└── main.ts
+```
+
+### ESLint
 
 次に ESLint の設定を追加する。
 
