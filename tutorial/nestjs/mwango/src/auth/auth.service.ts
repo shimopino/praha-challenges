@@ -7,10 +7,17 @@ import {
 import { UsersService } from '../users/users.service';
 import { RegisterUserDTO } from './dtos/register-user.dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { TokenPayload } from './interfaces/token-payload.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   public async register(registerUser: RegisterUserDTO) {
     const hashedPassword = await bcrypt.hash(registerUser.password, 10);
@@ -46,5 +53,13 @@ export class AuthService {
     // eslint-disable-next-line unused-imports/no-unused-vars
     const { password, ...authenticatedUser } = user;
     return authenticatedUser;
+  }
+
+  public getCookieWithJwtToken(userId: number) {
+    const payload: TokenPayload = { userId };
+    const token = this.jwtService.sign(payload);
+    return `Authorization=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_EXPIRATION_TIME',
+    )}`;
   }
 }

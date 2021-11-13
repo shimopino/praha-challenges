@@ -897,6 +897,8 @@ npm install --save-dev @types/passport-jwt @types/cookie-parser
 あとは JWT を生成・解号するための秘密キーと、JWT の有効期限を環境変数として設定すればいい。
 
 ```ts
+// src/app.module.ts
+
 @Module({
   imports: [
     PostsModule,
@@ -911,4 +913,85 @@ npm install --save-dev @types/passport-jwt @types/cookie-parser
   ],
 })
 export class AppModule {}
+```
+
+環境設定ファイルにも該当する環境変数を登録しておく。
+
+```bash
+# .env.dev
+JWT_SECRET=dev
+JWT_EXPIRATION_TIME=60
+```
+
+### トークンの生成とクライアントへの送信
+
+生成された JWT はクッキーに格納するようにする。
+
+そのためまずは認証モジュールに対して JWT に関する設定を追加する。
+
+```ts
+@Module({
+  imports: [
+    UsersModule,
+    PassportModule,
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
+        },
+      }),
+    }),
+  ],
+  providers: [AuthService, LocalStrategy],
+  controllers: [AuthController],
+})
+export class AuthModule {}
+```
+
+次に HTTP レスポンスに付与する Cookie の値を生成する。この際に JWT を生成する際のペイロードや、Cookie の有効期限の設定などを指定している。
+
+```ts
+public getCookieWithJwtToken(userId: number) {
+  const payload: TokenPayload = { userId };
+  const token = this.jwtService.sign(payload);
+  return `Authorization=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+    'JWT_EXPIRATION_TIME',
+  )}`;
+}
+```
+
+これであとはエンドポイントの対応するハンドラーに対して Cookie の値を付与すればいい。
+
+```ts
+@HttpCode(200)
+@UseGuards(LocalAuthenticationGuard)
+@Post('login')
+async logIn(@AuthUser() user: AuthUserType, @Res() res: Response) {
+  const cookie = this.authService.getCookieWithJwtToken(user.id);
+  res.setHeader('Set-Cookie', cookie);
+  return user;
+}
+```
+
+これでリクエストを送信すれば以下のようにサーバーから Cookie が送信されていることがわかる。
+
+```bash
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Set-Cookie: Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTYzNjgzNDc5MywiZXhwIjoxNjM2ODM0ODUzfQ.-ZeS8ruU50L9zoPSvG4Q-zH2gSGfq9Vol_Oqu42aRAc; HttpOnly; Path=/; Max-Age=60
+Content-Type: application/json; charset=utf-8
+Content-Length: 59
+ETag: W/"3b-XMZ6Iz2CEhwRX6baBkDk2xK/OwI"
+Date: Sat, 13 Nov 2021 20:19:53 GMT
+Connection: close
+
+{
+  "id": 1,
+  "email": "shimopino@example.com",
+  "name": "shimopino"
+}
 ```
