@@ -26,6 +26,8 @@
   - [パスワードの暗号化](#%E3%83%91%E3%82%B9%E3%83%AF%E3%83%BC%E3%83%89%E3%81%AE%E6%9A%97%E5%8F%B7%E5%8C%96)
   - [passport.js を使用した認証処理](#passportjs-%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%9F%E8%AA%8D%E8%A8%BC%E5%87%A6%E7%90%86)
   - [Guard](#guard)
+  - [Json Web Tokens](#json-web-tokens)
+  - [環境設定を追加](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
