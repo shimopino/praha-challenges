@@ -871,3 +871,42 @@ Connection: close
   "error": "Unauthorized"
 }
 ```
+
+### Json Web Tokens
+
+### 環境設定を追加
+
+NestJS ではアプリケーションの設定に環境変数を適用するためのライブラリとして `@nestjs/config` が用意されており、環境変数が期待通りの型として適用できるのか検証するためのライブラリとして `joi` を使用する。
+
+これでアプリケーションを起動する前に、環境変数が事前に設定した条件に沿っているのか検証することが可能となる。
+
+```bash
+npm install @nestjs/config joi
+npm install --save-dev @types/joi
+```
+
+アクセストークンとして採用する JWT 周りの処理を実装するため、下記のライブラリをインストールする。
+
+```bash
+npm install @nestjs/jwt passport-jwt cookie-parser
+npm install --save-dev @types/passport-jwt @types/cookie-parser
+```
+
+あとは JWT を生成・解号するための秘密キーと、JWT の有効期限を環境変数として設定すればいい。
+
+```ts
+@Module({
+  imports: [
+    PostsModule,
+    UsersModule,
+    AuthModule,
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
+      }),
+    }),
+  ],
+})
+export class AppModule {}
+```
