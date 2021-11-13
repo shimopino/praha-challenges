@@ -304,3 +304,30 @@ Connection: close
   "error": "Not Found"
 }
 ```
+
+### 記事を削除する
+
+次に記事を削除するためのエンドポイント `DELETE /posts/:id` に対応するハンドラーとサービスクラスを作成する。
+
+```ts
+@Delete(':id')
+deletePost(@Param('id') id: string) {
+  return this.postsService.deletePost(parseInt(id));
+}
+```
+
+あとはサービスクラスの処理を追加すればいい。
+
+```ts
+deletePost(id: number) {
+  const postIndex = this.posts.findIndex((post) => post.id === id);
+  if (postIndex === -1) {
+    throw new NotFoundException('Post not found');
+  }
+
+  this.posts.splice(postIndex, 1)
+  return id;
+}
+```
+
+これで記事を削除することが可能となった。

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreatePostDTO } from './dtos/create-post.dto';
 import { UpdatePostDTO } from './dtos/replace-post.dto';
 import { PostsService } from './posts.service';
@@ -20,5 +28,10 @@ export class PostsController {
   @Put(':id')
   replacePost(@Param('id') id: string, @Body() body: UpdatePostDTO) {
     return this.postsService.replacePost(parseInt(id), body);
+  }
+
+  @Delete(':id')
+  deletePost(@Param('id') id: string) {
+    return this.postsService.deletePost(parseInt(id));
   }
 }

@@ -18,3 +18,6 @@ Content-Type: application/json
     "title": "チュートリアル #1.3",
     "content": "記事の内容を編集"
 }
+
+### Delete a Post
+DELETE http://localhost:3000/posts/1
