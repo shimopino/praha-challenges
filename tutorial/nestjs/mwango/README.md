@@ -46,3 +46,33 @@ npm install --save-dev \
 ```
 
 `.eslintrc.js` に追加する設定は、全て各ライブラリの公式サイトが推奨している設定を採用している。
+
+## #1. Controller, Service, Module
+
+NestJS ではクライアントから送信された HTTP リクエストを以下の流れで処理している。
+
+![](assets/basic-arch.drawio.svg)
+
+アプリケーション全体の設定や特定の機能に関する設定を `Module` で行い、実際に HTTP リクエストのエンドポイントと対応するハンドラーを `Controller` に記述し、内部の処理は `Service` に記述するような構造である。
+
+ではまずはブログの記事に対する CRUD を操作を実現するためのアプリケーションを作成する。
+
+まずは下記のように CLI を使用して対応する機能を初期化していく。
+
+```bash
+nest generate module posts
+nest generate controller posts --no-spec
+nest generate service posts --no-spec
+```
+
+これで以下のような構造で対応するファイルが作成された。
+
+```bash
+src
+├── app.module.ts
+├── main.ts
+└── posts
+    ├── posts.controller.ts
+    ├── posts.module.ts
+    └── posts.service.ts
+```
