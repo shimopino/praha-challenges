@@ -359,3 +359,73 @@ getPostById(id: number) {
 ```
 
 これで特定の記事を取得することができた。
+
+## #2. PostgreSQL with Prisma
+
+### PostgreSQL の準備
+
+ORM である [Prisma](https://www.prisma.io/docs/) を使用してデータを DBMS で管理するように変更する。
+
+まずは DBMS として使用する PostgreSQL を Docker コンテナ上に用意する。
+
+```yml
+# docker.compose.yml
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    ports:
+      - '3001:5432'
+    volumes:
+      - dev-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: prisma
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+      TZ: 'Asia/Tokyo'
+    networks:
+      - postgres
+  pgadmin:
+    links:
+      - postgres:postgres
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - '3002:80'
+    volumes:
+      - dev-pgadmin:/root/.pgadmin
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: prisma
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+      TZ: 'Asia/Tokyo'
+      PGADMIN_DEFAULT_EMAIL: dev@dev.com
+      PGADMIN_DEFAULT_PASSWORD: dev
+    networks:
+      - postgres
+
+volumes:
+  dev-db:
+    driver: local
+  dev-pgadmin:
+    driver: local
+
+networks:
+  postgres:
+    driver: bridge
+```
+
+これで `package.json` に以下のコマンドを追加することで簡単にコンテナを起動・終了できるようにしておけばいい。
+
+```js
+"scripts": {
+  "db:up": "docker-compose up -d --build",
+  "db:down": "docker-compose down"
+}
+```
+
+これであとは `http://localhost:3002` にアクセスすれば、データベースの中身に直接アクセスすることができるようになる。
+
