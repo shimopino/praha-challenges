@@ -1,20 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreatePostDTO } from './dtos/create-post.dto';
 import { UpdatePostDTO } from './dtos/replace-post.dto';
-import { Post } from './post.interface';
 
 @Injectable()
 export class PostsService {
-  private lastPostId = 0;
-  // 記事のデータはインメモリに保存する
-  private posts: Post[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  getAllPosts() {
-    return this.posts;
+  async getAllPosts() {
+    return await this.prisma.post.findMany();
   }
 
-  getPostById(id: number) {
-    const post = this.posts.find((post) => post.id === id);
+  async getPostById(id: number) {
+    const post = await this.prisma.post.findUnique({
+      where: { id },
+    });
+
     if (!post) {
       throw new NotFoundException('Post not found');
     }
@@ -22,33 +23,42 @@ export class PostsService {
     return post;
   }
 
-  createPost(post: CreatePostDTO) {
-    const newPost = {
-      id: this.posts.length + 1,
-      ...post,
-    };
-    this.posts.push(newPost);
+  async createPost(post: CreatePostDTO) {
+    const newPost = await this.prisma.post.create({
+      data: {
+        title: post.title,
+        content: post.content,
+      },
+    });
+
     return newPost;
   }
 
-  replacePost(id: number, post: UpdatePostDTO) {
-    const postIndex = this.posts.findIndex((post) => post.id === id);
-    if (postIndex === -1) {
+  async replacePost(id: number, post: UpdatePostDTO) {
+    const updatedPost = await this.prisma.post.update({
+      where: { id },
+      data: {
+        title: post.title,
+        content: post.content,
+      },
+    });
+
+    if (!updatedPost) {
       throw new NotFoundException('Post not found');
     }
 
-    const newPost = { id, ...post };
-    this.posts[postIndex] = newPost;
-    return newPost;
+    return updatedPost;
   }
 
-  deletePost(id: number) {
-    const postIndex = this.posts.findIndex((post) => post.id === id);
-    if (postIndex === -1) {
+  async deletePost(id: number) {
+    const deletePost = await this.prisma.post.delete({
+      where: { id },
+    });
+
+    if (!deletePost) {
       throw new NotFoundException('Post not found');
     }
 
-    this.posts.splice(postIndex, 1);
-    return id;
+    return deletePost.id;
   }
 }

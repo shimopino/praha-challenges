@@ -553,3 +553,76 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 ```
 
 `PrismaClient` はデータベースへの接続が切れた場合に接続を切るための `hooks` が用意されているため、`onModuleDestroy` を指定する必要はない。
+
+### CRUD 処理の書き換え
+
+では Prisma を使用して、インメモリの場合に実施していた処理を書き換える。
+
+- [公式サイト](https://www.prisma.io/docs/concepts/components/prisma-client/crud)
+
+まずは記事の一覧を取得する処理と、特定の記事を検索するための処理を実装する。
+
+```ts
+async getAllPosts() {
+  return await this.prisma.post.findMany();
+}
+
+async getPostById(id: number) {
+  const post = await this.prisma.post.findUnique({
+    where: { id },
+  });
+
+  if (!post) {
+    throw new NotFoundException('Post not found');
+  }
+
+  return post;
+}
+```
+
+Prisma を使用することでシンプルな API でデータベースに対してクエリを発行することが可能となる。
+
+そのほかの更新系の API に関しても、以下のように直感的な使い勝手となっている。
+
+```ts
+async createPost(post: CreatePostDTO) {
+  const newPost = await this.prisma.post.create({
+    data: {
+      title: post.title,
+      content: post.content,
+    },
+  });
+
+  return newPost;
+}
+
+async replacePost(id: number, post: UpdatePostDTO) {
+  const updatedPost = await this.prisma.post.update({
+    where: { id },
+    data: {
+      title: post.title,
+      content: post.content,
+    },
+  });
+
+  if (!updatedPost) {
+    throw new NotFoundException('Post not found');
+  }
+
+  return updatedPost;
+}
+
+async deletePost(id: number) {
+  const deletePost = await this.prisma.post.delete({
+    where: { id },
+  });
+
+  if (!deletePost) {
+    throw new NotFoundException('Post not found');
+  }
+
+  return deletePost.id;
+}
+```
+
+これで実際に PgAdmin を確認すればデータベースに対してアクセスできていることがわかる。
