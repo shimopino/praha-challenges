@@ -17,6 +17,7 @@
 - [&#035;2. PostgreSQL with Prisma](#2-postgresql-with-prisma)
   - [PostgreSQL の準備](#postgresql-%E3%81%AE%E6%BA%96%E5%82%99)
   - [Prisma の追加](#prisma-%E3%81%AE%E8%BF%BD%E5%8A%A0)
+  - [データモデルの作成](#%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB%E3%81%AE%E4%BD%9C%E6%88%90)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
