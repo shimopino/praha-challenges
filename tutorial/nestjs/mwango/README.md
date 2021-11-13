@@ -20,6 +20,8 @@
   - [データモデルの作成](#%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB%E3%81%AE%E4%BD%9C%E6%88%90)
   - [NestJS と Prisma の連携](#nestjs-%E3%81%A8-prisma-%E3%81%AE%E9%80%A3%E6%90%BA)
   - [CRUD 処理の書き換え](#crud-%E5%87%A6%E7%90%86%E3%81%AE%E6%9B%B8%E3%81%8D%E6%8F%9B%E3%81%88)
+- [&#035;3. Authentication with bcrypt, passport, jwt, cookies](#3-authentication-with-bcrypt-passport-jwt-cookies)
+  - [データモデルの準備](#%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB%E3%81%AE%E6%BA%96%E5%82%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
