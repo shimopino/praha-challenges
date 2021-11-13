@@ -5,10 +5,12 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [環境設定](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A)
-  - [初期化](#%E5%88%9D%E6%9C%9F%E5%8C%96)
-  - [ESLint](#eslint)
-- [&#035;1. Controller, Service, Module](#1-controller-service-module)
+- [mwango](#mwango)
+  - [環境設定](#環境設定)
+    - [初期化](#初期化)
+    - [ESLint](#eslint)
+  - [#1. Controller, Service, Module](#1-controller-service-module)
+    - [記事の一覧を取得する](#記事の一覧を取得する)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -74,4 +76,34 @@ src
 └── posts
     ├── posts.controller.ts
     ├── posts.module.ts
+```
+
+### 記事の一覧を取得する
+
+クライアントから記事の一覧を取得するためのエンドポイントとして `GET /posts` に対応するハンドラーを作成する。
+
+```ts
+@Controller('path')
+export class PostsController {
+  constructor() {}
+
+  @Get()
+  getAllPosts() {
+    return 'hi';
+  }
+}
+```
+
+これでエンドポイントに対するハンドラーを作成できたので、`src/posts/requests.http` を使用して HTTP リクエストを送信すると以下のようなレスポンスが返ってきていることがわかる。
+
+```bash
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 2
+ETag: W/"2-witfkXg0JglCjW9RssWvTAveakI"
+Date: Sat, 13 Nov 2021 13:45:14 GMT
+Connection: close
+
+hi
 ```
