@@ -23,6 +23,7 @@
 - [&#035;3. Authentication with bcrypt, passport, jwt, cookies](#3-authentication-with-bcrypt-passport-jwt-cookies)
   - [データモデルの準備](#%E3%83%87%E3%83%BC%E3%82%BF%E3%83%A2%E3%83%87%E3%83%AB%E3%81%AE%E6%BA%96%E5%82%99)
   - [ユーザーの登録と検索を追加](#%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E7%99%BB%E9%8C%B2%E3%81%A8%E6%A4%9C%E7%B4%A2%E3%82%92%E8%BF%BD%E5%8A%A0)
+  - [パスワードの暗号化](#%E3%83%91%E3%82%B9%E3%83%AF%E3%83%BC%E3%83%89%E3%81%AE%E6%9A%97%E5%8F%B7%E5%8C%96)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
