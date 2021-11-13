@@ -796,3 +796,55 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 }
 ```
+
+### Guard
+
+まずは認証機能を利用するためのエンドポイントと対応するハンドラーを作成する。
+
+```ts
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  async register(@Body() registerUser: RegisterUserDTO) {
+    return this.authService.register(registerUser);
+  }
+
+  @HttpCode(200)
+  @UseGuards(LocalAuthenticationGuard)
+  @Post('login')
+  async logIn(@AuthUser() user: AuthUserType) {
+    return user;
+  }
+}
+```
+
+ここではログインが `POST /auth/login` であるが、ログイン成功時にはステータスコードをデフォルトの `201` ではなく、`GET` 系のステータスコードである `200` を返すようにしている。
+
+また、`LocalAuthenticationGuard` を使用して、アノテーションを付与したハンドラーに対して、`passport-local` による認証処理を紐づけるようにしている。
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+export class LocalAuthenticationGuard extends AuthGuard('local') {}
+```
+
+このように紐づけることで `local.strategy.ts` の `validate` メソッドを実行させ、`validate` メソッドはその返り値を、HTTP リクエストのオブジェクトである `Request` の `user` プロパティとして登録する。
+
+あとは以下のようなデコレーターを使用してユーザーに関する情報をコントローラーで受け取ることができるようにしている。
+
+```ts
+// src/auth/decorators/auth-user.decorator.ts
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { AuthUserType } from '../interfaces/request-user.interface';
+
+export const AuthUser = createParamDecorator(
+  (data: never, context: ExecutionContext) => {
+    const request = context.switchToHttp().getRequest();
+    return request.user as AuthUserType;
+  },
+);
+```
