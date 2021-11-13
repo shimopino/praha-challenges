@@ -12,10 +12,19 @@
 
 mwango さんの [コース](https://wanago.io/2020/05/11/nestjs-api-controllers-routing-module/) を実践する。
 
-## 初期設定
+## 環境設定
 
 まずは NestJS でプロジェクトを初期化する。
 
 ```bash
 nest new mwango
+```
+
+次に ESLint の設定を追加する。
+
+```bash
+npm install --save-dev \
+    eslint-plugin-import \
+    eslint-plugin-jest \
+    eslint-plugin-unused-imports
 ```
