@@ -703,3 +703,60 @@ export class UsersService {
 })
 export class UsersModule {}
 ```
+
+### パスワードの暗号化
+
+パスワードをデータベースに保存する際には、平文ではなく暗号化をした上で実施する。そのために `bcrypt` ライブラリを使用する。
+
+```bash
+npm install bcrypt @types/bcrypt
+```
+
+ではこのライブラリを使用してユーザーの登録処理を実装するために、まずは認証機能を実装するためのモジュール周りを作成する。
+
+```bash
+nest generate module auth
+nest generate service auth --no-spec
+```
+
+ユーザーの登録に関しては、以下のようにパスワードの暗号化とユーザーモジュールを使用した登録処理を実行する。
+
+```ts
+public async register(registerUser: RegisterUserDTO) {
+  const hashedPassword = await bcrypt.hash(registerUser.password, 10);
+
+  try {
+    const { password, ...createdUser } = await this.usersService.create({
+      ...registerUser,
+      password: hashedPassword,
+    });
+    return createdUser;
+  } catch (error: unknown) {
+    throw new InternalServerErrorException('Something went wrong');
+  }
+}
+```
+
+ユーザーの認証では、まずはメールアドレスでユーザーの検索を行った後で、パスワードの検証を実施する必要がある。
+
+```ts
+public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+  const user = await this.usersService.getByEmail(email);
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  const isPasswordMatch = await bcrypt.compare(
+    plainTextPassword,
+    user.password,
+  );
+
+  if (!isPasswordMatch) {
+    throw new UnauthorizedException('Wrong credentials provided');
+  }
+
+  const { password, ...authenticatedUser } = user;
+  return authenticatedUser;
+}
+```
