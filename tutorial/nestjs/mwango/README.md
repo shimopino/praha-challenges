@@ -650,3 +650,55 @@ model User {
 ```
 
 あとはマイグレーションを実行すればデータベースに反映される。
+
+### ユーザーの登録と検索を追加
+
+認証機能を作成するにあたって、ユーザーを作成する機能とユーザーを登録する機能を作成する必要があるため、以下のコマンドを使用して初期化を行う。
+
+```bash
+nest generate module users
+nest generate service users --no-spec
+```
+
+記事の作成や検索の時と同じ手順で、以下のようにユーザーを検索するための処理とユーザーを登録するための処理を追加する。
+
+```ts
+@Injectable()
+export class UsersService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  async create(user: CreateUserDTO) {
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: user.email,
+        name: user.name,
+        password: user.password,
+      },
+    });
+
+    return newUser;
+  }
+}
+```
+
+あとは認証機能からユーザー機能を使用できるように、以下のように外部のモジュールにサービスクラスを出力するように設定を変更する必要がある。
+
+```ts
+@Module({
+  providers: [UsersService, PrismaService],
+  exports: [UsersService],
+})
+export class UsersModule {}
+```
