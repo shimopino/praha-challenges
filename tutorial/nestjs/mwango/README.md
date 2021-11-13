@@ -849,3 +849,25 @@ export const AuthUser = createParamDecorator(
   },
 );
 ```
+
+これでユーザー登録を行った場合、以下のようにパスワードがハッシュ化させた状態で送信したユーザー情報が登録されていることがわかる。
+
+![](assets/register.png)
+
+これで正しいパスワードを送信すればログインが可能となり、間違ったパスワードを送信すると以下のような例外メッセージが送出されていることがわかる。
+
+```bash
+HTTP/1.1 401 Unauthorized
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 80
+ETag: W/"50-igSll3zhhPDhmhWUcuSX1ocgcfY"
+Date: Sat, 13 Nov 2021 18:38:08 GMT
+Connection: close
+
+{
+  "statusCode": 401,
+  "message": "Wrong credentials provided",
+  "error": "Unauthorized"
+}
+```
