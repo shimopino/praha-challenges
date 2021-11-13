@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { CreatePostDTO } from './dtos/create-post.dto';
+import { UpdatePostDTO } from './dtos/replace-post.dto';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
@@ -14,5 +15,10 @@ export class PostsController {
   @Post()
   createPost(@Body() body: CreatePostDTO) {
     return this.postsService.createPost(body);
+  }
+
+  @Put(':id')
+  replacePost(@Param('id') id: string, @Body() body: UpdatePostDTO) {
+    return this.postsService.replacePost(parseInt(id), body);
   }
 }

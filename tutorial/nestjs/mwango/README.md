@@ -5,12 +5,14 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [環境設定](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A)
-  - [初期化](#%E5%88%9D%E6%9C%9F%E5%8C%96)
-  - [ESLint](#eslint)
-- [&#035;1. Controller, Service, Module](#1-controller-service-module)
-  - [記事の一覧を取得する](#%E8%A8%98%E4%BA%8B%E3%81%AE%E4%B8%80%E8%A6%A7%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B)
-  - [記事を追加する](#%E8%A8%98%E4%BA%8B%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+- [mwango](#mwango)
+  - [環境設定](#環境設定)
+    - [初期化](#初期化)
+    - [ESLint](#eslint)
+  - [#1. Controller, Service, Module](#1-controller-service-module)
+    - [記事の一覧を取得する](#記事の一覧を取得する)
+    - [記事を追加する](#記事を追加する)
+    - [記事を編集する](#記事を編集する)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -247,3 +249,59 @@ createPost(post: CreatePostDTO) {
 ```
 
 これで記事を作成するためのエンドポイントを作成することができた。
+
+### 記事を編集する
+
+次に保存されている記事を編集するためのエンドポイント `PUT /posts/:id` に対応するハンドラーを作成する。
+
+今回はエンドポイントに対して記事の ID が含まれているが、NestJS では `@Param` アノテーションを使用することで動的に変化する ID を取得することができる。
+
+```ts
+@Put(':id')
+replacePost(@Param('id') id: string, @Body() body: UpdatePostDto) {
+  return this.postsService.replacePost(Number(id), body);
+}
+```
+
+記事の作成時と同様に HTTP ボディに対応する型を作成する。
+
+```ts
+// src/posts/dtos/replace-post.dto.ts
+export class UpdatePostDTO {
+  title: string;
+  content: string;
+}
+```
+
+あとはインメモリに保存されている記事に対して、ID をもとに検索をした後で内容を変更する処理を作成すればいい。
+
+```ts
+replacePost(id: number, post: UpdatePostDTO) {
+  const postIndex = this.posts.findIndex((post) => post.id === id);
+  if (postIndex === -1) {
+    throw new NotFoundException('Post not found');
+  }
+
+  const newPost = { id, ...post };
+  this.posts[postIndex] = newPost;
+  return newPost;
+}
+```
+
+これで記事の編集が可能となり、また例外処理を追加しているためエンドポイントで指定された ID に該当する記事が存在しない場合は以下のようなメッセージが返されるようになっている。
+
+```bash
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 65
+ETag: W/"41-8ILy2EHCJEew/XmB6AJG95e/11c"
+Date: Sat, 13 Nov 2021 14:34:46 GMT
+Connection: close
+
+{
+  "statusCode": 404,
+  "message": "Post not found",
+  "error": "Not Found"
+}
+```

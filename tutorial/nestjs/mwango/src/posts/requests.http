@@ -9,3 +9,12 @@ Content-Type: application/json
     "title": "チュートリアル #1",
     "content": "excellent"
 }
+
+### Change a Post
+PUT http://localhost:3000/posts/1
+Content-Type: application/json
+
+{
+    "title": "チュートリアル #1.3",
+    "content": "記事の内容を編集"
+}
