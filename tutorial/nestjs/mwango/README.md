@@ -528,3 +528,27 @@ PgAdmin 以外にも、下記のコマンドを使用することで直接 Docke
 ```bash
 docker container exec -it postgres psql -U dev prisma
 ```
+
+### NestJS と Prisma の連携
+
+NestJS でアプリケーションを起動・終了した際に、データベースへの接続や切断も実行できるようにするために、以下のラッパークラスを作成する。
+
+- [公式サイト](https://docs.nestjs.com/recipes/prisma#use-prisma-client-in-your-nestjs-services)
+
+```ts
+// src/prisma/prisma.service.ts
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit {
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  async enableShutdownHooks(app: INestApplication) {
+    this.$on('beforeExit', async () => {
+      await app.close();
+    });
+  }
+}
+```
+
+`PrismaClient` はデータベースへの接続が切れた場合に接続を切るための `hooks` が用意されているため、`onModuleDestroy` を指定する必要はない。
