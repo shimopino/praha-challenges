@@ -470,3 +470,60 @@ DATABASE_URL="postgresql://dev:dev@localhost:3001/prisma?schema=public"
   "start:dev": "dotenv -e .env.dev -- nest start --watch",
 }
 ```
+
+### データモデルの作成
+
+Prisma では `schema.prisma` というファイルに独自の記法を使用してデータモデルを作成する。
+
+```js
+model Post {
+  // @id で主キーとして指定
+  // @default でレコード作成時のデフォルト値を指定
+  // autoincrement() で自動採番を使用
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+}
+```
+
+あとは環境変数を参照した上でデータベースに反映させるためのマイグレーションを実施する。
+
+```js
+"scripts": {
+  "migrate:dev": "dotenv -e .env.dev -- prisma migrate dev"
+}
+```
+
+これで下記のディレクトリにマイグレーション用の SQL ファイルが作成される。
+
+```bash
+prisma
+├── migrations
+│   ├── 20211113154156_init
+│   │   └── migration.sql
+│   └── migration_lock.toml
+└── schema.prisma
+```
+
+これで生成された `migration.sql` を確認すると以下のテーブル生成用のコマンドが作成されていることがわかる。
+
+```sql
+-- CreateTable
+CREATE TABLE "Post" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+
+    CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
+);
+```
+
+これで PgAdmin を確認すれば、以下のようにマイグレーションが実行されており、データベースの中身にもアクセスすることができていることがわかる。
+
+![](assets/pgadmin-init.png)
+
+PgAdmin 以外にも、下記のコマンドを使用することで直接 Docker コンテナ内にアクセスして中身を確認することも可能である。
+
+```bash
+docker container exec -it postgres psql -U dev prisma
+```
