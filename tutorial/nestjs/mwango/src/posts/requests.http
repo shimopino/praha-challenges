@@ -1,2 +1,11 @@
 ### Get All Posts
 GET http://localhost:3000/posts
+
+### Create a Post
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+    "title": "チュートリアル #1",
+    "content": "excellent"
+}
