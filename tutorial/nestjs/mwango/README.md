@@ -28,6 +28,7 @@
   - [Guard](#guard)
   - [Json Web Tokens](#json-web-tokens)
   - [環境設定を追加](#%E7%92%B0%E5%A2%83%E8%A8%AD%E5%AE%9A%E3%82%92%E8%BF%BD%E5%8A%A0)
+  - [トークンの生成とクライアントへの送信](#%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E3%81%AE%E7%94%9F%E6%88%90%E3%81%A8%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%81%B8%E3%81%AE%E9%80%81%E4%BF%A1)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
