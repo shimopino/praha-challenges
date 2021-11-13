@@ -710,7 +710,8 @@ export class UsersModule {}
 パスワードをデータベースに保存する際には、平文ではなく暗号化をした上で実施する。そのために `bcrypt` ライブラリを使用する。
 
 ```bash
-npm install bcrypt @types/bcrypt
+npm install bcrypt
+npm install --save-dev @types/bcrypt
 ```
 
 ではこのライブラリを使用してユーザーの登録処理を実装するために、まずは認証機能を実装するためのモジュール周りを作成する。
@@ -759,5 +760,38 @@ public async getAuthenticatedUser(email: string, plainTextPassword: string) {
 
   const { password, ...authenticatedUser } = user;
   return authenticatedUser;
+}
+```
+
+### passport.js を使用した認証処理
+
+公式サイトが推奨している通り、`passport.js` を使用して認証処理を実装する。
+
+今回はさまざまな認証方法（`strategy`）の中でも、デフォルトでユーザー名とパスワードで認証を行うことのできる `passport-local` ライブラリを使用する。
+
+```bash
+npm install passport passport-local @nestjs/passport
+npm install --save-dev @types/passport-local
+```
+
+特徴的な点は、以下のようにコンストラクタに認証を行うための設定を記述し、必ず設定を反映させた値を受け取ることのできる `validate` メソッドを実装する必要がある点である。
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-local';
+import { AuthService } from '../auth.service';
+
+@Injectable()
+export class LocalStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly authService: AuthService) {
+    super({
+      usernameField: 'email',
+    });
+  }
+
+  async validate(email: string, password: string) {
+    return this.authService.getAuthenticatedUser(email, password);
+  }
 }
 ```
