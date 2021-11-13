@@ -63,7 +63,6 @@ NestJS ではクライアントから送信された HTTP リクエストを以�
 ```bash
 nest generate module posts
 nest generate controller posts --no-spec
-nest generate service posts --no-spec
 ```
 
 これで以下のような構造で対応するファイルが作成された。
@@ -75,5 +74,4 @@ src
 └── posts
     ├── posts.controller.ts
     ├── posts.module.ts
-    └── posts.service.ts
 ```
