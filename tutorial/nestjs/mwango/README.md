@@ -429,3 +429,41 @@ networks:
 
 これであとは `http://localhost:3002` にアクセスすれば、データベースの中身に直接アクセスすることができるようになる。
 
+### Prisma の追加
+
+では Prisma を使用してデータモデルの作成と、データベースへのマイグレーションを実行していく。
+
+```bash
+npm install --save-dev prisma
+```
+
+これで次に初期化する。
+
+```bash
+npx prisma init
+# .
+# ├── prisma
+# │   └── schema.prisma   # 初期のスキーマファイル
+# └── .env                # 環境設定
+```
+
+ここで `.env` が作成されるが、環境変数を簡単に切り替えることができるように [公式ページで推奨されている方法](https://www.prisma.io/docs/guides/development-environment/environment-variables/using-multiple-env-files) を使用する。
+
+```bash
+npm install --save-dev dotenv-cli
+```
+
+次に以下のような環境変数を作成する。
+
+```bash
+# .env.dev
+DATABASE_URL="postgresql://dev:dev@localhost:3001/prisma?schema=public"
+```
+
+あとは `package.json` に以下のように環境変数ファイルへの参照を追加すればいい。
+
+```js
+"scripts": {
+  "start:dev": "dotenv -e .env.dev -- nest start --watch",
+}
+```
