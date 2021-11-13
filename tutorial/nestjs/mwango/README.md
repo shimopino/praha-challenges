@@ -28,3 +28,5 @@ npm install --save-dev \
     eslint-plugin-jest \
     eslint-plugin-unused-imports
 ```
+
+`.eslintrc.js` に追加する設定は、全て各ライブラリの公式サイトが推奨している設定を採用している。
