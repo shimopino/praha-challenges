@@ -14,6 +14,9 @@
   - [記事を編集する](#%E8%A8%98%E4%BA%8B%E3%82%92%E7%B7%A8%E9%9B%86%E3%81%99%E3%82%8B)
   - [記事を削除する](#%E8%A8%98%E4%BA%8B%E3%82%92%E5%89%8A%E9%99%A4%E3%81%99%E3%82%8B)
   - [特定の記事を取得する](#%E7%89%B9%E5%AE%9A%E3%81%AE%E8%A8%98%E4%BA%8B%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B)
+- [&#035;2. PostgreSQL with Prisma](#2-postgresql-with-prisma)
+  - [PostgreSQL の準備](#postgresql-%E3%81%AE%E6%BA%96%E5%82%99)
+  - [Prisma の追加](#prisma-%E3%81%AE%E8%BF%BD%E5%8A%A0)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
