@@ -1258,3 +1258,113 @@ export class ExceptionsLoggerFilter extends BaseExceptionFilter {
    ```
 
 ### HTTP リクエストの検証
+
+NestJS では備え付けの `pipe` を使用することで、HTTP リクエストの検証処理を追加することができる。
+
+そのためにはまずは検証のための設定を追加する。
+
+```ts
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  app.use(cookieParser());
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+これで以下のライブラリを追加して検証処理を記述することができるようになる。
+
+```bash
+npm install class-validator class-transformer
+```
+
+例えばユーザー登録時の DTO に以下のような条件を付与することができる。
+
+```ts
+// src/auth/dtos/register-user.dto.ts
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+export class RegisterUserDTO {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(7)
+  password: string;
+}
+```
+
+これで例えばパスワードを少ない文字列で送信した場合は以下のようなエラーメッセージが返される。
+
+```bash
+HTTP/1.1 400 Bad Request
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 108
+ETag: W/"6c-4CfYpZ8dcBbxNsp68eDggEmmWvY"
+Date: Sun, 14 Nov 2021 03:31:59 GMT
+Connection: close
+
+{
+  "statusCode": 400,
+  "message": [
+    "password must be longer than or equal to 7 characters"
+  ],
+  "error": "Bad Request"
+}
+```
+
+### エンドポイントへの検証処理
+
+エンドポイントに対する ID なども検証処理を追加することができる。
+
+例えばエンドポイントに ID が含まれている場合には以下のクラスを用意する。
+
+```ts
+import { IsNumberString } from 'class-validator';
+
+export class FindOneParam {
+  @IsNumberString()
+  id: string;
+}
+```
+
+こうすることで `@Param('id')` のように明示的に ID を指定する必要がなくなる。
+
+```ts
+@Get(':id')
+getPostById(@Param() { id }: FindOneParam) {
+  return this.postsService.getPostById(parseInt(id));
+}
+```
+
+### Optional 項目の追加
+
+`ValidationPipe` の設定を変更することで任意の項目は検証処理をスキップすることができるようになる。
+
+```ts
+app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
+```
+
+これで以下のように `@IsOptional` アノテーションを付与すれば、任意項目となり値が設定されている場合にのみ検証を実行することができる。
+
+```ts
+// src/posts/dtos/replace-post.dto.ts
+export class UpdatePostDTO {
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  content: string;
+}
+```
