@@ -1057,3 +1057,65 @@ async getById(id: number) {
   return user;
 }
 ```
+
+### 認証処理を追加
+
+これで JWT を解析して、ユーザーが存在していた場合には後続のハンドラーの処理を実行するようにできる。
+
+実際に以下のような `Guard` を使用して、ユーザーの検証ができた場合にのみ記事を作成することができるようにする。
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {}
+```
+
+これで記事を作成するためのハンドラーに以下のようにアノテーションを付与することで、ログインしていないユーザーが記事を作成できないようにすることができる。
+
+```ts
+@Post()
+@UseGuards(JwtAuthGuard)
+createPost(@Body() body: CreatePostDTO) {
+  return this.postsService.createPost(body);
+}
+```
+
+これでログインしていない状態で記事を作成すると以下のようなレスポンスを受け取ることになる。
+
+```bash
+HTTP/1.1 401 Unauthorized
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 43
+ETag: W/"2b-hGShxOkieaAVDloBubJVM+h58D8"
+Date: Sun, 14 Nov 2021 02:25:31 GMT
+Connection: close
+
+{
+  "statusCode": 401,
+  "message": "Unauthorized"
+}
+```
+
+### ログアウト
+
+ログアウトをする際には Cookie に格納されている JWT を削除すればいい。
+
+```ts
+public getCookieForLogOut() {
+  return `Authentication=; HttpOnly; Path=; Max-Age=0`;
+}
+```
+
+これで対応するハンドラーから上記の処理を呼び出してクライアントの Cookie としてレスポンスを返せばいい。
+
+```ts
+@UseGuards(JwtAuthGuard)
+@Post('logout')
+async logOut(@AuthUser() user: AuthUserType, @Res() res: Response) {
+  res.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
+  return res.sendStatus(200);
+}
+```
