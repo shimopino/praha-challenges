@@ -29,4 +29,17 @@ export class UsersService {
 
     return newUser;
   }
+
+  async getById(id: number) {
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    const { password, ...user } = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
 }

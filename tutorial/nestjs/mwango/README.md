@@ -996,3 +996,64 @@ Connection: close
   "name": "shimopino"
 }
 ```
+
+### トークンを受け取る
+
+クライアントから送信された HTTP リクエストに付与されている Cookie を解析できるように、ミドルウェアを追加する必要がある。
+
+```ts
+import * as cookieParser from 'cookie-parser';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+これで Cookie 自体を解析して値を抽出することが可能となった。
+
+しかし、JWT はそのままの値で使用するのではなく、JWT のペイロードに乗っている値を抽出し、値が改竄されていないことを検証する必要がある。
+
+そこで以下のように `passport-jwt` を使用して解析対象の JWT が HTTP リクエストのどこに格納されているのか設定し、また、解号に使用する秘密キーを参照する設定を追加する必要がある。
+
+```ts
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request: Request) => {
+          return request?.cookies?.Authentication;
+        },
+      ]),
+      secretOrKey: configService.get('JWT_SECRET'),
+    });
+  }
+
+  async validate(payload: TokenPayload) {
+    return this.usersService.getById(payload.userId);
+  }
+}
+```
+
+あとは `validate` メソッドの引数に解号された JWT の値を受け取り、ユーザーを検索する処理を実行すれば、もしもユーザーが存在していた場合には、`Request` オブジェクトの `user` プロパティに検索したユーザーを登録することになる。
+
+```ts
+async getById(id: number) {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  const { password, ...user } = await this.prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  return user;
+}
+```
