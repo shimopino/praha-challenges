@@ -1414,3 +1414,43 @@ async login(@AuthUser() user: AuthUserType) {
   return user;
 }
 ```
+
+## #6. Dependancy Injection
+
+```ts
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  // ...
+}
+```
+
+```ts
+@Module({
+  imports: [
+    UsersModule,
+    PassportModule,
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
+        },
+      }),
+    }),
+  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  controllers: [AuthController],
+})
+export class AuthModule {}
+```
+
+## #7. Relationships
