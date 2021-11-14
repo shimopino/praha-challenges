@@ -42,6 +42,9 @@
 - [&#035;5. Interceptors](#5-interceptors)
 - [&#035;6. Dependancy Injection](#6-dependancy-injection)
 - [&#035;7. Relationships](#7-relationships)
+  - [one-to-one](#one-to-one)
+  - [one-to-many](#one-to-many)
+  - [many-to-many](#many-to-many)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
