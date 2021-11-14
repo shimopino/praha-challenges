@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Res,
@@ -37,5 +38,11 @@ export class AuthController {
   async logOut(@AuthUser() user: AuthUserType, @Res() res: Response) {
     res.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
     return res.sendStatus(200);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  auth(@AuthUser() user: AuthUserType) {
+    return user;
   }
 }

@@ -1119,3 +1119,15 @@ async logOut(@AuthUser() user: AuthUserType, @Res() res: Response) {
   return res.sendStatus(200);
 }
 ```
+
+### ログイン検証処理
+
+クライアントがログインしているのか検証できるようにするために、クライアントからのリクエストを受けてユーザーがログイン状態なのかレスポンスとして返すようにしておくと便利である。
+
+```ts
+@UseGuards(JwtAuthGuard)
+@Get()
+auth(@AuthUser() user: AuthUserType) {
+  return user;
+}
+```
