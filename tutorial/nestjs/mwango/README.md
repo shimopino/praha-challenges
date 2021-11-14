@@ -1456,3 +1456,114 @@ export class AuthModule {}
 ```
 
 ## #7. Relationships
+
+Prisma ではテーブル同士の多重度を、複数の方法で表現することができる。
+
+### one-to-one
+
+1 体 1 の関係性とは、例えばユーザー自体の存在を示すテーブルと、ユーザーのプロフィール情報の関係性がある。
+
+- ユーザーはプロフィールを設定している場合とそうではない場合がある
+- プロフィールは必ずユーザーに紐づいている必要がある
+
+```ts
+model User {
+  id      Int      @id @default(autoincrement())
+  // 紐づいてる場合とそうではない場合がある
+  profile Profile?
+}
+
+model Profile {
+  id     Int  @id @default(autoincrement())
+  // プロフィールは必ずユーザーに紐づいてる
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+```
+
+### one-to-many
+
+1 体多の関係性とは、例えばユーザーが複数の記事を投稿しているような場合に使用する。
+
+```ts
+model User {
+  id    Int    @id @default(autoincrement())
+  // ユーザーは0以上の記事を保持できる
+  posts Post[]
+}
+
+model Post {
+  id       Int  @id @default(autoincrement())
+  // 記事は必ずユーザーに紐づいてる
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+}
+```
+
+なお下記のように記事の側には必ずユーザーを紐付ければいいわけではなく、任意の項目に変更することもできる。
+
+```ts
+model User {
+  id    Int    @id @default(autoincrement())
+  posts Post[]
+}
+
+model Post {
+  id       Int   @id @default(autoincrement())
+  // 記事はユーザーに紐づいていない場合も存在する
+  author   User? @relation(fields: [authorId], references: [id])
+  authorId Int?
+}
+```
+
+### many-to-many
+
+記事とカテゴリのような多対多の構造を表現する方法として、明示的に表現する場合と暗黙的に表現する場合が存在する。
+
+明示的に表現するとは、以下のように記事とカテゴリを紐づけるためのテーブルを用意することであり、カテゴリを紐づけるというイベントに対して追加の情報を付与しておきたい場合に使用する。
+
+例えば以下ではカテゴリを紐づけた人物と日時を追加の情報としてテーブルに持たせている。
+
+```ts
+model Post {
+  id         Int                 @id @default(autoincrement())
+  title      String
+  categories CategoriesOnPosts[]
+}
+
+model Category {
+  id    Int                 @id @default(autoincrement())
+  name  String
+  posts CategoriesOnPosts[]
+}
+
+model CategoriesOnPosts {
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  // 以下の2項目が追加
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([postId, categoryId])
+}
+```
+
+暗黙的に表現する場合は、以下のようにテーブル同士を紐づけるテーブルを作成することなく、配列同士で参照するようにしている。
+
+```ts
+model Post {
+  id         Int        @id @default(autoincrement())
+  categories Category[]
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  posts Post[]
+}
+```
+
+上記の場合には気を付ける点は以下になる。
+
+- 主キーは 1 つである必要あり
