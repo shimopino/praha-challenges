@@ -1370,3 +1370,46 @@ export class UpdatePostDTO {
   content: string;
 }
 ```
+
+## #5. Interceptors
+
+NestJS が提供しているインターセプターでは、HTTP レスポンスや HTTP リクエストに対して任意の処理を挟み込むことができる。
+
+例えばユーザーの登録やログイン成功時に Cookie に JWT を付与する処理は、インターセプターで共通化することができる。
+
+```ts
+@Injectable()
+export class TokenInterceptor implements NestInterceptor {
+  constructor(private readonly authService: AuthService) {}
+
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<User>,
+  ): Observable<User> {
+    return next.handle().pipe(
+      map((user) => {
+        const res = context.switchToHttp().getResponse<Response>();
+        const token = this.authService.signToken(user);
+
+        res.cookie('Authentication', token, {
+          httpOnly: true,
+          signed: true,
+          sameSite: 'strict',
+          secure: process.env.NODE_ENV === 'production',
+        });
+
+        return user;
+      }),
+    );
+  }
+}
+```
+
+あとはハンドラーに対してインターセプターを登録すれば、上記の処理を HTTP レスポンスオブジェクトに対して実行することができる。
+
+```ts
+@UseInterceptors(TokenInterceptor)
+async login(@AuthUser() user: AuthUserType) {
+  return user;
+}
+```
