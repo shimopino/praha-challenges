@@ -16,3 +16,9 @@ Content-Type: application/json
     "email": "shimopino@example.com",
     "password": "shimopino"
 }
+
+### Log Out
+POST http://localhost:3000/auth/logout
+
+### Check login state
+GET http://localhost:3000/auth
