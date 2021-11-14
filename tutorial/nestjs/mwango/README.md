@@ -1135,3 +1135,122 @@ auth(@AuthUser() user: AuthUserType) {
   return user;
 }
 ```
+
+## #4. エラー処理
+
+### カスタム例外クラス
+
+NestJS では `exception filter` を使用することで、例外処理を明示的に記述していない例外が発生した場合に、共通処理としてフォーマットなどを整えたりすることができる。
+
+NestJS は以下の共通クラスを用意している。
+
+```ts
+export class BaseExceptionFilter<T = any> implements ExceptionFilter<T> {
+  // ...
+  catch(exception: T, host: ArgumentsHost) {
+    // ...
+    if (!(exception instanceof HttpException)) {
+      return this.handleUnknownError(exception, host, applicationRef);
+    }
+    const res = exception.getResponse();
+    const message = isObject(res)
+      ? res
+      : {
+          statusCode: exception.getStatus(),
+          message: res,
+        };
+    // ...
+  }
+
+  public handleUnknownError(
+    exception: T,
+    host: ArgumentsHost,
+    applicationRef: AbstractHttpAdapter | HttpServer,
+  ) {
+    const body = {
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: MESSAGES.UNKNOWN_EXCEPTION_MESSAGE,
+    };
+    // ...
+  }
+}
+```
+
+ここからわかる点は NestJS は、`HttpException` クラスとその継承クラスを使用することを想定しており、それ以外の例外クラスをクライアントに送出しようとすると `InternalServerException` を返すような設定になっている。
+
+また共通のプロパティとしてステータスコードとエラーメッセージが用意されていることがわかる。
+
+独自の例外型を作成したい場合は、以下のように `HttpException` クラスを継承した上で、独自のメッセージをコンストラクタに指定すればいい。
+
+```ts
+// posts/exception/post-not-found.exception.ts
+import { NotFoundException } from '@nestjs/common';
+
+export class PostNotFoundException extends NotFoundException {
+  constructor(postId: number) {
+    super(`Post with id ${postId} not found`);
+  }
+}
+```
+
+### Exception Filter
+
+NestJS では、送出された例外をキャッチして共通処理を追加することができる。
+
+そのためには `@Catch` アノテーションを使用して、どの例外を対象とするのか指定することができる。
+
+```ts
+import { ArgumentsHost, Catch } from '@nestjs/common';
+import { BaseExceptionFilter } from '@nestjs/core';
+
+@Catch()
+export class ExceptionsLoggerFilter extends BaseExceptionFilter {
+  catch(exception: unknown, host: ArgumentsHost) {
+    console.log('Exception thrown', exception);
+    super.catch(exception, host);
+  }
+}
+```
+
+この例外処理をキャッチするためのフィルターをアプリケーションに対して設定する方法としては以下の 3 つの方法が存在している。
+
+1. アプリケーション全体に適用する
+
+   ```ts
+   async function bootstrap() {
+     const app = await NestFactory.create(AppModule);
+
+     const { httpAdapter } = app.get(HttpAdapterHost);
+     app.useGlobalFilters(new ExceptionsLoggerFilter(httpAdapter));
+
+     app.use(cookieParser());
+     await app.listen(3000);
+   }
+   ```
+
+2. モジュール全体に設定する
+
+   ```ts
+   @Module({
+     // ...
+     providers: [
+       {
+         provide: APP_FILTER,
+         useClass: ExceptionsLoggerFilter,
+       },
+     ],
+   })
+   export class AppModule {}
+   ```
+
+3. ハンドラーに設定する
+
+   ```ts
+   @Get(':id')
+   @UseFilters(ExceptionsLoggerFilter)
+   getPostById(@Param('id') id: string) {
+     return this.postsService.getPostById(parseInt(id))
+   }
+   ```
+
+### HTTP リクエストの検証
