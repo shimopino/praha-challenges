@@ -11,3 +11,15 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 全体像
+
+作成する内容一覧
+
+- 認証系
+  - ユーザー登録
+  - ログイン
+  - ログアウト
+- TODOアプリ
+  - 参照
+  - 作成（ログインしているユーザーのみ可能）
+  - 更新（作成者本人のみ可能）
+  - 削除（作成者本人のみ可能）
