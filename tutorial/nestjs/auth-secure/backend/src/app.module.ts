@@ -15,6 +15,7 @@ import * as Joi from 'joi';
         APP_SECRET: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION_TIME: Joi.string().required(),
+        PORT: Joi.number().required(),
       }),
     }),
   ],
