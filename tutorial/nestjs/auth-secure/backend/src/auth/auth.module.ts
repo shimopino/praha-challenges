@@ -8,6 +8,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SignJwtTokenService } from './service/sign-jwt-token.service';
 import { LoginUserService } from './service/login.service';
 import { LocalStrategy } from './strategy/local.strategy';
+import { JwtStrategy } from './strategy/jwt.strategy';
+import { VerifyJwtPayloadService } from './service/verify-payload.service';
 
 @Module({
   controllers: [AuthController],
@@ -15,7 +17,9 @@ import { LocalStrategy } from './strategy/local.strategy';
     RegisterUserService,
     SignJwtTokenService,
     LoginUserService,
+    VerifyJwtPayloadService,
     LocalStrategy,
+    JwtStrategy,
   ],
   imports: [
     UsersModule,

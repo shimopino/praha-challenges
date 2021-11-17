@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -8,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthUser } from '../decorator/auth-user.decorator';
+import { JWTAuthGuard } from '../guard/jwt-auth.guard';
 import { LocalAuthGuard } from '../guard/local.guard';
 import { TokenInterceptor } from '../interceptor/token.interceptor';
 import { RegisterUserService } from '../service/register-user.service';
@@ -31,5 +33,11 @@ export class AuthController {
   @UseInterceptors(TokenInterceptor)
   async login(@AuthUser() user: AuthUserType): Promise<AuthUserType> {
     return user;
+  }
+
+  @Get('me')
+  @UseGuards(JWTAuthGuard)
+  me() {
+    return 'hi';
   }
 }

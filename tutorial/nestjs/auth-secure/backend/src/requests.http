@@ -16,3 +16,7 @@ Content-Type: application/json
     "email": "shimopino@example.com",
     "password": "shimopino"
 }
+
+### Check a login state
+GET http://localhost:8080/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaGltb3Bpbm9AZXhhbXBsZS5jb20iLCJpYXQiOjE2MzcxNzYwMjEsImV4cCI6MTYzNzE3OTYyMX0.ujBltYrFBdkR3vJC3MhWK2PzpbQ-jc_j2XMwOMNEFKY
