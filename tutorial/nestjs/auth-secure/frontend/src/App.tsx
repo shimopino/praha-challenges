@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Check } from "./components/Check";
 import { RegisterForm } from "./components/RegisterForm";
 
 function App() {
@@ -12,6 +13,9 @@ function App() {
       <main>
         <h2>ユーザー登録</h2>
         <RegisterForm />
+
+        <h2>チェック</h2>
+        <Check />
       </main>
     </div>
   );
