@@ -1,4 +1,14 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { AuthUser } from '../decorator/auth-user.decorator';
+import { LocalAuthGuard } from '../guard/local.guard';
 import { TokenInterceptor } from '../interceptor/token.interceptor';
 import { RegisterUserService } from '../service/register-user.service';
 import { RegisterUserDTO } from './request/register-user.dto';
@@ -13,5 +23,13 @@ export class AuthController {
   async register(@Body() user: RegisterUserDTO): Promise<AuthUserType> {
     const result = await this.registerUser.execute(user);
     return result;
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  @UseInterceptors(TokenInterceptor)
+  async login(@AuthUser() user: AuthUserType): Promise<AuthUserType> {
+    return user;
   }
 }

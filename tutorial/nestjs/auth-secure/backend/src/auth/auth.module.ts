@@ -6,10 +6,17 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SignJwtTokenService } from './service/sign-jwt-token.service';
+import { LoginUserService } from './service/login.service';
+import { LocalStrategy } from './strategy/local.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [RegisterUserService, SignJwtTokenService],
+  providers: [
+    RegisterUserService,
+    SignJwtTokenService,
+    LoginUserService,
+    LocalStrategy,
+  ],
   imports: [
     UsersModule,
     PassportModule,
