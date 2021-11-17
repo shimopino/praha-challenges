@@ -8,11 +8,11 @@ import { Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthUserType } from '../controller/response/auth-user.response';
-import { SignJwtTokenService } from '../service/sign-jwt-token.service';
+import { SignAccessTokenService } from '../service/sign-access-token.service';
 
 @Injectable()
-export class TokenInterceptor implements NestInterceptor {
-  constructor(private readonly signJwt: SignJwtTokenService) {}
+export class AccessTokenInterceptor implements NestInterceptor {
+  constructor(private readonly signJwt: SignAccessTokenService) {}
 
   intercept(
     context: ExecutionContext,
@@ -23,10 +23,9 @@ export class TokenInterceptor implements NestInterceptor {
         const response = context.switchToHttp().getResponse<Response>();
         const token = this.signJwt.execute(user);
 
-        response.setHeader('Authorization', `Bearer ${token}`);
-        response.cookie('token', token, {
+        response.cookie('access_token', token, {
           httpOnly: true,
-          signed: true,
+          signed: false,
           sameSite: 'none',
           secure: false,
         });
