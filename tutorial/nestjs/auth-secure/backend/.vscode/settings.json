@@ -17,5 +17,8 @@
   },
   "editor.lineNumbers": "on",
   "editor.rulers": [80],
-  "eslint.packageManager": "npm"
+  "eslint.packageManager": "npm",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
