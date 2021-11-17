@@ -1,3 +1,10 @@
-import { User } from '.prisma/client';
+import { Exclude } from 'class-transformer';
 
-export type AuthUserType = Partial<Omit<User, 'password'>>;
+export class AuthUserType {
+  id: string;
+  name: string;
+  email: string;
+
+  @Exclude()
+  refreshToken?: string;
+}
