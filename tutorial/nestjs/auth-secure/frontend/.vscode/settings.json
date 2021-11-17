@@ -17,5 +17,6 @@
   },
   "editor.lineNumbers": "on",
   "editor.rulers": [80],
-  "eslint.packageManager": "npm"
+  "eslint.packageManager": "npm",
+  "typescript.preferences.importModuleSpecifier": "relative"
 }

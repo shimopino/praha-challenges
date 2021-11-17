@@ -6,5 +6,6 @@ import { FindByEmailService } from './service/find-by-email.service';
 @Module({
   providers: [FindByEmailService, CreateUserService],
   imports: [PrismaModule],
+  exports: [FindByEmailService, CreateUserService],
 })
 export class UsersModule {}
