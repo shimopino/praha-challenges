@@ -57,7 +57,7 @@ export class AuthController {
 
   @Get('refresh')
   @UseGuards(JwtRefreshGuard)
-  @UseInterceptors(RefreshTokenInterceptor)
+  @UseInterceptors(AccessTokenInterceptor)
   refresh(@AuthUser() user: AuthUserType) {
     return user;
   }
