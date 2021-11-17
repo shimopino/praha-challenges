@@ -20,5 +20,6 @@
   "eslint.packageManager": "npm",
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "relative"
 }
