@@ -26,7 +26,7 @@ export class AccessTokenInterceptor implements NestInterceptor {
         response.cookie('access_token', access_token, {
           httpOnly: true,
           signed: false,
-          sameSite: 'none',
+          sameSite: 'lax',
           secure: false,
         });
 

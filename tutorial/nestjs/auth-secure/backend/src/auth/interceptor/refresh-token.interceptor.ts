@@ -26,7 +26,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
         response.cookie('refresh_token', refresh_token, {
           httpOnly: true,
           signed: false,
-          sameSite: 'none',
+          sameSite: 'lax',
           secure: false,
         });
 
