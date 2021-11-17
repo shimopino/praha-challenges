@@ -21,11 +21,9 @@ export class RefreshTokenInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(async (user) => {
         const response = context.switchToHttp().getResponse<Response>();
-        const token = await this.signJwt.execute(user);
+        const refresh_token = await this.signJwt.execute(user);
 
-        console.log(token);
-
-        response.cookie('refresh_token', token, {
+        response.cookie('refresh_token', refresh_token, {
           httpOnly: true,
           signed: false,
           sameSite: 'none',

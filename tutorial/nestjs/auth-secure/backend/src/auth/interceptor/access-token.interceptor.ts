@@ -21,9 +21,9 @@ export class AccessTokenInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((user) => {
         const response = context.switchToHttp().getResponse<Response>();
-        const token = this.signJwt.execute(user);
+        const access_token = this.signJwt.execute(user);
 
-        response.cookie('access_token', token, {
+        response.cookie('access_token', access_token, {
           httpOnly: true,
           signed: false,
           sameSite: 'none',
