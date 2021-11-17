@@ -7,7 +7,7 @@ import {
 import { Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RegisterUserResponse } from '../controller/response/register-user.response';
+import { AuthUserType } from '../controller/response/auth-user.response';
 import { SignJwtTokenService } from '../service/sign-jwt-token.service';
 
 @Injectable()
@@ -16,10 +16,8 @@ export class TokenInterceptor implements NestInterceptor {
 
   intercept(
     context: ExecutionContext,
-    next: CallHandler<RegisterUserResponse>,
-  ):
-    | Observable<RegisterUserResponse>
-    | Promise<Observable<RegisterUserResponse>> {
+    next: CallHandler<AuthUserType>,
+  ): Observable<AuthUserType> | Promise<Observable<AuthUserType>> {
     return next.handle().pipe(
       map((user) => {
         const response = context.switchToHttp().getResponse<Response>();
