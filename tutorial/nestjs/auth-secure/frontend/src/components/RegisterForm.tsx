@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 import React, { useState } from "react";
 
 export const RegisterForm = () => {
@@ -7,11 +7,11 @@ export const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      axios.post(
+      await axios.post(
         "http://localhost:8080/auth/register",
         {
           name,
@@ -25,12 +25,15 @@ export const RegisterForm = () => {
           withCredentials: true,
         }
       );
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        console.log(e.message);
-        setError(e.message);
+
+      alert("ユーザー登録完了！");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.message);
+        console.log(error.response?.status);
+      } else {
+        console.error(e);
       }
-      console.error(e);
     }
   };
 

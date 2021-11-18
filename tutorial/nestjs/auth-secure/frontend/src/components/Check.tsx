@@ -1,18 +1,22 @@
 import axios from "axios";
 
 export const Check = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      axios.get("http://localhost:8080/auth/me", {
+      await axios.get("http://localhost:8080/auth/me", {
         withCredentials: true,
       });
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        console.log(e.message);
+
+      alert("Cookieの検証OK！");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.message);
+        console.log(error.response?.status);
+      } else {
+        console.error(e);
       }
-      console.error(e);
     }
   };
 
