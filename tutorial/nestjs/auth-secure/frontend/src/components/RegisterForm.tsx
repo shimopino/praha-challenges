@@ -32,7 +32,7 @@ export const RegisterForm = () => {
         console.log(error.message);
         console.log(error.response?.status);
       } else {
-        console.error(e);
+        console.error(error);
       }
     }
   };
