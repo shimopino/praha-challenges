@@ -1,0 +1,28 @@
+### Create a User
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+    "name": "shimopino",
+    "email": "shimopino@example.com",
+    "password": "shimopino"
+}
+
+### Login a user
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "email": "shimopino@example.com",
+    "password": "shimopino"
+}
+
+### Check a login state
+GET http://localhost:8080/auth/me
+
+### Refresh a token
+GET http://localhost:8080/auth/refresh
+
+### Logout a user
+POST http://localhost:8080/auth/logout
+

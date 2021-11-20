@@ -1,0 +1,24 @@
+### Register a User
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "email": "shimopino@example.com",
+    "name": "shimopino",
+    "password": "shimopino"
+}
+
+### Log In
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "shimopino@example.com",
+    "password": "shimopino"
+}
+
+### Log Out
+POST http://localhost:3000/auth/logout
+
+### Check login state
+GET http://localhost:3000/auth
