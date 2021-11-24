@@ -41,3 +41,12 @@ AWS で作成するアカウントには 2 種類存在しており、用途も�
 
 - [ルートユーザー認証情報が必要なタスク](https://docs.aws.amazon.com/ja_jp/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root)
 
+### AWS IAM
+
+AWS IAM の機能の中でも、以下の 4 つの違いがわかるように解説を行なっていく。
+
+- IAM ユーザー
+- IAM グループ
+- IAM ポリシー
+- IAM ロール
+
