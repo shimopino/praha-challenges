@@ -29,3 +29,15 @@ AWS のリソースにアクセスする際にも認証・認可の仕組みが�
 
 > https://www.slideshare.net/AmazonWebServicesJapan/20190129-aws-black-belt-online-seminar-aws-identity-and-access-management-iam-part1
 
+### AWS のアカウント
+
+AWS で作成するアカウントには 2 種類存在しており、用途も異なっているため、どのような違いがあるのか認識しておくことが重要である。
+
+大きな違いは以下の図にあるように、付与されている権限である。AWS アカウントはアカウント内の全てのリソースへのフルアクセスが可能という大きな権限を持っているため、日常的な作業な管理者権限を有する IAM ユーザーを作成することが推奨されている。
+
+![](assets/aws_accounts.drawio.svg)
+
+ただし、AWS アカウントの認証情報が必要なタスク（AWS アカウントの解約など）もあるため、適宜使い分ける必要がある。
+
+- [ルートユーザー認証情報が必要なタスク](https://docs.aws.amazon.com/ja_jp/general/latest/gr/root-vs-iam.html#aws_tasks-that-require-root)
+
