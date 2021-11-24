@@ -70,3 +70,30 @@ IAM グループを使用すると、複数の IAM ユーザーに対するア�
 
 > https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_groups.html
 
+### IAM ポリシー
+
+IAM ポリシーを使用すると、ユーザーによる AWS リソースへのアクセスを制限することができる。
+
+IAM ポリシーは、AWS が最初から用意している AWS 管理ポリシーだけではなく、ユーザーが独自にポリシーを作成（カスタム管理ポリシー）することもできる。
+
+その場合には基本的には以下のフォーマットに従う。
+
+- 「Action（どの AWS サービスの）」
+- 「Resource（どの AWS リソースに対して）」
+- 「Effect（許可/拒否するのか）」
+
+例えば以下の IAM ポリシーでは、「特定の S3 バケットに対して」「バケット内のオブジェクトを取得するサービスを」「許可する」アクセス権限を表している。
+
+```js
+{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Effect": "Allow",
+        "Action": "s3:ListBucket",
+        "Resource": "arn:aws:s3::example_bucket"
+    }
+}
+```
+
+- [IAM でのポリシーとアクセス許可](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies.html)
+
