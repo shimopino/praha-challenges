@@ -97,3 +97,14 @@ IAM ポリシーは、AWS が最初から用意している AWS 管理ポリシ�
 
 - [IAM でのポリシーとアクセス許可](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/access_policies.html)
 
+### IAM ポリシーの種類
+
+IAM ポリシーの種類は複数存在しているが、よく使用されているのは以下の 2 種類である。
+
+- アイデンティティベースのポリシー
+- リソースベースのポリシー
+
+ポリシーの種類に応じて、以下のように設定する項目が異なっているので注意が必要である。
+
+![](assets/iam_policies.drawio.svg)
+
