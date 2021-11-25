@@ -96,9 +96,20 @@ IAM ポリシーのデザインパターンの 1 つにブラックリストパ�
 
 ## クイズ 3
 
+AWS サービスの中で、AWS アカウントで行われた AWS API コールや関連イベントを記録できるサービスはなんでしょうか。
+
 <details>
 <summary>回答例</summary>
 <div>
+
+- AWS CloudTrail
+
+公式では全リージョンでの有効かが推奨されている。
+
+- [【AWS Black Belt Online Seminar】AWS Identity and Access Management (AWS IAM) Part2](https://youtu.be/qrZKKF6V6Dc?t=1358)
+
+</div>
+</details>
 
 </div>
 </details>
