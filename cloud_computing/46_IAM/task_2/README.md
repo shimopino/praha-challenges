@@ -17,6 +17,7 @@
   - [S3 バケットの作成](#s3-%E3%83%90%E3%82%B1%E3%83%83%E3%83%88%E3%81%AE%E4%BD%9C%E6%88%90)
   - [IAM ポリシーの作成](#iam-%E3%83%9D%E3%83%AA%E3%82%B7%E3%83%BC%E3%81%AE%E4%BD%9C%E6%88%90)
   - [IAM ロールの作成・アタッチ](#iam-%E3%83%AD%E3%83%BC%E3%83%AB%E3%81%AE%E4%BD%9C%E6%88%90%E3%83%BB%E3%82%A2%E3%82%BF%E3%83%83%E3%83%81)
+  - [IAM ロールと IAM ポリシー](#iam-%E3%83%AD%E3%83%BC%E3%83%AB%E3%81%A8-iam-%E3%83%9D%E3%83%AA%E3%82%B7%E3%83%BC)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
