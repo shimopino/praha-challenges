@@ -148,3 +148,25 @@ SSH で接続するために事前に作成したキーペアを、新たに作�
 
 これでアクセス制御の準備は完了した。
 
+### IAM ロールの作成・アタッチ
+
+次に EC2 インスタンスに IAM ポリシーを付与するための IAM ロールを作成する。
+
+![](assets/attach_policy.png)
+
+![](assets/policy_result.png)
+
+次に作成した IAM ロールを EC2 インスタンスに付与する。
+
+![](assets/change_ec2_role.png)
+
+![](assets/attach_policy_to_ec2.png)
+
+こうすることで再度 EC2 インスタンスにアクセスしてコマンドを実行すると、 IAM ロールへの認証と IAM ポリシーに紐づくアクセス制御が実行されるため、以下のように今度は対象の S3 バケット内のオブジェクトを取得することができるようになる。
+
+![](assets/aws_cli_success.png)
+
+試しに IAM ロールの紐付けを外すと、以下のようにコマンドのエラーが発生していることがわかる。
+
+![](assets/aws_cli_role_error.png)
+
