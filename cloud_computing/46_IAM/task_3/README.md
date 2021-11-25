@@ -8,6 +8,7 @@
 - [クイズ 1](#%E3%82%AF%E3%82%A4%E3%82%BA-1)
 - [クイズ 2](#%E3%82%AF%E3%82%A4%E3%82%BA-2)
 - [クイズ 3](#%E3%82%AF%E3%82%A4%E3%82%BA-3)
+- [クイズ 4](#%E3%82%AF%E3%82%A4%E3%82%BA-4)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
