@@ -122,3 +122,14 @@ SSH で接続するために事前に作成したキーペアを、新たに作�
 
 ![](assets/ec2_ssh_access.png)
 
+### S3 バケットの作成
+
+次に S3 バケットを以下の名称で作成する。
+
+![](assets/s3_bucket.png)
+
+サンプルとして画像をアップロードする。
+
+![](assets/s3_object.png)
+
+
