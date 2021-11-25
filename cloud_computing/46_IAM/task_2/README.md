@@ -75,3 +75,21 @@
 }
 ```
 
+### ルートユーザーと IAM ユーザー
+
+ルートユーザーは AWS リソースに対するフルアクセス権限を有しており、アクセス制御をすることもできないため、普段の開発ではアクセス権限を付与した IAM ユーザーを使用することが推奨されている。
+
+- [AWS アカウント ルートユーザーのアクセスキーをロックする](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/best-practices.html#lock-away-credentials)
+
+## IAM グループを作成する
+
+では `AdministratorAccess` 権限を有する IAM グループを作成する。
+
+実際に作成されたグループを確認してみると、ポリシーに `AdministratorAccess` 権限が付与されているグループが作成されていることがわかる。
+
+![](assets/Administrator_group.png)
+
+ここで IAM グループ内に、なんの権限も持たせていない IAM ユーザーを所属させて、対象のユーザーで IAM コンソールを見てみると、以下のようにグループに付与されている権限を通してエラーが発生していないことがわかる。
+
+![](assets/Administrator_group_access.png)
+
