@@ -40,3 +40,37 @@
 }
 ```
 
+### 一般権限を有する IAM ユーザーを作成する
+
+今度は同じ手順で `PowerUserAccess` 権限を付与したユーザーを作成すると、以下のように IAM コンソール画面でエラーが発生していることがわかる。
+
+![](assets/PowerUserAccess.png)
+
+これは `PowerUserAccess` 権限ではコンソール画面に出力するためのリソース操作に対する権限が足りていないからである。
+
+実際に `PowerUserAccess` 権限の中身を見てみると、`NotAction` にあるように IAM に関係するほとんどの操作が制限されており、ロールを作成したり取得したりすることしかできないことがわかる。
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "NotAction": ["iam:*", "organizations:*", "account:*"],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateServiceLinkedRole",
+        "iam:DeleteServiceLinkedRole",
+        "iam:ListRoles",
+        "organizations:DescribeOrganization",
+        "account:ListRegions"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
