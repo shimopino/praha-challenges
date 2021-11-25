@@ -111,5 +111,17 @@ AWS サービスの中で、AWS アカウントで行われた AWS API コール
 </div>
 </details>
 
+## クイズ 4
+
+AWS の CloudTrail のコンソール画面からダッシュボードに移動して、今回の課題を実施する際に実行した API コールの履歴を確認してみましょう。
+
+<details>
+<summary>回答例</summary>
+<div>
+
+以下のようなログが確認できれば OK である。
+
+![](assets/cloudtrail_log.png)
+
 </div>
 </details>
