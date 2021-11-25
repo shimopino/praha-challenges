@@ -112,3 +112,11 @@
 
 - [IAM ユーザーへのアクセス許可を割り当てるためにユーザーグループを使用する](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions)
 
+## IAM ロール
+
+### EC2 インスタンスの用意
+
+SSH で接続するために事前に作成したキーペアを、新たに作成した EC2 インスタンスにアタッチすることで、以下のように OpenSSH でターミナルにアクセスすることができるようになる。
+
+![](assets/ec2_ssh_access.png)
+
