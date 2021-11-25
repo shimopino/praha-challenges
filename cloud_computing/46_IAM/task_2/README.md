@@ -11,6 +11,7 @@
   - [ルートユーザーと IAM ユーザー](#%E3%83%AB%E3%83%BC%E3%83%88%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%A8-iam-%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC)
 - [IAM グループを作成する](#iam-%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%82%92%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B)
   - [アクセス権限の付与方法](#%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%A8%A9%E9%99%90%E3%81%AE%E4%BB%98%E4%B8%8E%E6%96%B9%E6%B3%95)
+  - [アクセス権限を付与する対象](#%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E6%A8%A9%E9%99%90%E3%82%92%E4%BB%98%E4%B8%8E%E3%81%99%E3%82%8B%E5%AF%BE%E8%B1%A1)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
