@@ -17,6 +17,7 @@
 - [SSH アクセス可能な EC2 インスタンス](#ssh-%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%8F%AF%E8%83%BD%E3%81%AA-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9)
   - [キーペアの作成](#%E3%82%AD%E3%83%BC%E3%83%9A%E3%82%A2%E3%81%AE%E4%BD%9C%E6%88%90)
   - [セキュリティグループの作成](#%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%AE%E4%BD%9C%E6%88%90)
+  - [EC2 インスタンスの作成](#ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AE%E4%BD%9C%E6%88%90)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
