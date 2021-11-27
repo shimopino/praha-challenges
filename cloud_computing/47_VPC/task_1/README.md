@@ -14,6 +14,8 @@
 - [インターネットゲートウェイ](#%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%8D%E3%83%83%E3%83%88%E3%82%B2%E3%83%BC%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A4)
 - [ルートテーブル](#%E3%83%AB%E3%83%BC%E3%83%88%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB)
   - [VPC 内通信専用のルートテーブル](#vpc-%E5%86%85%E9%80%9A%E4%BF%A1%E5%B0%82%E7%94%A8%E3%81%AE%E3%83%AB%E3%83%BC%E3%83%88%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB)
+- [SSH アクセス可能な EC2 インスタンス](#ssh-%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%8F%AF%E8%83%BD%E3%81%AA-ec2-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9)
+  - [キーペアの作成](#%E3%82%AD%E3%83%BC%E3%83%9A%E3%82%A2%E3%81%AE%E4%BD%9C%E6%88%90)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
