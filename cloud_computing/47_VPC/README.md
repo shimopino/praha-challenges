@@ -6,7 +6,6 @@
 <summary>Table of Contents</summary>
 
 - [課題 1](#%E8%AA%B2%E9%A1%8C-1)
-- [課題 2](#%E8%AA%B2%E9%A1%8C-2)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
