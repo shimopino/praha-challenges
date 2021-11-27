@@ -311,3 +311,37 @@ aws ec2 associate-route-table \
 
 ![](assets/rt-private_result.png)
 
+## SSH アクセス可能な EC2 インスタンス
+
+### キーペアの作成
+
+EC2 インスタンスを構築するために、SSH アクセスする際に使用するキーペアを作成する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-key-pair.html
+
+# praha-task-47
+aws ec2 create-key-pair \
+    --key-name praha-task-47 \
+    --key-type rsa \
+    --query 'KeyMaterial' \
+    --output text \
+    --profile <your profile> > ~/.ssh/praha-task-47.pem
+
+# 権限を絞る
+chmod 400 ~/.ssh/praha-task-47.pem
+```
+
+キーペアを削除したい場合は以下のコマンドを実行すればいい。
+
+```bash
+# 削除する場合
+aws ec2 delete-key-pair \
+    --key-name praha-task-47 \
+    --profile <your profile>
+```
+
+参考資料
+
+- [Amazon EC2 キーペアの作成、表示、削除](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-keypairs.html)
+
