@@ -204,3 +204,66 @@ aws ec2 attach-internet-gateway \
 
 - [インターネットゲートウェイ](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/VPC_Internet_Gateway.html)
 
+## ルートテーブル
+
+インターネットゲートウェイを VPC に紐づけることで、インターネットと通信することができるようになるが、その後でインターネットからの通信を対象のサブネットなどに振り分けるためのルートテーブルを追加する必要がある。
+
+![](assets/route-table.drawio.svg)
+
+なお VPC を作成した段階でデフォルトのルートテーブルが作成される。これは以下のように VPC 内の通信をルーティングできるようにするためのルートが追加されている。
+
+![](assets/rt-public-default.png)
+
+これでは VPC 内からインターネットへ通信することができないため、VPC 内からのインターネットへの通信はインターネットゲートウェイを経由して外部へ通信する設定を追加する。
+
+![](assets/design_route-table.drawio.svg)
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-route.html
+
+aws ec2 create-route \
+    --route-table-id rtb-0bd6439f1b679a862 \
+    --destination-cidr-block 0.0.0.0/0 \
+    --gateway-id igw-0d6546efe63fe9988 \
+    --profile <your profile>
+```
+
+これでルートテーブルに新しくルートを登録することができた。
+
+![](assets/rt-public_result.png)
+
+あとはこのルートテーブルをパブリックサブネットに対して明示的に関連づけるようにしておく。
+
+まずは紐づける対象となるサブネットを確認する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/describe-subnets.html
+
+aws ec2 describe-subnets \
+    --filters "Name=vpc-id,Values=vpc-07694e790ce13cfbc" \
+    --query "Subnets[*].{ID:SubnetId,CIDR:CidrBlock}" \
+    --profile <your profile>
+```
+
+あとは、サブネットとルートテーブルを紐づければいい。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/associate-route-table.html
+
+aws ec2 associate-route-table \
+    --route-table-id rtb-0bd6439f1b679a862 \
+    --subnet-id subnet-0940ad7e2d04fab22 \
+    --profile <your profile>
+
+aws ec2 associate-route-table \
+    --route-table-id rtb-0bd6439f1b679a862 \
+    --subnet-id subnet-07580fd2ad5c53c69 \
+    --profile <your profile>
+```
+
+![](assets/rt-public-subnet_result.png)
+
+参考資料
+
+- [例: AWS CLI を使用して IPv4 VPC とサブネットを作成](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/vpc-subnets-commands-example.html)
+
