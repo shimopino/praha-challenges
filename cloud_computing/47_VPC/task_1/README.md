@@ -268,3 +268,45 @@ aws ec2 associate-route-table \
 
 - [例: AWS CLI を使用して IPv4 VPC とサブネットを作成](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/vpc-subnets-commands-example.html)
 
+### VPC 内通信専用のルートテーブル
+
+プライベートサブネットでは、インターネットに接続せずに VPC 内で通信ができればいい。
+
+そのため新規でルートテーブルを作成した際にデフォルトで登録されているルート (VPC 内のサービス間通信のトラフィック) を使用する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-route-table.html
+
+# praha-rt-private-1a
+aws ec2 create-route-table \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=praha-rt-private-1a}]' \
+    --profile <your profile>
+
+# praha-rt-private-1c
+aws ec2 create-route-table \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=praha-rt-private-1c}]' \
+    --profile <your profile>
+```
+
+あとは上記のプライベートサブネットごとに作成したルートテーブルに対して、明示的にサブネットを紐づければいい。
+
+```bash
+# praha-rt-private-1a
+aws ec2 associate-route-table \
+    --route-table-id rtb-068899b0c03d1b887 \
+    --subnet-id subnet-0c684330b157d6407 \
+    --profile <your profile>
+
+# praha-rt-private-1c
+aws ec2 associate-route-table \
+    --route-table-id rtb-047a6ba6f2c84cf7e \
+    --subnet-id subnet-064f719d064ffaf5f \
+    --profile <your profile>
+```
+
+これで下記のようにルートテーブルとプライベートサブネットが紐づいていることがわかる。
+
+![](assets/rt-private_result.png)
+
