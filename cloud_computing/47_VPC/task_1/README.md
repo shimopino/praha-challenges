@@ -5,8 +5,7 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 1](#課題-1)
-  - [AWS VPC](#aws-vpc)
+- [AWS VPC](#aws-vpc)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
