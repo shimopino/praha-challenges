@@ -394,7 +394,7 @@ aws ec2 authorize-security-group-ingress \
 
 パブリックサブネットに SSH でアクセス可能な EC2 インスタンスを作成する。
 
-![](assets/design_buston.drawio.svg)
+![](assets/design_bastion.drawio.svg)
 
 EC2 インスタンスの作成時の注意点としては、パブリックアクセスを可能にするために、パブリック IP アドレスを割り当てる様にしておく点である。
 
