@@ -556,3 +556,36 @@ aws ec2 run-instances \
 
 ![](assets/ssh-private_result.png)
 
+### 多段接続による EC2 インスタンスへのアクセス
+
+ではパブリックサブネット内の EC2 インスタンスを経由して、プライベートサブネット内の EC2 インスタンスに SSH アクセスできるような多段接続設定を追加していく。
+
+![](assets/ssh-forward.drawio.svg)
+
+そのためローカルの `~/.ssh/config` を以下のように編集する。
+
+```bash
+Host bastion-1a
+    Hostname 13.115.248.29
+    User ec2-user
+    Port 22
+    IdentityFile ~/.ssh/praha-task-47.pem
+
+Host web-1a
+    Hostname 10.0.49.39
+    User ec2-user
+    Port 22
+    IdentityFile ~/.ssh/praha-task-47-private.pem
+    ProxyCommand ssh bastion-1a -W %h:%p
+
+Host web-1c
+    Hostname 10.0.74.10
+    User ec2-user
+    Port 22
+    IdentityFile ~/.ssh/praha-task-47-private.pem
+    ProxyCommand ssh bastion-1a -W %h:%p
+```
+
+これで以下の様にパブリックサブネットの EC2 インスタンスを踏み台として、プライベートサブネット内の EC2 インスタンスに SSH アクセスできる様になったことがわかる。
+
+![](assets/ssh-multiaccess_result.png)
