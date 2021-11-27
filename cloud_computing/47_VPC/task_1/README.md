@@ -471,3 +471,35 @@ aws ec2 delete-key-pair \
     --profile <your profile>
 ```
 
+### セキュリティグループの作成
+
+プライベートサブネットに構築する EC2 インスタンスでは、パブリックサブネットに配置している EC2 インスタンスからの SSH アクセスを実施する。
+
+そのためパブリック用の EC2 インスタンスに適用しているセキュリティグループから、SSH アクセスを許可するためのルールを作成していく。
+
+```bash
+# https://docs.aws.amazon.com/v2/documentation/api/latest/reference/ec2/create-security-group.html
+
+# praha-sg-web
+aws ec2 create-security-group \
+    --group-name praha-sg-web \
+    --description 'Security Group for SSH in Public Subnet' \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --profile <your profile>
+```
+
+あとはインバウンドルールの送信元に対象のセキュリティグループを指定すればいい。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/authorize-security-group-ingress.html
+
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-09a29fc2218a293f9 \
+    --protocol tcp \
+    --port 22 \
+    --source-group sg-05926a9dfc5b8ada7 \
+    --profile <your profile>
+```
+
+![](assets/sg-private_result.png)
+
