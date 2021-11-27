@@ -389,3 +389,49 @@ aws ec2 authorize-security-group-ingress \
 - [Amazon EC2 のセキュリティグループの作成、設定、および削除](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-sg.html)
 - [ステップ 4: AWS CLI を使用してセキュリティグループのインバウンドルールを設定する](https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/DAX.create-cluster.cli.configure-inbound-rules.html)
 
+### EC2 インスタンスの作成
+
+パブリックサブネットに SSH でアクセス可能な EC2 インスタンスを作成する。
+
+![](assets/design_buston.drawio.svg)
+
+EC2 インスタンスの作成時の注意点としては、パブリックアクセスを可能にするために、パブリック IP アドレスを割り当てる様にしておく点である。
+
+これは `--associate-public-ip-address` フラグで制御する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/run-instances.html
+
+# for praha-subnet-public-1a
+aws ec2 run-instances \
+    --image-id ami-0404778e217f54308 \
+    --count 1 \
+    --instance-type t2.micro \
+    --key-name praha-task-47 \
+    --security-group-ids sg-05926a9dfc5b8ada7 \
+    --subnet-id subnet-0940ad7e2d04fab22 \
+    --associate-public-ip-address \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=praha-ec2-buston-public-1a}]' \
+    --profile <your profile>
+
+# for praha-subnet-public-1c
+aws ec2 run-instances \
+    --image-id ami-0404778e217f54308 \
+    --count 1 \
+    --instance-type t2.micro \
+    --key-name praha-task-47 \
+    --security-group-ids sg-05926a9dfc5b8ada7 \
+    --subnet-id subnet-07580fd2ad5c53c69 \
+    --associate-public-ip-address \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=praha-ec2-buston-public-1c}]' \
+    --profile <your profile>
+```
+
+これで以下のようなリソースを作成することができた。
+
+![](assets/ec2-public_result.png)
+
+参考資料
+
+- [Amazon EC2 インスタンスの起動、一覧表示、および終了](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-instances.html)
+
