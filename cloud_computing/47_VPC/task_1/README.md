@@ -54,6 +54,8 @@ aws ec2 create-vpc \
     --profile <yout profile>
 ```
 
+これ以降のリソース作成は全て AWS CLI を使用する。
+
 参考資料
 
 - [VPC とサブネットの利用](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/working-with-vpcs.html)
