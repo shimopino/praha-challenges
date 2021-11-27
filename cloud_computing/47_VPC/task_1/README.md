@@ -162,3 +162,44 @@ aws ec2 create-subnet \
 
 ![](assets/subnet_result.png)
 
+## インターネットゲートウェイ
+
+今のままではサブネットを構築しただけであり、インターネットと VPC は通信していない状態である。
+
+そこでインターネットとの接続点となるインタネットゲートウェイを作成し、対象の VPC に紐づける必要がある。
+
+![](assets/design_internet-gateway.drawio.svg)
+
+これで VPC 内のパブリック ID アドレスを有している (インターネットに公開されている) リソースと通信することが可能となる。
+
+AWS CLI では以下のコマンドで作成する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-internet-gateway.html
+
+# praha-igw
+aws ec2 create-internet-gateway \
+    --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=praha-igw}]' \
+    --profile <your profile>
+```
+
+インターネットゲートウェイの作成ができれば、あとは VPC に紐づける。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/attach-internet-gateway.html
+
+# 作成したインターネットゲートウェイをVPCにアタッチする
+aws ec2 attach-internet-gateway \
+    --internet-gateway-id igw-0d6546efe63fe9988 \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --profile <your profile>
+```
+
+これで以下のようなリソースを作成することができた。
+
+![](assets/igw_result.png)
+
+参考資料
+
+- [インターネットゲートウェイ](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/VPC_Internet_Gateway.html)
+
