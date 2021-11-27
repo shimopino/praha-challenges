@@ -436,3 +436,9 @@ aws ec2 run-instances \
 
 - [Amazon EC2 インスタンスの起動、一覧表示、および終了](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-instances.html)
 
+### SSH によるアクセス
+
+あとは EC2 インスタンスのパブリック IP アドレスと、作成した秘密鍵を指定すれば以下のようにインスタンスにアクセスすることができる。
+
+![](assets/ssh-public_result.png)
+
