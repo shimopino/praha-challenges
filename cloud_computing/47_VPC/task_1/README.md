@@ -347,3 +347,44 @@ aws ec2 delete-key-pair \
 
 - [Amazon EC2 キーペアの作成、表示、削除](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-keypairs.html)
 
+### セキュリティグループの作成
+
+まずはパブリックサブネット内に EC2 インスタンスを作成するが、SSH アクセスのみを許可するような設定を追加する。
+
+このように対象のリソースに対してトラフィックのインバウンドとアウトバウンドの制限を設けたい場合は、**セキュリティグループ** を作成することで対応することが可能となる。
+
+そこで以下のコマンドでセキュリティグループを作成する。
+
+```bash
+# https://docs.aws.amazon.com/v2/documentation/api/latest/reference/ec2/create-security-group.html
+
+# praha-sg-bastion
+aws ec2 create-security-group \
+    --group-name praha-sg-bastion \
+    --description 'Security Group for SSH in Public Subnet' \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --profile <your profile>
+```
+
+あとは作成されたセキュリティグループに対して、インバウンドルールを追加する。
+
+```bash
+# https://docs.aws.amazon.com/cli/latest/reference/ec2/authorize-security-group-ingress.html
+#
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-05926a9dfc5b8ada7 \
+    --protocol tcp \
+    --port 22 \
+    --cidr 0.0.0.0/0 \
+    --profile <your profile>
+```
+
+これで以下のように外部からの SSH アクセスのみを許可するようなトラフィック制限を設けることができた。
+
+![](assets/sg-public_result.png)
+
+参考資料
+
+- [Amazon EC2 のセキュリティグループの作成、設定、および削除](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-services-ec2-sg.html)
+- [ステップ 4: AWS CLI を使用してセキュリティグループのインバウンドルールを設定する](https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/DAX.create-cluster.cli.configure-inbound-rules.html)
+
