@@ -7,6 +7,7 @@
 
 - [AWS VPC](#aws-vpc)
 - [VPC の構築](#vpc-%E3%81%AE%E6%A7%8B%E7%AF%89)
+- [リージョンとアベイラビリティゾーン](#%E3%83%AA%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E3%81%A8%E3%82%A2%E3%83%99%E3%82%A4%E3%83%A9%E3%83%93%E3%83%AA%E3%83%86%E3%82%A3%E3%82%BE%E3%83%BC%E3%83%B3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
