@@ -108,3 +108,56 @@ VPC 内で構築するサブネットは、インターネットに対して公�
 
 > ただし VPC あたりのサブネット作成上限数はデフォルトで 200 個までなので注意が必要である。
 
+### サブネットの構築
+
+今回は以下の構成図のように、冗長性を持たせるためのマルチ AZ 構成であり、インターネットに公開するサブネットと公開しないサブネットを構築していく。
+
+![](assets/design_subnet.drawio.svg)
+
+AWS CLI では以下のコマンドで作成する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-subnet.html
+
+# 使用できるアベイラビリティゾーンを全て確認する
+aws ec2 describe-availability-zones \
+    --region ap-northeast-1 \
+    --profile <your profile>
+
+# praha-subnet-public-1a
+aws ec2 create-subnet \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --cidr-block 10.0.0.0/20 \
+    --availability-zone ap-northeast-1a \
+    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=praha-subnet-public-1a}]' \
+    --profile <your profile>
+
+# praha-subnet-public-1c
+aws ec2 create-subnet \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --cidr-block 10.0.16.0/20 \
+    --availability-zone ap-northeast-1c \
+    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=praha-subnet-public-1c}]' \
+    --profile <your profile>
+
+# praha-subnet-private-1a
+aws ec2 create-subnet \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --cidr-block 10.0.48.0/20 \
+    --availability-zone ap-northeast-1a \
+    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=praha-subnet-private-1a}]' \
+    --profile <your profile>
+
+# praha-subnet-private-1c
+aws ec2 create-subnet \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --cidr-block 10.0.64.0/20 \
+    --availability-zone ap-northeast-1c \
+    --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=praha-subnet-private-1c}]' \
+    --profile <your profile>
+```
+
+これで以下のようなリソースを作成することができた。
+
+![](assets/subnet_result.png)
+
