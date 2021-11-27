@@ -443,3 +443,29 @@ aws ec2 run-instances \
 
 ![](assets/ssh-public_result.png)
 
+## プライベートサブネット内での EC2 インスタンスの作成
+
+### キーペアの作成
+
+パブリックサブネットに配置している EC2 インスタンスに適用している SSH キーとは、別のキーペアを作成して新しく作成する EC2 インスタンスに適用する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-key-pair.html
+
+# praha-task-47-private
+aws ec2 create-key-pair \
+    --key-name praha-task-47-private \
+    --key-type rsa \
+    --query 'KeyMaterial' \
+    --output text \
+    --profile <your profile> > ~/.ssh/praha-task-47-private.pem
+
+# 権限を絞る
+chmod 400 ~/.ssh/praha-task-47-private.pem
+
+# 削除する場合
+aws ec2 delete-key-pair \
+    --key-name praha-task-47-private \
+    --profile <your profile>
+```
+
