@@ -504,3 +504,54 @@ aws ec2 authorize-security-group-ingress \
 
 ![](assets/sg-private_result.png)
 
+### EC2 インスタンスの作成
+
+ではプライベートサブネットに新しく EC2 インスタンスを作成する。このインスタンスの特徴は以下になる。
+
+- インターネットから直接 SSH アクセスすることはできない
+- パブリックサブネットの EC2 インスタンス経由の SSH アクセスのみ可能
+
+![](assets/design_private.drawio.svg)
+
+ただし以下の点に注意する必要がある。
+
+- パブリック IP アドレスは割り当てない (`--no-associate-public-ip-address`)
+- 新たに作成したセキュリティグループと紐づける
+- プライベートサブネットと紐づける
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/run-instances.html
+
+# for praha-ec2-private-1a
+aws ec2 run-instances \
+    --image-id ami-0404778e217f54308 \
+    --count 1 \
+    --instance-type t2.micro \
+    --key-name praha-task-47-private \
+    --security-group-ids sg-09a29fc2218a293f9 \
+    --subnet-id subnet-0c684330b157d6407 \
+    --no-associate-public-ip-address \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=praha-ec2-private-1a}]' \
+    --profile <your profile>
+
+# for praha-ec2-private-1c
+aws ec2 run-instances \
+    --image-id ami-0404778e217f54308 \
+    --count 1 \
+    --instance-type t2.micro \
+    --key-name praha-task-47-private \
+    --security-group-ids sg-09a29fc2218a293f9 \
+    --subnet-id subnet-064f719d064ffaf5f \
+    --no-associate-public-ip-address \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=praha-ec2-private-1c}]' \
+    --profile <your profile>
+```
+
+これで以下のように新しく EC2 インスタンスが作成され、パブリック IP アドレスも割り当てられていないことがわかる。
+
+![](assets/ec2-private_result.png)
+
+そのため VPC 内でのプライベート IP アドレスしか割り当てられていないためで SSH アクセスすることが不可能であることがわかる。
+
+![](assets/ssh-private_result.png)
+
