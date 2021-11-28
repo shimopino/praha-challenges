@@ -263,3 +263,18 @@ aws ec2 authorize-security-group-ingress \
 
 - [チュートリアル: AWS CLI を使用した Application Load Balancer の作成](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html)
 
+### リクエストの分散の確認
+
+では試しに `ap-northeast-1c` に配置している Web サーバーを停止させて挙動を確認する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/stop-instances.html
+
+aws ec2 stop-instances \
+    --instance-ids i-05ce2f45e1eb5a92d \
+    --profile <your profile>
+```
+
+これで常に以下の画面が表示されていることが確認できた。
+
+![](assets/only-1a_result.png)
