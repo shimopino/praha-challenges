@@ -162,3 +162,46 @@ https://www.nginx.com/blog/setting-up-nginx/#aws-setup
 
 ![](assets/design_alb.drawio.svg)
 
+### Security Gourp を作成する
+
+ロードバランサーが HTTP や HTTPS のリクエストを受け付けることができるようにセキュリティグループを作成する。
+
+```bash
+# praha-sg-alb
+aws ec2 create-security-group \
+    --group-name praha-sg-alb \
+    --description 'Security Group for Public Access in Public Subnet' \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --profile <your profile>
+
+# HTTP
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-0516adee76de6fd3b \
+    --protocol tcp \
+    --port 80 \
+    --cidr 0.0.0.0/0 \
+    --profile <your profile>
+
+# HTTPS
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-0516adee76de6fd3b \
+    --protocol tcp \
+    --port 443 \
+    --cidr 0.0.0.0/0 \
+    --profile <your profile>
+```
+
+なお Web サーバーがロードバランサーからのリクエストを受け付けることができる様に、以下の様にセキュリティグループを編集する。
+
+```bash
+# HTTP
+aws ec2 authorize-security-group-ingress \
+    --group-id sg-09a29fc2218a293f9 \
+    --protocol tcp \
+    --port 80 \
+    --source-group sg-0516adee76de6fd3b \
+    --profile <your profile>
+```
+
+これであとはロードバランサーを作成すればいいだけである。
+
