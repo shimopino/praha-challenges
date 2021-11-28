@@ -5,9 +5,8 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [TDD の練習](#tdd-の練習)
-  - [TODO リスト](#todo-リスト)
-  - [pre-commit 設定](#pre-commit-設定)
+- [TODO リスト](#todo-%E3%83%AA%E3%82%B9%E3%83%88)
+- [pre-commit 設定](#pre-commit-%E8%A8%AD%E5%AE%9A)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
