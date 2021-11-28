@@ -252,3 +252,9 @@ $ sudo systemctl restart nginx.service
 
 - [Nginx で 403 Forbidden が表示された時のチェックポイント 5 選](https://engineers.weddingpark.co.jp/nginx-403-forbidden/)
 
+## メモ
+
+Vim コマンド
+
+- `:%d`: ファイル全行削除
+- `:42`: 42 行目に移動
