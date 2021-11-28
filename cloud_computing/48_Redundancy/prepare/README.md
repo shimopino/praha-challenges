@@ -149,3 +149,54 @@ aws ec2 run-instances \
 
 ![](assets/ssh-access_result.png)
 
+## Nginx での動作検証
+
+[公式サイト](https://www.nginx.com/blog/setting-up-nginx/) を参考に Web サイトを構築する。
+
+ただし Amazon Linux を使用しているため、Nginx のインストール方法は下記を使用する。
+
+- まずは必要なライブラリをインストールする
+
+  ```bash
+  $ sudo rm -rf /var/cache/yum/*
+  $ sudo yum clean all
+  $ sudo yum update
+  ```
+
+- Amazon Linux のパッケージマネージャを使用する
+
+  ```bash
+  $ which amazon-linux-extras
+  $ amazon-linux-extras | grep nginx
+  ```
+
+- インストール
+
+  ```bash
+  $ sudo amazon-linux-extras install nginx1
+  ```
+
+- バージョン確認
+
+  ```bash
+  $ nginx -v
+  > nginx version: nginx/1.20.0
+  ```
+
+Nginx では、以下のコマンドを使用してサーバーを立ち上げたり、終了したり、状態を確認できたりする。
+
+```bash
+$ sudo systemctl start nginx.service
+$ sudo systemctl status nginx.service
+$ sudo systemctl stop nginx.service
+$ sudo systemctl restart nginx.service
+```
+
+実際に上記のコマンドを使用して Nginx を起動させることができる。
+
+![](assets/nginx-start.png)
+
+これで EC2 インスタンスのパブリック IP アドレスにブラウザからアクセスすると以下のページが確認できる。
+
+![](assets/nginx-access.png)
+
