@@ -8,6 +8,7 @@
 - [前回の課題の振り返り](#%E5%89%8D%E5%9B%9E%E3%81%AE%E8%AA%B2%E9%A1%8C%E3%81%AE%E6%8C%AF%E3%82%8A%E8%BF%94%E3%82%8A)
 - [NAT ゲートウェイ](#nat-%E3%82%B2%E3%83%BC%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A4)
   - [プライベートな EC2 の公開](#%E3%83%97%E3%83%A9%E3%82%A4%E3%83%99%E3%83%BC%E3%83%88%E3%81%AA-ec2-%E3%81%AE%E5%85%AC%E9%96%8B)
+  - [NAT ゲートウェイとは](#nat-%E3%82%B2%E3%83%BC%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A4%E3%81%A8%E3%81%AF)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
