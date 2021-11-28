@@ -12,11 +12,9 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## React Hooks 深掘り
-
 [Getting Closure on React Hooks by Shawn Wang | JSConf.Asia 2019](https://www.youtube.com/watch?v=KJP1E-Y-xyo&t=1065s) を実践する。
 
-### Closure
+## Closure
 
 数値をインクリメントしていく関数を作成する場合、グローバルスコープの変数を使用すると以下の様に記述することができる。
 
@@ -81,6 +79,64 @@ const add = (function () {
     return foo;
   };
 })();
+```
+
+## useState
+
+まずは `useState` 関数の入出力を定義する。
+
+```ts
+function useState(initialValue) {
+  return [state, setState];
+}
+```
+
+そこで初期値として与えられた値を状態として格納し、新しい値を受け取ってその状態を更新するための関数を作成すると以下の様になる。
+
+```ts
+function useState(initialValue) {
+  const _val = initialValue;
+  const state = _val;
+  const setState = (newVal) => {
+    _val = newVal;
+  };
+
+  return [state, setState];
+}
+```
+
+この場合、状態を更新する関数を呼び出しても一度返り値として返した状態の変数は中身が変わることはない。
+
+```ts
+const [count, setCount] = useState(1);
+
+console.log(count); // 1
+setCount(2);
+console.log(count); // 1
+```
+
+このためには関数内に閉じている変数を返すような処理を追加する必要がある。
+
+```ts
+function useState(initialValue) {
+  const _val = initialValue;
+  const state = () => _val;
+  const setState = (newVal) => {
+    _val = newVal;
+  };
+
+  return [state, setState];
+}
+```
+
+これで関数を実行すれば現在の状態を取得することができる。
+
+```ts
+const [count, setCount] = useState(1);
+
+console.log(count()); // 1
+setCount(2);
+console.log(count()); // 2
 ```
 
 ## 参考資料
