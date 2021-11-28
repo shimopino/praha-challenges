@@ -16,6 +16,8 @@
   - [Elastic Load Balancer とは](#elastic-load-balancer-%E3%81%A8%E3%81%AF)
   - [Application Load Balancer の構築](#application-load-balancer-%E3%81%AE%E6%A7%8B%E7%AF%89)
   - [Security Gourp を作成する](#security-gourp-%E3%82%92%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B)
+  - [Application Load Balancer を作成する](#application-load-balancer-%E3%82%92%E4%BD%9C%E6%88%90%E3%81%99%E3%82%8B)
+  - [リクエストの分散の確認](#%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%81%AE%E5%88%86%E6%95%A3%E3%81%AE%E7%A2%BA%E8%AA%8D)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
