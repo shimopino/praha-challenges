@@ -209,3 +209,57 @@ aws ec2 authorize-security-group-ingress \
 
 これであとはロードバランサーを作成すればいいだけである。
 
+### Application Load Balancer を作成する
+
+次にロードバランサーを作成する。
+
+- まずはロードバランサーを作成する
+
+  ```bash
+  aws elbv2 create-load-balancer \
+    --name praha-alb \
+    --subnets subnet-07580fd2ad5c53c69 subnet-0940ad7e2d04fab22 \
+    --security-groups sg-0516adee76de6fd3b \
+    --profile <your profile>
+  ```
+
+- 次にどのインスタンスに振り分けるのかターゲットグループを作成する
+
+  ```bash
+  aws elbv2 create-target-group \
+    --name praha-web-target \
+    --protocol HTTP \
+    --port 3000 \
+    --vpc-id vpc-07694e790ce13cfbc \
+    --profile <your profile>
+  ```
+
+- 次はインスタンスをターゲットグループに登録する
+
+  ```bash
+  aws elbv2 register-targets \
+    --target-group-arn arn:aws:elasticloadbalancing:ap-northeast-1:998141369043:targetgroup/praha-web-target/eff52b787f23b9fc \
+    --targets Id=i-04e8737225992e49b Id=i-05ce2f45e1eb5a92d \
+    --profile <your profile>
+  ```
+
+- ターゲットグループにリクエストを転送するルールを持つリスナーを作成する
+
+  ```bash
+  aws elbv2 create-listener \
+    --load-balancer-arn arn:aws:elasticloadbalancing:ap-northeast-1:998141369043:loadbalancer/app/praha-alb/873e4ca063bb6cc0 \
+    --protocol HTTP --port 80 \
+    --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:ap-northeast-1:998141369043:targetgroup/praha-web-target/eff52b787f23b9fc \
+    --profile <your profile>
+  ```
+
+ここまでできればロードバランサーに登録されている A レコードにアクセスすれば、Web サーバーに配置した `index.html` を確認することができる。
+
+![](assets/both-1a_result.png)
+
+![](assets/both-1c_result.png)
+
+参考資料
+
+- [チュートリアル: AWS CLI を使用した Application Load Balancer の作成](https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/tutorial-application-load-balancer-cli.html)
+
