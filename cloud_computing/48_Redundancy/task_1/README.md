@@ -10,6 +10,8 @@
   - [プライベートな EC2 の公開](#%E3%83%97%E3%83%A9%E3%82%A4%E3%83%99%E3%83%BC%E3%83%88%E3%81%AA-ec2-%E3%81%AE%E5%85%AC%E9%96%8B)
   - [NAT ゲートウェイとは](#nat-%E3%82%B2%E3%83%BC%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A4%E3%81%A8%E3%81%AF)
   - [NAT ゲートウェイの構築](#nat-%E3%82%B2%E3%83%BC%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A4%E3%81%AE%E6%A7%8B%E7%AF%89)
+  - [ルートテーブルの更新](#%E3%83%AB%E3%83%BC%E3%83%88%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%81%AE%E6%9B%B4%E6%96%B0)
+- [Nginx サーバーの配置](#nginx-%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%AE%E9%85%8D%E7%BD%AE)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
