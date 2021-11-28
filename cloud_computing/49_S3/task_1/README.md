@@ -161,3 +161,30 @@ S3 コンソールを使用して、`images` 配下のオブジェクトが新�
 - [Amazon S3 ライフサイクルを使用したオブジェクトの移行](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html)
 
 ### オブジェクトを削除するライフライクルの設定
+
+オブジェクトの有効期限のライフサイクルを定義すると、オブジェクトは自動的に S3 削除キューに追加され、非同期的に削除される。
+
+```bash
+aws s3api create-bucket \
+  --bucket expires-bucket \
+  --create-bucket-configuration LocationConstraint=ap-northeast-1 \
+  --profile <your profile>
+```
+
+ログ用のファイルを追加する。
+
+```bash
+aws s3api put-object \
+  --bucket expires-bucket \
+  --key logs/log.txt \
+  --body assets/log.txt \
+  --profile <your profile>
+```
+
+S3 コンソールを使用して、全てのオブジェクトに対して新規作成から 90 日後に自動的にオブジェクトを削除するアクションを追加した。
+
+![](assets/expire-rule_result.png)
+
+参考資料
+
+- [オブジェクトの有効期限](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/userguide/lifecycle-expire-general-considerations.html)
