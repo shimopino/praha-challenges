@@ -201,3 +201,54 @@ $ sudo systemctl restart nginx.service
 
 ![](assets/nginx-access.png)
 
+## Web ページの編集
+
+次にホームディレクトリに `public_html/index.html` を配置して、Nginx から参照する設定を追加していく。
+
+- まずは HTML ファイルを用意する
+
+  ```bash
+  $ mkdir public_html
+  $ cd public_html
+  $ vim index.html
+  >
+    Hello from ap-northeast-1a
+  ```
+
+- 次に Nginx の設定ファイルを変更する
+
+  ```bash
+  $ cd /etc/nginx
+  $ sudo vim nginx.conf
+  >
+    - root /usr/share/nginx/html;
+    + root /home/ec2-user/public_html;
+  ```
+
+- ディレクトリの権限を編集する
+
+  ```bash
+  $ cd ~
+  $ ls -ld
+  > drwx------ 6 ec2-user ec2-user 166 11月 28 05:57 .
+
+  # nginxプロセスは読み取れないので権限を付与する
+  $ chmod 701 ./
+  ```
+
+- Nginx を再起動する
+
+  ```bash
+  $ sudo systemctl restart nginx.service
+  ```
+
+同じ手順をもう一方のサブネットに配置した EC2 インスタンスでも実行する。
+
+![](assets/public-1a.png)
+
+![](assets/public-1c.png)
+
+参考資料
+
+- [Nginx で 403 Forbidden が表示された時のチェックポイント 5 選](https://engineers.weddingpark.co.jp/nginx-403-forbidden/)
+
