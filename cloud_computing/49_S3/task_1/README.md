@@ -10,4 +10,18 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## S3
+
 ## ストレージクラス
+
+### ストレージクラスの種類
+
+### ストレージクラスのユースケース
+
+## ライフサイクル
+
+### ライフサイクルとは
+
+### ストレージクラスを変更するライフサイクルの設定
+
+### オブジェクトを削除するライフライクルの設定

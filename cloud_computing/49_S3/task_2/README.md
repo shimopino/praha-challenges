@@ -11,3 +11,11 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## バックアップ
+
+### レプリケーション
+
+### クロスリージョンレプリケーション
+
+## バージョニング
+
+### バージョニングの挙動確認
