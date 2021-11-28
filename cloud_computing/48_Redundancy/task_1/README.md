@@ -84,3 +84,33 @@ aws ec2 create-nat-gateway \
 
 ![](assets/nat_result.png)
 
+### ルートテーブルの更新
+
+現在のプライベートサブネットに割り当てられているルートテーブルには、VPC 内のリソース同士の通信を行うだけであり、外部へのトラフィックはどこにも通信されない設定となっている。
+
+そこで以下の様にルートテーブルを更新して、プライベートサブネットの EC2 インスタンスから NAT ゲートウェイに対してトラフィックを制御する。
+
+![](assets/design_nat-rt.drawio.svg)
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-route.html
+
+# ap-notheast-1a
+aws ec2 create-route \
+    --route-table-id rtb-068899b0c03d1b887 \
+    --nat-gateway-id nat-0d4678c1fb1b2c34d \
+    --destination-cidr-block 0.0.0.0/0 \
+    --profile <your profile>
+
+# ap-notheast-1c
+aws ec2 create-route \
+    --route-table-id rtb-047a6ba6f2c84cf7e \
+    --nat-gateway-id nat-0e891587384c62e36 \
+    --destination-cidr-block 0.0.0.0/0 \
+    --profile <your profile>
+```
+
+これで以下の様にルートテーブルに対して、NAT ゲートウェイにトラフィックを送信するようなルーティング設定を追加することができた。
+
+![](assets/rt-nat_result.png)
+
