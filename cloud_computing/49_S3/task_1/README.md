@@ -123,4 +123,41 @@ AWS CLI を使用してライフサイクルを設定することが可能であ
 
 ### ストレージクラスを変更するライフサイクルの設定
 
+Amazon S3 では、ストレージクラス間のオブジェクトの移行に関して、以下の移行元と移行先の組み合わせをサポートしている。
+
+![](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/userguide/images/lifecycle-transitions-v2.png)
+
+では試しに移行アクションを定義するため、以下のコマンドを使用して S3 バケットを作成する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/create-bucket.html
+
+aws s3api create-bucket \
+  --bucket trasition-bucket \
+  --create-bucket-configuration LocationConstraint=ap-northeast-1 \
+  --profile <your profile>
+```
+
+では上記の S3 バケットに画像を配置する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/put-object.html
+
+aws s3api put-object \
+  --bucket transition-bucket \
+  --key images/mycat.jpg \
+  --body assets/mycat.jpg \
+  --profile <your profile>
+```
+
+![](assets/put-object_result.png)
+
+S3 コンソールを使用して、`images` 配下のオブジェクトが新規作成から 30 日後に自動的に `S3 Standard IA` に移行させるアクションを追加した。
+
+![](assets/transit-rule_result.png)
+
+参考資料
+
+- [Amazon S3 ライフサイクルを使用したオブジェクトの移行](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html)
+
 ### オブジェクトを削除するライフライクルの設定
