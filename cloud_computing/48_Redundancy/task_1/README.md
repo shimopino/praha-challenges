@@ -38,3 +38,48 @@
 
 ![](assets/nat-gateway.drawio.svg)
 
+### NAT ゲートウェイの構築
+
+今回作成する NAT ゲートウェイでは、パブリックサブネットに配置するため、以下のような構成図になる。
+
+![](assets/design_nat-gateway.drawio.svg)
+
+パブリックサブネットに NAT ゲートウェイを配置するにあたって、NAT ゲートウェイにパブリック IP アドレスを割り当てる必要がある。
+
+そこでまずはパブリック IP アドレス (Elastic IP) を作成する。
+
+```bash
+# https://docs.aws.amazon.com/cli/latest/reference/ec2/allocate-address.html
+
+aws ec2 allocate-address --profile <your profile>
+aws ec2 allocate-address --profile <your profile>
+```
+
+これで以下の IP アドレスが生成された。
+
+![](assets/elastic-ip_result.png)
+
+次に以下のコマンドで NAT ゲートウェイを作成する。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/ec2/create-nat-gateway.html
+
+# praha-ngw-public-1a
+aws ec2 create-nat-gateway \
+    --subnet-id subnet-0940ad7e2d04fab22 \
+    --allocation-id eipalloc-0d37e5f0ce8bd1750 \
+    --tag-specifications 'ResourceType=natgateway,Tags=[{Key=Name,Value=praha-ngw-public-1a}]' \
+    --profile <your profile>
+
+# praha-ngw-public-1c
+aws ec2 create-nat-gateway \
+    --subnet-id subnet-07580fd2ad5c53c69 \
+    --allocation-id eipalloc-0885b112b724c564b \
+    --tag-specifications 'ResourceType=natgateway,Tags=[{Key=Name,Value=praha-ngw-public-1c}]' \
+    --profile <your profile>
+```
+
+これで以下の様に NAT ゲートウェイが作成されたことがわかる。
+
+![](assets/nat_result.png)
+
