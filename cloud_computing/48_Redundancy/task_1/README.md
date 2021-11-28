@@ -130,3 +130,27 @@ EC2 インスタンスに Nginx を導入する手順は下記のページにま
 
 https://www.nginx.com/blog/setting-up-nginx/#aws-setup
 
+## Application Load Balancer
+
+### Elastic Load Balancer とは
+
+ロードバランサーを使用すると、Web サーバーを複数用意して性能を向上させるようなスケールアウトを実行できる様になる。
+
+このロードバランサーは以下の様な役割を持っている。
+
+- 不正なリクエストを検知して、リクエストを拒否する
+- SSL による暗号化処理を担当して、Web サーバーの負荷を下げる
+- リクエストを複数の Web サーバーに対して分散できる
+- Web サーバーをリクエストの負荷に応じて自動的にスケールアウトする
+
+![](assets/elastic-load-balancer.drawio.svg)
+
+この Elastic Load Balancer はいくつかの種類が存在している。
+
+| Type                      | Feature              | Way                        |
+| ------------------------- | -------------------- | -------------------------- |
+| Application Load Balancer | HTTP や HTTPS に特化 | Web サイトや REST API など |
+| Network Load Balancer     | いろいろな通信に対応 | ゲーム、チャットなど       |
+
+今回は **Application Load Balancer** を使用する。
+
