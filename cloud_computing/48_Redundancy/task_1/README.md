@@ -154,3 +154,11 @@ https://www.nginx.com/blog/setting-up-nginx/#aws-setup
 
 今回は **Application Load Balancer** を使用する。
 
+### Application Load Balancer の構築
+
+今回は Application Load Balancer を以下の様に配置する。
+
+別個にセキュリティグループを配置して、ロードバランサーからはプライベートサブネット内の EC2 インスタンスにトラフィックを振り分けるような設定を追加する。
+
+![](assets/design_alb.drawio.svg)
+
