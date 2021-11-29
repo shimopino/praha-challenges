@@ -9,6 +9,7 @@
   - [クロスリージョンレプリケーション](#%E3%82%AF%E3%83%AD%E3%82%B9%E3%83%AA%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E3%83%AC%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3)
 - [バージョニング](#%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0)
   - [バージョニングの挙動確認](#%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%8B%E3%83%B3%E3%82%B0%E3%81%AE%E6%8C%99%E5%8B%95%E7%A2%BA%E8%AA%8D)
+  - [AWS CLI](#aws-cli)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
