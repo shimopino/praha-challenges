@@ -148,3 +148,21 @@ Amazon S3 での `GET` リクエストは最後に保存されたバージョン
 
 ![](assets/restore-versioning-object.png)
 
+### AWS CLI
+
+バージョニングを有効にしたい場合は、AWS CLI で以下のコマンドを実行すればいい。
+
+```bash
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/create-bucket.html
+aws s3api create-bucket \
+  --bucket versioning-bucket-tokyo \
+  --region ap-northeast-1 \
+  --create-bucket-configuration LocationConstraint=eu-west-1 \
+  --profile <your profile>
+
+# https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/put-bucket-versioning.html
+aws s3api put-bucket-versioning \
+  --bucket versioning-bucket-tokyo \
+  --versioning-configuration Status=Enabled \
+  --profile <your profile>
+```
