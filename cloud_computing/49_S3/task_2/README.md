@@ -93,4 +93,37 @@ AWS S3 が提供しているレプリケーションを使用すると、S3 バ�
 
 ## バージョニング
 
+Amazon S3 が提供しているバージョニング機能を使用すると、バケットに保存された全てのオブジェクトのバージョンを、保存・取得・復元できる様になる。
+
+仕組みとしては、以下の様に同じオブジェクトに対して一意なバージョン ID を割り当て、すべてのバージョンのオブジェクトを保存する様にしている。
+
+![](https://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/images/versioning_Enabled.png)
+
+バージョニングを無効にしていた場合でもバージョン ID は付与されており、常に `null` が設定される様になっている。
+
+例えば同じ名称のオブジェクトを `PUT` した場合には、以下の様に新しいバージョン ID (`121212`) が生成され、オブジェクトとバージョン ID のセットが新しいバージョンとして登録される。
+
+![](https://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/images/versioning_PUT_versionEnabled3.png)
+
+オブジェクトが削除される場合には、バケット内の全てのバージョンを保持したまま、新しいバージョン ID を付与した状態で削除マーカーが挿入される。
+
+![](htps://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/images/versioning_DELETE_versioningEnabled.png)
+
+Amazon S3 での `GET` リクエストは最後に保存されたバージョンを取得するが、最新バージョンが削除マーカーである場合には、`404 Not Found` を返す様になっている。
+
+![](https://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/images/versioning_DELETE_NoObjectFound2.png)
+
+`Get Object` では以下の様に特定のバージョンのオブジェクトを取得することも可能である。
+
+![](https://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/images/versioning_GET_Versioned3.png)
+
+削除マーカーを残すことなく完全にオブジェクトを削除したい場合は、`DELETE VersionId` で特定のバージョンを削除することができる。
+
+![](https://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/images/versioning_DELETE_versioningEnabled2.png)
+
+参考資料
+
+- [S3 バージョニングの仕組み](https://docs.aws.amazon.com/ja_jp/ja_jp/AmazonS3/latest/userguide/versioning-workflows.html)
+- [絵で見て 3 分でおさらいする Amazon S3 のバージョニングとライフサイクル](https://dev.classmethod.jp/articles/3minutes-s3-versioning-lifecycle/#toc-9)
+
 ### バージョニングの挙動確認
