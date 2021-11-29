@@ -14,8 +14,6 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## バックアップ
-
 ## レプリケーション
 
 AWS S3 が提供しているレプリケーションを使用すると、S3 バケット間でオブジェクトを自動かつ非同期的にコピーすることが可能である。
