@@ -127,3 +127,24 @@ Amazon S3 での `GET` リクエストは最後に保存されたバージョン
 - [絵で見て 3 分でおさらいする Amazon S3 のバージョニングとライフサイクル](https://dev.classmethod.jp/articles/3minutes-s3-versioning-lifecycle/#toc-9)
 
 ### バージョニングの挙動確認
+
+まずは実験用のバケットを作成する。
+
+![](assets/create-versioning-bucket.png)
+
+その際にオブジェクトのバージョニング機能を有効にしておく必要がある。
+
+![](assets/on-versioning.png)
+
+ではサンプルとなるオブジェクトをバケットにアップロードする。
+
+![](assets/upload-version-object.png)
+
+これで同じファイルを削除した後で、`バージョンの表示` を有効にすると以下の様に削除したオブジェクトが、削除マーカーとして追加されていることがわかる。
+
+![](assets/check-delete-marker.png)
+
+この状態で削除マーカーを削除すると、以下の様にバケットにオブジェクトが復元されていることがわかる。
+
+![](assets/restore-versioning-object.png)
+
