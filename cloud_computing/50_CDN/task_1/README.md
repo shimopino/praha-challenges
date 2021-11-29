@@ -33,3 +33,7 @@
 - [How caching and CDNs work](https://docs.fastly.com/en/guides/how-caching-and-cdns-work)
 - [Leveraging the browser cache with Fastly’s CDN](https://www.fastly.com/blog/leveraging-browser-cache-fastlys-cdn)
 - [Keeping things fresh with stale-while-revalidate](https://web.dev/stale-while-revalidate/)
+
+CDN 関連の障害
+
+- [2021 年 6 月に発生した Fastly と Akamai の大規模 CDN 障害の根本的原因と課題とは](https://www.cscdbs.com/jp/cdn-outages-blog/)
