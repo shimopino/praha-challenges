@@ -19,6 +19,15 @@
 
 これは新しい変更をバックグラウンドで導入し、実際に使用するためのデータを準備した後で、新しい構造にシームレスに切り替えることができる様に設計された、一連の個別ステップを適用することが実現することができる。
 
+### Step 1: 新しいスキーマをデプロイする
+
+まずは新しい要件を満たす、新しいスキーマを設計する。これは例えば以下の様なものである。
+
+- 現在のカラムをそのままにして、必要となる特性を追加した新しいカラムをテーブルに追加する
+- 新しいデータ構造を表す、新しいテーブルを作成する
+
+![](assets/step1.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
