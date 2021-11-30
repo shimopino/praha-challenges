@@ -76,6 +76,14 @@
 
 ![](assets/step6.drawio.svg)
 
+### Step 7: 古いデータ構造を廃棄する
+
+ここまでで古いデータ構造は完全に使用していない状態になっている。
+
+これで古いデータ構造を安全に廃棄することが可能となったため、データベースから削除すればデータ移行の完了である。
+
+![](assets/step7.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
