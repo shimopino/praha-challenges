@@ -49,6 +49,14 @@
 
 ![](assets/step3.drawio.svg)
 
+### Step 4: インターフェースを検証する
+
+ここまでの段階で、古いデータ構造と新しいデータ構造には同じデータが格納されているはずである。
+
+そこで、本番で稼働するシステムが必要とするクエリを新しいデータ構造でテストを実施し、期待通りの結果が得られるのか検証を行う必要がある。このプロセスは、新しいデータ構造を本番で使用する前の最後のステップなので、慎重に要求を満たしていることを検証する必要がある。
+
+![](assets/step4.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
