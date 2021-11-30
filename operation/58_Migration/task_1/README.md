@@ -7,6 +7,7 @@
 
 - [Expand and Contract Pattern](#expand-and-contract-pattern)
   - [Step 1: 新しいスキーマをデプロイする](#step-1-%E6%96%B0%E3%81%97%E3%81%84%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E3%82%92%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4%E3%81%99%E3%82%8B)
+  - [Step 2: インターフェースを拡張する](#step-2-%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E6%8B%A1%E5%BC%B5%E3%81%99%E3%82%8B)
 - [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
