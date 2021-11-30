@@ -58,6 +58,16 @@
 
 ![](assets/step4.drawio.svg)
 
+### Step 5: 新しいデータ構造への読み取りを追加する
+
+ここまでで古いデータ構造と新しいデータ構造はデータを共有できており、インターフェースの検証も完了している状態である。
+
+このプロセスでは、本番環境で使用する読み取りに新しいデータ構造に採用する様に変更を加える。
+
+このプロセスはデータを失ってしまう可能性があるため、ステークホルダーと調整しながら実施する必要がある。
+
+![](assets/step5.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
