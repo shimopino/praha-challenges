@@ -69,6 +69,12 @@
 
 ![](assets/step5.drawio.svg)
 
+### Step 6: 古いデータ構造への書き込みを止める
+
+新しいデータ構造が意図した通りに動作していることが検証できれば、データベースのクライアンどを更新して古いデータ構造への書き込みを停止する。
+
+![](assets/step6.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
