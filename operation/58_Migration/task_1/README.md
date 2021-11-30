@@ -100,4 +100,6 @@
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
+- [Customizing migrations](https://www.prisma.io/docs/guides/database/developing-with-prisma-migrate/customizing-migrations#using-the-expand-and-contract-pattern-to-evolve-the-schema-without-downtime)
 - [Migration troubleshooting in production](https://www.prisma.io/docs/guides/database/production-troubleshooting)
+- [Tips on breaking change migrations](https://github.com/prisma/prisma/discussions/7421)
