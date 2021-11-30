@@ -29,6 +29,16 @@
 
 ![](assets/step1.drawio.svg)
 
+### Step 2: インターフェースを拡張する
+
+データベースに対して新しいスキーマを配置した後は、クライアント側のインターフェースが追加されたスキーマを認識できる様にする。
+
+重要な点は、書き込みを行う際にクライアントからは古いデータ構造と新しいデータ構造の両方にデータを追加したり、変更したりする点である。
+
+これで 2 つの構造間のインターフェースを検証することができ、今後は全てのデータが新しいデータ構造にも永続化されることを保証できる。なお、読み取りは元のデータ構造を排他的に参照するため、外部動作は変化しない。
+
+![](assets/step2.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
