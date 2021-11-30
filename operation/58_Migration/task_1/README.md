@@ -40,6 +40,14 @@
 
 ![](assets/step2.drawio.svg)
 
+### Step 3: 古いデータ構造から新しいデータ構造へのマイグレーション
+
+古いデータ構造に元々登録されていたデータは、新しいデータ構造にはまだ登録されていない状態である。
+
+この場合、データタイプの変更や値の分割などの新旧のデータ構造の違いを、何らかの形式で修正する必要がある。このプロセスは慎重に設計する必要がある。
+
+![](assets/step3.drawio.svg)
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
