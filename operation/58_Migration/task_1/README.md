@@ -85,6 +85,14 @@
 
 ![](assets/step7.drawio.svg)
 
+## マイグレーションシナリオ
+
+### カラム名の変更
+
+### ダウンタイムなしでのデプロイ
+
+### 外部キーの依存方向の逆転
+
 ## 参考資料
 
 - [Using the expand and contract pattern for schema changes](https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern)
