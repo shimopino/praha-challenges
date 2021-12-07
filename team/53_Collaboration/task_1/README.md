@@ -14,6 +14,21 @@
 
 ## プルリクエストの大きさはどの程度が良いのか
 
+以下によさそうな理由をまとめておく。
+
+- レビュー時間を短くできる
+- 後続の依存する作業への待機時間を減らせる
+- １つのことだけに集中して作業できる
+- 
+
 ## コードのコメントにはどのような内容を記載するべきでしょうか
 
 ## コミットメッセージにはどのような内容を記載するべきでしょうか
+
+## 参考資料
+
+- [10 tips for better Pull Requests by Mark Seemann](https://blog.ploeh.dk/2015/01/15/10-tips-for-better-pull-requests/)
+- [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html)
+- [Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
+- [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- [Googleのコードレビューのガイドラインに沿って自分がエンジニア1年目に書いたコードをレビューしてみた](https://www.praha-inc.com/lab/posts/code-review)
