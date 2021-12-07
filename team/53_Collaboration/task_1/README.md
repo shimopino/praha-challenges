@@ -6,3 +6,9 @@
 
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## プルリクエストの大きさはどの程度が良いのか
+
+## コードのコメントにはどのような内容を記載するべきでしょうか
+
+## コミットメッセージにはどのような内容を記載するべきでしょうか
