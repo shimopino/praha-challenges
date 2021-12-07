@@ -10,4 +10,4 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## チーム開発を円滑にするための取り組み
+そのため、行の幅を広い設定にしてしまっている場合は横スクロールを実行しなければコードの全体像を確認することができないため、例えば80行以下に制限しておくことでレビューしやすい状態に設定できる。
