@@ -80,6 +80,26 @@ team/56_Git/task_1/README.md
   no changes added to commit (use "git add" and/or "git commit -a")
   ```
 
+- 次に `git add -p team/56_Git/task_1/README.md` を使用して所定の箇所のみをステージングする
+
+  ![](assets/2021-12-08-23-18-27.png)
+
+- これでステータスを確認すると以下の様に一部の行のみがステージングされている
+
+  ```bash
+  ❯❯❯ git status
+
+  On branch feature/task56-issue-141
+  Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+          modified:   team/56_Git/task_1/README.md
+
+  Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+          modified:   team/56_Git/task_1/README.md
+  ```
+
 ## ワークスペースで実施したファイルの変更を一時的に退避するには？
 
 ## 特定のファイルのコミット履歴を見るには？
