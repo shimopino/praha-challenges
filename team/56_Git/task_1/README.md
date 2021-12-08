@@ -18,7 +18,7 @@
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 特定のコミットとの差分をひょうじするには？
+## 特定のコミットとの差分を表示するには？
 
 ## 差分があるファイル名だけを一覧表示するには？
 
