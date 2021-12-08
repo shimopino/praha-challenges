@@ -20,6 +20,35 @@
 
 ## 特定のコミットとの差分を表示するには？
 
+まずは比較を行いたいコミットを確認する。
+
+```bash
+❯❯❯ git log --oneline -3
+
+7887cc5 (HEAD -> feature/task56-issue-141, origin/feature/task56-issue-141) chore(docs): update TOC
+d94dbb0 docs: 項目名が間違っていたため修正 #141
+397138e chore(docs): update TOC
+```
+
+ここで以下のコマンドを実行すればコミット間の差分を表示することが可能となる。
+
+```git
+❯❯❯ git diff d94dbb0 397138e
+
+diff --git a/team/56_Git/task_1/README.md b/team/56_Git/task_1/README.md
+index cc048fd..0f8fe84 100644
+--- a/team/56_Git/task_1/README.md
++++ b/team/56_Git/task_1/README.md
+@@ -18,7 +18,7 @@
+ </details>
+ <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+ 
+-## 特定のコミットとの差分を表示するには？
++## 特定のコミットとの差分をひょうじするには？
+ 
+ ## 差分があるファイル名だけを一覧表示するには？
+```
+
 ## 差分があるファイル名だけを一覧表示するには？
 
 ## ファイルの一部を部分的にステージングするには？
