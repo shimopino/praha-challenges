@@ -62,6 +62,24 @@ team/56_Git/task_1/README.md
 
 ## ファイルの一部を部分的にステージングするには？
 
+ファイルをステージングするときに、`-p` フラグを付けることでステージング対象を `PATCH` モードで選択することが可能となる。
+
+以下にコマンドを実際に使用した際の結果をのせる。
+
+- まずはステージング対象のファイルを確認する
+
+  ```bash
+  ❯❯❯ git status
+
+  On branch feature/task56-issue-141
+  Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+          modified:   team/56_Git/task_1/README.md
+
+  no changes added to commit (use "git add" and/or "git commit -a")
+  ```
+
 ## ワークスペースで実施したファイルの変更を一時的に退避するには？
 
 ## 特定のファイルのコミット履歴を見るには？
