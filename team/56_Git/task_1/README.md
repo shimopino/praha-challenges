@@ -82,7 +82,7 @@ team/56_Git/task_1/README.md
 
 - 次に `git add -p team/56_Git/task_1/README.md` を使用して所定の箇所のみをステージングする
 
-  ![](assets/2021-12-08-23-18-27.png)
+  ![](assets/staging-patch-mode.png)
 
 - これでステータスを確認すると以下の様に一部の行のみがステージングされている
 
