@@ -102,6 +102,60 @@ team/56_Git/task_1/README.md
 
 ## ワークスペースで実施したファイルの変更を一時的に退避するには？
 
+ワークスペースでおこなっていた作業を一時的に退避させる場合には `stash` コマンドを使用することができる。
+
+上記の文章を作成した段階で差分を確認すると以下の様に表示されているはずである。
+
+```bash
+❯❯❯ git diff team/56_Git/task_1/README.md
+
+diff --git a/team/56_Git/task_1/README.md b/team/56_Git/task_1/README.md
+index 7503248..5b770ae 100644
+--- a/team/56_Git/task_1/README.md
++++ b/team/56_Git/task_1/README.md
+@@ -102,6 +102,8 @@ team/56_Git/task_1/README.md
+
+ ## ワークスペースで実施したファイルの変更を一時的に退避するには？
+
++ワークスペースでおこなっていた作業を一時的に退避させる場合には `stash` コマンドを使用することができる。
++
+ ## 特定のファイルのコミット履歴を見るには？
+```
+
+後は `git stash` コマンドを実行すればワークスペース内の編集ファイルを一時的な保存領域に退避させることが可能となる。
+
+```bash
+❯❯❯ git stash
+
+Saved working directory and index state WIP on task56-issue-141: c6ce923 docs: patchモードでの編集過程を追加 #141
+```
+
+`git stash list` コマンドを使用すれば一時的に退避させた内容を一覧で確認することができる。
+
+```bash
+❯❯❯ git stash list
+
+stash@{0}: WIP on task56-issue-141: c6ce923 docs: patchモードでの編集過程を追加 #141
+```
+
+一時的に退避させた内容は `git stash pop` コマンドで復元することができる。
+
+```bash
+❯❯❯ git stash pop
+```
+
+上記以外にも `git stash` のコマンドは数多く存在している。
+
+| コマンド                             | 内容                                                                       |
+| ------------------------------------ | -------------------------------------------------------------------------- |
+| `git stash save "stash message"`     | 一次退避させた内容に対してメッセージを割り当てることができる               |
+| `git stash save --include-untracked` | 新規作成したファイルも含めて一時退避を行う                                 |
+| `git stash apply stash@{1}`          | 一次退避させた内容から、復元させたいものを選択してワークスペースに反映する |
+| `git stash pop stash@{1}`            | 一次退避させた内容を復元した後で、退避させている一時ファイルを削除する     |
+| `git stash show stash@{1}`           | 一次退避させた内容を差分を確認できる                                       |
+| `git stash clear`                    | 一次退避させていた内容をすべて削除する                                     |
+| `git stash drop stash@{1}`           | 一次退避させていた、特定の内容のみを削除する                               |
+
 ## 特定のファイルのコミット履歴を見るには？
 
 ## 複数のコミットを 1 つにまとめるには？
