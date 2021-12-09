@@ -316,3 +316,9 @@ git checkout -b feature/task56-issue-141 main
     ```
 
 ## マージ中にコンフリクトが発生した場合に作業を中断するには？
+
+マージ中にコンフリクトを発生させるため、新しく `index.html` を作成して以下のようにブランチを分岐させる。
+
+![](assets/merge-conflict.drawio.svg)
+
+
