@@ -321,4 +321,59 @@ git checkout -b feature/task56-issue-141 main
 
 ![](assets/merge-conflict.drawio.svg)
 
+1. まずは `original` ブランチでコンフリクトを発生させるファイル `index.html` を作成する
 
+    ```bash
+    ❯❯❯ git checkout -b original feature/task56-issue-141
+
+    ❯❯❯ echo "<h1><original branch/h1>" >| index.html
+
+    ❯❯❯ git add index.html
+    ❯❯❯ git commit -m "docs: 検証用のコミット original-1 #141" 
+    ```
+
+2. 次に `conflict` ブランチで同じファイルにコンフリクトを発生させるコミットを作成する
+
+    ```bash
+    ❯❯❯ git checkout -b conflict original
+
+    ❯❯❯ echo "<h1><conflict branch/h1>" >| index.html
+    
+    ❯❯❯ git add index.html
+    ❯❯❯ git commit -m "docs: 検証用のコミット conflict-1 #141"
+    ```
+
+3. 次に `original` ブランチでさらに編集を行い、コミットを1つ進めた状態にしておく
+
+    ```bash
+    ❯❯❯ git checkout original
+
+    ❯❯❯ echo "<h1><original conflict branch/h1>" >| index.html
+    
+    ❯❯❯ git add index.html
+    ❯❯❯ git commit -m "docs: 検証用のコミット original-1 #141"
+    ```
+
+4. マージを行う
+
+    ```bash
+    ❯❯❯ git merge conflict
+    ```
+
+5. コンフリクトが発生していることを確認できる
+
+    ```bash
+    Auto-merging team/56_Git/task_1/index.html
+    CONFLICT (content): Merge conflict in team/56_Git/task_1/index.html
+    Automatic merge failed; fix conflicts and then commit the result.
+    ```
+
+6. コンフリクトが発生したため、マージ作業を中断する
+
+    ```bash
+    ❯❯❯ git merge --abort
+    ```
+
+これでマージの際にコンフリクトを発生させることができた状態になっている。
+
+`--abort` フラグを使用すればマージ作業を中断することができる。
