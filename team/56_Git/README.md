@@ -6,6 +6,7 @@
 <summary>Table of Contents</summary>
 
 - [課題 1](#%E8%AA%B2%E9%A1%8C-1)
+- [クイズ](#%E3%82%AF%E3%82%A4%E3%82%BA)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
