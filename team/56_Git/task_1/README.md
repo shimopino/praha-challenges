@@ -189,4 +189,68 @@ git checkout -b feature/task56-issue-141 main
 
 ## 最新のコミットのみをクローンするには？
 
+最新のコミットのみをクローンするには、`--depth` フラグを使用すればいい。
+
+例えば本リポジトリをクローンした際の挙動で確認する。
+
+- 全ての履歴を含めてクローンする
+  - コミットログを見ると過去の履歴分も含めて取得していることがわかる
+
+    ```bash
+    ❯❯❯ git clone git@github.com:shimopino/praha-challenges.git
+
+    Cloning into 'praha-challenges'...
+    remote: Enumerating objects: 13160, done.
+    remote: Counting objects: 100% (982/982), done.
+    remote: Compressing objects: 100% (533/533), done.
+    remote: Total 13160 (delta 463), reused 685 (delta 306), pack-reused 12178
+    Receiving objects: 100% (13160/13160), 42.21 MiB | 5.98 MiB/s, done.
+    Resolving deltas: 100% (6503/6503), done.
+
+    ❯❯❯ cd praha-challenges
+
+    ~ praha-challenges ❯❯❯ git log --oneline
+
+    1e7b972 (HEAD -> main, origin/main, origin/HEAD) Merge pull request #162 from shimopino/fix/task15-delete
+    513bf20 chore(docs): update TOC
+    97f530c feat: 削除されてしまっていた課題15の内容を復元
+    8cd01c2 Merge pull request #150 from shimopino/feature/task39-issue-119
+    dcfac6f Merge pull request #158 from shimopino/feature/nestjs-auth-issue-155
+    0ecc341 fix: 変数名を統一する #155
+    3d7e66c feat: 検証ようのログインフォームを追加 #155
+    e691332 feat: CSRF対策を追加 #155
+    53156bf feat: axiosでの例外処理を追加 #155
+    6ceefb8 feat: 登録されているクッキーを送信するための設定を追加 #155
+    0bde22f feat: ユーザー登録するための処理を追加 #155
+    4af88e3 feat: アプリケーションを起動する際のエントリーファイル名を変更 #155
+    ef53c09 feat: クッキーを受け取ることができるようにCORS設定を変更 #155
+    1191b64 feat: JWTの暗号化キーを別々に指定 #155
+    d11df22 feat: 有効期限の環境変数は数値型であることを検証する #155
+    c87d326 feat: リフレッシュが実行された場合には、リフレッシュトークンの有効期限内でアクセストークンを再発行する #155
+    d388b6d feat: インターセプターの変数名にトークンの種類を明記 #155
+    ad50e46 feat: 認証関連の処理を検証するためのリクエストを追加 #155
+    ```
+
+- 最新のコミットのみをクローンする
+  - 最新のコミット履歴しか取得してきていないことがわかる
+  - そのため、今回のリポジトリではクローンしてきた際のサイズも半分以下になっていることがわかる
+
+    ```bash
+    ❯❯❯ git clone git@github.com:shimopino/praha-challenges.git
+
+    Cloning into 'praha-challenges'...
+    remote: Enumerating objects: 1218, done.
+    remote: Counting objects: 100% (1218/1218), done.
+    remote: Compressing objects: 100% (887/887), done.
+    remote: Total 1218 (delta 249), reused 838 (delta 158), pack-reused 0
+    Receiving objects: 100% (1218/1218), 16.73 MiB | 5.63 MiB/s, done.
+    Resolving deltas: 100% (249/249), done.
+
+    ❯❯❯ cd praha-challenges
+
+    ~ praha-challenges ❯❯❯ git log --oneline
+
+    1e7b972 (grafted, HEAD -> main, origin/main, origin/HEAD) Merge pull request #162 from shimopino/fix/task15-delete
+    ```
+
 ## マージ中にコンフリクトが発生した場合に作業を中断するには？
