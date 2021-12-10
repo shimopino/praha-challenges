@@ -5,13 +5,12 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題１](#課題１)
-  - [Git flow](#git-flow)
-    - [概要](#概要)
-    - [開発の流れ](#開発の流れ)
-  - [Github flow](#github-flow)
-  - [GitLab flow](#gitlab-flow)
-  - [Git Feature flow](#git-feature-flow)
+- [Git flow](#git-flow)
+  - [概要](#%E6%A6%82%E8%A6%81)
+  - [開発の流れ](#%E9%96%8B%E7%99%BA%E3%81%AE%E6%B5%81%E3%82%8C)
+- [Github flow](#github-flow)
+- [GitLab flow](#gitlab-flow)
+- [Git Feature flow](#git-feature-flow)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
