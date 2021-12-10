@@ -21,6 +21,7 @@
 - [ブルックスの法則](#%E3%83%96%E3%83%AB%E3%83%83%E3%82%AF%E3%82%B9%E3%81%AE%E6%B3%95%E5%89%87)
 - [コンウェイの法則](#%E3%82%B3%E3%83%B3%E3%82%A6%E3%82%A7%E3%82%A4%E3%81%AE%E6%B3%95%E5%89%87)
 - [QCDS](#qcds)
+- [参考資料](#%E5%8F%82%E8%80%83%E8%B3%87%E6%96%99)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
