@@ -5,11 +5,10 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題１](#課題１)
-  - [Git flow](#git-flow)
-  - [Github flow](#github-flow)
-  - [GitLab flow](#gitlab-flow)
-  - [Git Feature flow](#git-feature-flow)
+- [Git flow](#git-flow)
+- [Github flow](#github-flow)
+- [GitLab flow](#gitlab-flow)
+- [Git Feature flow](#git-feature-flow)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
