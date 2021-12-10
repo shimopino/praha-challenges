@@ -56,3 +56,16 @@
 ## コンウェイの法則
 
 ## QCDS
+
+## 参考資料
+
+- 書籍
+  - [アジャイルサムライ――達人開発者への道](https://www.amazon.co.jp//dp/B00J1XKB6K/)
+  - [エクストリームプログラミング](https://www.amazon.co.jp/dp/B012UWOLOQ/)
+  - [Clean Agile　基本に立ち戻れ (アスキードワンゴ)](https://www.amazon.co.jp//dp/B08KRHDS84/)
+  - [SCRUM BOOT CAMP THE BOOK【増補改訂版】 スクラムチームではじめるアジャイル開発](https://www.amazon.co.jp//dp/B086GBXRN6/)
+  - [エッセンシャル スクラム](https://www.amazon.co.jp//dp/B00MB6GO7E/)
+- サイト
+  - [scrummaster.jp](https://scrummaster.jp/)
+  - [Ryuzee.com](https://www.ryuzee.com/)
+  - [graat](https://www.graat.co.jp/blogs/articles)
