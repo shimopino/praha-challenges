@@ -5,15 +5,20 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Git flow](#git-flow)
-- [Github flow](#github-flow)
-- [GitLab flow](#gitlab-flow)
-- [Git Feature flow](#git-feature-flow)
+- [課題１](#課題１)
+  - [Git flow](#git-flow)
+    - [概要](#概要)
+    - [開発の流れ](#開発の流れ)
+  - [Github flow](#github-flow)
+  - [GitLab flow](#gitlab-flow)
+  - [Git Feature flow](#git-feature-flow)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Git flow
+
+### 概要
 
 **Git flow** は以下のブランチで構成されている。
 
@@ -27,7 +32,7 @@
 | develop    | ・開発作業を行うブランチ<br>・新しい機能は feature ブランチに切って開発                                                        |
 | feature    | ・develop ブランチをベースに作成されるブランチ<br>・新しい機能を開発する                                                       |
 
-開発フローの例
+### 開発の流れ
 
 | ブランチ名                                   | 用途                                      |
 | :------------------------------------------- | :---------------------------------------- |
