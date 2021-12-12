@@ -42,7 +42,7 @@ IAM の Switch Role と IAM ユーザーの違いはなんでしょうか。
 - Admin ロールに切り替える
   ![](assets/switch-admin.png)
 - 権限が足りていることがわかる
-  ![](assets/admin-admin-permissions.png)
+  ![](assets/admin-permissions.png)
 
 </div>
 </details>
