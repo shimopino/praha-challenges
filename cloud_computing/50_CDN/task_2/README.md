@@ -82,6 +82,10 @@ CloudFront のディストリビューションを作成する場合には、オ
 
 これでディストリビューションのドメイン名とファイル名で URL にアクセスすれば、CloudFront 経由で画像を参照できていることがわかる。
 
+参考資料
+
+- [CloudFront 経由で S3 のファイルにアクセスする](https://qiita.com/NaokiIshimura/items/46994e67b712831c3016)
+
 ## S3 バケットへの直接アクセス
 
 ![](assets/s3-access.png)
