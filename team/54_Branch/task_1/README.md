@@ -48,24 +48,36 @@
 | リリースを行う                               | ![](assets/git-flow-process-5.drawio.svg) |
 | 緊急のバグ対応を行う                         | ![](assets/git-flow-process-6.drawio.svg) |
 
-合間合間でCIでのテストなどを実施する。
+合間合間で CI でのテストなどを実施する。
 
 ## Github flow
 
 ### 概要
 
-[**GitHub flow**](http://scottchacon.com/2011/08/31/github-flow.html) は以下のブランチで構成されている。
+[**GitHub flow**](http://scottchacon.com/2011/08/31/github-flow.html) は Git Flow のワークフローが複雑すぎるため、よりシンプルなワークフローとして提案された。
 
+具体的には以下のブランチで構成されている。
 
+![](assets/github-flow.drawio.svg)
 
 ### 開発プロセス
+
+Github Flow では、プロダクション環境へのデプロイ頻度が非常に短い（１日に何回も行う）ことを前提としてワークフローである。
+
+| プロセス                                                                                                                            | プロセスの流れ                               |
+| ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| 1. master ブランチは常にデプロイ可能<br><br>・ブランチをロールバックすることはまれ<br>・revert コミットや修正コミットを追加するだけ | ![](assets/github-flow-process-1.drawio.svg) |
+| 2. master から開発用ブランチを作成する<br><br>・ブランチ名を機能に合わせて命名する<br>・開発しているトピックを一覧できる            | ![](assets/github-flow-process-2.drawio.svg) |
+| 3. 開発用ブランチに定期的に push する<br><br>・デプロイ観点は master のみ<br>・master ブランチ以外は単に作業中であるのみ            | ![](assets/github-flow-process-3.drawio.svg) |
+| 4. プルリクエストを作成する<br><br>・コードレビューを実施する<br>・修正対応はコミットするのみ                                       | ![](assets/github-flow-process-3.drawio.svg) |
+| 5. マージする<br><br>・レビュー後にのみマージする<br>・直接 master ブランチで作業はしない                                           | ![](assets/github-flow-process-5.drawio.svg) |
+| 6. デプロイする<br><br>・master ブランチにマージ後にデプロイする<br>・小さなコミットでもデプロイしていく                            | ![](assets/github-flow-process-5.drawio.svg) |
 
 ## GitLab flow
 
 [**GitLab flow**](https://postd.cc/gitlab-flow/) は以下のブランチで構成されている。
 
 ### 概要
-
 
 ### 開発プロセス
 
@@ -76,4 +88,3 @@
 [**GitFeature flow**](https://developers.gnavi.co.jp/entry/GitFeatureFlow/**koyama**) は以下のブランチで構成されている。
 
 ### 開発プロセス
-
