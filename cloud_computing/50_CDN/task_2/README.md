@@ -2,7 +2,17 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
 
+- [リージョンごとの S3 バケットの作成](#%E3%83%AA%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E3%81%94%E3%81%A8%E3%81%AE-s3-%E3%83%90%E3%82%B1%E3%83%83%E3%83%88%E3%81%AE%E4%BD%9C%E6%88%90)
+- [CloudFront と S3 を接続する](#cloudfront-%E3%81%A8-s3-%E3%82%92%E6%8E%A5%E7%B6%9A%E3%81%99%E3%82%8B)
+- [S3 バケットへの直接アクセス](#s3-%E3%83%90%E3%82%B1%E3%83%83%E3%83%88%E3%81%B8%E3%81%AE%E7%9B%B4%E6%8E%A5%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9)
+- [CloudFront へのアクセス](#cloudfront-%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9)
+- [比較結果](#%E6%AF%94%E8%BC%83%E7%B5%90%E6%9E%9C)
+- [TTFB](#ttfb)
+
+</details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## リージョンごとの S3 バケットの作成
