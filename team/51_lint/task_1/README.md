@@ -45,6 +45,27 @@ module.exports = {
 
 ## ESLint のおすすめルール
 
-## extends と plugings の違い
+ESlint では、`"extends": "eslint:recommended"` を設定ファイルに追加した場合に適用されるルールや、その他のルールにどの様なものがあるのか [公式サイト](https://eslint.org/docs/rules/) に記述されている。
+
+以下に重要だと感じるルールを列挙していく。なお `"extends": "eslint:recommended"` で適用できるルールは除外している。（例えば `no-unused-vars` など重要だと感じるが以下にはまとめていない。）
+
+- [no-console](https://eslint.org/docs/rules/no-console)
+  - `console` でのログ出力はデバッグの際にのみ使用して、本番環境には残しておきたいくはない
+  - このルールを有効にしておくことで、不要なログ出力を消し忘れることを防ぐことが可能となる
+- [array-callback-return](https://eslint.org/docs/rules/array-callback-return)
+  - 配列の各要素に対して操作を行う関数を作成する
+  - このコールバック関数には `return` を書き忘れることがある
+  - このルールを有効にしておくことで、変換処理が不要な場合は `forEach` を使用することを矯正できる
+- [no-nested-ternary](https://eslint.org/docs/rules/no-nested-ternary)
+  - 三項演算子は分岐処理を短くできるので便利である
+  - しかし、何回もネストさせてしまうと処理の見通しが悪くなってしまう
+  - このルールを有効にしておくことで、三項演算子のネストが発生しない様になる
+- [max-depth](https://eslint.org/docs/rules/max-depth)
+  - 複雑な処理の場合、複数の条件分岐を書いてしまい処理の可読性が悪化することがある
+  - この場合、ネストを深くするよりも論理凝集度から機能的凝集へと高めていく方がいい
+  - このルールを有効にしておくことで、ネストできる深さの最大値を設定することができる
+- [no-eval](https://eslint.org/docs/rules/no-eval)
+  - JavaScript での `eval` はセキュリティ的に危険なメソッドである
+  - このルールを有効にすることで、代替となるアプローチを矯正することができる
 
 ## airbnb のルール
