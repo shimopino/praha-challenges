@@ -5,19 +5,18 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題１](#課題１)
-  - [Git flow](#git-flow)
-    - [概要](#概要)
-    - [開発プロセス](#開発プロセス)
-  - [Github flow](#github-flow)
-    - [概要](#概要-1)
-    - [開発プロセス](#開発プロセス-1)
-  - [GitLab flow](#gitlab-flow)
-    - [概要](#概要-2)
-    - [開発プロセス](#開発プロセス-2)
-  - [Git Feature flow](#git-feature-flow)
-    - [概要](#概要-3)
-    - [開発プロセス](#開発プロセス-3)
+- [Git flow](#git-flow)
+  - [概要](#%E6%A6%82%E8%A6%81)
+  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9)
+- [Github flow](#github-flow)
+  - [概要](#%E6%A6%82%E8%A6%81-1)
+  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-1)
+- [GitLab flow](#gitlab-flow)
+  - [概要](#%E6%A6%82%E8%A6%81-2)
+  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-2)
+- [Git Feature flow](#git-feature-flow)
+  - [概要](#%E6%A6%82%E8%A6%81-3)
+  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
