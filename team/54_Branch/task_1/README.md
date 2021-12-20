@@ -5,18 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Git flow](#git-flow)
-  - [概要](#%E6%A6%82%E8%A6%81)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9)
-- [Github flow](#github-flow)
-  - [概要](#%E6%A6%82%E8%A6%81-1)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-1)
-- [GitLab flow](#gitlab-flow)
-  - [概要](#%E6%A6%82%E8%A6%81-2)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-2)
-- [Git Feature flow](#git-feature-flow)
-  - [概要](#%E6%A6%82%E8%A6%81-3)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-3)
+- [課題１](#課題１)
+  - [Git flow](#git-flow)
+    - [概要](#概要)
+    - [開発プロセス](#開発プロセス)
+  - [Github flow](#github-flow)
+    - [概要](#概要-1)
+    - [開発プロセス](#開発プロセス-1)
+  - [GitLab flow](#gitlab-flow)
+    - [概要](#概要-2)
+    - [開発プロセス](#開発プロセス-2)
+  - [Git Feature flow](#git-feature-flow)
+    - [概要](#概要-3)
+    - [開発プロセス](#開発プロセス-3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -64,7 +65,7 @@
 
 まずは以前のブランチ戦略の問題点を考えていく。
 
-Git-flow の問題点とは、hotfixブランチとreleaseブランチが余計な複雑性を持ち込んでしまうことである。継続的デリバリが主流の場合、デフォルトのブランチがデプロイされるため、多くのブランチが存在していることはそれだけデプロイする機能を管理することが難しくなってしまうことを意味している。
+Git-flow の問題点とは、hotfix ブランチと release ブランチが余計な複雑性を持ち込んでしまうことである。継続的デリバリが主流の場合、デフォルトのブランチがデプロイされるため、多くのブランチが存在していることはそれだけデプロイする機能を管理することが難しくなってしまうことを意味している。
 
 Github Flow では、プロダクション環境へのデプロイ頻度が非常に短い（１日に何回も行う）ことを前提としたワークフローである。
 
@@ -79,9 +80,11 @@ Github Flow では、プロダクション環境へのデプロイ頻度が非�
 
 ## GitLab flow
 
+### 概要
+
 [**GitLab flow**](https://postd.cc/gitlab-flow/) は以下のブランチで構成されている。
 
-### 概要
+![](assets/gitlab-flow.drawio.svg)
 
 ### 開発プロセス
 
