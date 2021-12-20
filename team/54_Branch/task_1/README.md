@@ -93,6 +93,13 @@ GitHub-flow の問題点とは、ブランチを必要最小限にすること�
 
 GitLab-flow では、以下の様に 本番環境へデプロイするための production ブランチなどが存在している。
 
+| プロセス                                        | ブランチの流れ                               |
+| :---------------------------------------------- | :------------------------------------------- |
+| 1. master ブランチから機能開発用ブランチを切る  | ![](assets/gitlab-flow-process-1.drawio.svg) |
+| 2. master ブランチに開発内容を取り込む          | ![](assets/gitlab-flow-process-2.drawio.svg) |
+| 3. リリースを制御するため前準備のブランチを切る | ![](assets/gitlab-flow-process-3.drawio.svg) |
+| 4. リリース時期になったら本番環境へデプロイする | ![](assets/gitlab-flow-process-4.drawio.svg) |
+
 ## Git Feature flow
 
 ### 概要
