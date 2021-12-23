@@ -5,18 +5,19 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [Git flow](#git-flow)
-  - [概要](#%E6%A6%82%E8%A6%81)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9)
-- [Github flow](#github-flow)
-  - [概要](#%E6%A6%82%E8%A6%81-1)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-1)
-- [GitLab flow](#gitlab-flow)
-  - [概要](#%E6%A6%82%E8%A6%81-2)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-2)
-- [Git Feature flow](#git-feature-flow)
-  - [概要](#%E6%A6%82%E8%A6%81-3)
-  - [開発プロセス](#%E9%96%8B%E7%99%BA%E3%83%97%E3%83%AD%E3%82%BB%E3%82%B9-3)
+- [課題１](#課題１)
+  - [Git flow](#git-flow)
+    - [概要](#概要)
+    - [開発プロセス](#開発プロセス)
+  - [Github flow](#github-flow)
+    - [概要](#概要-1)
+    - [開発プロセス](#開発プロセス-1)
+  - [GitLab flow](#gitlab-flow)
+    - [概要](#概要-2)
+    - [開発プロセス](#開発プロセス-2)
+  - [Git Feature flow](#git-feature-flow)
+    - [概要](#概要-3)
+    - [開発プロセス](#開発プロセス-3)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -117,3 +118,11 @@ Git-Flow では、フロー自体が複雑であり、毎日リリースを実�
 GitHub-Flow では、毎日リリースすることが前提となっている軽量ブランチ戦略ではあるが、品質管理チームによるテストなど、何らかの作業を行なってから本番環境をリリースするスタイルには向いていない。
 
 GitFeature-Flow では、各ブランチを独立させておくことで上記の課題を解消している。
+
+| プロセス                                                | ブランチの流れ                                   |
+| :------------------------------------------------------ | :----------------------------------------------- |
+| 1. master ブランチから機能開発用のブランチを切る        | ![](assets/gitfeature-flow-process-1.drawio.svg) |
+| 2. リリース前にテスト環境に同期したブランチにマージする | ![](assets/gitfeature-flow-process-2.drawio.svg) |
+| 3. テストが完了すれば本番環境へマージする               | ![](assets/gitfeature-flow-process-3.drawio.svg) |
+
+テスト環境と本番環境に同期しているブランチがそれぞれ独立しており、機能開発した内容は単にマージするか否かでリリースするのか判断できるため、使いやすいと感じる。
