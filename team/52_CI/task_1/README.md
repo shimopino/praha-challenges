@@ -51,3 +51,27 @@ jobs:
 参考資料
 
 - [Create an example workflow](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions#create-an-example-workflow)
+
+## サンプルリポジトリ
+
+プルリクエストが作成された場合に、自動的に ESLint を実行するワークフローを作成する。
+
+https://github.com/shimopino/github-actions-playground
+
+ここでは以下のイベントで発火するワークフローを作成している。
+
+```yml
+on:
+  pull_request:
+    types: [opened, reopend, synchronize]
+```
+
+- プルリクエストに関して
+  - 新規作成されたとき
+  - 一時閉じたプルリクが再度開かれたとき
+  - プルリクに対してコミットをプッシュしたとき
+
+参考資料
+
+- [Events and trigger workflows](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows)
+- [on.<event_name>.types](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#onevent_nametypes)
