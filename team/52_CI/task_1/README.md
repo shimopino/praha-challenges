@@ -72,6 +72,8 @@ on:
   - 一時閉じたプルリクが再度開かれたとき
   - プルリクに対してコミットをプッシュしたとき
 
+実際にワークフローを実行した際の処理の流れなどは、サンプルリポジトリを参照する。
+
 参考資料
 
 - [Events and trigger workflows](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows)
