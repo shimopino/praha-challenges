@@ -1,8 +1,46 @@
 # 課題 1
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- START doctoc -->
+<!-- END doctoc -->
 
+## Github Actions とは
 
+Github Actions とは、リポジトリで発生したイベントに応じて、自動的に設定されているワークフローをサーバー上で実行するための仕組みである。
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+![](assets/github-actions.drawio.svg)
+
+Github Actions を使用したい場合は、リポジトリの `.github/workflows` ディレクトリにワークフローを記述している YAML ファイルを配置すればいい。
+
+例えば以下はリポジトリに何かしらが push された際に、node のバージョン 14 で `bats` というライブラリをインストールして、そのバージョンを表示しているワークフローになる。
+
+```yml
+# 任意項目であり、ワークフロー自体の名称を設定できる
+# この名称で 「Actions」 タブには表示される
+name: learn-github-actions
+# ワークフローを起動するトリガーを設定できる
+# ここでは全ての push イベントが発生した際にワークフローを起動する設定となっている
+on: [push]
+# ワークフローで実行する処理をジョブという形でまとめることができる
+jobs:
+  # 実行するジョブに名称を設定できる
+  check-bats-version:
+    # Githubでホスティングされている最新のUbuntuイメージの仮想環境でジョブを実行する
+    runs-on: ubuntu-latest
+    # 実行する処理をグルーピングする
+    steps:
+      # リポジトリをランナー上にチェックするアクションになる
+      # ワークフローがリポジトリのコードに対して実行される場合は、必ず必要となるアクションである
+      - uses: actions/checkout@v2
+      # Nodeのv14をインストールしてr、PATHに node と npm を追加する
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      # "run" はランナー上で実行したいコマンドを指定する
+      # ここでは単純に指定のライブラリをインストールしてそのバージョンを表示しているだけである
+      - run: npm install -g bats
+      - run: bats -v
+```
+
+参考資料
+
+- [Create an example workflow](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions#create-an-example-workflow)
