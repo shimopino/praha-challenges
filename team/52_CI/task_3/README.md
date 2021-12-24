@@ -61,6 +61,32 @@ steps:
 
 ### actions/cache
 
+`cache` アクションでは、指定されたキーでキャッシュを作成し、次回以降は同じキーに該当する場合にはキャッシュを使用して、新しいキーが指定された場合には新しくキャッシュを作成することができる。
+
+処理の流れとしては以下になる。
+
+1. `key` にマッチするキャッシュがある場合は、`path` のディレクトリにキャッシュを復元する
+2. `key` にマッチしない場合は、ジョブが成功した後に新しいキャッシュが作成される
+3. `key` にマッチしない場合は、`restore-keys` という代替のキーに該当するキャッシュがないか検索する
+4. キャッシュがヒットする場合は、`path` のディレクトリにキャッシュを復元する
+
+実際の設定ファイルは以下のようになる。
+
+```yml
+steps:
+  - uses: actions/checkout@v2
+  - uses: actions/cache@v2
+    env:
+      cache-name: cache-node-modules
+    with:
+      path: ~/.npm
+      key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      restore-keys: |
+        ${{ runner.os }}-build-${{ env.cache-name }}-
+        ${{ runner.os }}-build-
+        ${{ runner.os }}-
+```
+
 参考資料
 
 - [Caching dependencies to speed up workflows](https://docs.github.com/ja/actions/advanced-guides/caching-dependencies-to-speed-up-workflows)
