@@ -5,11 +5,10 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 3](#課題-3)
-  - [node_modules caches](#node_modules-caches)
-    - [setup-node](#setup-node)
-    - [actions/cache](#actionscache)
-  - [キャッシュへのアクセス制限](#キャッシュへのアクセス制限)
+- [node_modules caches](#node_modules-caches)
+  - [setup-node](#setup-node)
+  - [actions/cache](#actionscache)
+- [キャッシュへのアクセス制限](#%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%88%B6%E9%99%90)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
