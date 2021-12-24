@@ -5,10 +5,15 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [node_modules caches](#node_modules-caches)
-  - [setup-node](#setup-node)
-  - [actions/cache](#actionscache)
-- [キャッシュへのアクセス制限](#%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%88%B6%E9%99%90)
+- [課題 3](#課題-3)
+  - [node_modules caches](#node_modules-caches)
+    - [setup-node](#setup-node)
+    - [actions/cache](#actionscache)
+  - [キャッシュへのアクセス制限](#キャッシュへのアクセス制限)
+  - [repository_dispatch](#repository_dispatch)
+  - [特定のディレクトリへの変更をトリガーとする](#特定のディレクトリへの変更をトリガーとする)
+  - [jobs 間の連携](#jobs-間の連携)
+  - [secrets の取り扱い](#secrets-の取り扱い)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -232,3 +237,29 @@ jobs:
 - [Creating dependent jobs](https://docs.github.com/ja/actions/learn-github-actions/managing-complex-workflows#creating-dependent-jobs)
 - [jobs.<job_id>.needs](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idneeds)
 
+## secrets の取り扱い
+
+環境変数を使用する際にはいくつかの注意点が存在する。
+
+- `GITHUB_` というプレフィックスは使用できない
+- 変数名を数字から始めることはできない
+- 大文字小文字を区別しない
+- 作成段階で一意でなければならない
+
+![](assets/add-repo-secrets.png)
+
+ワークフローの定義ファイルからは、`secrets` キーワードを使用することでリポジトリに設定した機密情報にアクセスすることが可能となる。
+
+```yml
+steps:
+  - name: Hello world
+    with: # Set the secret as an input
+      super_secret: ${{ secrets.SAMPLE_ACCESS_TOKEN }}
+    env: # Or as an environment variable
+      super_secret: ${{ secrets.SAMPLE_ACCESS_TOKEN }}
+  - run: echo $SAMPLE_ACCESS_TOKEN
+```
+
+参考資料
+
+- [Encrypted secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
