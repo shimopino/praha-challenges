@@ -143,3 +143,21 @@ curl https://api.github.com/com/repos/shimopino/github-actions-playground/dispat
 
 - [repository_dispatch](https://docs.github.com/ja/actions/learn-github-actions/events-that-trigger-workflows#repository_dispatch)
 
+## 特定のディレクトリへの変更をトリガーとする
+
+`on.<push|pull_request>.paths` の設定を追加することで、プッシュやプルリクエストの実行時に特定のフォルダへの変更のみをトリガーとすることができる。
+
+```yml
+on:
+  push:
+    paths:
+      # sub-directory 以下の変更をトリガーする
+      - "sub-directory/**"
+      # sub-directory/docs 以下の変更ではトリガーされない
+      - "!sub-directory/docs/**"
+```
+
+参考資料
+
+- [on.<push|pull_request>.paths](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#onpushpull_requestpaths)
+
