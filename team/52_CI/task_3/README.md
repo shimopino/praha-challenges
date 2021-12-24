@@ -2,7 +2,14 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<details>
+<summary>Table of Contents</summary>
 
+- [node_modules caches](#node_modules-caches)
+  - [setup-node](#setup-node)
+  - [actions/cache](#actionscache)
+
+</details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## node_modules caches
