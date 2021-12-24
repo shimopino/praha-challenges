@@ -5,9 +5,11 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [node_modules caches](#node_modules-caches)
-  - [setup-node](#setup-node)
-  - [actions/cache](#actionscache)
+- [課題 3](#課題-3)
+  - [node_modules caches](#node_modules-caches)
+    - [setup-node](#setup-node)
+    - [actions/cache](#actionscache)
+  - [キャッシュへのアクセス制限](#キャッシュへのアクセス制限)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -90,3 +92,21 @@ steps:
 参考資料
 
 - [Caching dependencies to speed up workflows](https://docs.github.com/ja/actions/advanced-guides/caching-dependencies-to-speed-up-workflows)
+
+## キャッシュへのアクセス制限
+
+`actions/cache@v2` のバージョンを使用する場合、`GITHUB_REF` を有している任意のイベントをトリガーに発生したワークフローで、キャッシュにアクセスすることができる。
+
+ブランチ間では、親ブランチで作成されたキャッシュは子ブランチでも使用することができ、同じ親を持つブランチでは論理的な境界をもつアクセス制限を設けることができる。
+
+```bash
+# mainブランチとfeature-aブランチのキャッシュを利用可能
+main
+  └── feature-a
+          └── feature-b
+
+# feature-* ブランチはお互いのキャッシュを参照できない
+main
+  ├── feature-a
+  └── feature-b
+```
