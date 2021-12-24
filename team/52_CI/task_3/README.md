@@ -161,3 +161,74 @@ on:
 
 - [on.<push|pull_request>.paths](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#onpushpull_requestpaths)
 
+## jobs 間の連携
+
+デフォルトでは、ワークフローないの全てのジョブは並列で実行される様になっている。`needs` キーワードを使用すれば、特定のジョブが終了した後で指定したジョブを実行することが可能となる。
+
+```yml
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./setup_server.sh
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./build_server.sh
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./test_server.sh
+  # もしもテストの実行結果に限らずSlackに結果を通知する様な場合
+  # always を付与して、失敗時にもジョブが実行される様にする
+  notify:
+    if: ${{ always() }}
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./notify-slack.sh
+```
+
+ここでは 1 つのファイルに複数のジョブを指定したが、ワークフロー自体をファイル別に分けたとしてもイベントを連携させることで、ジョブに依存関係を持たせることが可能となる。
+
+```yml
+#############
+# build.yml
+#############
+name: ci build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ...
+
+#############
+# notify.yml
+#############
+name: ci notify
+
+on:
+  workflow_run:
+    workflows: ["CI build"]
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ...
+```
+
+参考資料
+
+- [Creating dependent jobs](https://docs.github.com/ja/actions/learn-github-actions/managing-complex-workflows#creating-dependent-jobs)
+- [jobs.<job_id>.needs](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idneeds)
+
