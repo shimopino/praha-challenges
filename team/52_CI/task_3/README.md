@@ -5,15 +5,14 @@
 <details>
 <summary>Table of Contents</summary>
 
-- [課題 3](#課題-3)
-  - [node_modules caches](#node_modules-caches)
-    - [setup-node](#setup-node)
-    - [actions/cache](#actionscache)
-  - [キャッシュへのアクセス制限](#キャッシュへのアクセス制限)
-  - [repository_dispatch](#repository_dispatch)
-  - [特定のディレクトリへの変更をトリガーとする](#特定のディレクトリへの変更をトリガーとする)
-  - [jobs 間の連携](#jobs-間の連携)
-  - [secrets の取り扱い](#secrets-の取り扱い)
+- [node_modules caches](#node_modules-caches)
+  - [setup-node](#setup-node)
+  - [actions/cache](#actionscache)
+- [キャッシュへのアクセス制限](#%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%81%B8%E3%81%AE%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%88%B6%E9%99%90)
+- [repository_dispatch](#repository_dispatch)
+- [特定のディレクトリへの変更をトリガーとする](#%E7%89%B9%E5%AE%9A%E3%81%AE%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%B8%E3%81%AE%E5%A4%89%E6%9B%B4%E3%82%92%E3%83%88%E3%83%AA%E3%82%AC%E3%83%BC%E3%81%A8%E3%81%99%E3%82%8B)
+- [jobs 間の連携](#jobs-%E9%96%93%E3%81%AE%E9%80%A3%E6%90%BA)
+- [secrets の取り扱い](#secrets-%E3%81%AE%E5%8F%96%E3%82%8A%E6%89%B1%E3%81%84)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
