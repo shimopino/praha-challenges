@@ -109,3 +109,37 @@ main
   ├── feature-a
   └── feature-b
 ```
+
+## repository_dispatch
+
+`repository_dispatch` というトリガーを使用すると、webhook でワークフローをトリガーすることができる様になる。
+
+```yml
+name: repository dispatch sample
+
+on:
+  repository_dispatch:
+    types: [issued]
+
+jobs:
+  dispatch_echo:
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "hook repository dispatch event"
+```
+
+あとは対象のリポジトリに対して API コールを実行すればいい。
+
+```bash
+# https://docs.github.com/ja/rest/reference/repos#create-a-repository-dispatch-event
+curl https://api.github.com/com/repos/shimopino/github-actions-playground/dispatches \
+  -X POSR \
+  -H "Authorization: token $TOKEN" \
+  -H "Accept: application/vnd.github.v3+json" \
+  --data '{"event_type": "issued" }'
+```
+
+参考資料
+
+- [repository_dispatch](https://docs.github.com/ja/actions/learn-github-actions/events-that-trigger-workflows#repository_dispatch)
+
