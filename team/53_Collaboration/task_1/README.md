@@ -39,4 +39,37 @@ https://twitter.com/t_wada/status/1281496033839550468?s=20
 
 ## コードのコメントにはどのような内容を記載するべきでしょうか
 
+コードのコメントは、自身も含めた将来的にそのコードを読む開発者が理解しやすいものであるべきである。
+
+その際に注意すべき点は、コードが何をしているのか (What) を表すコメントよりも、コードを読んだだけでは理解できないであろう理由 (Why) を記述した方が良いよいうことである。
+
+例えば以下のようなコメントである。
+
+```js
+// 計算コストが高いため、最初のみ計算を実施する
+const result = // ...
+```
+
+反対に以下のようなコメントは良いコメントとは言えない。
+
+```js
+// 価格から割引分を引き算する
+const finalPrice = numItems * itemPrice \
+    - min(5, numItems) * itemPrice * 0.1;
+```
+
+このようなコメントはリファクタリングを行う機械であり、以下のように改善することができる。
+
+```js
+const price = numItems * itemPrice;
+const discount = min(5, numItems) * itemPrice * 0.1;
+const finalPrice = price - discount;
+```
+
+参考資料
+
+- [Code Health: To Comment or Not to Comment?](https://testing.googleblog.com/2017/07/code-health-to-comment-or-not-to-comment.html)
+- [https://twitter.com/t_wada/status/904916106153828352?s=20](https://twitter.com/t_wada/status/904916106153828352?s=20)
+- [リーダブルコード 第 5 章](https://www.amazon.co.jp/dp/4873115655/)
+
 ## コミットメッセージにはどのような内容を記載するべきでしょうか
