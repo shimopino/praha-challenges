@@ -17,5 +17,12 @@
 
 - [gitmoji の使い方](https://zenn.dev/ogakuzuko/articles/a160fdd8b4b3b8)
 
+## Commitlint
 
-そのため、行の幅を広い設定にしてしまっている場合は横スクロールを実行しなければコードの全体像を確認することができないため、例えば80行以下に制限しておくことでレビューしやすい状態に設定できる。
+`commitlint` はコミットメッセージに対して静的解析を実行できるツールである。具体的には `husky` のプレコミットフックのようにコードがコミットされる前にメッセージを解析する処理を実行できる。
+
+デフォルト設定では、**Conventional Commits** の規約に従うようにコミットメッセージを編集する必要がある。
+
+参考記事
+
+- [How to Write Good Commit Messages with Commitlint](https://www.freecodecamp.org/news/how-to-use-commitlint-to-write-good-commit-messages/)
