@@ -29,3 +29,7 @@
 | Vue      | [CONTRIBUTING.md](https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md)  | [ISSUE_TEMPLATE](https://github.com/vuejs/vue/tree/dev/.github/ISSUE_TEMPLATE)          | [PULL_REQUEST_TEMPLATE.md](https://github.com/vuejs/vue/blob/dev/.github/PULL_REQUEST_TEMPLATE.md)          |
 | Svelte   | [CONTRIBUTING.md](https://github.com/sveltejs/svelte/blob/master/CONTRIBUTING.md) | [ISSUE_TEMPLATE](https://github.com/sveltejs/svelte/tree/master/.github/ISSUE_TEMPLATE) | [PULL_REQUEST_TEMPLATE.md](https://github.com/sveltejs/svelte/blob/master/.github/PULL_REQUEST_TEMPLATE.md) |
 | Vite     | [CONTRIBUTING.md](https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md)       | [ISSUE_TEMPLATE](https://github.com/vitejs/vite/tree/main/.github/ISSUE_TEMPLATE)       | [PULL_REQUEST_TEMPLATE.md](https://github.com/vitejs/vite/blob/main/.github/PULL_REQUEST_TEMPLATE.md)       |
+
+### ISSUE_TEMPLATE
+
+### PULL_REQUEST_TEMPLATE
