@@ -7,6 +7,8 @@
 
 - [Github でテンプレート機能をつかってみよう](#github-%E3%81%A7%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88%E6%A9%9F%E8%83%BD%E3%82%92%E3%81%A4%E3%81%8B%E3%81%A3%E3%81%A6%E3%81%BF%E3%82%88%E3%81%86)
   - [既存のフレームワークでのテンプレート](#%E6%97%A2%E5%AD%98%E3%81%AE%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E3%83%AF%E3%83%BC%E3%82%AF%E3%81%A7%E3%81%AE%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88)
+  - [ISSUE_TEMPLATE](#issue_template)
+  - [PULL_REQUEST_TEMPLATE](#pull_request_template)
 
 </details>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
