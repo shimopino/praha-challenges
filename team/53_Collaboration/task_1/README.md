@@ -73,3 +73,52 @@ const finalPrice = price - discount;
 - [リーダブルコード 第 5 章](https://www.amazon.co.jp/dp/4873115655/)
 
 ## コミットメッセージにはどのような内容を記載するべきでしょうか
+
+コードの変更をコミットする際には、コードの差分を見れば「コードをどのように (What) 変更したのか」はすぐに理解することができる。
+
+そのためコミットメッセージには、「コードをなぜ (Why) 変更したのか」を残しておくことで、将来の自信も含めて他の開発者がコミット履歴を見てもその作業を理解できるようにしておくことが重要である。
+
+人間にとっても機械にとってもわかりやすいコミット履歴を作成するために、**Conventional Commits** という軽量の規約が提供されており、以下のような形式でコミットメッセージを記述することがルールとなっている。
+
+```bash
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer]
+```
+
+ここでの `type` とはコミットの大まかな内容を示すプレフィックスであり、セマンティックバージョニングと対応する形式となっている。
+
+```bash
+X. X. X
+│  │  └ fix type: バグのパッチ
+│  └─── feat type: 新しい機能の追加
+└────── BREAKING CHANGE type: APIの破壊的変更の導入
+```
+
+この規約に従うことで、自動化ツールの導入が可能となり、例えば以下のことが可能となる。
+
+- 変更履歴の自動生成
+- セマンティックバージョン単位での履歴の自動まとめ
+- 変更内容の通知
+- ビルドや公開処理をトリガー
+
+実際に Angular では以下のようなコミットメッセージを記述している。
+
+```bash
+fix($compile): couple of unit tests for IE9
+
+Older IEs serialize html uppercased, but IE9 does not...
+Would be better to expect case insensitive, unfortunately jasmine does
+not allow to user regexps for throw expectations.
+
+Closes #392
+Breaks foo.bar api, foo.baz should be used instead
+```
+
+参考資料
+
+- [Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/)
+- [Angular Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
+- [いいコミットメッセージの共通点と書き方〜便利なテンプレートやチーム開発時のお作法まで詳しく解説〜 ](https://www.praha-inc.com/lab/posts/commit-message)
