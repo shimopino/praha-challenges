@@ -14,3 +14,7 @@
 # [課題１](./task_1)
 
 # [課題 2](./task_2)
+
+メモ
+
+- [[Issue] 課題 53「チーム開発を円滑にするコツを覚えよう」](https://github.com/shimopino/praha-challenges/issues/138)
