@@ -34,6 +34,155 @@
 
 ### ISSUE_TEMPLATE
 
+複数の ISSUE テンプレートで共通しているものは以下になる。
+
+- バグ報告
+
+  ```yml
+  # https://github.com/vitejs/vite/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml
+  name: "\U0001F41E Bug report"
+  description: Report an issue with Vite
+  labels: [pending triage]
+  body:
+    - type: markdown
+      attributes:
+        value: |
+          Thanks for taking the time to fill out this bug report!
+    - type: textarea
+      id: bug-description
+      attributes:
+        label: Describe the bug
+        description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
+        placeholder: Bug description
+      validations:
+        required: true
+    - type: input
+      id: reproduction
+      attributes:
+        label: Reproduction
+        description: Please provide a link via [vite.new](https://vite.new/) or a link to a repo that can reproduce the problem you ran into. A [minimal reproduction](https://stackoverflow.com/help/minimal-reproducible-example) is required. If a report is vague (e.g. just a generic error message) and has no reproduction, it will receive a "need reproduction" label. If no reproduction is provided after 3 days, it will be auto-closed.
+        placeholder: Reproduction
+      validations:
+        required: true
+    - type: textarea
+      id: system-info
+      attributes:
+        label: System Info
+        description: Output of `npx envinfo --system --npmPackages '{vite,@vitejs/*}' --binaries --browsers`
+        render: shell
+        placeholder: System, Binaries, Browsers
+      validations:
+        required: true
+    - type: dropdown
+      id: package-manager
+      attributes:
+        label: Used Package Manager
+        description: Select the used package manager
+        options:
+          - npm
+          - yarn
+          - pnpm
+      validations:
+        required: true
+    - type: textarea
+      id: logs
+      attributes:
+        label: Logs
+        description: |
+          Optional if provided reproduction. Please try not to insert an image but copy paste the log text.
+
+          1. Run `vite` or `vite build` with the `--debug` flag.
+          2. Provide the error log here.
+        render: shell
+    - type: checkboxes
+      id: checkboxes
+      attributes:
+        label: Validations
+        description: Before submitting the issue, please make sure you do the following
+        options:
+          - label: Follow our [Code of Conduct](https://github.com/vitejs/vite/blob/main/CODE_OF_CONDUCT.md)
+            required: true
+          - label: Read the [Contributing Guidelines](https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md).
+            required: true
+          - label: Read the [docs](https://vitejs.dev/guide).
+            required: true
+          - label: Check that there isn't [already an issue](https://github.com/vitejs/vite/issues) that reports the same bug to avoid creating a duplicate.
+            required: true
+          - label: Make sure this is a Vite issue and not a framework-specific issue. For example, if it's a Vue SFC related bug, it should likely be reported to https://github.com/vuejs/vue-next instead.
+            required: true
+          - label: Check that this is a concrete bug. For Q&A open a [GitHub Discussion](https://github.com/vitejs/vite/discussions) or join our [Discord Chat Server](https://chat.vitejs.dev/).
+            required: true
+          - label: The provided reproduction is a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example) of the bug.
+            required: true
+  ```
+
+- 新機能提案
+
+  ```yml
+  # https://raw.githubusercontent.com/vitejs/vite/main/.github/ISSUE_TEMPLATE/feature_request.yml
+  name: "\U0001F680 New feature proposal"
+  description: Propose a new feature to be added to Vite
+  labels: ["enhancement: pending triage"]
+  body:
+    - type: markdown
+      attributes:
+        value: |
+          Thanks for your interest in the project and taking the time to fill out this feature report!
+    - type: textarea
+      id: feature-description
+      attributes:
+        label: Clear and concise description of the problem
+        description: "As a developer using Vite I want [goal / wish] so that [benefit]. If you intend to submit a PR for this issue, tell us in the description. Thanks!"
+      validations:
+        required: true
+    - type: textarea
+      id: suggested-solution
+      attributes:
+        label: Suggested solution
+        description: "In module [xy] we could provide following implementation..."
+      validations:
+        required: true
+    - type: textarea
+      id: alternative
+      attributes:
+        label: Alternative
+        description: Clear and concise description of any alternative solutions or features you've considered.
+    - type: textarea
+      id: additional-context
+      attributes:
+        label: Additional context
+        description: Any other context or screenshots about the feature request here.
+    - type: checkboxes
+      id: checkboxes
+      attributes:
+        label: Validations
+        description: Before submitting the issue, please make sure you do the following
+        options:
+          - label: Follow our [Code of Conduct](https://github.com/vitejs/vite/blob/main/CODE_OF_CONDUCT.md)
+            required: true
+          - label: Read the [Contributing Guidelines](https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md).
+            required: true
+          - label: Read the [docs](https://vitejs.dev/guide).
+            required: true
+          - label: Check that there isn't already an issue that request the same feature to avoid creating a duplicate.
+            required: true
+  ```
+
+- その他
+
+  - 以下のように公式のチャットスペースなどへの案内がある場合も
+
+    ```yml
+    blank_issues_enabled: false
+    contact_links:
+      - name: Discord Chat
+        url: https://chat.vitejs.dev
+        about: Ask questions and discuss with other Vite users in real time.
+      - name: Questions & Discussions
+        url: https://github.com/vitejs/vite/discussions
+        about: Use GitHub discussions for message-board style questions and discussions.
+    ```
+
 ### PULL_REQUEST_TEMPLATE
 
 複数のプルリクエストのテンプレートで共通しているものを抜き出す。
