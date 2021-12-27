@@ -35,3 +35,53 @@
 ### ISSUE_TEMPLATE
 
 ### PULL_REQUEST_TEMPLATE
+
+複数のプルリクエストのテンプレートで共通しているものを抜き出す。
+
+- 規約に従っているのか？
+  - `CONTRIBUTING.md` に記述されているルールに従っているのか？
+  - テストが追加されているのか？（バグ修正あるいは新機能開発）
+  - ドキュメントは最新化されているのか？（バグ修正あるいは新機能開発）
+- プルリクの種別は何か？
+  - バグ修正？
+  - 新機能開発？
+  - リファクタリング？
+  - ドキュメントの更新？
+- どのような振る舞いなのか？
+- 破壊的変更が導入されるのか？
+
+これらから以下のテンプレートを作成する。
+
+<details>
+<summary>テンプレート</summary>
+<div>
+
+```md
+<!-- Thank you for contributing! -->
+
+### Description
+
+<!-- Please insert your description here and provide especially info about the "what" this PR is solving -->
+
+### Additional context
+
+<!-- e.g. is there anything you'd like reviewers to focus on? -->
+
+---
+
+### What is the purpose of this pull request? <!-- (put an "X" next to an item) -->
+
+- [ ] Bug fix
+- [ ] New Feature
+- [ ] Documentation update
+- [ ] Other
+
+### Before submitting the PR, please make sure you do the following
+
+- [ ] [Contributing Guidelines](https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md) に従っているのか
+- [ ] 関連するドキュメントが最新化されているのか
+- [ ] 関連するテストコードが追加され、パスしているのか
+```
+
+</div>
+</details>
